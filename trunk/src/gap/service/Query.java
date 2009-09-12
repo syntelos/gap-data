@@ -1,0 +1,352 @@
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
+package gap.service;
+
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.Map;
+import java.util.StringTokenizer;
+
+/**
+ * 
+ * 
+ * @author jdp
+ */
+public final class Query
+    extends java.lang.Object
+{
+    public final static class Special {
+        /**
+         * count={count} Requests page size for paged collection. If
+         * no parameter is specified the container can choose how many
+         * items in the collection should be returned. However, the
+         * container SHOULD support a large default count value so
+         * that all items can be returned by default.
+         * 
+         * startIndex={startIndex}	Index into a paged collection.
+         */
+        public final static class Page {
+            public final static String Count = "count";
+            public final static String StartIndex = "startIndex";
+
+            public final int count, startIndex;
+
+            public Page(Map<String,String[]> parameters){
+                super();
+                int count = 1, startIndex = 0;
+                try {
+                    String[] value = parameters.get(Count);
+                    if (null != value && 0 < value.length)
+                        count = Integer.parseInt(value[0]);
+                }
+                catch (NumberFormatException exc){
+                }
+                try {
+                    String[] value = parameters.get(StartIndex);
+                    if (null != value && 0 < value.length)
+                        startIndex = Integer.parseInt(value[0]);
+                }
+                catch (NumberFormatException exc){
+                }
+                this.count = count; 
+                this.startIndex = startIndex;
+            }
+        }
+        /**
+         * filterBy={fieldname} For a collection, return entries
+         * filtered by the given field.
+         * 
+         * filterOp={operation} The operation to use when filtering a
+         * collection, defaults to "contains". Valid values are
+         * contains, equals, startsWith, and present.
+         * 
+         * filterValue={value} The value to use when filtering a
+         * collection. For example,
+         * filterBy=name&amp;filterOp=startsWith&amp;filterValue=John will
+         * return all items whose name field starts with John. Johnny
+         * and John Doe would both be included.)
+         * 
+         */
+        public final static class Filter {
+            public final static String FilterName = "filterBy";
+            public final static String FilterValue = "filterValue";
+            public final static String FilterOp = "filterOp";
+
+            public final String name, op, value;
+
+            public Filter(Map<String,String[]> parameters){
+                super();
+                String[] value;
+                value = parameters.get(FilterName);
+                if (null != value && 0 < value.length)
+                    this.name = value[0];
+                else
+                    this.name = null;
+
+                value = parameters.get(FilterOp);
+                if (null != value && 0 < value.length)
+                    this.op = value[0];
+                else
+                    this.op = null;
+
+                value = parameters.get(FilterValue);
+                if (null != value && 0 < value.length)
+                    this.value = value[0];
+                else
+                    this.value = null;
+            }
+
+            public boolean isEmpty(){
+                return (!this.isNotEmpty());
+            }
+            public boolean isNotEmpty(){
+                return (null != this.name && null != this.op && null != this.value);
+            }
+        }
+        /**
+         * format={format}	Format desired; one of (atom, json, xml); default is json if not provided
+         */
+        public final static class Format {
+
+            public final static String Format = "format";
+
+            private final static int Atom = 1, Json = 0, Xml = 2;
+
+
+            public final String name;
+
+            private final int type;
+
+
+            public Format(Map<String,String[]> parameters){
+                super();
+                String[] value = parameters.get(Format);
+                if (null == value || 0 == value.length){
+                    this.name = "json";
+                    this.type = Json;
+                }
+                else {
+                    this.name = value[0];
+                    if ("atom".equalsIgnoreCase(this.name))
+                        this.type = Atom;
+                    else if ("json".equalsIgnoreCase(this.name))
+                        this.type = Json;
+                    else if ("xml".equalsIgnoreCase(this.name))
+                        this.type = Xml;
+                    else
+                        this.type = Json;
+                }
+            }
+
+            public boolean isAtom(){
+                return (Atom == this.type);
+            }
+            public boolean isXml(){
+                return (Xml == this.type);
+            }
+            public boolean isJson(){
+                return (Json == this.type);
+            }
+        }
+        /**
+         * fields={-join|,|field} List of fields to include in
+         * representation or in the members of a collection. If no
+         * fields are provided it is up to the container to decide
+         * which fields to return. However, the set MUST include the
+         * minimum set of fields. For people this is id, name, and
+         * thumbnailUrl. For activities this is id and title. @all is
+         * accepted to indicate returning all available fields.
+         */
+        public final static class Fields {
+            public final static String Fields = "fields";
+            public final static String All = "@all";
+
+
+            public final boolean all, defaults;
+            public final String[] list;
+
+            public Fields(Map<String,String[]> parameters){
+                super();
+                String[] value = parameters.get(Fields);
+                if (null != value){
+                    StringBuilder string = new StringBuilder();
+                    for (String v : value){
+                        if (0 < string.length())
+                            string.append(',');
+                        string.append(v);
+                    }
+                    boolean all = false, defaults = false;
+                    String[] list = null;
+                    StringTokenizer strtok = new StringTokenizer(string.toString(),",| ");
+                    int count = strtok.countTokens();
+                    switch (count){
+                    case 0:
+                        defaults = true;
+                        break;
+                    case 1:
+                        String one = strtok.nextToken();
+                        list = new String[]{one};
+                        all = (All.equals(one));
+                        if (all)
+                            list = null;
+                        break;
+                    default:
+                        list = new String[count];
+                        for (int cc = 0; cc < count; cc++){
+                            String field = strtok.nextToken();
+                            list[cc] = field;
+                            if (All.equals(field)){
+                                all = true;
+                                list = null;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    this.all = all;
+                    this.defaults = defaults;
+                    this.list = list;
+                }
+                else {
+                    this.all = false;
+                    this.defaults = true;
+                    this.list = null;
+                }
+            }
+
+            public boolean isEmpty(){
+                return (null == this.list);
+            }
+            public boolean isNotEmpty(){
+                return (null != this.list);
+            }
+        }
+        /**
+         * networkDistance={networkDistance} Modifies group-relative
+         * requests (@friends, etc.) to include the transitive closure
+         * of all friends up to {networkDistance} links away. MAY NOT
+         * be honored by the container.
+         */
+        public final static class NetworkDistance {
+            public final static String NetworkDistance = "networkDistance";
+
+            public NetworkDistance(Map<String,String[]> parameters){
+                super();
+            }
+        }
+        /**
+         * sortBy={fieldname} For a collection, return entries sorted
+         * by the given field.
+         * 
+         * sortOrder={order} Can either be "ascending" or
+         * "descending", defaults to ascending. Used to sort objects
+         * in a collection.
+         */
+        public final static class Sort {
+            public final static String SortBy = "sortBy";
+            public final static String SortOrder = "sortOrder";
+
+            public Sort(Map<String,String[]> parameters){
+                super();
+            }
+        }
+        /**
+         * updatedSince={xsdDateTime} When specified the container
+         * should only return items whose updated date is equal to or
+         * more recent then the specified value.
+         */
+        public final static class Since {
+            public final static String UpdatedSince = "updatedSince";
+
+            public Since(Map<String,String[]> parameters){
+                super();
+            }
+        }
+    }
+
+    public final Map<String,String[]> parameters;
+    public final int size;
+    public final Special.Page page;
+    public final Special.Filter filter;
+    public final Special.Format format;
+    public final Special.Fields fields;
+    public final Special.NetworkDistance networkDistance;
+    public final Special.Sort sort;
+    public final Special.Since since;
+
+
+    public Query(HttpServletRequest req){
+        super();
+        Map<String,String[]> parameters = (Map<String,String[]>)req.getParameterMap();
+        this.parameters = parameters;
+        this.size = parameters.size();
+        this.page = new Special.Page(parameters);
+        this.filter = new Special.Filter(parameters);
+        this.format = new Special.Format(parameters);
+        this.fields = new Special.Fields(parameters);
+        this.networkDistance = new Special.NetworkDistance(parameters);
+        this.sort = new Special.Sort(parameters);
+        this.since = new Special.Since(parameters);
+    }
+
+
+    public boolean isEmpty(){
+        return (0 == this.size);
+    }
+    public boolean isNotEmpty(){
+        return (0 != this.size);
+    }
+    public int size(){
+        return this.size;
+    }
+    public String[] get(String name){
+        return this.parameters.get(name);
+    }
+    public String valueOf(String name){
+        String[] value = this.parameters.get(name);
+        if (null != value && 0 < value.length){
+            if (1 == value.length)
+                return value[0];
+            else {
+                StringBuilder string = new StringBuilder();
+                for (String v : value){
+                    if (0 < string.length())
+                        string.append(',');
+                    string.append(v);
+                }
+                return string.toString();
+            }
+        }
+        else
+            return null;
+    }
+    public boolean isFieldsAll(){
+        return this.fields.defaults;
+    }
+    public boolean isFieldsDefault(){
+        return this.fields.all;
+    }
+    public boolean hasFields(){
+        return this.fields.isNotEmpty();
+    }
+    public String[] getFields(){
+        return this.fields.list;
+    }
+}

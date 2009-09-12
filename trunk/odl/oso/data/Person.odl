@@ -1,0 +1,11 @@
+package oso.data
+
+import com.google.appengine.api.datastore.*
+import java.util.*
+
+class Person version 1 {
+    Key key
+    *unique String id
+    *hash-unique String logonId
+    List<String> roles
+}
