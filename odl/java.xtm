@@ -1,0 +1,329 @@
+
+package {{=package_name}};
+
+import gap.data.ListFilter;
+import gap.data.Store;
+import gap.service.Templates;
+
+import hapax.TemplateDictionary;
+
+{{#import}}
+import {{=import_spec}};
+{{/import}}
+
+import javax.annotation.Generated;
+
+/** 
+ * Generated from "{{=odl_gen_odl_src}}" with "{{=odl_gen_xtm_src}}".
+ * 
+ */
+@Generated(value={"gap.odl.Main","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
+public final class {{=class_name}}
+    extends gap.data.BigTable
+{
+
+    private final static long serialVersionUID = {{=class_version}};
+
+{{#field_hash_unique}}
+    public final static String {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+        if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
+            String {{=field_name}}String = {{=field_to_string_prefix}}{{=field_name}}{{=field_to_string_suffix}};{{/field}}
+            return gap.data.Hash.For({{#field}}{{#field_it_NotFirst}}+'/'+{{/field_it_NotFirst}}{{=field_name}}String{{/field}});
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static {{=class_name}} For{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+        if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
+            String {{=field_unique_name}} = {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            {{=class_name}} {{=class_nameDecamel}} = ({{=class_name}})Store.C.Get({{=field_unique_name}});
+            if (null != {{=class_nameDecamel}})
+                return {{=class_nameDecamel}};
+            else {
+                Query query = new Query("{{=class_name}}");{{#field}}
+                query.addFilter("{{=field_name}}",Query.FilterOperator.EQUAL,{{=field_name}});{{/field}}
+                {{=class_nameDecamel}} = ({{=class_name}})Store.P.Query1({{=class_name}}.class,query);
+                if (null != {{=class_nameDecamel}})
+                    Store.C.Put({{=field_unique_name}},{{=class_nameDecamel}});
+                return {{=class_nameDecamel}};
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static {{=class_name}} GetCreate({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+        {{=class_name}} {{=class_nameDecamel}} = For{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+        if (null == {{=class_nameDecamel}}){
+            {{=class_nameDecamel}} = new {{=class_name}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            {{=class_nameDecamel}} = ({{=class_name}})Store.P.Put({{=class_nameDecamel}});
+            Store.C.Put({{=class_nameDecamel}}.get{{=field_unique_nameCamel}}(),{{=class_nameDecamel}});
+        }
+        return {{=class_nameDecamel}};
+    }
+{{/field_hash_unique}}
+{{#field_unique}}
+    public final static {{=class_name}} For{{=field_nameCamel}}(String {{=field_name}}){
+        if (null != {{=field_name}}){
+            {{=class_name}} {{=class_nameDecamel}} = ({{=class_name}})Store.C.Get({{=field_name}});
+            if (null != {{=class_nameDecamel}})
+                return {{=class_nameDecamel}};
+            else {
+                Query query = new Query("{{=class_name}}");
+                query.addFilter("{{=field_name}}",Query.FilterOperator.EQUAL,{{=field_name}});
+                {{=class_nameDecamel}} = ({{=class_name}})Store.P.Query1({{=class_name}}.class,query);
+                if (null != {{=class_nameDecamel}})
+                    Store.C.Put({{=field_name}},{{=class_nameDecamel}});
+                return {{=class_nameDecamel}};
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+{{/field_unique}}
+
+    /**
+     * 
+     */
+    public static enum Field
+        implements gap.data.Field
+    {
+{{#pfield}}
+        {{=field_nameCamel}}("{{=field_name}}"){{#pfield_it_NotLast}},{{/pfield_it_NotLast}}{{#pfield_it_Last}};{{/pfield_it_Last}}{{/pfield}}
+
+
+        private final static Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
+        public static final String[] AllNames;
+        static {
+            Field[] allFields = Field.values();
+            int count = allFields.length;
+            String[] names = new String[count];
+            for (int cc = 0; cc < count; cc++) {
+                Field field = allFields[cc];
+                String fieldName = field.getFieldName();
+                names[cc] = fieldName;
+                FieldName.put(fieldName,field);
+            }
+            AllNames = names;
+        }
+        public static Field getField(String name) {
+            return FieldName.get(name);
+        }
+        public static Object Get(Field field, {{=class_name}} instance){
+            switch(field){
+{{#pfield}}
+            case {{=field_nameCamel}}:
+                return instance.get{{=field_nameCamel}}();{{/pfield}}
+            default:
+                throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
+            }
+        }
+        public static void Set(Field field, {{=class_name}} instance, Object value){
+            switch(field){
+{{#pfield}}
+            case {{=field_nameCamel}}:
+                instance.set{{=field_nameCamel}}( ({{=field_class}})value);
+                return;{{/pfield}}
+            default:
+                throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
+            }
+        }
+
+
+        private final String fieldName;
+
+
+        Field(String fieldName){
+            this.fieldName = fieldName;
+        }
+
+
+        public String getFieldName(){
+            return this.fieldName;
+        }
+        public String toString(){
+            return this.fieldName;
+        }
+    }
+
+{{#pfield}}
+    private volatile {{=field_class}} {{=field_name}};    {{#field_is_unique}}// {{=data_model}}{{/field_is_unique}}{{#field_is_hash_unique}}// {{=data_model}}{{/field_is_hash_unique}}{{/pfield}}
+
+{{#tfield}}
+    private volatile transient {{=field_class}} {{=field_name}};    {{#field_is_transient}}// {{=data_model}}{{/field_is_transient}}{{/tfield}}
+
+
+    public {{=class_name}}() {
+        super();
+    }{{#field_hash_unique}}
+    public {{=class_name}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
+        super();{{#field}}
+        this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
+        String {{=field_unique_name}} = {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+        this.set{{=field_unique_nameCamel}}({{=field_unique_name}});
+    }
+{{/field_hash_unique}}
+
+    public void init(){
+    }
+
+{{#pfield}}
+    public boolean has{{=field_nameCamel}}(){
+        return (null != this.{{=field_name}});
+    }
+    public boolean hasNot{{=field_nameCamel}}(){
+        return (null == this.{{=field_name}});
+    }
+    public {{=field_class}} get{{=field_nameCamel}}(){
+        return this.{{=field_name}};
+    }
+    public void set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
+        this.{{=field_name}} = {{=field_name}};
+    }{{#field_is_list}}
+    public boolean isEmpty{{=field_nameCamel}}(){
+        {{=field_class}} list = this.{{=field_name}};
+        if (null != list)
+            return list.isEmpty();
+        else
+            return true;
+    }
+    public boolean isNotEmpty{{=field_nameCamel}}(){
+        {{=field_class}} list = this.{{=field_name}};
+        if (null != list)
+            return (!list.isEmpty());
+        else
+            return false;
+    }
+    public boolean contains{{=field_nameCamel}}({{=field_list_component}} {{=field_name}}Item){
+        if (null != {{=field_name}}Item){
+            {{=field_class}} list = this.{{=field_name}};
+            if (null != list)
+                return list.contains({{=field_name}}Item);
+            else
+                return false;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public {{=field_list_component}} get{{=field_nameCamel}}(ListFilter<{{=field_list_component}}> filter){
+        if (null != filter){
+            {{=field_class}} list = this.{{=field_name}};
+            if (null != list){
+                for ({{=field_list_component}} item : list){
+                    if (filter.accept(item))
+                        return item;
+                }
+            }
+            return null;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public void add{{=field_nameCamel}}({{=field_list_component}} {{=field_name}}Item){
+        if (null != {{=field_name}}Item){
+            {{=field_class}} list = this.{{=field_name}};
+            if (null == list){
+                list = new java.util.ArrayList<{{=field_list_component}}>();
+                this.{{=field_name}} = list;
+            }
+            else if (list.contains({{=field_name}}Item))
+                return;
+
+            list.add({{=field_name}}Item);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public void remove{{=field_nameCamel}}({{=field_list_component}} {{=field_name}}Item){
+        if (null != {{=field_name}}Item){
+            {{=field_class}} list = this.{{=field_name}};
+            if (null != list)
+                list.remove({{=field_name}}Item);
+        }
+        else
+            throw new IllegalArgumentException();
+    }{{/field_is_list}}
+{{/pfield}}
+
+{{#tfield}}
+    public boolean has{{=field_nameCamel}}(){
+        return (null != this.{{=field_name}});
+    }
+    public boolean hasNot{{=field_nameCamel}}(){
+        return (null == this.{{=field_name}});
+    }
+    public {{=field_class}} get{{=field_nameCamel}}(){
+        return this.{{=field_name}};
+    }
+    public void set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
+        this.{{=field_name}} = {{=field_name}};
+    }
+{{/tfield}}
+
+    /*
+     * Data binding supports
+     */
+    public String getClassKind(){
+        return "{{=class_name}}";
+    }
+    public {{=field_unique_class}} getClassFieldUnique(){
+        return "{{=field_unique_name}}";
+    }
+    public String getClassFieldKeyName(){
+        return "{{=field_key_name}}";
+    }
+    public List<gap.data.Field> getClassFields(){
+        List<gap.data.Field> list = new java.util.ArrayList<gap.data.Field>();
+        for (gap.data.Field field : Field.values())
+            list.add(field);
+        return list;
+    }
+    public gap.data.Field getClassFieldByName(String name){
+        return Field.getField(name);
+    }
+    public java.io.Serializable valueOf(gap.data.Field field){
+        return (java.io.Serializable)Field.Get((Field)field,this);
+    }
+    public void define(gap.data.Field field, java.io.Serializable value){
+        Field.Set((Field)field,this,value);
+    }
+    public int updateFrom(gap.service.Query query, Person request){
+        /*
+         * 
+         */
+        return 0;
+    }
+    public TemplateDictionary dictionaryFor(){
+        return this.dictionaryInto(Templates.CreateDictionary());
+    }
+    public TemplateDictionary dictionaryInto(gap.service.Query query, TemplateDictionary dict){
+        if (null != query && query.hasFields()){
+
+            for (String name: query.getFields()){
+                Field field = Field.getField(name);
+                if (null != field){
+                    java.lang.Object value = Field.Get(field,this);
+                    if (null != value){
+                        dict.putVariable(field.toString(),value.toString());
+                    }
+                }
+            }
+            return dict;
+        }
+        else 
+            return this.dictionaryInto(dict);
+    }
+    public TemplateDictionary dictionaryInto(TemplateDictionary dict){
+
+        for (Field field : Field.values()){
+            java.lang.Object value = Field.Get(field,this);
+            if (null != value){
+                dict.putVariable(field.toString(),value.toString());
+            }
+        }
+        return dict;
+    }
+    public TemplateDictionary dictionaryFor(gap.service.Query query){
+        return this.dictionaryInto(Templates.CreateDictionary());
+    }
+
+}

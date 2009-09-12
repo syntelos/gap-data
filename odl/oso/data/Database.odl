@@ -1,0 +1,10 @@
+package oso.data
+
+import com.google.appengine.api.datastore.*
+import java.util.*
+
+class Database version 1 {
+    Key key
+    *unique String id
+    *hash-unique String name
+}

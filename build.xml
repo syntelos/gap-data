@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="gap-data" default="jar">
+  <tstamp/>
+  <property name="compiler.source" value="1.6"/>
+  <property name="compiler.target" value="1.6"/>
+  <property name="compiler.optimize" value="false"/>
+  <property name="compiler.debug" value="true"/>
+  <property name="compiler.deprecation" value="false"/>
+
+  <property name="src" value="src"/>
+  <property name="ver.src" value="ver/src"/>
+  <property name="ver.web" value="ver/web"/>
+  <property name="web" value="web"/>
+  <property name="out" value="out"/>
+  <property name="out.webinf" value="${out}/WEB-INF"/>
+  <property name="out.bin" value="${out.webinf}/classes"/>
+  <property name="out.lib" value="${out.webinf}/lib"/>
+  <property name="lib" value="lib"/>
+  <property name="doc" value="doc"/>
+  <property name="odl" value="odl"/>
+
+  <basename property="project.dirn" file="${basedir}"/>
+  <condition property="project.target" value="gap-data-test">
+    <equals arg1="${project.dirn}" arg2="trunk"/>
+  </condition>
+  <condition property="project.target" value="gap-data">
+    <equals arg1="${project.dirn}" arg2="prod"/>
+  </condition>
+  <fail unless="project.target" message="Unrecognized configuration, see build."/>
+
+  <property name="project.vendor" value="Team FREDNET"/>
+
+  <property name="project.target.version" value="1"/>
+
+  <import file="ant/build.in.java.xml"/>
+  <import file="ant/build.in.version.xml"/>
+  <import file="ant/build.in.odl.xml"/>
+
+  <!-- 
+     - G.App Engine
+    -->
+  <property name="gap.sdk" value="appengine-java-sdk"/>
+  <property file="${gap.sdk}/current.properties" />
+  <property name="gap.sdk.dir" value="${gap.sdk}/${gap.sdk.version}"/>
+  <import file="${gap.sdk.dir}/config/user/ant-macros.xml" />
+
+
+  <path id="lib.path">
+    <pathelement path="${out.bin}" />
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${out.lib}">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${gap.sdk.dir}/lib/shared">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <path id="jar.pack.path.hapax">
+    <fileset dir="${lib}">
+      <include name="**/hapax*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="jar.pack.path.appengine">
+    <fileset dir="${out.lib}">
+      <include name="**/appengine-api-1.0-sdk-*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="jar.pack.path.joda-time">
+    <fileset dir="${lib}">
+      <include name="**/joda-time-*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="init" description="">
+
+    <copy todir="${out.lib}" flatten="true">
+
+      <fileset dir="${lib}">
+        <include name="**/*.jar" />
+      </fileset>
+      <fileset dir="${gap.sdk.dir}/lib/user">
+        <include name="**/*.jar" />
+      </fileset>
+    </copy>
+
+  </target>
+
+  <target name="clean" description="Delete all products: 'out', 'jar', etc..">
+
+    <clean bin="${out}" this="."/>
+  </target>
+
+  <target name="clean_build" description="Delete classes, then compile, then package.">
+
+    <flush dir="${out.bin}" type="class"/>
+
+    <antcall target="write"/>
+  </target>
+
+
+  <target name="debug" depends="write" description="Starts local debug http server, suspended, on port 8888 with jpda on port 9999.">
+    <dev_appserver war="${out}" port="8888" >
+      <options>
+        <arg value="--jvm_flag=-Xdebug"/>
+        <arg value="--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9999"/>
+      </options>
+    </dev_appserver>
+  </target>
+
+  <target name="write" depends="compile,version" description="Produce 'war' content.">
+
+    <!-- enhance_war war="${out}" / -->
+
+    <copy todir="${out}" overwrite="true">
+      <filterset>
+        <filter token="ProjectTarget"        value="${project.target}"/>
+        <filter token="ProjectTargetVersion" value="${project.target.version}"/>
+        <filter token="ProjectVendor"        value="${project.vendor}"/>
+        <filter token="VersionName"          value="${ant.project.name}"/>
+        <filter token="VersionMajor"         value="${version.major}"/>
+        <filter token="VersionMinor"         value="${version.minor}"/>
+        <filter token="VersionBuild"         value="${version.build}"/>
+      </filterset>
+      <fileset dir="${ver.web}">
+        <include name="**/*.xml"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${out}">
+
+      <fileset dir="${web}">
+        <include name="**/*.css" />
+        <include name="**/*.gif" />
+        <include name="**/*.html" />
+        <include name="**/*.ico" />
+        <include name="**/*.jpg" />
+        <include name="**/*.js" />
+        <include name="**/*.png" />
+        <include name="**/*.txt" />
+        <include name="**/*.xml" />
+        <include name="**/*.xtm" />
+      </fileset>
+    </copy>
+    <copy todir="${out.bin}">
+
+      <fileset dir="${src}">
+        <include name="**/*.xml" />
+        <include name="**/*.properties" />
+      </fileset>
+    </copy>
+
+  </target>
+
+  <target name="jar" depends="write" description="Archive 'jar' content into 'gap-data-V*.jar'.  See 'version'.">
+
+    <archive.cleanly/>
+
+    <property name="jar.file.name" value="${ant.project.name}-${this.version}.jar"/>
+
+    <archive target="${jar.file.name}" bin="${out}/WEB-INF/classes" manifest="${src}/gap/data/Manifest.mf">
+      <pack>
+        <zipfileset src="${toString:jar.pack.path.hapax}"/>
+        <zipfileset src="${toString:jar.pack.path.appengine}"/>
+        <zipfileset src="${toString:jar.pack.path.joda-time}"/>
+        <fileset dir="${odl}">
+          <include name="**/*.xtm" />
+        </fileset>
+      </pack>
+    </archive>
+
+  </target>
+
+  <target name="odl" depends="write" description="Generate 'src' files from 'odl' files.">
+
+    <odl-write classpath.id="lib.path"/>
+
+  </target>
+
+  <target name="compile" depends="version,init" description="Compile code from 'src' to 'bin'.">
+
+    <compile src="${src}" ver="${ver.src}" bin="${out.bin}" classpath.id="lib.path"/>
+
+  </target>
+
+  <target name="doc" depends="version" description="Package javadocs.">
+    <mkdir dir="${doc}"/>
+
+    <javadoc packagenames="ps.*" destdir="${doc}" author="true" version="true" use="true">
+
+      <classpath refid="lib.path"/>
+
+      <packageset dir="${src}" includes="**/*"/>
+    </javadoc>
+
+    <zip destfile="${ant.project.name}-${this.version}-doc.zip" basedir="doc"/>
+  </target>
+
+  <target name="version" description="Report current version.">
+    <version/>
+  </target>
+
+  <target name="build" description="Increment version build number and report result.">
+    <version-build/>
+    <version/>
+  </target>
+
+  <target name="major" description="Increment version major number and report result.">
+    <version-major/>
+    <version/>
+  </target>
+
+  <target name="minor" description="Increment version minor number and report result.">
+    <version-minor/>
+    <version/>
+  </target>
+
+  <target name="sign" depends="jar" description="Calls 'jar' then signs it to produce 'gap-data-X.Y.Z.jar.asc'.">
+    <exec executable="gpg">
+      <arg line=" --armor --output ${jar.file.name}.asc --detach-sig ${jar.file.name} "/>
+    </exec>
+  </target>
+
+
+  <target name="release" depends="version" description="Upload 'jar' to Downloads.  Use 'featured', 'beta' or 'alpha'.">
+
+    <taskdef classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask" classpath="ant/ant-googlecode.jar" name="gcupload"/>
+
+    <property file="build.credentials" />
+    <fail unless="build.username" message="Missing property 'build.username' from file 'build.credentials'."/>
+    <fail unless="build.password" message="Missing property 'build.password' from file 'build.credentials'."/>
+
+    <property name="release.labels.jar" value="Type-Package, OpSys-All, Featured"/>
+    <property name="release.labels.hash" value="Type-Hash, OpSys-All"/>
+
+    <gcupload 
+            username="${build.username}" 
+            password="${build.password}" 
+         projectname="${ant.project.name}" 
+            filename="${jar.file.name}" 
+      targetfilename="${jar.file.name}"
+             summary="Version ${this.version} of ${ant.project.name}"
+              labels="${release.labels.jar}" />
+    <gcupload 
+            username="${build.username}" 
+            password="${build.password}" 
+         projectname="${ant.project.name}" 
+            filename="${jar.file.name}.md5" 
+      targetfilename="${jar.file.name}.md5"
+             summary="Version ${this.version} of ${ant.project.name}"
+              labels="${release.labels.hash}" />
+  </target>
+  <target name="featured" description="Define labels for a Featured release, call 'release'.">
+    <property name="release.labels.jar" value="Featured, Type-Package, OpSys-All"/>
+    <antcall target="release"/>
+  </target>
+  <target name="alpha" description="Define labels for an Alpha release, call 'release'.">
+    <property name="release.labels.jar" value="Alpha, Type-Package, OpSys-All"/>
+    <antcall target="release"/>
+  </target>
+  <target name="beta" description="Define labels for a Beta release, call 'release'.">
+    <property name="release.labels.jar" value="Beta, Type-Package, OpSys-All"/>
+    <antcall target="release"/>
+  </target>
+
+  <target name="update" depends="write" description="G.App Engine upload.">
+    <appcfg action="update" war="${out}" />
+  </target>
+
+  <target name="update_indexes" depends="write" description="G.App Engine datastore index configuration upload.">
+    <appcfg action="update_indexes" war="${out}" />
+  </target>
+
+  <target name="rollback" depends="write" description="G.App Engine rolls back of interrupted 'update'.">
+    <appcfg action="rollback" war="${out}" />
+  </target>
+
+  <target name="request_logs" description="G.App Engine download log data.">
+    <appcfg action="request_logs" war="${out}">
+      <options>
+        <arg value="--num_days=5"/>
+      </options>
+      <args>
+        <arg value="logs.txt"/>
+      </args>
+    </appcfg>
+  </target>
+
+</project>
