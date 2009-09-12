@@ -1,0 +1,8 @@
+#summary Object Description Language (ODL)
+#labels Featured,Documentation
+
+= Introduction =
+
+The Object Description Language (ODL) is a data model for driving sourcecode generation.  
+
+The GAP ODL process employs a [http://code.google.com/p/hapax2 Hapax2] template for transforming the ODL model into Java Programming Language (JPL) sourcecode. 
