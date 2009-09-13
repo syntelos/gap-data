@@ -1,5 +1,5 @@
 #summary Object Description Language (ODL)
-#labels Featured,Documentation
+#labels Documentation
 
 = Introduction =
 
