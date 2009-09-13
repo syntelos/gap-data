@@ -175,13 +175,13 @@
 
   </target>
 
-  <target name="odl" depends="write" description="Generate 'src' files from 'odl' files.">
+  <target name="odl" description="Generate 'src/pkg/*.java' files from 'odl/pkg/*.odl' files.">
 
     <odl-write classpath.id="lib.path"/>
 
   </target>
 
-  <target name="compile" depends="version,init" description="Compile code from 'src' to 'bin'.">
+  <target name="compile" depends="version,init" description="Compile code from 'src' to bin.">
 
     <compile src="${src}" ver="${ver.src}" bin="${out.bin}" classpath.id="lib.path"/>
 
