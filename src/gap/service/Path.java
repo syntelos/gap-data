@@ -155,16 +155,19 @@ public final class Path
     }
 
 
-    private final String servlet;
+    private final String servlet, full, sub;
     private final String[] components;
     private final int size;
 
 
     public Path(HttpServletRequest req){
         super();
-        this.servlet = Clean(req.getServletPath());
+        String servlet = req.getServletPath();
+        this.servlet = Clean(servlet);
         String path = req.getPathInfo();
+        this.sub = path;
         if (null != path){
+            this.full = (servlet+path);
             if ("/".equals(path)){
                 this.components = null;
                 this.size = 0;
@@ -181,6 +184,7 @@ public final class Path
             }
         }
         else {
+            this.full = servlet;
             this.components = null;
             this.size = 0;
         }
@@ -205,6 +209,12 @@ public final class Path
     }
     public String getServlet(){
         return this.servlet;
+    }
+    public String getFull(){
+        return this.full;
+    }
+    public String getSub(){
+        return this.sub;
     }
     public String getSource(){
         int idx = 0;
