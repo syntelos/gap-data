@@ -200,12 +200,48 @@ public final class Path
     public int size(){
         return this.size;
     }
+    /**
+     * @return Subcomponent for index or null for not found.
+     */
     public String get(int idx){
         String[] components = this.components;
         if (null != components && idx < components.length)
             return components[idx];
         else
             return null;
+    }
+    /**
+     * @return Subcomponent for index zero equals string (case sensitive).
+     */
+    public boolean isSub0(String string){
+        String sub0 = this.get(0);
+        return (null != sub0 && sub0.equals(string));
+    }
+    /**
+     * @return Subcomponent for index one equals string (case sensitive).
+     */
+    public boolean isSub1(String string){
+        String sub1 = this.get(1);
+        return (null != sub1 && sub1.equals(string));
+    }
+    /**
+     * @return Subcomponent for index two equals string (case sensitive).
+     */
+    public boolean isSub2(String string){
+        String sub2 = this.get(2);
+        return (null != sub2 && sub2.equals(string));
+    }
+    public boolean isSub3(String string){
+        String sub3 = this.get(3);
+        return (null != sub3 && sub3.equals(string));
+    }
+    public boolean isSub4(String string){
+        String sub4 = this.get(4);
+        return (null != sub4 && sub4.equals(string));
+    }
+    public boolean isSub5(String string){
+        String sub5 = this.get(5);
+        return (null != sub5 && sub5.equals(string));
     }
     public String getServlet(){
         return this.servlet;
