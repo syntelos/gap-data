@@ -80,6 +80,18 @@ public final class {{=class_name}}
             throw new IllegalArgumentException();
     }
 {{/field_unique}}
+    public final static {{=class_name}} Query1(Query query){
+        if (null != query)
+            return ({{=class_name}})Store.P.Query1({{=class_name}}.class,query);
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static List QueryN(Query query, FetchOptions page){
+        if (null != query)
+            return Store.P.QueryN({{=class_name}}.class,query,page);
+        else
+            throw new IllegalArgumentException();
+    }
 
     /**
      * 
