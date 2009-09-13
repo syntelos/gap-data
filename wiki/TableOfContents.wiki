@@ -1,5 +1,5 @@
 #labels Documentation
-
- * [Language]
+ * [Usage]
+ * [Language Object Definition Language]
  * [API]
  * [Examples]
