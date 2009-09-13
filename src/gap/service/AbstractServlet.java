@@ -49,19 +49,22 @@ public abstract class AbstractServlet
 
 
     protected final Logon logon(HttpServletRequest req, Accept accept){
-        Principal principal = req.getUserPrincipal();
-        String uri = this.getUri(accept,req);
-        TemplateDictionary dict = Templates.CreateDictionary();
-        return this.logon(principal,uri,dict);
+        Logon logon = Logon.Get();
+        if (null != logon)
+            return logon;
+        else {
+            Principal principal = req.getUserPrincipal();
+            String uri = this.getUri(accept,req);
+            TemplateDictionary dict = Templates.CreateDictionary();
+            return this.logon(principal,uri,dict);
+        }
     }
-    protected final Logon logon(Principal principal, String uri, TemplateDictionary dict){
-        UserService service = this.getUserService();
+    private final Logon logon(Principal principal, String uri, TemplateDictionary dict){
+        UserService service = UserServiceFactory.getUserService();
         Logon logon = new Logon(principal,uri,dict,service);
         return Logon.Enter(logon);
     }
-    protected final UserService getUserService(){
-        return UserServiceFactory.getUserService();
-    }
+
     protected final String getUri(Accept accept, HttpServletRequest req){
         String uri = req.getParameter("uri");
         if (null != uri)
