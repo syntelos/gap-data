@@ -8,4 +8,12 @@ The checkout, configure, build, and update usage needs to be developed.  At the 
 
 The plan, visible in the codebase, is for the ODL description to be augmented in future by a usage starting from a plain old java bean marked up with "gap.data" annotations.  The same model expressed in ODL will be able to be expressed in JPL in the bean.
 
-In this case, the bean will be rewritten to extend a superclass that is the current generated code.
+In this case, the bean will be rewritten in the compilation phase to extend a superclass that is the current generated code.  
+
+Programming from the user bean will access all of the functions and methods currently available, and to be developed.
+
+= Persistent Bean Features =
+
+Currently dysfunctional but to be corrected in the codebase is support for collections methods for bean fields.
+
+To be developed are list/set and map by reference collection classes.  This effort will solve the tag problem for a list of tags on a bean.
