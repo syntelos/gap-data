@@ -14,6 +14,4 @@ Programming from the user bean will access all of the functions and methods curr
 
 = Persistent Bean Features =
 
-Currently dysfunctional but to be corrected in the codebase is support for collections methods for bean fields.
-
 To be developed are list/set and map by reference collection classes.  This effort will solve the tag problem for a list of tags on a bean.
