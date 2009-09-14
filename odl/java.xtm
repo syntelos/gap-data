@@ -109,6 +109,12 @@ public final class {{=class_name}}
     }
 {{/field_hash_unique}}
 {{#field_unique}}
+    public final static Key KeyFor(String {{=field_name}}){
+        return KeyFactory.createKey(KIND,id);
+    }
+    public final static Key KeyFor(Key ancestor, String {{=field_name}}){
+        return KeyFactory.createKey(ancestor,KIND,id);
+    }
     public final static {{=class_name}} For{{=field_nameCamel}}(Key ancestor, String {{=field_name}}){
         if (null != ancestor && ancestor.isComplete() && null != {{=field_name}}){
             String ckey = (ToString(ancestor)+'/'+{{=field_name}});
