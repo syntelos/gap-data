@@ -46,12 +46,9 @@ public final class Remote
             ufs = URLFetchServiceFactory.getURLFetchService();
             UFS.set(ufs);
         }
-        else
-            /*
-             * A thread calling into enter twice has a bug: a
-             * premature exit will be incorrect.
-             */
-            throw new IllegalStateException();
+        /*
+         * Valid reentry is possible in some error handling schemes
+         */
     }
     static void Exit(){
         URLFetchService ufs = UFS.get();

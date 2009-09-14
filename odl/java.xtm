@@ -354,24 +354,7 @@ public final class {{=class_name}}
 
     /*
      * Data addressing supports
-     */
-{{#rfield}}
-    public Key createKeyFor{{=field_nameCamel}}({{=field_class}} childRelation){
-        if (null != childRelation){
-            Key thisKey = this.getClassFieldKeyValue();
-            if (null != thisKey){
-                String id = childRelation.getClassFieldUnique();
-                if (null != id)
-                    return {{=field_class}}.KeyFor(thisKey,id);
-                else
-                    throw new IllegalStateException("Child instance incomplete, has no ID.");
-            }
-            else
-                throw new IllegalStateException("This key unavailable, instance not persisted.");
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+     */{{#rfield}}
     public Query createQueryFor{{=field_nameCamel}}(){
         Key thisKey = this.getClassFieldKeyValue();
         if (null != thisKey)
