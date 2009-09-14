@@ -28,6 +28,7 @@ import com.google.appengine.api.datastore.ShortBlob;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The gap data object handled by the {@link Store} API for memcache
@@ -52,10 +53,6 @@ import java.util.List;
  * queries, while all other field types are not.
  * 
  * 
- * @see oso.data.Activity
- * @see oso.data.Image
- * @see oso.data.Message
- * @see oso.data.MessageCollection
  * @see oso.data.Person
  * @author jdp
  */
@@ -63,18 +60,72 @@ public abstract class BigTable
     extends java.lang.Object
     implements java.io.Serializable
 {
+    protected final static Set<String> Imports = new java.util.HashSet<String>();
 
+    protected final static void Register(Class dc){
+        String pkg = dc.getPackage().getName();
+        if (null != pkg)
+            Imports.add(pkg);
+        else
+            throw new IllegalStateException(dc.getName());
+    }
+    public static Class Find(String kind)
+        throws ClassNotFoundException
+    {
+        for (String pkg : Imports){
+            String classname = (pkg+'.'+kind);
+            try {
+                return Class.forName(classname);
+            }
+            catch (ClassNotFoundException exc){
+            }
+        }
+        throw new ClassNotFoundException(kind);
+    }
+
+    /**
+     * An independent "key to string" ensures that any upstream code
+     * changes won't kill our database.
+     */
+    public final static String ToString(Key key){
+        if (null != key){
+            StringBuilder strbuf = new StringBuilder();
+            ToString(key,strbuf,key);
+            return strbuf.toString();
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    private final static void ToString(Key key, StringBuilder strbuf, Key k){
+
+        Key p = k.getParent();
+        if (null != p)
+            ToString(key,strbuf,p);
+
+        strbuf.append('/');
+        strbuf.append(k.getKind());
+        strbuf.append(':');
+        String n = k.getName();
+        if (null != n && 0 != n.length())
+            strbuf.append(n);
+        else {
+            long num = k.getId();
+            if (0L != num)
+                strbuf.append(String.valueOf(num));
+            else
+                throw new IllegalArgumentException("Key is incomplete '"+key+"'.");
+        }
+    }
     public final static BigTable From(Entity entity){
         if (null != entity){
             String kind = entity.getKind();
             if (null != kind){
-                String classname = "oso.data."+kind;
                 try {
-                    Class table = Class.forName(classname);
+                    Class table = Find(kind);
                     return From(table,entity);
                 }
                 catch (java.lang.ClassNotFoundException exc){
-                    throw new java.lang.RuntimeException(classname,exc);
+                    throw new java.lang.RuntimeException(kind,exc);
                 }
             }
             else
@@ -150,6 +201,9 @@ public abstract class BigTable
         return this;
     }
 
+    /*
+     * Data binding supports
+     */
     /**
      * A static value naming the datastore class name, e.g., "Person".
      */
@@ -197,7 +251,7 @@ public abstract class BigTable
         if (null == datastoreEntity){
             String kind = this.getClassKind();
             if (null != kind){
-                String keyf = this.getClassFieldKeyName();
+                Key keyf = this.getClassFieldKeyValue();
                 if (null != keyf)
                     datastoreEntity = new Entity(kind,keyf);
                 else
@@ -210,30 +264,8 @@ public abstract class BigTable
         }
         return datastoreEntity;
     }
-    public final Entity getDatastoreEntity(Key parent){
-        Entity datastoreEntity = this.datastoreEntity;
-        if (null == datastoreEntity){
-            String kind = this.getClassKind();
-            if (null != kind){
-                String keyf = this.getClassFieldKeyName();
-                if (null != keyf)
-                    datastoreEntity = new Entity(kind,keyf,parent);
-                else
-                    datastoreEntity = new Entity(kind,parent);
-
-                this.datastoreEntity = datastoreEntity;
-            }
-            else
-                throw new IllegalStateException("Missing class kind.");
-        }
-        return datastoreEntity;
-    }
     public final Entity fillToDatastoreEntity(){
         return this.fillTo(this.getDatastoreEntity());
-    }
-    public final Entity fillToDatastoreEntity(Key parent){
-        Entity datastoreEntity = this.getDatastoreEntity(parent);
-        return this.fillTo(datastoreEntity);
     }
     public final Entity fillFromDatastoreEntity(Entity entity){
         return (this.datastoreEntity = this.fillFrom(entity));

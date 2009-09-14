@@ -19,18 +19,64 @@ import javax.annotation.Generated;
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
  * 
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-13T16:36:16.872Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-14T20:23:00.363Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
 
     private final static long serialVersionUID = 1;
 
+    public final static String KIND = "Person";
 
+    static {
+        Register(Person.class);
+    }
+
+
+    public final static Key KeyIdFor(String logonId){
+        String id = IdFor( logonId);
+        return KeyFactory.createKey(KIND,id);
+    }
+    public final static Key KeyIdFor(Key ancestor, String logonId){
+        String id = IdFor(ancestor, logonId);
+        return KeyFactory.createKey(ancestor,KIND,id);
+    }
+    public final static Query CreateQueryFor(){
+        return new Query(KIND);
+    }
+    public final static Query CreateQueryFor(Key ancestor){
+        return new Query(KIND,ancestor);
+    }
+    public final static String IdFor(Key ancestor, String logonId){
+        if (ancestor.isComplete() && null != logonId){
+            String logonIdString = logonId;
+            return gap.data.Hash.For(ToString(ancestor)+'/'+logonIdString);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public final static String IdFor(String logonId){
         if (null != logonId){
             String logonIdString = logonId;
             return gap.data.Hash.For(logonIdString);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static Person ForLogonId(Key ancestor, String logonId){
+        if (null != logonId){
+            String id = IdFor(ancestor,  logonId);
+            Person person = (Person)Store.C.Get(id);
+            if (null != person)
+                return person;
+            else {
+                Query query = new Query("Person",ancestor);
+                query.addFilter("logonId",Query.FilterOperator.EQUAL,logonId);
+                person = (Person)Store.P.Query1(Person.class,query);
+                if (null != person)
+                    Store.C.Put(id,person);
+                return person;
+            }
         }
         else
             throw new IllegalArgumentException();
@@ -64,6 +110,24 @@ public final class Person
     }
 
 
+    public final static Person ForId(Key ancestor, String id){
+        if (null != ancestor && ancestor.isComplete() && null != id){
+            String ckey = (ToString(ancestor)+'/'+id);
+            Person person = (Person)Store.C.Get(ckey);
+            if (null != person)
+                return person;
+            else {
+                Query query = new Query("Person",ancestor);
+                query.addFilter("id",Query.FilterOperator.EQUAL,id);
+                person = (Person)Store.P.Query1(Person.class,query);
+                if (null != person)
+                    Store.C.Put(ckey,person);
+                return person;
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public final static Person ForId(String id){
         if (null != id){
             Person person = (Person)Store.C.Get(id);
@@ -194,6 +258,16 @@ public final class Person
         this.setLogonId(logonId);
         String id = IdFor( logonId);
         this.setId(id);
+        Key key = KeyFactory.createKey(KIND,id);
+        this.setKey(key);
+    }
+    public Person(Key ancestor, String logonId) {
+        super();
+        this.setLogonId(logonId);
+        String id = IdFor(ancestor,  logonId);
+        this.setId(id);
+        Key key = KeyFactory.createKey(ancestor,KIND,id);
+        this.setKey(key);
     }
 
 
@@ -320,10 +394,15 @@ public final class Person
 
 
     /*
+     * Data addressing supports
+     */
+
+
+    /*
      * Data binding supports
      */
     public String getClassKind(){
-        return "Person";
+        return KIND;
     }
     public String getClassFieldUnique(){
         return "id";

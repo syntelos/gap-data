@@ -39,7 +39,7 @@ public final class Field
 
     public final java.lang.Class typeClass;
 
-    public final boolean indexed, unique, hash, persistent, key;
+    public final boolean indexed, unique, hash, persistent, key, relation;
 
 
     public Field(Reader reader, Package pkg, List<Import> imports)
@@ -58,17 +58,36 @@ public final class Field
                 switch (strtok.countTokens()){
 
                 case 2:
-                    this.qualifier = null;
-                    this.typeName = strtok.nextToken();
-                    this.typeParameters = SimpleTypeParameters(this.typeName);
-                    this.name = strtok.nextToken();
-                    this.nameCamel = Camel(this.name);
-                    this.typeClass = Import.Find(pkg,imports,this.typeName);
-                    this.indexed = gap.data.BigTable.IsIndexed(this.typeClass);
-                    this.unique = false;
-                    this.hash = false;
-                    this.persistent = true;
-                    this.key = (null != this.typeClass && Key.class.equals(this.typeClass));
+
+                    String s = strtok.nextToken();
+                    if ("*child".equals(s)){
+                        this.qualifier = s;
+                        this.indexed = false;
+                        this.unique = false;
+                        this.hash = false;
+                        this.persistent = false;
+                        this.relation = true;
+                        this.typeName = strtok.nextToken();
+                        this.typeParameters = SimpleTypeParameters(this.typeName);
+                        this.name = Class.Decamel(this.typeName);
+                        this.nameCamel = Camel(this.name);
+                        this.typeClass = Import.Find(pkg,imports,this.typeName);
+                        this.key = false;
+                    }
+                    else {
+                        this.qualifier = null;
+                        this.typeName = s;
+                        this.typeParameters = SimpleTypeParameters(this.typeName);
+                        this.name = strtok.nextToken();
+                        this.nameCamel = Camel(this.name);
+                        this.typeClass = Import.Find(pkg,imports,this.typeName);
+                        this.indexed = gap.data.BigTable.IsIndexed(this.typeClass);
+                        this.unique = false;
+                        this.hash = false;
+                        this.persistent = true;
+                        this.key = (null != this.typeClass && Key.class.equals(this.typeClass));
+                        this.relation = false;
+                    }
                     return;
 
                 case 3:
@@ -86,6 +105,7 @@ public final class Field
                                 this.unique = true;
                                 this.hash = false;
                                 this.persistent = true;
+                                this.relation = false;
                             }
                             else
                                 throw new Syntax("Unique field is not an indexed type '"+line+"'.");
@@ -94,11 +114,19 @@ public final class Field
                             this.unique = true;
                             this.hash = true;
                             this.persistent = true;
+                            this.relation = false;
                         }
                         else if ("*transient".equalsIgnoreCase(this.qualifier)){
                             this.unique = false;
                             this.hash = false;
                             this.persistent = false;
+                            this.relation = false;
+                        }
+                        else if ("*child".equalsIgnoreCase(this.qualifier)){
+                            this.unique = false;
+                            this.hash = false;
+                            this.persistent = false;
+                            this.relation = true;
                         }
                         else 
                             throw new Syntax("Unrecognized field field qualifier in '"+line+"'.");
@@ -107,6 +135,7 @@ public final class Field
                         this.unique = false;
                         this.hash = false;
                         this.persistent = true;
+                        this.relation = false;
                     }
 
                     if (this.key && (!this.persistent))
@@ -199,6 +228,20 @@ public final class Field
             return java.util.Map.class.isAssignableFrom(typeClass);
         else
             return false;
+    }
+    public boolean isTypeClassBigTable(){
+        java.lang.Class typeClass = this.typeClass;
+        if (null != typeClass)
+            return gap.data.BigTable.class.isAssignableFrom(typeClass);
+        else
+            return false;
+    }
+    public boolean isNotTypeClassBigTable(){
+        java.lang.Class typeClass = this.typeClass;
+        if (null != typeClass)
+            return (!gap.data.BigTable.class.isAssignableFrom(typeClass));
+        else
+            return true;
     }
 
     public final static String Camel(String string){
