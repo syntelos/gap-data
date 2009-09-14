@@ -163,12 +163,9 @@ public final class Store
                 ds = MemcacheServiceFactory.getMemcacheService();
                 PTL.set(ds);
             }
-            else
-                /*
-                 * A thread calling into enter twice has a bug: a
-                 * premature exit will be incorrect.
-                 */
-                throw new IllegalStateException();
+            /*
+             * Valid reentry is possible in some error handling schemes
+             */
         }
         static void Exit(){
             MemcacheService ds = PTL.get();
