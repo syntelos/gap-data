@@ -180,6 +180,17 @@ public final class Main
                             throw new Syntax("Model has more than one 'Key' field.");
                     }
                 }
+                else if (field.relation){
+
+                    if (field.hasTypeClass() && field.isNotTypeClassBigTable())
+                        throw new Syntax("Relation field '"+field.name+"' is not a subclass of 'gap.data.BigTable'.");
+
+                    TemplateDictionary dataField = data.addSection("rfield");
+
+                    dataField.putVariable("field_class",field.typeName);
+                    dataField.putVariable("field_name",field.name);
+                    dataField.putVariable("field_nameCamel",field.nameCamel);
+                }
                 else {
 
                     TemplateDictionary dataField = data.addSection("tfield");
