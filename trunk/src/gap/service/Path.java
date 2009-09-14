@@ -243,6 +243,10 @@ public final class Path
         String sub5 = this.get(5);
         return (null != sub5 && sub5.equals(string));
     }
+    public boolean isServlet(String string){
+        String servlet = this.servlet;
+        return (null != servlet && servlet.equals(string));
+    }
     public String getServlet(){
         return this.servlet;
     }
