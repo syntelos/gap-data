@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
  * 
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-14T20:23:00.363Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-14T21:24:34.397Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
@@ -110,6 +110,12 @@ public final class Person
     }
 
 
+    public final static Key KeyFor(String id){
+        return KeyFactory.createKey(KIND,id);
+    }
+    public final static Key KeyFor(Key ancestor, String id){
+        return KeyFactory.createKey(ancestor,KIND,id);
+    }
     public final static Person ForId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
             String ckey = (ToString(ancestor)+'/'+id);
