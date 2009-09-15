@@ -65,8 +65,11 @@ public abstract class BigTable
 
     protected final static void Register(Class dc){
         String pkg = dc.getPackage().getName();
-        if (null != pkg)
-            Imports.add(pkg);
+        if (null != pkg){
+            synchronized(Imports){
+                Imports.add(pkg);
+            }
+        }
         else
             throw new IllegalStateException(dc.getName());
     }
@@ -254,9 +257,20 @@ public abstract class BigTable
             if (null != kind){
                 Key key = this.getClassFieldKeyValue();
                 if (null != key){
-                    //                     datastoreEntity = Store.P.Get().get(key);
-                    //                     if (null == datastoreEntity)
-                    datastoreEntity = new Entity(kind,key);
+                    /*
+                     * Entity for object from memcache
+                     * 
+                     * Key.name identity code needs to be aware that
+                     * the datastore key can have multiple key.id's
+                     * for a key.name.
+                     */
+                    try {
+                        datastoreEntity = Store.P.Get().get(key);
+                        this.defineKeyFrom(datastoreEntity);
+                    }
+                    catch (com.google.appengine.api.datastore.EntityNotFoundException exc){
+                        datastoreEntity = new Entity(kind,key);
+                    }
                 }
                 else
                     throw new IllegalStateException("Missing key field value.");
