@@ -117,7 +117,13 @@ public final class Store
             DatastoreService ds = Get();
             PreparedQuery stmt = ds.prepare(query);
 
-            Entity entity = stmt.asSingleEntity();
+            Entity entity = stmt.asSingleEntity();/* This expression requires that a key having name
+                                                   * but not id resolve to one id.
+                                                   * 
+                                                   * Key.name identity code needs to be aware that
+                                                   * the datastore key can have multiple key.id's
+                                                   * for a key.name.
+                                                   */
             if (null == entity)
                 return null;
             else {
