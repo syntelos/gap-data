@@ -281,16 +281,6 @@ public abstract class BigTable
             String fieldName = field.getFieldName();
             java.io.Serializable value = this.valueOf(field);
             if (null != value){
-                /*
-                 * The closed set of "indexed" types is highly
-                 * defined, while the open set of "unindexed" leads to
-                 * the ambiguity in the handling of the datastore Blob
-                 * type.  
-                 * 
-                 * The Blob type is accepted as both a field type and
-                 * the container of {@link Serialize Serialize'd}
-                 * field values.
-                 */
                 if (IsIndexed(value))
                     entity.setProperty(fieldName, value);
                 else {
@@ -310,23 +300,11 @@ public abstract class BigTable
 
             java.io.Serializable object = (java.io.Serializable)entity.getProperty(field.getFieldName());
             if (null != object){
-                /*
-                 * Resolving types could be done via the reflection of
-                 * the return type of the field's getter method.  
-                 * 
-                 * The process defined here is not inexpensive, but
-                 * correct in both success and failure.
-                 */
                 if (IsIndexed(object))
                     this.define(field,object);
                 else if (object instanceof Blob){
-                    try {
-                        java.io.Serializable deser = Serialize.From(field,object);
-                        this.define(field,deser);
-                    }
-                    catch (Exception exc){
-                        this.define(field,object);
-                    }
+                    java.io.Serializable deser = Serialize.From(field, ((Blob)object));
+                    this.define(field,deser);
                 }
                 else
                     this.define(field,object);

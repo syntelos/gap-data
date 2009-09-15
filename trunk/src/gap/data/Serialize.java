@@ -43,9 +43,6 @@ public final class Serialize
     /**
      * @see BigTable#fillFrom
      */
-    public final static java.io.Serializable From(Field field, Object blob){
-        return From(field, (Blob)blob);
-    }
     public final static java.io.Serializable From(Field field, Blob blob){
         if (null != blob){
             try {
