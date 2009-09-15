@@ -20,6 +20,7 @@
 package gap.data;
 
 import com.google.appengine.api.datastore.Blob;
+import com.google.appengine.api.datastore.DataTypeUtils;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Link;
@@ -255,7 +256,7 @@ public abstract class BigTable
                 if (null != keyf)
                     datastoreEntity = new Entity(kind,keyf);
                 else
-                    datastoreEntity = new Entity(kind);
+                    throw new IllegalStateException("Missing key field value.");
 
                 this.datastoreEntity = datastoreEntity;
             }
@@ -278,16 +279,17 @@ public abstract class BigTable
             java.io.Serializable value = this.valueOf(field);
             if (null != value){
                 /*
-                 * The set of types named "indexed" is highly defined,
-                 * while the set "datastore" leads to the ambiguity in
-                 * the handling of the datastore Blob type as both a
-                 * field type and the container of {@link Serialize
-                 * Serialize'd} field values.
+                 * The closed set of "indexed" types is highly
+                 * defined, while the open set of "unindexed" leads to
+                 * the ambiguity in the handling of the datastore Blob
+                 * type.  
+                 * 
+                 * The Blob type is accepted as both a field type and
+                 * the container of {@link Serialize Serialize'd}
+                 * field values.
                  */
                 if (IsIndexed(value))
                     entity.setProperty(fieldName, value);
-                else if (IsDatastore(value))
-                    entity.setUnindexedProperty(fieldName, value);
                 else {
                     Blob blob = Serialize.To(field,value);
                     entity.setUnindexedProperty(fieldName, blob);
@@ -307,9 +309,10 @@ public abstract class BigTable
             if (null != object){
                 /*
                  * Resolving types could be done via the reflection of
-                 * the return type of the field's getter method.  The
-                 * process defined here is not inexpensive, but
-                 * correct when successful.
+                 * the return type of the field's getter method.  
+                 * 
+                 * The process defined here is not inexpensive, but
+                 * correct in both success and failure.
                  */
                 if (IsIndexed(object))
                     this.define(field,object);
@@ -341,29 +344,17 @@ public abstract class BigTable
     }
 
 
-    private final static java.util.Set<Class> IndexedTypes = new java.util.HashSet<Class>();
-    static {
-        IndexedTypes.add(Boolean.class);
-        IndexedTypes.add(String.class);
-        IndexedTypes.add(Byte.class);
-        IndexedTypes.add(Short.class);
-        IndexedTypes.add(Integer.class);
-        IndexedTypes.add(Long.class);
-        IndexedTypes.add(Float.class);
-        IndexedTypes.add(Double.class);
-        IndexedTypes.add(java.util.Date.class);
-    }
     public final static boolean IsUnindexed(java.lang.Class jclass){
         if (null == jclass)
             return false;
         else
-            return (!IndexedTypes.contains(jclass));
+            return (!DataTypeUtils.isSupportedType(jclass));
     }
     public final static boolean IsIndexed(java.lang.Class jclass){
         if (null == jclass)
             return false;
         else
-            return (IndexedTypes.contains(jclass));
+            return DataTypeUtils.isSupportedType(jclass);
     }
     protected final static boolean IsUnindexed(java.io.Serializable value){
         if (null == value)
@@ -376,27 +367,6 @@ public abstract class BigTable
             return false;
         else 
             return IsIndexed(value.getClass());
-    }
-
-    private final static java.util.Set<Class> DatastoreTypes = new java.util.HashSet<Class>();
-    static {
-        DatastoreTypes.add(Blob.class);
-        DatastoreTypes.add(Key.class);
-        DatastoreTypes.add(Link.class);
-        DatastoreTypes.add(Text.class);
-        DatastoreTypes.add(ShortBlob.class);
-    }
-    public final static boolean IsDatastore(java.lang.Class jclass){
-        if (null == jclass)
-            return false;
-        else
-            return (DatastoreTypes.contains(jclass));
-    }
-    protected final static boolean IsDatastore(java.io.Serializable value){
-        if (null == value)
-            return false;
-        else 
-            return IsDatastore(value.getClass());
     }
 
 }
