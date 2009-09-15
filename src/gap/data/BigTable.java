@@ -281,9 +281,19 @@ public abstract class BigTable
             String fieldName = field.getFieldName();
             java.io.Serializable value = this.valueOf(field);
             if (null != value){
-                if (IsIndexed(value))
+                /*
+                 * Serialization strategy
+                 */
+                if (value instanceof Blob){
+
+                    Blob blob = Serialize.To(field,value);
+                    entity.setUnindexedProperty(fieldName, blob);
+                }
+                else if (IsIndexed(value))
+
                     entity.setProperty(fieldName, value);
                 else {
+
                     Blob blob = Serialize.To(field,value);
                     entity.setUnindexedProperty(fieldName, blob);
                 }
@@ -300,13 +310,14 @@ public abstract class BigTable
 
             java.io.Serializable object = (java.io.Serializable)entity.getProperty(field.getFieldName());
             if (null != object){
-                if (IsIndexed(object))
-                    this.define(field,object);
-                else if (object instanceof Blob){
+                /*
+                 * Serialization strategy
+                 */
+                if (object instanceof Blob){
                     java.io.Serializable deser = Serialize.From(field, ((Blob)object));
                     this.define(field,deser);
                 }
-                else
+                else 
                     this.define(field,object);
             }
             else
