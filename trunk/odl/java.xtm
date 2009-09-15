@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 
 /** 
  * Generated from "{{=odl_gen_odl_src}}" with "{{=odl_gen_xtm_src}}".
- * 
+ *
  */
 @Generated(value={"gap.odl.Main","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
 public final class {{=class_name}}
@@ -64,7 +64,7 @@ public final class {{=class_name}}
     }
     public final static {{=class_name}} For{{#field}}{{=field_nameCamel}}{{/field}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
-            String {{=field_unique_name}} = {{=field_unique_nameCamel}}For(ancestor, {{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            String {{=field_unique_name}} = {{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
             {{=class_name}} {{=class_nameDecamel}} = ({{=class_name}})Store.C.Get({{=field_unique_name}});
             if (null != {{=class_nameDecamel}})
                 return {{=class_nameDecamel}};
@@ -102,6 +102,15 @@ public final class {{=class_name}}
         {{=class_name}} {{=class_nameDecamel}} = For{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            {{=class_nameDecamel}} = ({{=class_name}})Store.P.Put({{=class_nameDecamel}});
+            Store.C.Put({{=class_nameDecamel}}.get{{=field_unique_nameCamel}}(),{{=class_nameDecamel}});
+        }
+        return {{=class_nameDecamel}};
+    }
+    public final static {{=class_name}} GetCreate(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+        {{=class_name}} {{=class_nameDecamel}} = For{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+        if (null == {{=class_nameDecamel}}){
+            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
             {{=class_nameDecamel}} = ({{=class_name}})Store.P.Put({{=class_nameDecamel}});
             Store.C.Put({{=class_nameDecamel}}.get{{=field_unique_nameCamel}}(),{{=class_nameDecamel}});
         }

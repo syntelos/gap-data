@@ -17,9 +17,9 @@ import javax.annotation.Generated;
 
 /** 
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
- * 
+ *
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-14T21:24:34.397Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-15T13:07:15.038Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
@@ -65,7 +65,7 @@ public final class Person
     }
     public final static Person ForLogonId(Key ancestor, String logonId){
         if (null != logonId){
-            String id = IdFor(ancestor,  logonId);
+            String id = IdFor(ancestor, logonId);
             Person person = (Person)Store.C.Get(id);
             if (null != person)
                 return person;
@@ -103,6 +103,15 @@ public final class Person
         Person person = ForLogonId( logonId);
         if (null == person){
             person = new Person( logonId);
+            person = (Person)Store.P.Put(person);
+            Store.C.Put(person.getId(),person);
+        }
+        return person;
+    }
+    public final static Person GetCreate(Key ancestor, String logonId){
+        Person person = ForLogonId(ancestor, logonId);
+        if (null == person){
+            person = new Person(ancestor, logonId);
             person = (Person)Store.P.Put(person);
             Store.C.Put(person.getId(),person);
         }
@@ -402,7 +411,6 @@ public final class Person
     /*
      * Data addressing supports
      */
-
 
     /*
      * Data binding supports
