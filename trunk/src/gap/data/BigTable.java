@@ -252,9 +252,12 @@ public abstract class BigTable
         if (null == datastoreEntity){
             String kind = this.getClassKind();
             if (null != kind){
-                Key keyf = this.getClassFieldKeyValue();
-                if (null != keyf)
-                    datastoreEntity = new Entity(kind,keyf);
+                Key key = this.getClassFieldKeyValue();
+                if (null != key){
+                    //                     datastoreEntity = Store.P.Get().get(key);
+                    //                     if (null == datastoreEntity)
+                    datastoreEntity = new Entity(kind,key);
+                }
                 else
                     throw new IllegalStateException("Missing key field value.");
 
