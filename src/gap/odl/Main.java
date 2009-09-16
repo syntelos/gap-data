@@ -243,13 +243,9 @@ public final class Main
                     dataField.putVariable("field_name",unique.name);
                     dataField.putVariable("field_nameCamel",unique.nameCamel);
                 }
-                else
-                    throw new Syntax("Model requires one or more fields qualified as '*hash-unique'.");
             }
             else if (null != uniqueHash)
                 throw new Syntax("Model requires field qualified as '*unique'.");
-            else
-                throw new Syntax("Model requires fields qualified as '*unique' and '*hash-unique'.");
 
             /*
              * Global field 'unique'
