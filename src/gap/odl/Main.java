@@ -172,6 +172,17 @@ public final class Main
                         else
                             throw new Syntax("Field '"+field.name+"' type list missing type parameter.");
                     }
+                    else if (field.isTypeClassMap()){
+                        if (field.hasTypeParameters()){
+                            TemplateDictionary field_is_map = dataField.addSection("field_is_map");
+                            String typeComponentFrom = field.getTypeParameter1();
+                            String typeComponentTo = field.getTypeParameter2();
+                            field_is_map.putVariable("field_map_component_from",typeComponentFrom);
+                            field_is_map.putVariable("field_map_component_to",typeComponentTo);
+                        }
+                        else
+                            throw new Syntax("Field '"+field.name+"' type map missing type parameter.");
+                    }
 
                     if (field.key){
                         if (null == key)

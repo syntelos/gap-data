@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-15T13:07:15.038Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-16T15:04:14.059Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
