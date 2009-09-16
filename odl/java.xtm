@@ -275,12 +275,27 @@ public final class {{=class_name}}
     public boolean hasNot{{=field_nameCamel}}(){
         return (null == this.{{=field_name}});
     }
+    public boolean drop{{=field_nameCamel}}(){
+        if (null != this.{{=field_name}}){
+            this.{{=field_name}} = null;
+            return true;
+        }
+        else
+            return false;
+    }
     public {{=field_class}} get{{=field_nameCamel}}(){
         return this.{{=field_name}};
     }
     public void set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         this.{{=field_name}} = {{=field_name}};
     }{{#field_is_list}}
+    public int size{{=field_nameCamel}}(){
+        {{=field_class}} list = this.{{=field_name}};
+        if (null != list)
+            return list.size();
+        else
+            return 0;
+    }
     public boolean isEmpty{{=field_nameCamel}}(){
         {{=field_class}} list = this.{{=field_name}};
         if (null != list)
@@ -344,6 +359,13 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }{{/field_is_list}}{{#field_is_map}}
+    public int size{{=field_nameCamel}}(){
+        {{=field_class}} map = this.{{=field_name}};
+        if (null != map)
+            return map.size();
+        else
+            return 0;
+    }
     public boolean isEmpty{{=field_nameCamel}}(){
         {{=field_class}} map = this.{{=field_name}};
         if (null != map)
@@ -380,11 +402,11 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public {{=field_map_component_to}} get{{=field_nameCamel}}({{=field_map_component_from}} key){
-        if (null != filter){
+    public {{=field_map_component_to}} get{{=field_nameCamel}}({{=field_map_component_from}} {{=field_name}}Key){
+        if (null != {{=field_name}}Key){
             {{=field_class}} map = this.{{=field_name}};
             if (null != map)
-                return map.get(key);
+                return map.get({{=field_name}}Key);
             else
                 return null;
         }

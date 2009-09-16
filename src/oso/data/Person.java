@@ -12,6 +12,8 @@ import com.google.appengine.api.datastore.*;
 
 import java.util.*;
 
+import java.io.Serializable;
+
 
 import javax.annotation.Generated;
 
@@ -19,12 +21,12 @@ import javax.annotation.Generated;
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-16T15:04:14.059Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-16T15:39:05.012Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
 
-    private final static long serialVersionUID = 1;
+    private final static long serialVersionUID = 2;
 
     public final static String KIND = "Person";
 
@@ -184,7 +186,8 @@ public final class Person
         Key("key"),
         Id("id"),
         LogonId("logonId"),
-        Roles("roles");
+        Roles("roles"),
+        Attributes("attributes");
 
 
         private final static Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -215,6 +218,8 @@ public final class Person
                 return instance.getLogonId();
             case Roles:
                 return instance.getRoles();
+            case Attributes:
+                return instance.getAttributes();
             default:
                 throw new IllegalArgumentException(field.toString()+" in Person");
             }
@@ -233,6 +238,9 @@ public final class Person
                 return;
             case Roles:
                 instance.setRoles( (List<String>)value);
+                return;
+            case Attributes:
+                instance.setAttributes( (Map<String,Serializable>)value);
                 return;
             default:
                 throw new IllegalArgumentException(field.toString()+" in Person");
@@ -261,6 +269,7 @@ public final class Person
     private volatile String id;    // *unique
     private volatile String logonId;    // *hash-unique
     private volatile List<String> roles;    
+    private volatile Map<String,Serializable> attributes;    
 
 
 
@@ -296,6 +305,14 @@ public final class Person
     public boolean hasNotKey(){
         return (null == this.key);
     }
+    public boolean dropKey(){
+        if (null != this.key){
+            this.key = null;
+            return true;
+        }
+        else
+            return false;
+    }
     public Key getKey(){
         return this.key;
     }
@@ -308,6 +325,14 @@ public final class Person
     }
     public boolean hasNotId(){
         return (null == this.id);
+    }
+    public boolean dropId(){
+        if (null != this.id){
+            this.id = null;
+            return true;
+        }
+        else
+            return false;
     }
     public String getId(){
         return this.id;
@@ -322,6 +347,14 @@ public final class Person
     public boolean hasNotLogonId(){
         return (null == this.logonId);
     }
+    public boolean dropLogonId(){
+        if (null != this.logonId){
+            this.logonId = null;
+            return true;
+        }
+        else
+            return false;
+    }
     public String getLogonId(){
         return this.logonId;
     }
@@ -335,11 +368,26 @@ public final class Person
     public boolean hasNotRoles(){
         return (null == this.roles);
     }
+    public boolean dropRoles(){
+        if (null != this.roles){
+            this.roles = null;
+            return true;
+        }
+        else
+            return false;
+    }
     public List<String> getRoles(){
         return this.roles;
     }
     public void setRoles(List<String> roles){
         this.roles = roles;
+    }
+    public int sizeRoles(){
+        List<String> list = this.roles;
+        if (null != list)
+            return list.size();
+        else
+            return 0;
     }
     public boolean isEmptyRoles(){
         List<String> list = this.roles;
@@ -400,6 +448,104 @@ public final class Person
             List<String> list = this.roles;
             if (null != list)
                 list.remove(rolesItem);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+
+    public boolean hasAttributes(){
+        return (null != this.attributes);
+    }
+    public boolean hasNotAttributes(){
+        return (null == this.attributes);
+    }
+    public boolean dropAttributes(){
+        if (null != this.attributes){
+            this.attributes = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public Map<String,Serializable> getAttributes(){
+        return this.attributes;
+    }
+    public void setAttributes(Map<String,Serializable> attributes){
+        this.attributes = attributes;
+    }
+    public int sizeAttributes(){
+        Map<String,Serializable> map = this.attributes;
+        if (null != map)
+            return map.size();
+        else
+            return 0;
+    }
+    public boolean isEmptyAttributes(){
+        Map<String,Serializable> map = this.attributes;
+        if (null != map)
+            return map.isEmpty();
+        else
+            return true;
+    }
+    public boolean isNotEmptyAttributes(){
+        Map<String,Serializable> map = this.attributes;
+        if (null != map)
+            return (!map.isEmpty());
+        else
+            return false;
+    }
+    public boolean containsKeyAttributes(String attributesKey){
+        if (null != attributesKey){
+            Map<String,Serializable> map = this.attributes;
+            if (null != map)
+                return map.containsKey(attributesKey);
+            else
+                return false;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public boolean containsValueAttributes(Serializable attributesValue){
+        if (null != attributesValue){
+            Map<String,Serializable> map = this.attributes;
+            if (null != map)
+                return map.containsValue(attributesValue);
+            else
+                return false;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public Serializable getAttributes(String attributesKey){
+        if (null != attributesKey){
+            Map<String,Serializable> map = this.attributes;
+            if (null != map)
+                return map.get(attributesKey);
+            else
+                return null;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public void putAttributes(String attributesKey, Serializable attributesValue){
+        if (null != attributesKey && null != attributesValue){
+            Map<String,Serializable> map = this.attributes;
+            if (null == map){
+                map = new java.util.HashMap<String,Serializable>();
+                this.attributes = map;
+            }
+            map.put(attributesKey, attributesValue);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public Serializable removeAttributes(String attributesKey){
+        if (null != attributesKey){
+            Map<String,Serializable> map = this.attributes;
+            if (null != map)
+                return map.remove(attributesKey);
+            else
+                return null;
         }
         else
             throw new IllegalArgumentException();

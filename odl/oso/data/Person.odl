@@ -2,10 +2,12 @@ package oso.data
 
 import com.google.appengine.api.datastore.*
 import java.util.*
+import java.io.Serializable
 
-class Person version 1 {
+class Person version 2 {
     Key key
     *unique String id
     *hash-unique String logonId
     List<String> roles
+    Map<String,Serializable> attributes
 }
