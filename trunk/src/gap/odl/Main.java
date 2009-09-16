@@ -176,8 +176,6 @@ public final class Main
                     if (field.key){
                         if (null == key)
                             key = field;
-                        else
-                            throw new Syntax("Model has more than one 'Key' field.");
                     }
                 }
                 else if (field.relation){
