@@ -343,7 +343,77 @@ public final class {{=class_name}}
         }
         else
             throw new IllegalArgumentException();
-    }{{/field_is_list}}
+    }{{/field_is_list}}{{#field_is_map}}
+    public boolean isEmpty{{=field_nameCamel}}(){
+        {{=field_class}} map = this.{{=field_name}};
+        if (null != map)
+            return map.isEmpty();
+        else
+            return true;
+    }
+    public boolean isNotEmpty{{=field_nameCamel}}(){
+        {{=field_class}} map = this.{{=field_name}};
+        if (null != map)
+            return (!map.isEmpty());
+        else
+            return false;
+    }
+    public boolean containsKey{{=field_nameCamel}}({{=field_map_component_from}} {{=field_name}}Key){
+        if (null != {{=field_name}}Key){
+            {{=field_class}} map = this.{{=field_name}};
+            if (null != map)
+                return map.containsKey({{=field_name}}Key);
+            else
+                return false;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public boolean containsValue{{=field_nameCamel}}({{=field_map_component_to}} {{=field_name}}Value){
+        if (null != {{=field_name}}Value){
+            {{=field_class}} map = this.{{=field_name}};
+            if (null != map)
+                return map.containsValue({{=field_name}}Value);
+            else
+                return false;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public {{=field_map_component_to}} get{{=field_nameCamel}}({{=field_map_component_from}} key){
+        if (null != filter){
+            {{=field_class}} map = this.{{=field_name}};
+            if (null != map)
+                return map.get(key);
+            else
+                return null;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public void put{{=field_nameCamel}}({{=field_map_component_from}} {{=field_name}}Key, {{=field_map_component_to}} {{=field_name}}Value){
+        if (null != {{=field_name}}Key && null != {{=field_name}}Value){
+            {{=field_class}} map = this.{{=field_name}};
+            if (null == map){
+                map = new java.util.HashMap<{{=field_map_component_from}},{{=field_map_component_to}}>();
+                this.{{=field_name}} = map;
+            }
+            map.put({{=field_name}}Key, {{=field_name}}Value);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public {{=field_map_component_to}} remove{{=field_nameCamel}}({{=field_map_component_from}} {{=field_name}}Key){
+        if (null != {{=field_name}}Key){
+            {{=field_class}} map = this.{{=field_name}};
+            if (null != map)
+                return map.remove({{=field_name}}Key);
+            else
+                return null;
+        }
+        else
+            throw new IllegalArgumentException();
+    }{{/field_is_map}}
 {{/pfield}}
 
 {{#tfield}}
