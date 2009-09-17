@@ -510,7 +510,7 @@ public final class {{=class_name}}
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
     }
-    public int updateFrom(gap.service.Query query, {{=class_name}} request){
+    public int updateFrom(gap.service.Parameters params, {{=class_name}} request){
         /*
          * 
          */
@@ -519,10 +519,10 @@ public final class {{=class_name}}
     public TemplateDictionary dictionaryFor(){
         return this.dictionaryInto(Templates.CreateDictionary());
     }
-    public TemplateDictionary dictionaryInto(gap.service.Query query, TemplateDictionary dict){
-        if (null != query && query.hasFields()){
+    public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary dict){
+        if (null != params && params.hasFields()){
 
-            for (String name: query.getFields()){
+            for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
                     java.lang.Object value = Field.Get(field,this);
@@ -533,7 +533,7 @@ public final class {{=class_name}}
             }
             return dict;
         }
-        else 
+        else
             return this.dictionaryInto(dict);
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary dict){
@@ -546,8 +546,8 @@ public final class {{=class_name}}
         }
         return dict;
     }
-    public TemplateDictionary dictionaryFor(gap.service.Query query){
-        return this.dictionaryInto(Templates.CreateDictionary());
+    public TemplateDictionary dictionaryFor(gap.service.Parameters params){
+        return this.dictionaryInto(params,Templates.CreateDictionary());
     }
 
 }
