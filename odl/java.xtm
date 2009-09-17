@@ -350,11 +350,29 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public void remove{{=field_nameCamel}}({{=field_list_component}} {{=field_name}}Item){
+    public boolean remove{{=field_nameCamel}}({{=field_list_component}} {{=field_name}}Item){
         if (null != {{=field_name}}Item){
             {{=field_class}} list = this.{{=field_name}};
             if (null != list)
-                list.remove({{=field_name}}Item);
+                return list.remove({{=field_name}}Item);
+            else
+                return false;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public boolean remove{{=field_nameCamel}}(ListFilter<{{=field_list_component}}> filter){
+        if (null != filter){
+            {{=field_class}} list = this.{{=field_name}};
+            if (null != list){
+                for ({{=field_list_component}} item : list){
+                    if (filter.accept(item)){
+                        list.remove(item);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         else
             throw new IllegalArgumentException();
@@ -413,14 +431,14 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public void put{{=field_nameCamel}}({{=field_map_component_from}} {{=field_name}}Key, {{=field_map_component_to}} {{=field_name}}Value){
+    public {{=field_map_component_to}} put{{=field_nameCamel}}({{=field_map_component_from}} {{=field_name}}Key, {{=field_map_component_to}} {{=field_name}}Value){
         if (null != {{=field_name}}Key && null != {{=field_name}}Value){
             {{=field_class}} map = this.{{=field_name}};
             if (null == map){
                 map = new java.util.HashMap<{{=field_map_component_from}},{{=field_map_component_to}}>();
                 this.{{=field_name}} = map;
             }
-            map.put({{=field_name}}Key, {{=field_name}}Value);
+            return map.put({{=field_name}}Key, {{=field_name}}Value);
         }
         else
             throw new IllegalArgumentException();
