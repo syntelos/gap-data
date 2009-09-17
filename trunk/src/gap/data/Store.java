@@ -182,26 +182,38 @@ public final class Store
             return PTL.get();
         }
         public static BigTable Get(Key key){
-
-            BigTable gdo = (BigTable)Get().get(key);
-            if (null != gdo){
-                gdo.setFromMemcache();
-                gdo.init();
-                return gdo;
+            MemcacheService mc = Store.C.Get();
+            try {
+                BigTable gdo = (BigTable)mc.get(key);
+                if (null != gdo){
+                    gdo.setFromMemcache();
+                    gdo.init();
+                    return gdo;
+                }
+                else 
+                    return null;
             }
-            else 
+            catch (com.google.appengine.api.memcache.InvalidValueException serialization){
+                mc.delete(key);
                 return null;
+            }
         }
         public static BigTable Get(String key){
-
-            BigTable gdo = (BigTable)Get().get(key);
-            if (null != gdo){
-                gdo.setFromMemcache();
-                gdo.init();
-                return gdo;
+            MemcacheService mc = Store.C.Get();
+            try {
+                BigTable gdo = (BigTable)mc.get(key);
+                if (null != gdo){
+                    gdo.setFromMemcache();
+                    gdo.init();
+                    return gdo;
+                }
+                else 
+                    return null;
             }
-            else 
+            catch (com.google.appengine.api.memcache.InvalidValueException serialization){
+                mc.delete(key);
                 return null;
+            }
         }
         public static List<BigTable> Get(java.lang.Iterable<Key> keys){
             MemcacheService mc = Store.C.Get();
@@ -209,7 +221,14 @@ public final class Store
             List<BigTable> list = new java.util.ArrayList<BigTable>();
             for (Key key : keys){
                 
-                BigTable gdo = (BigTable)mc.get(key);
+                BigTable gdo = null;
+                try {
+                    gdo = (BigTable)mc.get(key);
+                }
+                catch (com.google.appengine.api.memcache.InvalidValueException serialization){
+                    mc.delete(key);
+                }
+
                 if (null != gdo){
                     gdo.setFromMemcache();
                     gdo.init();
