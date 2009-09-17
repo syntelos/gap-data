@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-16T15:39:05.012Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-17T15:17:01.156Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
@@ -443,11 +443,29 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public void removeRoles(String rolesItem){
+    public boolean removeRoles(String rolesItem){
         if (null != rolesItem){
             List<String> list = this.roles;
             if (null != list)
-                list.remove(rolesItem);
+                return list.remove(rolesItem);
+            else
+                return false;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public boolean removeRoles(ListFilter<String> filter){
+        if (null != filter){
+            List<String> list = this.roles;
+            if (null != list){
+                for (String item : list){
+                    if (filter.accept(item)){
+                        list.remove(item);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         else
             throw new IllegalArgumentException();
@@ -527,14 +545,14 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public void putAttributes(String attributesKey, Serializable attributesValue){
+    public Serializable putAttributes(String attributesKey, Serializable attributesValue){
         if (null != attributesKey && null != attributesValue){
             Map<String,Serializable> map = this.attributes;
             if (null == map){
                 map = new java.util.HashMap<String,Serializable>();
                 this.attributes = map;
             }
-            map.put(attributesKey, attributesValue);
+            return map.put(attributesKey, attributesValue);
         }
         else
             throw new IllegalArgumentException();
