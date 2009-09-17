@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-17T15:44:02.808Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-17T22:45:25.597Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
@@ -603,7 +603,7 @@ public final class Person
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
     }
-    public int updateFrom(gap.service.Query query, Person request){
+    public int updateFrom(gap.service.Parameters params, Person request){
         /*
          * 
          */
@@ -612,10 +612,10 @@ public final class Person
     public TemplateDictionary dictionaryFor(){
         return this.dictionaryInto(Templates.CreateDictionary());
     }
-    public TemplateDictionary dictionaryInto(gap.service.Query query, TemplateDictionary dict){
-        if (null != query && query.hasFields()){
+    public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary dict){
+        if (null != params && params.hasFields()){
 
-            for (String name: query.getFields()){
+            for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
                     java.lang.Object value = Field.Get(field,this);
@@ -626,7 +626,7 @@ public final class Person
             }
             return dict;
         }
-        else 
+        else
             return this.dictionaryInto(dict);
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary dict){
@@ -639,8 +639,8 @@ public final class Person
         }
         return dict;
     }
-    public TemplateDictionary dictionaryFor(gap.service.Query query){
-        return this.dictionaryInto(Templates.CreateDictionary());
+    public TemplateDictionary dictionaryFor(gap.service.Parameters params){
+        return this.dictionaryInto(params,Templates.CreateDictionary());
     }
 
 }

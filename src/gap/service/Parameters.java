@@ -19,6 +19,10 @@
  */
 package gap.service;
 
+import hapax.TemplateDictionary;
+
+import com.google.appengine.api.datastore.Query;
+
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.Map;
@@ -29,7 +33,7 @@ import java.util.StringTokenizer;
  * 
  * @author jdp
  */
-public final class Query
+public final class Parameters
     extends java.lang.Object
 {
     public final static class Special {
@@ -46,27 +50,49 @@ public final class Query
             public final static String Count = "count";
             public final static String StartIndex = "startIndex";
 
-            public final int count, startIndex;
+            public final int count, startIndex, nextIndex, prevIndex;
 
-            public Page(Map<String,String[]> parameters){
+            public Page(Map<String,String[]> parameters, int page){
                 super();
-                int count = 1, startIndex = 0;
+                int count = page, startIndex = 0, nextIndex = page, prevIndex = 0;
                 try {
                     String[] value = parameters.get(Count);
-                    if (null != value && 0 < value.length)
+                    if (null != value && 0 < value.length){
                         count = Integer.parseInt(value[0]);
+                        if (1 > count)
+                            count = page;
+                    }
                 }
                 catch (NumberFormatException exc){
                 }
                 try {
                     String[] value = parameters.get(StartIndex);
-                    if (null != value && 0 < value.length)
+                    if (null != value && 0 < value.length){
                         startIndex = Integer.parseInt(value[0]);
+                        if (0 > startIndex)
+                            startIndex = 0;
+
+                        prevIndex = (startIndex - count);
+                        if (0 > prevIndex)
+                            prevIndex = 0;
+
+                        nextIndex = (startIndex + count);
+                    }
                 }
                 catch (NumberFormatException exc){
                 }
                 this.count = count; 
                 this.startIndex = startIndex;
+                this.nextIndex = nextIndex;
+                this.prevIndex = prevIndex;
+            }
+
+
+            public void dictionaryInto(TemplateDictionary dict){
+
+                dict.setVariable("startIndex",this.startIndex);
+                dict.setVariable("startIndexPrev",this.prevIndex);
+                dict.setVariable("startIndexNext",this.nextIndex);
             }
         }
         /**
@@ -89,7 +115,15 @@ public final class Query
             public final static String FilterValue = "filterValue";
             public final static String FilterOp = "filterOp";
 
-            public final String name, op, value;
+            public enum Op {
+                contains, equals, startsWith, present, lt, le, gt, ge, eq;
+            }
+
+
+            public final String name, value;
+
+            public final Op op;
+
 
             public Filter(Map<String,String[]> parameters){
                 super();
@@ -100,11 +134,19 @@ public final class Query
                 else
                     this.name = null;
 
+                Op op = null;
+
                 value = parameters.get(FilterOp);
-                if (null != value && 0 < value.length)
-                    this.op = value[0];
+                if (null != value && 0 < value.length){
+                    op = Op.valueOf(value[0]);
+                    if (null == op)
+                        this.op = Op.contains;
+                    else
+                        this.op = op;
+                }
                 else
-                    this.op = null;
+                    this.op = Op.contains;
+                
 
                 value = parameters.get(FilterValue);
                 if (null != value && 0 < value.length)
@@ -245,7 +287,10 @@ public final class Query
          * be honored by the container.
          */
         public final static class NetworkDistance {
+
             public final static String NetworkDistance = "networkDistance";
+
+
 
             public NetworkDistance(Map<String,String[]> parameters){
                 super();
@@ -263,8 +308,42 @@ public final class Query
             public final static String SortBy = "sortBy";
             public final static String SortOrder = "sortOrder";
 
+
+            public final String sortBy;
+
+            public final Query.SortDirection sortOrder;
+
+
             public Sort(Map<String,String[]> parameters){
                 super();
+                String[] sortBy = parameters.get(SortBy);
+                if (null != sortBy && 0 != sortBy.length)
+                    this.sortBy = sortBy[0];
+                else
+                    this.sortBy = null;
+
+                Query.SortDirection sortOrder = null;
+
+                String[] sortOrderP = parameters.get(SortOrder);
+                if (null != sortOrderP && 0 != sortOrderP.length){
+                    sortOrder = Query.SortDirection.valueOf(sortOrderP[0].toUpperCase());
+
+                    if (null == sortOrder)
+                        this.sortOrder = Query.SortDirection.DESCENDING;
+                    else
+                        this.sortOrder = sortOrder;
+                }
+                else
+                    this.sortOrder = Query.SortDirection.DESCENDING;
+            }
+
+
+            public void dictionaryInto(TemplateDictionary dict){
+                String sortBy = this.sortBy;
+                if (null != sortBy)
+                    dict.setVariable("sortBy",sortBy);
+
+                dict.setVariable("sortOrder",this.sortOrder.name().toLowerCase());
             }
         }
         /**
@@ -273,6 +352,7 @@ public final class Query
          * more recent then the specified value.
          */
         public final static class Since {
+
             public final static String UpdatedSince = "updatedSince";
 
             public Since(Map<String,String[]> parameters){
@@ -292,12 +372,25 @@ public final class Query
     public final Special.Since since;
 
 
-    public Query(HttpServletRequest req){
+    public Parameters(HttpServletRequest req){
         super();
         Map<String,String[]> parameters = (Map<String,String[]>)req.getParameterMap();
         this.parameters = parameters;
         this.size = parameters.size();
-        this.page = new Special.Page(parameters);
+        this.page = new Special.Page(parameters,20);
+        this.filter = new Special.Filter(parameters);
+        this.format = new Special.Format(parameters);
+        this.fields = new Special.Fields(parameters);
+        this.networkDistance = new Special.NetworkDistance(parameters);
+        this.sort = new Special.Sort(parameters);
+        this.since = new Special.Since(parameters);
+    }
+    public Parameters(HttpServletRequest req, int page){
+        super();
+        Map<String,String[]> parameters = (Map<String,String[]>)req.getParameterMap();
+        this.parameters = parameters;
+        this.size = parameters.size();
+        this.page = new Special.Page(parameters, page);
         this.filter = new Special.Filter(parameters);
         this.format = new Special.Format(parameters);
         this.fields = new Special.Fields(parameters);
@@ -307,6 +400,11 @@ public final class Query
     }
 
 
+    public void dictionaryInto(TemplateDictionary dict){
+
+        this.page.dictionaryInto(dict);
+        this.sort.dictionaryInto(dict);
+    }
     public boolean isEmpty(){
         return (0 == this.size);
     }
