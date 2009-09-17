@@ -88,10 +88,11 @@ public class Logon
     public final UserService service;
     public final User serviceUser;
     public final boolean serviceAdmin;
-    public final Person person;
     public final String serviceLogon, requestUrl;
-    private String loginUrl, logoutUrl;
     public final TemplateDictionary dict;
+
+    private Person person;
+    private String loginUrl, logoutUrl;
 
 
     public Logon(Principal principal, String uri, TemplateDictionary dict, UserService service){
@@ -104,7 +105,6 @@ public class Logon
         if (null == principal){
             String loginUrl = service.createLoginURL(uri);
             this.loginUrl = loginUrl;
-            this.person = null;
             this.serviceUser = null;
             this.serviceAdmin = false;
             this.serviceLogon = null;
@@ -135,8 +135,6 @@ public class Logon
 
             dict.putVariable("logon_identifier",email);
 
-            Person person = Person.GetCreate(email);
-            this.person = person;
 
             if (this.serviceAdmin){
                 dict.hideSection("without_site_admin");
@@ -154,14 +152,26 @@ public class Logon
             logon.hideSection("without_login");
             logon.showSection("with_login");
 
+            /*
+             * Ensure that every login enters the system, so that
+             * other users' processes can work with this user.
+             */
+            this.person = Person.GetCreate(email);
         }
     }
 
+
+    public boolean hasPerson(){
+        return (null != this.person);
+    }
+    public Person getPerson(){
+        return this.person;
+    }
     public String getUserId(){
         Person person = this.person;
         if (null != person)
             return person.getId();
-        else
+        else 
             return null;
     }
     public boolean isLoggedIn(){
