@@ -226,8 +226,10 @@ public final class Main
              * Fields: 'unique', and 'hash_unique'
              */
             if (null != unique){
+
+                TemplateDictionary dataField;
+
                 if (null != uniqueHash){
-                    TemplateDictionary dataField;
 
                     TemplateDictionary dataFieldH = data.addSection("field_hash_unique");
 
@@ -238,11 +240,11 @@ public final class Main
                         dataField.putVariable("field_nameCamel",field.nameCamel);
                     }
 
-                    dataField = data.addSection("field_unique");
-                    dataField.putVariable("field_class",unique.typeName);
-                    dataField.putVariable("field_name",unique.name);
-                    dataField.putVariable("field_nameCamel",unique.nameCamel);
                 }
+                dataField = data.addSection("field_unique");
+                dataField.putVariable("field_class",unique.typeName);
+                dataField.putVariable("field_name",unique.name);
+                dataField.putVariable("field_nameCamel",unique.nameCamel);
             }
             else if (null != uniqueHash)
                 throw new Syntax("Model requires field qualified as '*unique'.");

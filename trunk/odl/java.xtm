@@ -40,12 +40,6 @@ public final class {{=class_name}}
         String id = {{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
         return KeyFactory.createKey(ancestor,KIND,id);
     }
-    public final static Query CreateQueryFor(){
-        return new Query(KIND);
-    }
-    public final static Query CreateQueryFor(Key ancestor){
-        return new Query(KIND,ancestor);
-    }
     public final static String {{=field_unique_nameCamel}}For(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if (ancestor.isComplete() && {{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
             String {{=field_name}}String = {{=field_to_string_prefix}}{{=field_name}}{{=field_to_string_suffix}};{{/field}}
@@ -160,6 +154,12 @@ public final class {{=class_name}}
             throw new IllegalArgumentException();
     }
 {{/field_unique}}
+    public final static Query CreateQueryFor(){
+        return new Query(KIND);
+    }
+    public final static Query CreateQueryFor(Key ancestor){
+        return new Query(KIND,ancestor);
+    }
     public final static {{=class_name}} Query1(Query query){
         if (null != query)
             return ({{=class_name}})Store.P.Query1({{=class_name}}.class,query);
