@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-18T00:48:05.122Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-18T05:10:17.069Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
@@ -61,36 +61,16 @@ public final class Person
     }
     public final static Person ForLogonId(Key ancestor, String logonId){
         if (null != logonId){
-            String id = IdFor(ancestor, logonId);
-            Person person = (Person)Store.C.Get(id);
-            if (null != person)
-                return person;
-            else {
-                Query query = new Query("Person",ancestor);
-                query.addFilter("logonId",Query.FilterOperator.EQUAL,logonId);
-                person = (Person)Store.P.Query1(Person.class,query);
-                if (null != person)
-                    Store.C.Put(id,person);
-                return person;
-            }
+            Key key = KeyIdFor(ancestor, logonId);
+            return (Person)Store.Get(key);
         }
         else
             throw new IllegalArgumentException();
     }
     public final static Person ForLogonId(String logonId){
         if (null != logonId){
-            String id = IdFor( logonId);
-            Person person = (Person)Store.C.Get(id);
-            if (null != person)
-                return person;
-            else {
-                Query query = new Query("Person");
-                query.addFilter("logonId",Query.FilterOperator.EQUAL,logonId);
-                person = (Person)Store.P.Query1(Person.class,query);
-                if (null != person)
-                    Store.C.Put(id,person);
-                return person;
-            }
+            Key key = KeyIdFor( logonId);
+            return (Person)Store.Get(key);
         }
         else
             throw new IllegalArgumentException();
@@ -99,8 +79,7 @@ public final class Person
         Person person = ForLogonId( logonId);
         if (null == person){
             person = new Person( logonId);
-            person = (Person)Store.P.Put(person);
-            Store.C.Put(person.getId(),person);
+            person = (Person)Store.Put(person);
         }
         return person;
     }
@@ -108,8 +87,7 @@ public final class Person
         Person person = ForLogonId(ancestor, logonId);
         if (null == person){
             person = new Person(ancestor, logonId);
-            person = (Person)Store.P.Put(person);
-            Store.C.Put(person.getId(),person);
+            person = (Person)Store.Put(person);
         }
         return person;
     }
@@ -123,35 +101,16 @@ public final class Person
     }
     public final static Person ForId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
-            String ckey = (ToString(ancestor)+'/'+id);
-            Person person = (Person)Store.C.Get(ckey);
-            if (null != person)
-                return person;
-            else {
-                Query query = new Query("Person",ancestor);
-                query.addFilter("id",Query.FilterOperator.EQUAL,id);
-                person = (Person)Store.P.Query1(Person.class,query);
-                if (null != person)
-                    Store.C.Put(ckey,person);
-                return person;
-            }
+            Key key = KeyFor(ancestor,id);
+            return (Person)Store.Get(key);
         }
         else
             throw new IllegalArgumentException();
     }
     public final static Person ForId(String id){
         if (null != id){
-            Person person = (Person)Store.C.Get(id);
-            if (null != person)
-                return person;
-            else {
-                Query query = new Query("Person");
-                query.addFilter("id",Query.FilterOperator.EQUAL,id);
-                person = (Person)Store.P.Query1(Person.class,query);
-                if (null != person)
-                    Store.C.Put(id,person);
-                return person;
-            }
+            Key key = KeyFor(id);
+            return (Person)Store.Get(key);
         }
         else
             throw new IllegalArgumentException();
@@ -165,8 +124,6 @@ public final class Person
             Key key = instance.getKey();
             Store.DeleteCollection(new Query(key));
             Store.Delete(key);
-            String id = instance.getId();
-            Store.C.Delete(id);
         }
     }
     /**
