@@ -99,7 +99,13 @@ public final class {{=class_name}}
     public final static {{=class_name}} For{{=field_nameCamel}}(Key ancestor, String {{=field_name}}){
         if (null != ancestor && ancestor.isComplete() && null != {{=field_name}}){
             Key key = KeyFor(ancestor,{{=field_name}});
-            return ({{=class_name}})Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return ({{=class_name}})Store.Query1(q);
+            }
         }
         else
             throw new IllegalArgumentException();
@@ -107,7 +113,13 @@ public final class {{=class_name}}
     public final static {{=class_name}} For{{=field_nameCamel}}(String {{=field_name}}){
         if (null != {{=field_name}}){
             Key key = KeyFor({{=field_name}});
-            return ({{=class_name}})Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return ({{=class_name}})Store.Query1(q);
+            }
         }
         else
             throw new IllegalArgumentException();
@@ -129,7 +141,7 @@ public final class {{=class_name}}
     public final static void Clean({{=class_name}} instance){
         if (null != instance){
             Key key = instance.get{{=field_key_nameCamel}}();
-            Store.C.Delete(key);
+            Store.Clean(key);
         }
     }
     /**
@@ -157,13 +169,13 @@ public final class {{=class_name}}
     }
     public final static {{=class_name}} Query1(Query query){
         if (null != query)
-            return ({{=class_name}})Store.P.Query1({{=class_name}}.class,query);
+            return ({{=class_name}})Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
     public final static List QueryN(Query query, FetchOptions page){
         if (null != query)
-            return Store.P.QueryN({{=class_name}}.class,query,page);
+            return Store.QueryN(query,page);
         else
             throw new IllegalArgumentException();
     }
