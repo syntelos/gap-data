@@ -153,6 +153,28 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
+    /**
+     * Drop from the world.
+     */
+    public final static void Delete({{=class_name}} instance){
+        if (null != instance){
+            Key key = instance.get{{=field_key_nameCamel}}();
+            Store.Delete(key);
+            String {{=field_name}} = instance.get{{=field_nameCamel}}();
+            Store.C.Delete({{=field_name}});
+        }
+    }
+    /**
+     * Drop from memcache.
+     */
+    public final static void Clean({{=class_name}} instance){
+        if (null != instance){
+            Key key = instance.get{{=field_key_nameCamel}}();
+            Store.C.Delete(key);
+            String {{=field_name}} = instance.get{{=field_nameCamel}}();
+            Store.C.Delete({{=field_name}});
+        }
+    }
 {{/field_unique}}
     public final static Query CreateQueryFor(){
         return new Query(KIND);
@@ -549,5 +571,10 @@ public final class {{=class_name}}
     public TemplateDictionary dictionaryFor(gap.service.Parameters params){
         return this.dictionaryInto(params,Templates.CreateDictionary());
     }
-
+    public void drop(){
+        Delete(this);
+    }
+    public void clean(){
+        Clean(this);
+    }
 }

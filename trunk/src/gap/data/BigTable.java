@@ -288,6 +288,14 @@ public abstract class BigTable
     public final Entity fillFromDatastoreEntity(Entity entity){
         return (this.datastoreEntity = this.fillFrom(entity));
     }
+    /**
+     * Delete from the world, completely.
+     */
+    public abstract void drop();
+    /**
+     * Drop from memcache, exclusively.
+     */
+    public abstract void clean();
 
     protected final Entity fillTo(Entity entity){
 
