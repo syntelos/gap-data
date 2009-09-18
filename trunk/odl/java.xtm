@@ -58,36 +58,16 @@ public final class {{=class_name}}
     }
     public final static {{=class_name}} For{{#field}}{{=field_nameCamel}}{{/field}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
-            String {{=field_unique_name}} = {{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            {{=class_name}} {{=class_nameDecamel}} = ({{=class_name}})Store.C.Get({{=field_unique_name}});
-            if (null != {{=class_nameDecamel}})
-                return {{=class_nameDecamel}};
-            else {
-                Query query = new Query("{{=class_name}}",ancestor);{{#field}}
-                query.addFilter("{{=field_name}}",Query.FilterOperator.EQUAL,{{=field_name}});{{/field}}
-                {{=class_nameDecamel}} = ({{=class_name}})Store.P.Query1({{=class_name}}.class,query);
-                if (null != {{=class_nameDecamel}})
-                    Store.C.Put({{=field_unique_name}},{{=class_nameDecamel}});
-                return {{=class_nameDecamel}};
-            }
+            Key key = Key{{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            return ({{=class_name}})Store.Get(key);
         }
         else
             throw new IllegalArgumentException();
     }
     public final static {{=class_name}} For{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
-            String {{=field_unique_name}} = {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            {{=class_name}} {{=class_nameDecamel}} = ({{=class_name}})Store.C.Get({{=field_unique_name}});
-            if (null != {{=class_nameDecamel}})
-                return {{=class_nameDecamel}};
-            else {
-                Query query = new Query("{{=class_name}}");{{#field}}
-                query.addFilter("{{=field_name}}",Query.FilterOperator.EQUAL,{{=field_name}});{{/field}}
-                {{=class_nameDecamel}} = ({{=class_name}})Store.P.Query1({{=class_name}}.class,query);
-                if (null != {{=class_nameDecamel}})
-                    Store.C.Put({{=field_unique_name}},{{=class_nameDecamel}});
-                return {{=class_nameDecamel}};
-            }
+            Key key = Key{{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            return ({{=class_name}})Store.Get(key);
         }
         else
             throw new IllegalArgumentException();
@@ -96,8 +76,7 @@ public final class {{=class_name}}
         {{=class_name}} {{=class_nameDecamel}} = For{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            {{=class_nameDecamel}} = ({{=class_name}})Store.P.Put({{=class_nameDecamel}});
-            Store.C.Put({{=class_nameDecamel}}.get{{=field_unique_nameCamel}}(),{{=class_nameDecamel}});
+            {{=class_nameDecamel}} = ({{=class_name}})Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
     }
@@ -105,8 +84,7 @@ public final class {{=class_name}}
         {{=class_name}} {{=class_nameDecamel}} = For{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            {{=class_nameDecamel}} = ({{=class_name}})Store.P.Put({{=class_nameDecamel}});
-            Store.C.Put({{=class_nameDecamel}}.get{{=field_unique_nameCamel}}(),{{=class_nameDecamel}});
+            {{=class_nameDecamel}} = ({{=class_name}})Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
     }
@@ -120,35 +98,16 @@ public final class {{=class_name}}
     }
     public final static {{=class_name}} For{{=field_nameCamel}}(Key ancestor, String {{=field_name}}){
         if (null != ancestor && ancestor.isComplete() && null != {{=field_name}}){
-            String ckey = (ToString(ancestor)+'/'+{{=field_name}});
-            {{=class_name}} {{=class_nameDecamel}} = ({{=class_name}})Store.C.Get(ckey);
-            if (null != {{=class_nameDecamel}})
-                return {{=class_nameDecamel}};
-            else {
-                Query query = new Query("{{=class_name}}",ancestor);
-                query.addFilter("{{=field_name}}",Query.FilterOperator.EQUAL,{{=field_name}});
-                {{=class_nameDecamel}} = ({{=class_name}})Store.P.Query1({{=class_name}}.class,query);
-                if (null != {{=class_nameDecamel}})
-                    Store.C.Put(ckey,{{=class_nameDecamel}});
-                return {{=class_nameDecamel}};
-            }
+            Key key = KeyFor(ancestor,{{=field_name}});
+            return ({{=class_name}})Store.Get(key);
         }
         else
             throw new IllegalArgumentException();
     }
     public final static {{=class_name}} For{{=field_nameCamel}}(String {{=field_name}}){
         if (null != {{=field_name}}){
-            {{=class_name}} {{=class_nameDecamel}} = ({{=class_name}})Store.C.Get({{=field_name}});
-            if (null != {{=class_nameDecamel}})
-                return {{=class_nameDecamel}};
-            else {
-                Query query = new Query("{{=class_name}}");
-                query.addFilter("{{=field_name}}",Query.FilterOperator.EQUAL,{{=field_name}});
-                {{=class_nameDecamel}} = ({{=class_name}})Store.P.Query1({{=class_name}}.class,query);
-                if (null != {{=class_nameDecamel}})
-                    Store.C.Put({{=field_name}},{{=class_nameDecamel}});
-                return {{=class_nameDecamel}};
-            }
+            Key key = KeyFor({{=field_name}});
+            return ({{=class_name}})Store.Get(key);
         }
         else
             throw new IllegalArgumentException();
@@ -162,8 +121,6 @@ public final class {{=class_name}}
             Key key = instance.get{{=field_key_nameCamel}}();
             Store.DeleteCollection(new Query(key));
             Store.Delete(key);
-            String {{=field_name}} = instance.get{{=field_nameCamel}}();
-            Store.C.Delete({{=field_name}});
         }
     }
     /**
