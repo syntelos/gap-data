@@ -59,7 +59,13 @@ public final class {{=class_name}}
     public final static {{=class_name}} For{{#field}}{{=field_nameCamel}}{{/field}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
             Key key = Key{{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            return ({{=class_name}})Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return ({{=class_name}})Store.Query1(q);
+            }
         }
         else
             throw new IllegalArgumentException();
@@ -67,7 +73,13 @@ public final class {{=class_name}}
     public final static {{=class_name}} For{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
             Key key = Key{{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            return ({{=class_name}})Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return ({{=class_name}})Store.Query1(q);
+            }
         }
         else
             throw new IllegalArgumentException();
