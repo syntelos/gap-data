@@ -154,25 +154,41 @@ public final class {{=class_name}}
             throw new IllegalArgumentException();
     }
     /**
-     * Drop from the world.
+     * Drop the instance and any children of its key from the world,
+     * memcache and store.
      */
     public final static void Delete({{=class_name}} instance){
         if (null != instance){
             Key key = instance.get{{=field_key_nameCamel}}();
+            Store.DeleteCollection(new Query(key));
             Store.Delete(key);
             String {{=field_name}} = instance.get{{=field_nameCamel}}();
             Store.C.Delete({{=field_name}});
         }
     }
     /**
-     * Drop from memcache.
+     * Drop the instance from memcache, exclusively.
      */
     public final static void Clean({{=class_name}} instance){
         if (null != instance){
             Key key = instance.get{{=field_key_nameCamel}}();
             Store.C.Delete(key);
-            String {{=field_name}} = instance.get{{=field_nameCamel}}();
-            Store.C.Delete({{=field_name}});
+        }
+    }
+    /**
+     * Store the instance.
+     */
+    public final static void Save({{=class_name}} instance){
+        if (null != instance){
+            Store.Put(instance);
+        }
+    }
+    /**
+     * Write the instance to store.
+     */
+    public final static void Store({{=class_name}} instance){
+        if (null != instance){
+            Store.Put(instance);
         }
     }
 {{/field_unique}}
@@ -576,5 +592,11 @@ public final class {{=class_name}}
     }
     public void clean(){
         Clean(this);
+    }
+    public void save(){
+        Save(this);
+    }
+    public void store(){
+        Store(this);
     }
 }

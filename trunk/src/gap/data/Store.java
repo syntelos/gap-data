@@ -259,8 +259,13 @@ public final class Store
             return table;
         }
         public static void Delete(Key key){
-            if (null != key)
-                Get().delete(key);
+            if (null != key){
+                MemcacheService mc = Store.C.Get();
+                mc.delete(key);
+                String id = key.getName();
+                if (null != id)
+                    mc.delete(key);
+            }
         }
         public static void Delete(String key){
             if (null != key)
@@ -313,6 +318,29 @@ public final class Store
     public static void Delete(Key key){
         C.Delete(key);
         P.Delete(key);
+    }
+    public static void DeleteCollection(Query query){
+
+        query.setKeysOnly();
+
+        DatastoreService ds = Store.P.Get();
+        MemcacheService mc = Store.C.Get();
+
+        PreparedQuery stmt = ds.prepare(query);
+
+        Iterable<Entity> list = stmt.asIterable();
+
+        for (Entity ent : list){
+            Key key = ent.getKey();
+            {
+                String id = key.getName();
+                if (null != id)
+                    mc.delete(id);
+
+                mc.delete(key);
+            }
+            ds.delete(key);
+        }
     }
 
     protected Store(){
