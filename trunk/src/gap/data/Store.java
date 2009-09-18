@@ -53,13 +53,13 @@ public final class Store
     /**
      * BigTable
      */
-    public final static class P 
+    protected final static class P 
         extends java.lang.Object
     {
         private final static ThreadLocal<DatastoreService> PTL = new ThreadLocal<DatastoreService>();
 
 
-        static void Enter(){
+        protected static void Enter(){
             DatastoreService ds = PTL.get();
             if (null == ds){
                 ds = DatastoreServiceFactory.getDatastoreService();
@@ -69,15 +69,15 @@ public final class Store
              * Valid reentry is possible in some error handling schemes
              */
         }
-        static void Exit(){
+        protected static void Exit(){
             DatastoreService ds = PTL.get();
             if (null != ds)
                 PTL.set(null);
         }
-        public static DatastoreService Get(){
+        protected static DatastoreService Get(){
             return PTL.get();
         }
-        public static BigTable Get(Key key){
+        protected static BigTable Get(Key key){
             try {
                 Entity entity = Get().get(key);
                 if (null != entity){
@@ -93,7 +93,7 @@ public final class Store
                 return null;
             }
         }
-        public static List<BigTable> Get(java.lang.Iterable<Key> keys){
+        protected static List<BigTable> Get(java.lang.Iterable<Key> keys){
             List<BigTable> list = new java.util.ArrayList<BigTable>();
             Map <Key,Entity> map = Get().get(keys);
             for (Entity entity : map.values()){
@@ -104,16 +104,16 @@ public final class Store
             }
             return list;
         }
-        public static BigTable Put(BigTable table){
+        protected static BigTable Put(BigTable table){
             Entity entity = table.fillToDatastoreEntity();
             Key key = Get().put(entity);
             return table.setFromDatastore(key);
         }
-        public static void Delete(Key key){
+        protected static void Delete(Key key){
             if (null != key)
                 Get().delete(new Key[]{key});
         }
-        public static BigTable Query1(Class jclass, Query query){
+        protected static BigTable Query1(Query query){
             DatastoreService ds = Get();
             PreparedQuery stmt = ds.prepare(query);
 
@@ -133,7 +133,7 @@ public final class Store
                 return gdo;
             }
         }
-        public static List<BigTable> QueryN(Class jclass, Query query, FetchOptions page){
+        protected static List<BigTable> QueryN(Query query, FetchOptions page){
             DatastoreService ds = Get();
             PreparedQuery stmt = ds.prepare(query);
 
@@ -157,13 +157,13 @@ public final class Store
     /**
      * Memcache
      */
-    public final static class C
+    protected final static class C
         extends java.lang.Object
     {
         private final static ThreadLocal<MemcacheService> PTL = new ThreadLocal<MemcacheService>();
 
 
-        static void Enter(){
+        protected static void Enter(){
             MemcacheService ds = PTL.get();
             if (null == ds){
                 ds = MemcacheServiceFactory.getMemcacheService();
@@ -173,18 +173,19 @@ public final class Store
              * Valid reentry is possible in some error handling schemes
              */
         }
-        static void Exit(){
+        protected static void Exit(){
             MemcacheService ds = PTL.get();
             if (null != ds)
                 PTL.set(null);
         }
-        public static MemcacheService Get(){
+        protected static MemcacheService Get(){
             return PTL.get();
         }
-        public static BigTable Get(Key key){
+        protected static BigTable Get(Key key){
+            String ck = BigTable.ToString(key);
             MemcacheService mc = Store.C.Get();
             try {
-                BigTable gdo = (BigTable)mc.get(key);
+                BigTable gdo = (BigTable)mc.get(ck);
                 if (null != gdo){
                     gdo.setFromMemcache();
                     gdo.init();
@@ -198,18 +199,21 @@ public final class Store
                 return null;
             }
         }
-        public static List<BigTable> Get(java.lang.Iterable<Key> keys){
+        protected static List<BigTable> Get(java.lang.Iterable<Key> keys){
             MemcacheService mc = Store.C.Get();
             DatastoreService ds = Store.P.Get();
             List<BigTable> list = new java.util.ArrayList<BigTable>();
             for (Key key : keys){
                 
+                String ck = BigTable.ToString(key);
+
                 BigTable gdo = null;
                 try {
-                    gdo = (BigTable)mc.get(key);
+                    gdo = (BigTable)mc.get(ck);
                 }
                 catch (com.google.appengine.api.memcache.InvalidValueException serialization){
-                    mc.delete(key);
+
+                    mc.delete(ck);
                 }
 
                 if (null != gdo){
@@ -233,13 +237,20 @@ public final class Store
             }
             return list;
         }
-        public static BigTable Put(Key key, BigTable table){
-            Get().put(key,table);
+        protected static BigTable Put(Key key, BigTable table){
+
+            String ck = BigTable.ToString(key);
+
+            Get().put(ck,table);
+
             return table;
         }
-        public static void Delete(Key key){
+        protected static void Delete(Key key){
             if (null != key){
-                Get().delete(key);
+
+                String ck = BigTable.ToString(key);
+
+                Get().delete(ck);
             }
         }
     }
@@ -262,12 +273,10 @@ public final class Store
     public static BigTable Get(Key key){
         if (key.isComplete()){
             BigTable value = C.Get(key);
-            if (null == value){
-                value = P.Get(key);
-                if (null != value)
-                    C.Put(key,value);
-            }
-            return value;
+            if (null != value)
+                return value;
+            else
+                return P.Get(key);
         }
         else
             throw new IllegalArgumentException("Incomplete key '"+key+"'.");
@@ -275,6 +284,12 @@ public final class Store
     public static List<BigTable> Get(Iterable<Key> keys){
 
         return C.Get(keys);
+    }
+    public static BigTable Query1(Query q){
+        return Store.P.Query1(q);
+    }
+    public static List<BigTable> QueryN(Query q, FetchOptions p){
+        return Store.P.QueryN(q,p);
     }
     public static BigTable Put(BigTable table){
 
@@ -289,6 +304,9 @@ public final class Store
     public static void Delete(Key key){
         C.Delete(key);
         P.Delete(key);
+    }
+    public static void Clean(Key key){
+        C.Delete(key);
     }
     public static void DeleteCollection(Query query){
 

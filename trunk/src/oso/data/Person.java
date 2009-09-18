@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-18T05:10:17.069Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-18T12:54:35.213Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
@@ -102,7 +102,13 @@ public final class Person
     public final static Person ForId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
             Key key = KeyFor(ancestor,id);
-            return (Person)Store.Get(key);
+            Person instance = (Person)Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (Person)Store.Query1(q);
+            }
         }
         else
             throw new IllegalArgumentException();
@@ -110,7 +116,13 @@ public final class Person
     public final static Person ForId(String id){
         if (null != id){
             Key key = KeyFor(id);
-            return (Person)Store.Get(key);
+            Person instance = (Person)Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (Person)Store.Query1(q);
+            }
         }
         else
             throw new IllegalArgumentException();
@@ -132,7 +144,7 @@ public final class Person
     public final static void Clean(Person instance){
         if (null != instance){
             Key key = instance.getKey();
-            Store.C.Delete(key);
+            Store.Clean(key);
         }
     }
     /**
@@ -160,13 +172,13 @@ public final class Person
     }
     public final static Person Query1(Query query){
         if (null != query)
-            return (Person)Store.P.Query1(Person.class,query);
+            return (Person)Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
     public final static List QueryN(Query query, FetchOptions page){
         if (null != query)
-            return Store.P.QueryN(Person.class,query,page);
+            return Store.QueryN(query,page);
         else
             throw new IllegalArgumentException();
     }
