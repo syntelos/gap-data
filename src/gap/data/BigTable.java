@@ -296,6 +296,14 @@ public abstract class BigTable
      * Drop from memcache, exclusively.
      */
     public abstract void clean();
+    /**
+     * Clean and store.
+     */
+    public abstract void save();
+    /**
+     * Write to store.
+     */
+    public abstract void store();
 
     protected final Entity fillTo(Entity entity){
 

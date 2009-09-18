@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-18T00:09:56.798Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-18T00:48:05.122Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
@@ -157,25 +157,41 @@ public final class Person
             throw new IllegalArgumentException();
     }
     /**
-     * Drop from the world.
+     * Drop the instance and any children of its key from the world,
+     * memcache and store.
      */
     public final static void Delete(Person instance){
         if (null != instance){
             Key key = instance.getKey();
+            Store.DeleteCollection(new Query(key));
             Store.Delete(key);
             String id = instance.getId();
             Store.C.Delete(id);
         }
     }
     /**
-     * Drop from memcache.
+     * Drop the instance from memcache, exclusively.
      */
     public final static void Clean(Person instance){
         if (null != instance){
             Key key = instance.getKey();
             Store.C.Delete(key);
-            String id = instance.getId();
-            Store.C.Delete(id);
+        }
+    }
+    /**
+     * Store the instance.
+     */
+    public final static void Save(Person instance){
+        if (null != instance){
+            Store.Put(instance);
+        }
+    }
+    /**
+     * Write the instance to store.
+     */
+    public final static void Store(Person instance){
+        if (null != instance){
+            Store.Put(instance);
         }
     }
 
@@ -669,5 +685,11 @@ public final class Person
     }
     public void clean(){
         Clean(this);
+    }
+    public void save(){
+        Save(this);
+    }
+    public void store(){
+        Store(this);
     }
 }
