@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-18T12:54:35.213Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-18T13:54:38.669Z",comments="odl/oso/data/Person.odl")
 public final class Person
     extends gap.data.BigTable
 {
@@ -62,7 +62,13 @@ public final class Person
     public final static Person ForLogonId(Key ancestor, String logonId){
         if (null != logonId){
             Key key = KeyIdFor(ancestor, logonId);
-            return (Person)Store.Get(key);
+            Person instance = (Person)Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (Person)Store.Query1(q);
+            }
         }
         else
             throw new IllegalArgumentException();
@@ -70,7 +76,13 @@ public final class Person
     public final static Person ForLogonId(String logonId){
         if (null != logonId){
             Key key = KeyIdFor( logonId);
-            return (Person)Store.Get(key);
+            Person instance = (Person)Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (Person)Store.Query1(q);
+            }
         }
         else
             throw new IllegalArgumentException();
