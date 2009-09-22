@@ -70,78 +70,38 @@ import gap.jac.util.Pair;
 import java.nio.charset.Charset;
 
 /**
- * TODO: describe gap.jac.api.Tool
- *
- * <p><b>This is NOT part of any API supported by Sun Microsystems.
- * If you write code that depends on this, you do so at your own
- * risk.  This code and its internal interfaces are subject to change
- * or deletion without notice.</b></p>
  *
  * @author Peter von der Ah\u00e9
+ * @author jdp
  */
-public final class JavacTool implements JavaCompiler {
-    private final List<Pair<String,String>> options
-        = new ArrayList<Pair<String,String>>();
-    private final Context dummyContext = new Context();
-
-    private final PrintWriter silent = new PrintWriter(new OutputStream(){
-        public void write(int b) {}
-    });
-
-    private final Main sharedCompiler = new Main("javac", silent);
-    {
-        sharedCompiler.setOptions(Options.instance(dummyContext));
-    }
-
-    /**
-     * Constructor used by service provider mechanism.  The correct way to
-     * obtain an instance of this class is using create or the service provider
-     * mechanism.
-     * @see gap.jac.tools.JavaCompilerTool
-     * @see gap.jac.tools.ToolProvider
-     * @see #create
-     */
-    @Deprecated
-    public JavacTool() {}
-
-    /**
-     * Static factory method for creating new instances of this tool.
-     * @return new instance of this tool
-     */
+public final class JavacTool 
+    extends Object
+    implements JavaCompiler 
+{
     public static JavacTool create() {
         return new JavacTool();
     }
 
-    private String argsToString(Object... args) {
-        String newArgs = null;
-        if (args.length > 0) {
-            StringBuilder sb = new StringBuilder();
-            String separator = "";
-            for (Object arg : args) {
-                sb.append(separator).append(arg.toString());
-                separator = File.pathSeparator;
-            }
-            newArgs = sb.toString();
-        }
-        return newArgs;
+
+    private boolean compilationInProgress = false;
+
+    private final List<Pair<String,String>> options = new ArrayList<Pair<String,String>>();
+
+    private final Context dummyContext = new Context();
+
+    private final PrintWriter silent = new PrintWriter(new OutputStream(){
+            public void write(int b) {}
+        });
+
+    private final Main sharedCompiler;
+
+
+    public JavacTool(){
+        super();
+        this.sharedCompiler = new Main("javac", silent);
+        this.sharedCompiler.setOptions(Options.instance(dummyContext));
     }
 
-    private void setOption1(String name, OptionKind kind, Object... args) {
-        String arg = argsToString(args);
-        JavacOption option = sharedCompiler.getOption(name);
-        if (option == null || !match(kind, option.getKind()))
-            throw new IllegalArgumentException(name);
-        if ((args.length != 0) != option.hasArg())
-            throw new IllegalArgumentException(name);
-        if (option.hasArg()) {
-            if (option.process(null, name, arg)) // FIXME
-                throw new IllegalArgumentException(name);
-        } else {
-            if (option.process(null, name)) // FIXME
-                throw new IllegalArgumentException(name);
-        }
-        options.add(new Pair<String,String>(name,arg));
-    }
 
     public void setOption(String name, Object... args) {
         setOption1(name, OptionKind.NORMAL, args);
@@ -151,22 +111,94 @@ public final class JavacTool implements JavaCompiler {
         setOption1(name, OptionKind.EXTENDED, args);
     }
 
-    private static boolean match(OptionKind clientKind, OptionKind optionKind) {
-        return (clientKind == (optionKind == OptionKind.HIDDEN ? optionKind.EXTENDED : optionKind));
-    }
-
-    public JavacFileManager getStandardFileManager(
-        DiagnosticListener<? super JavaFileObject> diagnosticListener,
-        Locale locale,
-        Charset charset) {
+    public JavacFileManager getStandardFileManager(DiagnosticListener<? super JavaFileObject> diagnosticListener,
+                                                   Locale locale,
+                                                   Charset charset)
+    {
         Context context = new Context();
+
         if (diagnosticListener != null)
             context.put(DiagnosticListener.class, diagnosticListener);
+
         context.put(Log.outKey, new PrintWriter(System.err, true)); // FIXME
+
         return new JavacFileManager(context, true, charset);
     }
 
-    private boolean compilationInProgress = false;
+    public JavacTask getTask(Writer out,
+                             JavaFileManager fileManager,
+                             DiagnosticListener<? super JavaFileObject> diagnosticListener,
+                             Iterable<String> options,
+                             Iterable<String> classes,
+                             Iterable<? extends JavaFileObject> compilationUnits)
+    {
+        final String kindMsg = "All compilation units must be of SOURCE kind";
+
+        if (options != null)
+            for (String option : options)
+                option.getClass(); // null check
+
+        if (classes != null) {
+            for (String cls : classes)
+                if (!SourceVersion.isName(cls)) // implicit null check
+                    throw new IllegalArgumentException("Not a valid class name: " + cls);
+        }
+
+        if (compilationUnits != null) {
+            for (JavaFileObject cu : compilationUnits) {
+                if (cu.getKind() != JavaFileObject.Kind.SOURCE) // implicit null check
+                    throw new IllegalArgumentException(kindMsg);
+            }
+        }
+
+        Context context = new Context();
+
+        if (diagnosticListener != null)
+            context.put(DiagnosticListener.class, diagnosticListener);
+
+        if (out == null)
+            context.put(Log.outKey, new PrintWriter(System.err, true));
+        else
+            context.put(Log.outKey, new PrintWriter(out, true));
+
+        if (fileManager == null)
+            fileManager = getStandardFileManager(diagnosticListener, null, null);
+
+        context.put(JavaFileManager.class, fileManager);
+
+        processOptions(context, fileManager, options);
+
+        Main compiler = new Main("javacTask", context.get(Log.outKey));
+
+        return new JavacTaskImpl(this, compiler, options, context, classes, compilationUnits);
+    }
+
+    public int run(InputStream in, OutputStream out, OutputStream err, String... arguments) {
+        if (err == null)
+            err = System.err;
+
+        for (String argument : arguments)
+            argument.getClass(); // null check
+
+        return gap.jac.Main.main(arguments, new PrintWriter(err, true));
+    }
+
+    public Set<SourceVersion> getSourceVersions() {
+        return Collections.unmodifiableSet(EnumSet.range(SourceVersion.RELEASE_3,
+                                                         SourceVersion.latest()));
+    }
+
+    public int isSupportedOption(String option) {
+
+        JavacOption[] recognizedOptions =
+            RecognizedOptions.getJavacToolOptions(new GrumpyHelper());
+
+        for (JavacOption o : recognizedOptions) {
+            if (o.matches(option))
+                return o.hasArg() ? 1 : 0;
+        }
+        return -1;
+    }
 
     /**
      * Register that a compilation is about to start.
@@ -196,45 +228,41 @@ public final class JavacTool implements JavaCompiler {
         compilationInProgress = false;
     }
 
-    public JavacTask getTask(Writer out,
-                             JavaFileManager fileManager,
-                             DiagnosticListener<? super JavaFileObject> diagnosticListener,
-                             Iterable<String> options,
-                             Iterable<String> classes,
-                             Iterable<? extends JavaFileObject> compilationUnits)
-    {
-        final String kindMsg = "All compilation units must be of SOURCE kind";
-        if (options != null)
-            for (String option : options)
-                option.getClass(); // null check
-        if (classes != null) {
-            for (String cls : classes)
-                if (!SourceVersion.isName(cls)) // implicit null check
-                    throw new IllegalArgumentException("Not a valid class name: " + cls);
-        }
-        if (compilationUnits != null) {
-            for (JavaFileObject cu : compilationUnits) {
-                if (cu.getKind() != JavaFileObject.Kind.SOURCE) // implicit null check
-                    throw new IllegalArgumentException(kindMsg);
+    private String argsToString(Object... args) {
+        String newArgs = null;
+        if (args.length > 0) {
+            StringBuilder sb = new StringBuilder();
+            String separator = "";
+            for (Object arg : args) {
+                sb.append(separator).append(arg.toString());
+                separator = File.pathSeparator;
             }
+            newArgs = sb.toString();
         }
+        return newArgs;
+    }
 
-        Context context = new Context();
+    private void setOption1(String name, OptionKind kind, Object... args) {
+        String arg = this.argsToString(args);
 
-        if (diagnosticListener != null)
-            context.put(DiagnosticListener.class, diagnosticListener);
+        JavacOption option = this.sharedCompiler.getOption(name);
 
-        if (out == null)
-            context.put(Log.outKey, new PrintWriter(System.err, true));
-        else
-            context.put(Log.outKey, new PrintWriter(out, true));
+        if (option == null || !match(kind, option.getKind()))
+            throw new IllegalArgumentException(name);
+        if ((args.length != 0) != option.hasArg())
+            throw new IllegalArgumentException(name);
+        if (option.hasArg()) {
+            if (option.process(null, name, arg)) // FIXME
+                throw new IllegalArgumentException(name);
+        } else {
+            if (option.process(null, name)) // FIXME
+                throw new IllegalArgumentException(name);
+        }
+        options.add(new Pair<String,String>(name,arg));
+    }
 
-        if (fileManager == null)
-            fileManager = getStandardFileManager(diagnosticListener, null, null);
-        context.put(JavaFileManager.class, fileManager);
-        processOptions(context, fileManager, options);
-        Main compiler = new Main("javacTask", context.get(Log.outKey));
-        return new JavacTaskImpl(this, compiler, options, context, classes, compilationUnits);
+    private static boolean match(OptionKind clientKind, OptionKind optionKind) {
+        return (clientKind == (optionKind == OptionKind.HIDDEN ? optionKind.EXTENDED : optionKind));
     }
 
     private static void processOptions(Context context,
@@ -283,29 +311,6 @@ public final class JavacTool implements JavaCompiler {
                     throw new IllegalArgumentException(flag);
             }
         }
-    }
-
-    public int run(InputStream in, OutputStream out, OutputStream err, String... arguments) {
-        if (err == null)
-            err = System.err;
-        for (String argument : arguments)
-            argument.getClass(); // null check
-        return gap.jac.Main.main(arguments, new PrintWriter(err, true));
-    }
-
-    public Set<SourceVersion> getSourceVersions() {
-        return Collections.unmodifiableSet(EnumSet.range(SourceVersion.RELEASE_3,
-                                                         SourceVersion.latest()));
-    }
-
-    public int isSupportedOption(String option) {
-        JavacOption[] recognizedOptions =
-            RecognizedOptions.getJavacToolOptions(new GrumpyHelper());
-        for (JavacOption o : recognizedOptions) {
-            if (o.matches(option))
-                return o.hasArg() ? 1 : 0;
-        }
-        return -1;
     }
 
 }
