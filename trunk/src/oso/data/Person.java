@@ -18,10 +18,10 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /** 
- * Generated from "odl/oso/data/Person.odl" with "odl/java.xtm".
+ * Generated from "oso.data" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.odl.Main","odl/java.xtm"},date="2009-09-18T13:54:38.669Z",comments="odl/oso/data/Person.odl")
+@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-22T19:41:58.618Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
 {

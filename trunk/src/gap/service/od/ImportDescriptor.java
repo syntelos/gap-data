@@ -17,30 +17,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.odl;
+package gap.service.od;
+
 
 /**
- * Parse process flow jump.
+ * A JPL class or package import expression follows the JPL "import"
+ * keyword and does not include the JPL semicolon statement terminal.
+ * 
+ * The package expression includes a trailing dot- star.  The class
+ * expression is a fully qualified class name.
+ * 
  * 
  * @author jdp
  */
-public final class Jump
-    extends java.lang.RuntimeException
-{
-    public static class EOF
-        extends java.lang.RuntimeException
-    {
-        public EOF(Reader r){
-            super();
-            r.close();
-        }
-    }
+public interface ImportDescriptor {
 
-    public Jump(Reader r, String s){
-        super();
-        r.unread(s);
-    }
-    public Jump(Reader r){
-        super();
-    }
+    /**
+     * @return Not a package spec
+     */
+    public boolean hasClassName();
+
+    /**
+     * @return A fully qualified class name
+     */
+    public String getClassName();
+
+    /**
+     * @return Not a class name
+     */
+    public boolean hasPackageSpec();
+
+    /**
+     * @return Includes trailing ".*"
+     */
+    public String getPackageSpec();
+
 }

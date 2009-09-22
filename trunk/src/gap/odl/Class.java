@@ -19,6 +19,10 @@
  */
 package gap.odl;
 
+import gap.service.od.ClassDescriptor;
+import gap.service.od.FieldDescriptor;
+import gap.service.od.ImportDescriptor;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -85,6 +89,22 @@ import java.util.StringTokenizer;
  * }
  * </pre>
  * 
+ * <pre>
+ * # gap odl 'class Bar'
+ * #
+ * package foo
+ * import java.io.*
+ * class Bar version 3
+ *   implements Interface1
+ *   implements Interface2
+ * {
+ *   *unique String uniqueId
+ *   *hash-unique String uniqueName
+ *   Serializable fieldValue
+ *   List<String> aChangeSinceVersionOne
+ * }
+ * </pre>
+ * 
  * In this example, the value of 'uniqueId' is the gap data hash of
  * 'uniqueName'.
  * 
@@ -100,6 +120,8 @@ import java.util.StringTokenizer;
  */
 public final class Class
     extends Object
+    implements ClassDescriptor.Version,
+               ClassDescriptor.Implements
 {
 
     public final Package pack;
@@ -108,9 +130,13 @@ public final class Class
 
     public final String version;
 
-    public final List<Import> imports = new java.util.ArrayList<Import>();
+    public final List<ImportDescriptor> imports = new java.util.ArrayList<ImportDescriptor>();
 
-    public final List<Field> fields = new java.util.ArrayList<Field>();
+    public final List<Object> interfaces = new java.util.ArrayList<Object>();
+
+    public final List<FieldDescriptor> fields = new java.util.ArrayList<FieldDescriptor>();
+
+    private String definitionClassName;
 
 
     public Class(Reader reader)
@@ -136,7 +162,7 @@ public final class Class
                         String line = reader.next();
                         if (line.startsWith("#") || 0 == line.length())
                             continue;
-                        else if (line.startsWith("class ") && line.endsWith("{")){
+                        else if (line.startsWith("class ")){
                             StringTokenizer strtok = new StringTokenizer(line, " \t{");
                             switch (strtok.countTokens()){
                             case 2:
@@ -154,13 +180,21 @@ public final class Class
                             default:
                                 throw new Syntax("Malformed ODL class declaration in '"+line+"'.");
                             }
+
+                            if (!line.endsWith("{")){
+
+                                while (reader.hasNext()){
+                                    Interface inf = new Interface(reader, pack, this.imports);
+                                    this.interfaces.add(inf);
+                                }
+                            }
                         }
                         else
                             throw new Syntax("ODL class declaration not found.");
                     }
                 }
                 else {
-                    field = new Field(reader, pack, this.imports);
+                    field = new Field(reader, pack);
                     this.fields.add(field);
                 }
             }
@@ -190,12 +224,42 @@ public final class Class
     }
 
 
+    public String getName(){
+        return this.name;
+    }
+    public boolean hasVersion(){
+        return (null != this.version);
+    }
+    public Long getVersion(){
+        return new Long(this.version);
+    }
     public boolean hasImports(){
         return (!this.imports.isEmpty());
     }
     public boolean hasFields(){
         return (!this.fields.isEmpty());
     }
+    public List<FieldDescriptor> getFields(){
+        return this.fields;
+    }
+
+    public boolean hasDefinitionClassName(){
+        return (null != this.definitionClassName);
+    }
+    public String getDefinitionClassName(){
+        return this.definitionClassName;
+    }
+    public void setDefinitionClassName(String name){
+        this.definitionClassName = name;
+    }
+
+    public boolean hasInterfaces(){
+        return (!this.interfaces.isEmpty());
+    }
+    public List<Object> getInterfaces(){
+        return this.interfaces;
+    }
+
     public final static String Decamel(String string){
         if (1 < string.length())
             return (string.substring(0,1).toLowerCase()+string.substring(1));

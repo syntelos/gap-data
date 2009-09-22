@@ -200,6 +200,10 @@ public final class JavacTool
         return -1;
     }
 
+    public void destroy(){
+
+    }
+
     /**
      * Register that a compilation is about to start.
      */
