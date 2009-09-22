@@ -57,14 +57,19 @@ import gap.jac.tools.JavaFileManager;
 import gap.jac.tools.JavaFileObject;
 import gap.jac.annotation.processing.Processor;
 
-/** This class provides a commandline interface to the GJC compiler.
+/** 
  *
- *  <p><b>This is NOT part of any API supported by Sun Microsystems.  If
- *  you write code that depends on this, you do so at your own risk.
- *  This code and its internal interfaces are subject to change or
- *  deletion without notice.</b>
  */
 public class Main {
+
+    /** Result codes.
+     */
+    static final int
+        EXIT_OK = 0,        // Compilation completed with no errors.
+        EXIT_ERROR = 1,     // Completed but reported errors.
+        EXIT_CMDERR = 2,    // Bad command-line arguments
+        EXIT_SYSERR = 3,    // System error or resource exhaustion.
+        EXIT_ABNORMAL = 4;  // Compiler terminated abnormally
 
     /**
      * 
@@ -93,51 +98,55 @@ public class Main {
      */
     boolean fatalErrors;
 
-    /** Result codes.
-     */
-    static final int
-        EXIT_OK = 0,        // Compilation completed with no errors.
-        EXIT_ERROR = 1,     // Completed but reported errors.
-        EXIT_CMDERR = 2,    // Bad command-line arguments
-        EXIT_SYSERR = 3,    // System error or resource exhaustion.
-        EXIT_ABNORMAL = 4;  // Compiler terminated abnormally
-
     private Option[] recognizedOptions = RecognizedOptions.getJavaCompilerOptions(new OptionHelper() {
 
-        public void setOut(PrintWriter out) {
-            Main.this.out = out;
-        }
+            public void setOut(PrintWriter out) {
+                Main.this.out = out;
+            }
 
-        public void error(String key, Object... args) {
-            Main.this.error(key, args);
-        }
+            public void error(String key, Object... args) {
+                Main.this.error(key, args);
+            }
 
-        public void printVersion() {
-            Log.printLines(out, getLocalizedString("version", ownName,  JavaCompiler.version()));
-        }
+            public void printVersion() {
+                Log.printLines(out, getLocalizedString("version", ownName,  JavaCompiler.version()));
+            }
 
-        public void printFullVersion() {
-            Log.printLines(out, getLocalizedString("fullVersion", ownName,  JavaCompiler.fullVersion()));
-        }
+            public void printFullVersion() {
+                Log.printLines(out, getLocalizedString("fullVersion", ownName,  JavaCompiler.fullVersion()));
+            }
 
-        public void printHelp() {
-            help();
-        }
+            public void printHelp() {
+                Main.this.help();
+            }
 
-        public void printXhelp() {
-            xhelp();
-        }
+            public void printXhelp() {
+                Main.this.xhelp();
+            }
 
-        public void addFile(File f) {
-            if (!filenames.contains(f))
-                filenames.append(f);
-        }
+            public void addFile(File f) {
+                if (!Main.this.filenames.contains(f))
+                    Main.this.filenames.append(f);
+            }
 
-        public void addClassName(String s) {
-            classnames.append(s);
-        }
+            public void addClassName(String s) {
+                Main.this.classnames.append(s);
+            }
 
-    });
+        });
+    /** A table of all options that's passed to the JavaCompiler constructor.  */
+    private Options options = null;
+
+    /** The list of source files to process
+     */
+    public ListBuffer<File> filenames = null; // XXX sb protected
+
+    /** List of class files names passed on the command line
+     */
+    public ListBuffer<String> classnames = null; // XXX sb protected
+
+    private JavaFileManager fileManager;
+
 
     /**
      * Construct a compiler instance.
@@ -153,16 +162,7 @@ public class Main {
         this.ownName = name;
         this.out = out;
     }
-    /** A table of all options that's passed to the JavaCompiler constructor.  */
-    private Options options = null;
 
-    /** The list of source files to process
-     */
-    public ListBuffer<File> filenames = null; // XXX sb protected
-
-    /** List of class files names passed on the command line
-     */
-    public ListBuffer<String> classnames = null; // XXX sb protected
 
     /** Print a string that explains usage.
      */
@@ -308,21 +308,21 @@ public class Main {
         return filenames.toList();
     }
     // where
-        private boolean checkDirectory(String optName) {
-            String value = options.get(optName);
-            if (value == null)
-                return true;
-            File file = new File(value);
-            if (!file.exists()) {
-                error("err.dir.not.found", value);
-                return false;
-            }
-            if (!file.isDirectory()) {
-                error("err.file.not.directory", value);
-                return false;
-            }
+    private boolean checkDirectory(String optName) {
+        String value = options.get(optName);
+        if (value == null)
             return true;
+        File file = new File(value);
+        if (!file.exists()) {
+            error("err.dir.not.found", value);
+            return false;
         }
+        if (!file.isDirectory()) {
+            error("err.file.not.directory", value);
+            return false;
+        }
+        return true;
+    }
 
     /** Programmatic interface for main function.
      * @param args    The command line parameters.
@@ -482,7 +482,7 @@ public class Main {
      */
     void resourceMessage(Throwable ex) {
         Log.printLines(out, getLocalizedString("msg.resource"));
-//      System.out.println("(name buffer len = " + Name.names.length + " " + Name.nc);//DEBUG
+        //      System.out.println("(name buffer len = " + Name.names.length + " " + Name.nc);//DEBUG
         ex.printStackTrace(out);
     }
 
@@ -494,8 +494,6 @@ public class Main {
                        getLocalizedString("msg.proc.annotation.uncaught.exception"));
         ex.getCause().printStackTrace();
     }
-
-    private JavaFileManager fileManager;
 
     /* ************************************************************************
      * Internationalization

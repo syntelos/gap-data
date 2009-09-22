@@ -51,72 +51,19 @@ import java.util.logging.Level;
 import static java.util.logging.Level.*;
 
 /**
- * Provides methods for locating tool providers, for example,
- * providers of compilers.  This class complements the
- * functionality of {@link java.util.ServiceLoader}.
+ * 
  *
  * @author Peter von der Ah&eacute;
+ * @author jdp
  * @since 1.6
  */
 public class ToolProvider {
 
     private ToolProvider() {}
 
-    private static final String propertyName = "sun.tools.ToolProvider";
-    private static final String loggerName   = "gap.jac.tools";
 
-    /*
-     * Define the system property "sun.tools.ToolProvider" to enable
-     * debugging:
-     *
-     *     java ... -Dsun.tools.ToolProvider ...
-     */
-    static <T> T trace(Level level, Object reason) {
-        // NOTE: do not make this method private as it affects stack traces
-        try {
-            if (System.getProperty(propertyName) != null) {
-                StackTraceElement[] st = Thread.currentThread().getStackTrace();
-                String method = "???";
-                String cls = ToolProvider.class.getName();
-                if (st.length > 2) {
-                    StackTraceElement frame = st[2];
-                    method = String.format((Locale)null, "%s(%s:%s)",
-                                           frame.getMethodName(),
-                                           frame.getFileName(),
-                                           frame.getLineNumber());
-                    cls = frame.getClassName();
-                }
-                Logger logger = Logger.getLogger(loggerName);
-                if (reason instanceof Throwable) {
-                    logger.logp(level, cls, method,
-                                reason.getClass().getName(), (Throwable)reason);
-                } else {
-                    logger.logp(level, cls, method, String.valueOf(reason));
-                }
-            }
-        } catch (SecurityException ex) {
-            System.err.format((Locale)null, "%s: %s; %s%n",
-                              ToolProvider.class.getName(),
-                              reason,
-                              ex.getLocalizedMessage());
-        }
-        return null;
-    }
-
-    /**
-     * Gets the Java&trade; programming language compiler provided
-     * with this platform.
-     * @return the compiler provided with this platform or
-     * {@code null} if no compiler is provided
-     */
     public static JavaCompiler getSystemJavaCompiler() {
-        if (Lazy.compilerClass == null)
-            return trace(WARNING, "Lazy.compilerClass == null");
-        try {
-            return Lazy.compilerClass.newInstance();
-        } catch (Throwable e) {
-            return trace(WARNING, e);
-        }
+        return new gap.jac.api.JavacTool();
     }
 
     /**
@@ -129,63 +76,8 @@ public class ToolProvider {
      * or {@code null} if no tools are provided
      */
     public static ClassLoader getSystemToolClassLoader() {
-        if (Lazy.compilerClass == null)
-            return trace(WARNING, "Lazy.compilerClass == null");
-        return Lazy.compilerClass.getClassLoader();
+
+        return gap.jac.api.JavacTool.class.getClassLoader();
     }
 
-    /**
-     * This class will not be initialized until one of the above
-     * methods are called.  This ensures that searching for the
-     * compiler does not affect platform start up.
-     */
-    static class Lazy  {
-        private static final String defaultJavaCompilerName
-            = "gap.jac.api.JavacTool";
-        private static final String[] defaultToolsLocation
-            = { "lib", "tools.jar" };
-        static final Class<? extends JavaCompiler> compilerClass;
-        static {
-            Class<? extends JavaCompiler> c = null;
-            try {
-                c = findClass().asSubclass(JavaCompiler.class);
-            } catch (Throwable t) {
-                trace(WARNING, t);
-            }
-            compilerClass = c;
-        }
-
-        private static Class<?> findClass()
-            throws MalformedURLException, ClassNotFoundException
-        {
-            try {
-                return enableAsserts(Class.forName(defaultJavaCompilerName, false, null));
-            } catch (ClassNotFoundException e) {
-                trace(FINE, e);
-            }
-            File file = new File(System.getProperty("java.home"));
-            if (file.getName().equalsIgnoreCase("jre"))
-                file = file.getParentFile();
-            for (String name : defaultToolsLocation)
-                file = new File(file, name);
-            URL[] urls = {file.toURI().toURL()};
-            trace(FINE, urls[0].toString());
-            ClassLoader cl = URLClassLoader.newInstance(urls);
-            cl.setPackageAssertionStatus("gap.jac", true);
-            return Class.forName(defaultJavaCompilerName, false, cl);
-        }
-
-        private static Class<?> enableAsserts(Class<?> cls) {
-            try {
-                ClassLoader loader = cls.getClassLoader();
-                if (loader != null)
-                    loader.setPackageAssertionStatus("gap.jac", true);
-                else
-                    trace(FINE, "loader == null");
-            } catch (SecurityException ex) {
-                trace(FINE, ex);
-            }
-            return cls;
-        }
-    }
 }
