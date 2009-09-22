@@ -81,22 +81,20 @@ import gap.jac.parser.DocCommentScanner;
 
 import javax.lang.model.SourceVersion;
 
-/** This class could be the main entry point for GJC when GJC is used as a
- *  component in a larger software system. It provides operations to
- *  construct a new compiler, and to run a new compiler on a set of source
- *  files.
- *
- *  <p><b>This is NOT part of any API supported by Sun Microsystems.  If
- *  you write code that depends on this, you do so at your own risk.
- *  This code and its internal interfaces are subject to change or
- *  deletion without notice.</b>
+/**
+ * This class could be the main entry point for GJC when GJC is used
+ * as a component in a larger software system. It provides operations
+ * to construct a new compiler, and to run a new compiler on a set of
+ * source files.
+ * 
  */
-public class JavaCompiler implements ClassReader.SourceCompleter {
-    /** The context key for the compiler. */
-    protected static final Context.Key<JavaCompiler> compilerKey =
-        new Context.Key<JavaCompiler>();
+public class JavaCompiler
+    implements ClassReader.SourceCompleter
+{
 
-    /** Get the JavaCompiler instance for this context. */
+    protected static final Context.Key<JavaCompiler> compilerKey = new Context.Key<JavaCompiler>();
+
+
     public static JavaCompiler instance(Context context) {
         JavaCompiler instance = context.get(compilerKey);
         if (instance == null)
@@ -104,19 +102,17 @@ public class JavaCompiler implements ClassReader.SourceCompleter {
         return instance;
     }
 
-    /** The current version number as a string.
-     */
+
     public static String version() {
         return version("release");  // mm.nn.oo[-milestone]
     }
 
-    /** The current full version number as a string.
-     */
     public static String fullVersion() {
         return version("full"); // mm.mm.oo[-milestone]-build
     }
 
     private static final String versionRBName = "gap.jac.resources.version";
+
     private static ResourceBundle versionRB;
 
     private static String version(String key) {
