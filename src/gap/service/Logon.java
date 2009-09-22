@@ -167,6 +167,9 @@ public class Logon
     public Person getPerson(){
         return this.person;
     }
+    public String getLogonId(){
+        return this.serviceLogon;
+    }
     public String getUserId(){
         Person person = this.person;
         if (null != person)

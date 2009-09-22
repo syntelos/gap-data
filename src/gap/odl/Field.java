@@ -19,6 +19,9 @@
  */
 package gap.odl;
 
+import gap.service.od.FieldDescriptor;
+import gap.service.od.ImportDescriptor;
+
 import com.google.appengine.api.datastore.Key;
 
 import java.lang.reflect.TypeVariable;
@@ -33,16 +36,21 @@ import java.util.StringTokenizer;
  */
 public final class Field
     extends Object
+    implements FieldDescriptor.Persistence,
+               FieldDescriptor.Uniqueness,
+               FieldDescriptor.Relation
 {
 
-    public final String typeName, typeParameters[], name, qualifier, nameCamel;
+    public final String typeName, name;
 
-    public final java.lang.Class typeClass;
+    public final Persistence.Type persistence;
 
-    public final boolean indexed, unique, hash, persistent, key, relation;
+    public final Uniqueness.Type uniqueness;
+
+    public final Relation.Type relational;
 
 
-    public Field(Reader reader, Package pkg, List<Import> imports)
+    public Field(Reader reader, Package pkg)
         throws IOException, Syntax
     {
         super();
@@ -61,85 +69,54 @@ public final class Field
 
                     String s = strtok.nextToken();
                     if ("*child".equals(s)){
-                        this.qualifier = s;
-                        this.indexed = false;
-                        this.unique = false;
-                        this.hash = false;
-                        this.persistent = false;
-                        this.relation = true;
+
+                        this.uniqueness = Uniqueness.Type.Undefined;
+                        this.persistence = Persistence.Type.Transient;
+                        this.relational = Relation.Type.Child;
+
                         this.typeName = strtok.nextToken();
-                        this.typeParameters = SimpleTypeParameters(this.typeName);
                         this.name = Class.Decamel(this.typeName);
-                        this.nameCamel = Camel(this.name);
-                        this.typeClass = Import.Find(pkg,imports,this.typeName);
-                        this.key = false;
                     }
                     else {
-                        this.qualifier = null;
                         this.typeName = s;
-                        this.typeParameters = SimpleTypeParameters(this.typeName);
                         this.name = strtok.nextToken();
-                        this.nameCamel = Camel(this.name);
-                        this.typeClass = Import.Find(pkg,imports,this.typeName);
-                        this.indexed = gap.data.BigTable.IsIndexed(this.typeClass);
-                        this.unique = false;
-                        this.hash = false;
-                        this.persistent = true;
-                        this.key = (null != this.typeClass && Key.class.equals(this.typeClass));
-                        this.relation = false;
+                        this.uniqueness = Uniqueness.Type.Undefined;
+                        this.persistence = Persistence.Type.Persistent;
+                        this.relational = Relation.Type.None;
                     }
                     return;
 
                 case 3:
-                    this.qualifier = strtok.nextToken();
+                    String qualifier = strtok.nextToken();
                     this.typeName = strtok.nextToken();
-                    this.typeParameters = SimpleTypeParameters(this.typeName);
                     this.name = strtok.nextToken();
-                    this.nameCamel = Camel(this.name);
-                    this.typeClass = Import.Find(pkg,imports,this.typeName);
-                    this.indexed = gap.data.BigTable.IsIndexed(this.typeClass);
-                    this.key = (null != this.typeClass && Key.class.equals(this.typeClass));
-                    if (null != this.qualifier){
-                        if ("*unique".equalsIgnoreCase(this.qualifier)){
-                            if (this.indexed){
-                                this.unique = true;
-                                this.hash = false;
-                                this.persistent = true;
-                                this.relation = false;
-                            }
-                            else
-                                throw new Syntax("Unique field is not an indexed type '"+line+"'.");
-                        }
-                        else if ("*hash-unique".equalsIgnoreCase(this.qualifier)){
-                            this.unique = true;
-                            this.hash = true;
-                            this.persistent = true;
-                            this.relation = false;
-                        }
-                        else if ("*transient".equalsIgnoreCase(this.qualifier)){
-                            this.unique = false;
-                            this.hash = false;
-                            this.persistent = false;
-                            this.relation = false;
-                        }
-                        else if ("*child".equalsIgnoreCase(this.qualifier)){
-                            this.unique = false;
-                            this.hash = false;
-                            this.persistent = false;
-                            this.relation = true;
-                        }
-                        else 
-                            throw new Syntax("Unrecognized field field qualifier in '"+line+"'.");
-                    }
-                    else {
-                        this.unique = false;
-                        this.hash = false;
-                        this.persistent = true;
-                        this.relation = false;
-                    }
 
-                    if (this.key && (!this.persistent))
-                        throw new Syntax("Key field is not persistent '"+line+"'.");
+                    if ("*unique".equalsIgnoreCase(qualifier)){
+
+                        this.uniqueness = Uniqueness.Type.Unique;
+                        this.persistence = Persistence.Type.Persistent;
+                        this.relational = Relation.Type.None;
+                    }
+                    else if ("*hash-unique".equalsIgnoreCase(qualifier)){
+
+                        this.uniqueness = Uniqueness.Type.HashUnique;
+                        this.persistence = Persistence.Type.Persistent;
+                        this.relational = Relation.Type.None;
+                    }
+                    else if ("*transient".equalsIgnoreCase(qualifier)){
+
+                        this.uniqueness = Uniqueness.Type.Undefined;
+                        this.persistence = Persistence.Type.Transient;
+                        this.relational = Relation.Type.None;
+                    }
+                    else if ("*child".equalsIgnoreCase(qualifier)){
+
+                        this.uniqueness = Uniqueness.Type.Undefined;
+                        this.persistence = Persistence.Type.Transient;
+                        this.relational = Relation.Type.Child;
+                    }
+                    else 
+                        throw new Syntax("Unrecognized field qualifier in '"+line+"'.");
 
                     return;
 
@@ -152,131 +129,29 @@ public final class Field
     }
 
 
-    public boolean hasTypeClass(){
-        return (null != this.typeClass);
+    public String getName(){
+        return this.name;
     }
-    public java.lang.Class getTypeClass(){
-        return this.typeClass;
+    public Object getType(){
+        return this.typeName;
     }
-    public boolean hasTypeParameters(){
-        return (0 != this.typeParameters.length);
+    public boolean hasPersistence(){
+        return (null != this.persistence);
     }
-    public String[] getTypeParameters(){
-        return this.typeParameters;
+    public Persistence.Type getPersistence(){
+        return this.persistence;
     }
-    public String getTypeParameter1(){
-        String[] parameters = this.typeParameters;
-        if (null != parameters && 0 != parameters.length)
-            return parameters[0];
-        else
-            return "";
+    public boolean hasUniqueness(){
+        return (null != this.uniqueness);
     }
-    public String getTypeParameter2(){
-        String[] parameters = this.typeParameters;
-        if (null != parameters && 1 < parameters.length)
-            return parameters[1];
-        else
-            return "";
+    public Uniqueness.Type getUniqueness(){
+        return this.uniqueness;
     }
-    public boolean isTypeClassIndexed(){
-        return this.indexed;
+    public boolean hasRelation(){
+        return (null != this.relational);
     }
-    public boolean isTypeClassString(){
-        java.lang.Class typeClass = this.typeClass;
-        if (null != typeClass)
-            return java.lang.String.class.equals(typeClass);
-        else
-            return false;
-    }
-    public boolean isTypeClassDate(){
-        java.lang.Class typeClass = this.typeClass;
-        if (null != typeClass)
-            return java.util.Date.class.equals(typeClass);
-        else
-            return false;
-    }
-    public boolean isTypeClassCollection(){
-        java.lang.Class typeClass = this.typeClass;
-        if (null != typeClass)
-            return java.util.Collection.class.isAssignableFrom(typeClass);
-        else
-            return false;
-    }
-    public boolean isTypeClassList(){
-        java.lang.Class typeClass = this.typeClass;
-        if (null != typeClass)
-            return java.util.List.class.isAssignableFrom(typeClass);
-        else
-            return false;
-    }
-    public boolean isTypeClassListOfString(){
-        java.lang.Class typeClass = this.typeClass;
-        if (null != typeClass){
-            if (java.util.List.class.isAssignableFrom(typeClass)){
-                TypeVariable<java.lang.Class>[] parameters = typeClass.getTypeParameters();
-                if (null != parameters && 0 != parameters.length){
-                    java.lang.Class parameterClass = parameters[0].getGenericDeclaration();
-                    return java.lang.String.class.equals(parameterClass);
-                }
-            }
-        }
-        return false;
-    }
-    public boolean isTypeClassMap(){
-        java.lang.Class typeClass = this.typeClass;
-        if (null != typeClass)
-            return java.util.Map.class.isAssignableFrom(typeClass);
-        else
-            return false;
-    }
-    public boolean isTypeClassBigTable(){
-        java.lang.Class typeClass = this.typeClass;
-        if (null != typeClass)
-            return gap.data.BigTable.class.isAssignableFrom(typeClass);
-        else
-            return false;
-    }
-    public boolean isNotTypeClassBigTable(){
-        java.lang.Class typeClass = this.typeClass;
-        if (null != typeClass)
-            return (!gap.data.BigTable.class.isAssignableFrom(typeClass));
-        else
-            return true;
-    }
-
-    public final static String Camel(String string){
-        if (null != string){
-            int strlen = string.length();
-            if (0 != strlen){
-                if (1 != strlen)
-                    return (string.substring(0,1).toUpperCase()+string.substring(1));
-                else
-                    return string.toUpperCase();
-            }
-            else
-                throw new IllegalArgumentException();
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-
-    final static String[] SimpleTypeParameters(String typeName){
-        int start = typeName.indexOf('<');
-        if (-1 != start){
-            String parameters = typeName.substring((start+1),(typeName.length()-1)).trim();
-            StringTokenizer strtok = new StringTokenizer(parameters,", ");
-            int count = strtok.countTokens();
-            String[] list = new String[count];
-            for (int cc = 0; cc < count; cc++){
-                String token = strtok.nextToken();
-                if ('<' != token.charAt(0))
-                    list[cc] = token;
-                else
-                    throw new IllegalStateException(typeName);
-            }
-            return list;
-        }
-        return new String[0];
+    public Relation.Type getRelation(){
+        return this.relational;
     }
 
 }

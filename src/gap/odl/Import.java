@@ -19,6 +19,8 @@
  */
 package gap.odl;
 
+import gap.service.od.ImportDescriptor;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -30,16 +32,17 @@ import java.util.StringTokenizer;
  */
 public final class Import
     extends Object
+    implements ImportDescriptor
 {
-    public final static java.lang.Class Find(Package pkg, List<Import> imports, String type){
+    public final static java.lang.Class Find(Package pkg, List<ImportDescriptor> imports, String type){
         type = Clean(type);
         try {
             return java.lang.Class.forName(type);
         }
         catch (java.lang.ClassNotFoundException exc){
         }
-        for (Import imp : imports){
-            java.lang.Class clas = imp.classFor(type);
+        for (ImportDescriptor importDescriptor : imports){
+            java.lang.Class clas = ((Import)importDescriptor).classFor(type);
             if (null != clas)
                 return clas;
         }
@@ -101,6 +104,19 @@ public final class Import
         throw new Syntax("ODL class declaration not found.");
     }
 
+
+    public boolean hasClassName(){
+        return (null != this.className);
+    }
+    public String getClassName(){
+        return this.className;
+    }
+    public boolean hasPackageSpec(){
+        return (null != this.packageSpec);
+    }
+    public String getPackageSpec(){
+        return this.packageSpec;
+    }
 
     public boolean isPackage(){
         return (null != this.packageName);

@@ -17,30 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.odl;
+package gap.service.od;
+
 
 /**
- * Parse process flow jump.
+ * The object data model requires a package name.
  * 
  * @author jdp
  */
-public final class Jump
-    extends java.lang.RuntimeException
-{
-    public static class EOF
-        extends java.lang.RuntimeException
-    {
-        public EOF(Reader r){
-            super();
-            r.close();
-        }
-    }
+public interface PackageDescriptor {
+    /**
+     * @return A non null, not empty, fully qualified package name
+     * without a trailing dot.
+     */
+    public String getName();
 
-    public Jump(Reader r, String s){
-        super();
-        r.unread(s);
-    }
-    public Jump(Reader r){
-        super();
-    }
 }

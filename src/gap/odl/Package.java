@@ -29,6 +29,7 @@ import java.util.StringTokenizer;
  */
 public final class Package
     extends Object
+    implements gap.service.od.PackageDescriptor
 {
 
     public final String name;
@@ -58,4 +59,7 @@ public final class Package
         throw new Syntax("Missing ODL package statement.");
     }
 
+    public String getName(){
+        return this.name;
+    }
 }

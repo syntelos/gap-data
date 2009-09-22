@@ -17,30 +17,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.odl;
+package gap.service.jac;
+
+import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.CharBuffer;
+import gap.jac.tools.JavaFileObject.Kind;
 
 /**
- * Parse process flow jump.
+ * 
  * 
  * @author jdp
  */
-public final class Jump
-    extends java.lang.RuntimeException
+public final class JavaSourceInput
+    extends gap.jac.tools.SimpleJavaFileObject
 {
-    public static class EOF
-        extends java.lang.RuntimeException
-    {
-        public EOF(Reader r){
-            super();
-            r.close();
-        }
+
+    private Reader in;
+
+
+    public JavaSourceInput(URI uri, Reader in) {
+        super(uri, Kind.SOURCE);
+        this.in = in;
     }
 
-    public Jump(Reader r, String s){
-        super();
-        r.unread(s);
+
+    public Reader openReader() {
+        return this.in;
     }
-    public Jump(Reader r){
-        super();
+    public String toString(){
+        return this.toUri().toString();
     }
 }

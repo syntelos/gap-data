@@ -17,30 +17,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.odl;
+package gap.service.od;
+
 
 /**
- * Parse process flow jump.
+ * An incorrect state of the model.
  * 
  * @author jdp
  */
-public final class Jump
-    extends java.lang.RuntimeException
+public class ODStateException 
+    extends java.lang.IllegalStateException
 {
-    public static class EOF
-        extends java.lang.RuntimeException
-    {
-        public EOF(Reader r){
-            super();
-            r.close();
-        }
+
+    public final Object member;
+
+
+    public ODStateException(Object member, String m){
+        super(m);
+        this.member = member;
+    }
+    public ODStateException(String m, ODStateException exc){
+        super(m,exc);
+        this.member = exc.member;
     }
 
-    public Jump(Reader r, String s){
-        super();
-        r.unread(s);
-    }
-    public Jump(Reader r){
-        super();
+
+    /**
+     * @return Offending member
+     */
+    public Object getMember(){
+        return this.member;
     }
 }

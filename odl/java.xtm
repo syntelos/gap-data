@@ -17,14 +17,15 @@ import javax.annotation.Generated;
  * Generated from "{{=odl_gen_odl_src}}" with "{{=odl_gen_xtm_src}}".
  *
  */
-@Generated(value={"gap.odl.Main","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
+@Generated(value={"gap.od","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
 public final class {{=class_name}}
-    extends gap.data.BigTable
+    extends gap.data.BigTable{{#implements}}
+{{#implements_it_First}}    implements {{/implements_it_First}}{{#implements_it_NotFirst}}               {{/implements_it_NotFirst}}{{=interface}}{{/implements}}
 {
 
     private final static long serialVersionUID = {{=class_version}};
 
-    public final static String KIND = "{{=class_name}}";
+    public final static String KIND = "{{=class_kind}}";
 
     static {
         Register({{=class_name}}.class);{{#rfield}}

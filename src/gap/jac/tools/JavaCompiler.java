@@ -296,6 +296,11 @@ public interface JavaCompiler extends Tool, OptionChecker {
         Locale locale,
         Charset charset);
 
+
+
+    void destroy();
+
+
     /**
      * Interface representing a future for a compilation task.  The
      * compilation task has not yet started.  To start the task, call

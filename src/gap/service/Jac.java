@@ -17,30 +17,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.odl;
+package gap.service;
+
+import gap.service.jac.FileManager;
+
+import java.io.OutputStream;
+import java.io.Reader;
+import java.util.List;
+
 
 /**
- * Parse process flow jump.
+ * Compile java source to binary.
  * 
  * @author jdp
  */
-public final class Jump
-    extends java.lang.RuntimeException
+public class Jac
+    extends java.lang.ClassLoader
 {
-    public static class EOF
-        extends java.lang.RuntimeException
+    /**
+     * Compile JPL sourcecode into output.
+     * 
+     * @exception java.io.IOException Error writing to output.
+     */
+    public final static boolean CompileSource(String className, Reader in, OutputStream err, OutputStream bin)
+        throws java.io.IOException
     {
-        public EOF(Reader r){
-            super();
-            r.close();
+        if (null != className && null != in && null != bin){
+            FileManager fm = FileManager.Get();
+            if (null != fm)
+                return fm.compile(className,in,err,bin);
+            else
+                throw new IllegalStateException();
         }
+        else
+            throw new IllegalArgumentException();
     }
 
-    public Jump(Reader r, String s){
-        super();
-        r.unread(s);
-    }
-    public Jump(Reader r){
-        super();
-    }
 }

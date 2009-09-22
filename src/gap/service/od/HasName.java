@@ -17,30 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.odl;
+package gap.service.od;
+
 
 /**
- * Parse process flow jump.
+ * An object type for 'toString' conversion may implement this
+ * interface for 'getName' conversion to string.
+ * 
  * 
  * @author jdp
  */
-public final class Jump
-    extends java.lang.RuntimeException
-{
-    public static class EOF
-        extends java.lang.RuntimeException
-    {
-        public EOF(Reader r){
-            super();
-            r.close();
-        }
-    }
+public interface HasName {
 
-    public Jump(Reader r, String s){
-        super();
-        r.unread(s);
-    }
-    public Jump(Reader r){
-        super();
-    }
+    /**
+     */
+    public String getName();
+
 }
