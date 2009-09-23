@@ -27,6 +27,8 @@ public final class {{=class_name}}
 
     public final static String KIND = "{{=class_kind}}";
 
+    public final static String ClassName = "{{=class_name}}";
+
     static {
         Register({{=class_name}}.class);{{#rfield}}
         Register({{=field_class}}.class);{{/rfield}}
@@ -520,6 +522,9 @@ public final class {{=class_name}}
      */
     public String getClassKind(){
         return KIND;
+    }
+    public String getClassName(){
+        return ClassName;
     }
     public {{=field_unique_class}} getClassFieldUnique(){
         return "{{=field_unique_name}}";

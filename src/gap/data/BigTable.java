@@ -209,9 +209,14 @@ public abstract class BigTable
      * Data binding supports
      */
     /**
-     * A static value naming the datastore class name, e.g., "Person".
+     * @return A class static value naming the datastore class name,
+     * e.g., "Person".
      */
     public abstract String getClassKind();
+    /**
+     * @return The class static unqualified class name.
+     */
+    public abstract String getClassName();
     /**
      * A static value naming the field employed for instance lookups,
      * as from web interfaces.

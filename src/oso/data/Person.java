@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * Generated from "oso.data" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-23T18:50:46.396Z",comments="oso.data")
+@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-23T19:04:18.535Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
 {
@@ -29,6 +29,8 @@ public final class Person
     private final static long serialVersionUID = 2;
 
     public final static String KIND = "Person";
+
+    public final static String ClassName = "Person";
 
     static {
         Register(Person.class);
@@ -612,6 +614,9 @@ public final class Person
      */
     public String getClassKind(){
         return KIND;
+    }
+    public String getClassName(){
+        return ClassName;
     }
     public String getClassFieldUnique(){
         return "id";
