@@ -1,9 +1,7 @@
 
 package oso.data;
 
-import gap.data.Hash;
-import gap.data.ListFilter;
-import gap.data.Store;
+
 import gap.service.Templates;
 
 import hapax.TemplateDictionary;
@@ -22,7 +20,7 @@ import javax.annotation.Generated;
  * Generated from "oso.data" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-23T21:10:59.936Z",comments="oso.data")
+@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-23T21:54:45.812Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
 {
@@ -49,7 +47,7 @@ public final class Person
     public final static String IdFor(Key ancestor, String logonId){
         if (ancestor.isComplete() && null != logonId){
             String logonIdString = logonId;
-            return Hash.For(ToString(ancestor)+'/'+logonIdString);
+            return gap.data.Hash.For(ToString(ancestor)+'/'+logonIdString);
         }
         else
             throw new IllegalArgumentException();
@@ -57,7 +55,7 @@ public final class Person
     public final static String IdFor(String logonId){
         if (null != logonId){
             String logonIdString = logonId;
-            return Hash.For(logonIdString);
+            return gap.data.Hash.For(logonIdString);
         }
         else
             throw new IllegalArgumentException();
@@ -65,12 +63,12 @@ public final class Person
     public final static Person ForLogonId(Key ancestor, String logonId){
         if (null != logonId){
             Key key = KeyIdFor(ancestor, logonId);
-            Person instance = (Person)Store.Get(key);
+            Person instance = (Person)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)Store.Query1(q);
+                return (Person)gap.data.Store.Query1(q);
             }
         }
         else
@@ -79,12 +77,12 @@ public final class Person
     public final static Person ForLogonId(String logonId){
         if (null != logonId){
             Key key = KeyIdFor( logonId);
-            Person instance = (Person)Store.Get(key);
+            Person instance = (Person)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)Store.Query1(q);
+                return (Person)gap.data.Store.Query1(q);
             }
         }
         else
@@ -94,7 +92,7 @@ public final class Person
         Person person = ForLogonId( logonId);
         if (null == person){
             person = new Person( logonId);
-            person = (Person)Store.Put(person);
+            person = (Person)gap.data.Store.Put(person);
         }
         return person;
     }
@@ -102,7 +100,7 @@ public final class Person
         Person person = ForLogonId(ancestor, logonId);
         if (null == person){
             person = new Person(ancestor, logonId);
-            person = (Person)Store.Put(person);
+            person = (Person)gap.data.Store.Put(person);
         }
         return person;
     }
@@ -120,12 +118,12 @@ public final class Person
     public final static Person ForId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
             Key key = KeyFor(ancestor,id);
-            Person instance = (Person)Store.Get(key);
+            Person instance = (Person)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)Store.Query1(q);
+                return (Person)gap.data.Store.Query1(q);
             }
         }
         else
@@ -134,12 +132,12 @@ public final class Person
     public final static Person ForId(String id){
         if (null != id){
             Key key = KeyFor(id);
-            Person instance = (Person)Store.Get(key);
+            Person instance = (Person)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)Store.Query1(q);
+                return (Person)gap.data.Store.Query1(q);
             }
         }
         else
@@ -148,12 +146,12 @@ public final class Person
 
     public final static Person Get(Key key){
         if (null != key){
-            Person instance = (Person)Store.Get(key);
+            Person instance = (Person)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)Store.Query1(q);
+                return (Person)gap.data.Store.Query1(q);
             }
         }
         else
@@ -162,7 +160,7 @@ public final class Person
     public final static Key GetKey(Key key){
         if (null != key){
             Query q = CreateQueryFor(key);
-            return Store.QueryKey1(q);
+            return gap.data.Store.QueryKey1(q);
         }
         else
             throw new IllegalArgumentException();
@@ -173,11 +171,11 @@ public final class Person
     public final static Key NewChildRandomKey(Key parent){
         if (null != parent){
             String source = gap.data.BigTable.ToString(parent);
-            long id = Hash.Djb64(source);
+            long id = gap.data.Hash.Djb64(source);
             java.util.Random random = new java.util.Random();
             do {
                 id ^= random.nextLong();
-                String idString = Hash.Hex(id);
+                String idString = gap.data.Hash.Hex(id);
                 Key key = KeyFactory.createKey(KIND,idString);
                 if (null == GetKey(key))
                     return key;
@@ -194,8 +192,8 @@ public final class Person
     public final static void Delete(Person instance){
         if (null != instance){
             Key key = instance.getKey();
-            Store.DeleteCollection(new Query(key));
-            Store.Delete(key);
+            gap.data.Store.DeleteCollection(new Query(key));
+            gap.data.Store.Delete(key);
         }
     }
     /**
@@ -204,7 +202,7 @@ public final class Person
     public final static void Clean(Person instance){
         if (null != instance){
             Key key = instance.getKey();
-            Store.Clean(key);
+            gap.data.Store.Clean(key);
         }
     }
     /**
@@ -212,7 +210,7 @@ public final class Person
      */
     public final static void Save(Person instance){
         if (null != instance){
-            Store.Put(instance);
+            gap.data.Store.Put(instance);
         }
     }
     /**
@@ -220,7 +218,7 @@ public final class Person
      */
     public final static void Store(Person instance){
         if (null != instance){
-            Store.Put(instance);
+            gap.data.Store.Put(instance);
         }
     }
     public final static Query CreateQueryFor(){
@@ -231,25 +229,25 @@ public final class Person
     }
     public final static Person Query1(Query query){
         if (null != query)
-            return (Person)Store.Query1(query);
+            return (Person)gap.data.Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
     public final static List QueryN(Query query, FetchOptions page){
         if (null != query)
-            return Store.QueryN(query,page);
+            return gap.data.Store.QueryN(query,page);
         else
             throw new IllegalArgumentException();
     }
     public final static Key QueryKey1(Query query){
         if (null != query)
-            return Store.QueryKey1(query);
+            return gap.data.Store.QueryKey1(query);
         else
             throw new IllegalArgumentException();
     }
     public final static List<Key> QueryKeyN(Query query, FetchOptions page){
         if (null != query)
-            return Store.QueryKeyN(query,page);
+            return gap.data.Store.QueryKeyN(query,page);
         else
             throw new IllegalArgumentException();
     }
@@ -496,7 +494,7 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public String getRoles(ListFilter<String> filter){
+    public String getRoles(gap.data.ListFilter<String> filter){
         if (null != filter){
             List<String> list = this.roles;
             if (null != list){
@@ -536,7 +534,7 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public boolean removeRoles(ListFilter<String> filter){
+    public boolean removeRoles(gap.data.ListFilter<String> filter){
         if (null != filter){
             List<String> list = this.roles;
             if (null != list){

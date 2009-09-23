@@ -1,9 +1,7 @@
 
 package {{=package_name}};
 
-import gap.data.Hash;
-import gap.data.ListFilter;
-import gap.data.Store;
+
 import gap.service.Templates;
 
 import hapax.TemplateDictionary;
@@ -47,7 +45,7 @@ public final class {{=class_name}}
     public final static String {{=field_unique_nameCamel}}For(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if (ancestor.isComplete() && {{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
             String {{=field_name}}String = {{=field_to_string_prefix}}{{=field_name}}{{=field_to_string_suffix}};{{/field}}
-            return Hash.For(ToString(ancestor)+'/'+{{#field}}{{#field_it_NotFirst}}+'/'+{{/field_it_NotFirst}}{{=field_name}}String{{/field}});
+            return gap.data.Hash.For(ToString(ancestor)+'/'+{{#field}}{{#field_it_NotFirst}}+'/'+{{/field_it_NotFirst}}{{=field_name}}String{{/field}});
         }
         else
             throw new IllegalArgumentException();
@@ -55,7 +53,7 @@ public final class {{=class_name}}
     public final static String {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
             String {{=field_name}}String = {{=field_to_string_prefix}}{{=field_name}}{{=field_to_string_suffix}};{{/field}}
-            return Hash.For({{#field}}{{#field_it_NotFirst}}+'/'+{{/field_it_NotFirst}}{{=field_name}}String{{/field}});
+            return gap.data.Hash.For({{#field}}{{#field_it_NotFirst}}+'/'+{{/field_it_NotFirst}}{{=field_name}}String{{/field}});
         }
         else
             throw new IllegalArgumentException();
@@ -63,12 +61,12 @@ public final class {{=class_name}}
     public final static {{=class_name}} For{{#field}}{{=field_nameCamel}}{{/field}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
             Key key = Key{{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            {{=class_name}} instance = ({{=class_name}})Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return ({{=class_name}})Store.Query1(q);
+                return ({{=class_name}})gap.data.Store.Query1(q);
             }
         }
         else
@@ -77,12 +75,12 @@ public final class {{=class_name}}
     public final static {{=class_name}} For{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
             Key key = Key{{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            {{=class_name}} instance = ({{=class_name}})Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return ({{=class_name}})Store.Query1(q);
+                return ({{=class_name}})gap.data.Store.Query1(q);
             }
         }
         else
@@ -92,7 +90,7 @@ public final class {{=class_name}}
         {{=class_name}} {{=class_nameDecamel}} = For{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            {{=class_nameDecamel}} = ({{=class_name}})Store.Put({{=class_nameDecamel}});
+            {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
     }
@@ -100,7 +98,7 @@ public final class {{=class_name}}
         {{=class_name}} {{=class_nameDecamel}} = For{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            {{=class_nameDecamel}} = ({{=class_name}})Store.Put({{=class_nameDecamel}});
+            {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
     }
@@ -118,12 +116,12 @@ public final class {{=class_name}}
     public final static {{=class_name}} For{{=field_nameCamel}}(Key ancestor, String {{=field_name}}){
         if (null != ancestor && ancestor.isComplete() && null != {{=field_name}}){
             Key key = KeyFor(ancestor,{{=field_name}});
-            {{=class_name}} instance = ({{=class_name}})Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return ({{=class_name}})Store.Query1(q);
+                return ({{=class_name}})gap.data.Store.Query1(q);
             }
         }
         else
@@ -132,12 +130,12 @@ public final class {{=class_name}}
     public final static {{=class_name}} For{{=field_nameCamel}}(String {{=field_name}}){
         if (null != {{=field_name}}){
             Key key = KeyFor({{=field_name}});
-            {{=class_name}} instance = ({{=class_name}})Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return ({{=class_name}})Store.Query1(q);
+                return ({{=class_name}})gap.data.Store.Query1(q);
             }
         }
         else
@@ -146,12 +144,12 @@ public final class {{=class_name}}
 {{/field_unique}}
     public final static {{=class_name}} Get(Key key){
         if (null != key){
-            {{=class_name}} instance = ({{=class_name}})Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return ({{=class_name}})Store.Query1(q);
+                return ({{=class_name}})gap.data.Store.Query1(q);
             }
         }
         else
@@ -160,7 +158,7 @@ public final class {{=class_name}}
     public final static Key GetKey(Key key){
         if (null != key){
             Query q = CreateQueryFor(key);
-            return Store.QueryKey1(q);
+            return gap.data.Store.QueryKey1(q);
         }
         else
             throw new IllegalArgumentException();
@@ -171,11 +169,11 @@ public final class {{=class_name}}
     public final static Key NewChildRandomKey(Key parent){
         if (null != parent){
             String source = gap.data.BigTable.ToString(parent);
-            long id = Hash.Djb64(source);
+            long id = gap.data.Hash.Djb64(source);
             java.util.Random random = new java.util.Random();
             do {
                 id ^= random.nextLong();
-                String idString = Hash.Hex(id);
+                String idString = gap.data.Hash.Hex(id);
                 Key key = KeyFactory.createKey(KIND,idString);
                 if (null == GetKey(key))
                     return key;
@@ -192,8 +190,8 @@ public final class {{=class_name}}
     public final static void Delete({{=class_name}} instance){
         if (null != instance){
             Key key = instance.get{{=field_key_nameCamel}}();
-            Store.DeleteCollection(new Query(key));
-            Store.Delete(key);
+            gap.data.Store.DeleteCollection(new Query(key));
+            gap.data.Store.Delete(key);
         }
     }
     /**
@@ -202,7 +200,7 @@ public final class {{=class_name}}
     public final static void Clean({{=class_name}} instance){
         if (null != instance){
             Key key = instance.get{{=field_key_nameCamel}}();
-            Store.Clean(key);
+            gap.data.Store.Clean(key);
         }
     }
     /**
@@ -210,7 +208,7 @@ public final class {{=class_name}}
      */
     public final static void Save({{=class_name}} instance){
         if (null != instance){
-            Store.Put(instance);
+            gap.data.Store.Put(instance);
         }
     }
     /**
@@ -218,7 +216,7 @@ public final class {{=class_name}}
      */
     public final static void Store({{=class_name}} instance){
         if (null != instance){
-            Store.Put(instance);
+            gap.data.Store.Put(instance);
         }
     }
     public final static Query CreateQueryFor(){
@@ -229,25 +227,25 @@ public final class {{=class_name}}
     }
     public final static {{=class_name}} Query1(Query query){
         if (null != query)
-            return ({{=class_name}})Store.Query1(query);
+            return ({{=class_name}})gap.data.Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
     public final static List QueryN(Query query, FetchOptions page){
         if (null != query)
-            return Store.QueryN(query,page);
+            return gap.data.Store.QueryN(query,page);
         else
             throw new IllegalArgumentException();
     }
     public final static Key QueryKey1(Query query){
         if (null != query)
-            return Store.QueryKey1(query);
+            return gap.data.Store.QueryKey1(query);
         else
             throw new IllegalArgumentException();
     }
     public final static List<Key> QueryKeyN(Query query, FetchOptions page){
         if (null != query)
-            return Store.QueryKeyN(query,page);
+            return gap.data.Store.QueryKeyN(query,page);
         else
             throw new IllegalArgumentException();
     }
@@ -404,7 +402,7 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public {{=field_list_component}} get{{=field_nameCamel}}(ListFilter<{{=field_list_component}}> filter){
+    public {{=field_list_component}} get{{=field_nameCamel}}(gap.data.ListFilter<{{=field_list_component}}> filter){
         if (null != filter){
             {{=field_class}} list = this.{{=field_name}};
             if (null != list){
@@ -444,7 +442,7 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public boolean remove{{=field_nameCamel}}(ListFilter<{{=field_list_component}}> filter){
+    public boolean remove{{=field_nameCamel}}(gap.data.ListFilter<{{=field_list_component}}> filter){
         if (null != filter){
             {{=field_class}} list = this.{{=field_name}};
             if (null != list){
