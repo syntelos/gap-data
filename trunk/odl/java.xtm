@@ -192,6 +192,18 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
+    public final static Key QueryKey1(Query query){
+        if (null != query)
+            return Store.QueryKey1(query);
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static List<Key> QueryKeyN(Query query, FetchOptions page){
+        if (null != query)
+            return Store.QueryKeyN(query,page);
+        else
+            throw new IllegalArgumentException();
+    }
 
     /**
      * 

@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * Generated from "oso.data" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-22T19:41:58.618Z",comments="oso.data")
+@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-23T18:50:46.396Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
 {
@@ -191,6 +191,18 @@ public final class Person
     public final static List QueryN(Query query, FetchOptions page){
         if (null != query)
             return Store.QueryN(query,page);
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static Key QueryKey1(Query query){
+        if (null != query)
+            return Store.QueryKey1(query);
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static List<Key> QueryKeyN(Query query, FetchOptions page){
+        if (null != query)
+            return Store.QueryKeyN(query,page);
         else
             throw new IllegalArgumentException();
     }

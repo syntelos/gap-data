@@ -153,6 +153,44 @@ public final class Store
             }
             return list;
         }
+        protected static Key QueryKey1(Query query){
+            query.setKeysOnly();
+
+            DatastoreService ds = Get();
+            PreparedQuery stmt = ds.prepare(query);
+
+            Entity entity = stmt.asSingleEntity();/* This expression requires that a key having name
+                                                   * but not id resolve to one id.
+                                                   * 
+                                                   * Key.name identity code needs to be aware that
+                                                   * the datastore key can have multiple key.id's
+                                                   * for a key.name.
+                                                   */
+            if (null == entity)
+                return null;
+            else 
+                return entity.getKey();
+        }
+        protected static List<Key> QueryKeyN(Query query, FetchOptions page){
+            query.setKeysOnly();
+
+            DatastoreService ds = Get();
+            PreparedQuery stmt = ds.prepare(query);
+
+            Iterable<Entity> it;
+            if (null != page)
+                it = stmt.asIterable(page);
+            else
+                it = stmt.asIterable();
+
+            List<Key> list = new java.util.ArrayList<Key>();
+
+            for (Entity entity : it){
+
+                list.add(entity.getKey());
+            }
+            return list;
+        }
     }
     /**
      * Memcache
@@ -290,6 +328,12 @@ public final class Store
     }
     public static List<BigTable> QueryN(Query q, FetchOptions p){
         return Store.P.QueryN(q,p);
+    }
+    public static Key QueryKey1(Query q){
+        return Store.P.QueryKey1(q);
+    }
+    public static List<Key> QueryKeyN(Query q, FetchOptions p){
+        return Store.P.QueryKeyN(q,p);
     }
     public static BigTable Put(BigTable table){
 
