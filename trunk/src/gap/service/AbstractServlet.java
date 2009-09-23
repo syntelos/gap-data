@@ -89,26 +89,48 @@ public abstract class AbstractServlet
     {
         this.service( (HttpServletRequest)req, (HttpServletResponse)rep);
     }
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse rep)
-        throws IOException, ServletException
-    {
+    protected void serviceEnter(Method method, HttpServletRequest req, HttpServletResponse rep){
         Store.Enter();
         Remote.Enter();
         XMessaging.Enter();
+    }
+    protected void serviceExit(Method method, HttpServletRequest req, HttpServletResponse rep){
+        Store.Exit();
+        Remote.Exit();
+        Logon.Exit();
+        XMessaging.Exit();
+        Method.Exit();
+    }
+    @Override
+    protected final void service(HttpServletRequest req, HttpServletResponse rep)
+        throws IOException, ServletException
+    {
+        Method method = Method.Enter(req);
+
+        this.serviceEnter(method,req,rep);
         try {
-            switch (Method.Lookup(req)){
+            switch (method.type){
             case Method.GET:{
                 long lastModified = this.getLastModified(req);
                 if (0 < lastModified){
+
                     long ifModifiedSince = req.getDateHeader(HEADER_IFMODSINCE);
-                    if (ifModifiedSince < (lastModified / 1000 * 1000)) {
-                        MaybeSetLastModified(rep, lastModified);
+                    if (0 < ifModifiedSince){
+
+                        lastModified /= 1000;
+                        lastModified *= 1000;
+
+                        if (ifModifiedSince < lastModified){
+
+                            MaybeSetLastModified(rep, lastModified);
+
+                            this.doGet(req, rep);
+                        }
+                        else 
+                            rep.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    }
+                    else
                         this.doGet(req, rep);
-                    }
-                    else {
-                        rep.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-                    }
                 }
                 else
                     this.doGet(req, rep);
@@ -117,11 +139,18 @@ public abstract class AbstractServlet
             case Method.HEAD:{
                 long lastModified = this.getLastModified(req);
                 if (0 < lastModified){
+
                     long ifModifiedSince = req.getDateHeader(HEADER_IFMODSINCE);
-                    if (ifModifiedSince < (lastModified / 1000 * 1000))
-                        MaybeSetLastModified(rep, lastModified);
-                    else 
-                        rep.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    if (0 < ifModifiedSince){
+
+                        lastModified /= 1000;
+                        lastModified *= 1000;
+
+                        if (ifModifiedSince < lastModified)
+                            MaybeSetLastModified(rep, lastModified);
+                        else 
+                            rep.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    }
                 }
                 this.doHead(req, rep);
                 return;
@@ -142,18 +171,22 @@ public abstract class AbstractServlet
                 this.doTrace(req, rep);
                 return;
             default:
-                rep.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+req.getMethod()+"' not implemented");
+                this.doMethod(method,req,rep);
                 return;
             }
         }
         finally {
-            Store.Exit();
-            Remote.Exit();
-            Logon.Exit();
-            XMessaging.Exit();
+            this.serviceExit(method,req,rep);
         }
     }
+    protected void doMethod(Method method, HttpServletRequest req, HttpServletResponse rep)
+        throws IOException, ServletException
+    {
+        rep.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+method+"' not implemented");
+    }
 
+    /*
+     */
     protected final static String HEADER_IFMODSINCE = "If-Modified-Since";
     protected final static String HEADER_LASTMOD = "Last-Modified";
     
