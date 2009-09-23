@@ -1,6 +1,7 @@
 
 package oso.data;
 
+import gap.data.Hash;
 import gap.data.ListFilter;
 import gap.data.Store;
 import gap.service.Templates;
@@ -21,7 +22,7 @@ import javax.annotation.Generated;
  * Generated from "oso.data" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-23T19:38:48.007Z",comments="oso.data")
+@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-23T21:10:59.936Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
 {
@@ -48,7 +49,7 @@ public final class Person
     public final static String IdFor(Key ancestor, String logonId){
         if (ancestor.isComplete() && null != logonId){
             String logonIdString = logonId;
-            return gap.data.Hash.For(ToString(ancestor)+'/'+logonIdString);
+            return Hash.For(ToString(ancestor)+'/'+logonIdString);
         }
         else
             throw new IllegalArgumentException();
@@ -56,7 +57,7 @@ public final class Person
     public final static String IdFor(String logonId){
         if (null != logonId){
             String logonIdString = logonId;
-            return gap.data.Hash.For(logonIdString);
+            return Hash.For(logonIdString);
         }
         else
             throw new IllegalArgumentException();
@@ -144,6 +145,48 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
+
+    public final static Person Get(Key key){
+        if (null != key){
+            Person instance = (Person)Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (Person)Store.Query1(q);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static Key GetKey(Key key){
+        if (null != key){
+            Query q = CreateQueryFor(key);
+            return Store.QueryKey1(q);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    /**
+     * Test for uniqueness and iterate under collisions.
+     */
+    public final static Key NewChildRandomKey(Key parent){
+        if (null != parent){
+            String source = gap.data.BigTable.ToString(parent);
+            long id = Hash.Djb64(source);
+            java.util.Random random = new java.util.Random();
+            do {
+                id ^= random.nextLong();
+                String idString = Hash.Hex(id);
+                Key key = KeyFactory.createKey(KIND,idString);
+                if (null == GetKey(key))
+                    return key;
+            }
+            while (true);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     /**
      * Drop the instance and any children of its key from the world,
      * memcache and store.
@@ -180,7 +223,6 @@ public final class Person
             Store.Put(instance);
         }
     }
-
     public final static Query CreateQueryFor(){
         return new Query(KIND);
     }
@@ -312,6 +354,10 @@ public final class Person
 
     public Person() {
         super();
+    }
+    public Person(Key child) {
+        super();
+        this.setKey(child);
     }
     public Person(String logonId) {
         super();

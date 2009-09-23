@@ -44,7 +44,7 @@ public final class Hash
         if (null == string || 0 == string.length())
             return "00";
         else {
-            long value = Djb64(string.getBytes(UTF8));
+            long value = Djb64(string);
             return Hex(Long(value));
         }
     }
@@ -138,6 +138,12 @@ public final class Hash
         }
         return For(string.toString());
     }
+    public final static long Djb64 ( String string){
+        if (null != string)
+            return Djb64(string.getBytes(UTF8));
+        else
+            return 0L;
+    }
     /**
      * Daniel Bernstein's later function.
      * @see http://www.cse.yorku.ca/~oz/hash.html
@@ -154,6 +160,9 @@ public final class Hash
             }
             return hash;
         }
+    }
+    public final static String Hex(long num){
+        return Hex(Long(num));
     }
     public final static byte[] Long( long num){
         byte[] ret = new byte[8];

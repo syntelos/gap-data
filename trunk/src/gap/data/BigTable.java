@@ -92,10 +92,14 @@ public abstract class BigTable
      * changes won't kill our database.
      */
     public final static String ToString(Key key){
+        StringBuilder strbuf = ToStringBuilder(key);
+        return strbuf.toString();
+    }
+    public final static StringBuilder ToStringBuilder(Key key){
         if (null != key){
             StringBuilder strbuf = new StringBuilder();
             ToString(key,strbuf,key);
-            return strbuf.toString();
+            return strbuf;
         }
         else
             throw new IllegalArgumentException();
