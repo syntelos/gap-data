@@ -370,11 +370,8 @@ public final class Store
         for (Entity ent : list){
             Key key = ent.getKey();
             {
-                String id = key.getName();
-                if (null != id)
-                    mc.delete(id);
-
-                mc.delete(key);
+                String ck = BigTable.ToString(key);
+                mc.delete(ck);
             }
             ds.delete(key);
         }
