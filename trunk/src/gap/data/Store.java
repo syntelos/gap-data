@@ -293,6 +293,10 @@ public final class Store
     }
     public static BigTable Put(BigTable table){
 
+        if (table instanceof LastModified){
+            ((LastModified)table).setLastModified(System.currentTimeMillis());
+        }
+
         table = P.Put(table);
 
         Key key = table.getClassFieldKeyValue();
