@@ -21,7 +21,7 @@ import javax.annotation.Generated;
  * Generated from "oso.data" with "odl/java.xtm".
  *
  */
-@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-23T19:04:18.535Z",comments="oso.data")
+@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-23T19:38:48.007Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
 {
@@ -39,11 +39,11 @@ public final class Person
 
     public final static Key KeyIdFor(String logonId){
         String id = IdFor( logonId);
-        return KeyFactory.createKey(KIND,id);
+        return KeyFor(id);
     }
     public final static Key KeyIdFor(Key ancestor, String logonId){
         String id = IdFor(ancestor, logonId);
-        return KeyFactory.createKey(ancestor,KIND,id);
+        return KeyFor(ancestor,id);
     }
     public final static String IdFor(Key ancestor, String logonId){
         if (ancestor.isComplete() && null != logonId){
@@ -110,8 +110,11 @@ public final class Person
     public final static Key KeyFor(String id){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static Key KeyFor(Key ancestor, String id){
+    public final static Key KeyGroupFor(Key ancestor, String id){
         return KeyFactory.createKey(ancestor,KIND,id);
+    }
+    public final static Key KeyFor(Key ancestor, String id){
+        return KeyFactory.createKey(KIND,id);
     }
     public final static Person ForId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
@@ -315,7 +318,7 @@ public final class Person
         this.setLogonId(logonId);
         String id = IdFor( logonId);
         this.setId(id);
-        Key key = KeyFactory.createKey(KIND,id);
+        Key key = KeyFor(id);
         this.setKey(key);
     }
     public Person(Key ancestor, String logonId) {
@@ -323,7 +326,7 @@ public final class Person
         this.setLogonId(logonId);
         String id = IdFor(ancestor,  logonId);
         this.setId(id);
-        Key key = KeyFactory.createKey(ancestor,KIND,id);
+        Key key = KeyFor(ancestor,id);
         this.setKey(key);
     }
 

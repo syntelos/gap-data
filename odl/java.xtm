@@ -37,11 +37,11 @@ public final class {{=class_name}}
 {{#field_hash_unique}}
     public final static Key Key{{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         String id = {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
-        return KeyFactory.createKey(KIND,id);
+        return KeyFor(id);
     }
     public final static Key Key{{=field_unique_nameCamel}}For(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         String id = {{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
-        return KeyFactory.createKey(ancestor,KIND,id);
+        return KeyFor(ancestor,id);
     }
     public final static String {{=field_unique_nameCamel}}For(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if (ancestor.isComplete() && {{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
@@ -108,8 +108,11 @@ public final class {{=class_name}}
     public final static Key KeyFor(String {{=field_name}}){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static Key KeyFor(Key ancestor, String {{=field_name}}){
+    public final static Key KeyGroupFor(Key ancestor, String {{=field_name}}){
         return KeyFactory.createKey(ancestor,KIND,id);
+    }
+    public final static Key KeyFor(Key ancestor, String {{=field_name}}){
+        return KeyFactory.createKey(KIND,id);
     }
     public final static {{=class_name}} For{{=field_nameCamel}}(Key ancestor, String {{=field_name}}){
         if (null != ancestor && ancestor.isComplete() && null != {{=field_name}}){
@@ -286,7 +289,7 @@ public final class {{=class_name}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
         String {{=field_unique_name}} = {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         this.set{{=field_unique_nameCamel}}({{=field_unique_name}});
-        Key key = KeyFactory.createKey(KIND,{{=field_unique_name}});
+        Key key = KeyFor({{=field_unique_name}});
         this.set{{=field_key_nameCamel}}(key);
     }
     public {{=class_name}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
@@ -294,7 +297,7 @@ public final class {{=class_name}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
         String {{=field_unique_name}} = {{=field_unique_nameCamel}}For(ancestor, {{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         this.set{{=field_unique_nameCamel}}({{=field_unique_name}});
-        Key key = KeyFactory.createKey(ancestor,KIND,{{=field_unique_name}});
+        Key key = KeyFor(ancestor,{{=field_unique_name}});
         this.set{{=field_key_nameCamel}}(key);
     }
 {{/field_hash_unique}}
