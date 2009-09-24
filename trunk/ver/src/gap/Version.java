@@ -54,8 +54,6 @@ public final class Version {
 
     public final static boolean IsProd = (!IsTest);
 
-    public final static int TargetVersion = @ProjectTargetVersion@;
-
     public final static java.lang.String ToStringLong(String name){
         return (name+'/'+Long);
     }

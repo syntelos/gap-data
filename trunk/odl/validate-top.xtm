@@ -1,0 +1,92 @@
+
+package {{=package_name}}.validate;
+
+{{#import}}import {{=import_spec}};
+{{/import}}
+import gap.Primitive;
+import static gap.Primitive.*;
+
+/**
+ * Data validation functions.
+ */
+@Generated(value={"gap.od","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
+public abstract class AbstractValidate
+    extends Object
+{{{#primitives}}
+    public final static Object FromString(Primitive type, String string){
+        switch(field){
+{{#primitive}}        case {{=type_nameCamel}}:
+            return {{=type_nameCamel}}FromString(string);{{/primitive}}
+        default:
+            throw new IllegalStateException(type.name());
+        }
+    }
+    public final static String ToString(Primitive type, Object value){
+        switch(type){
+{{#primitive}}        case {{=type_nameCamel}}:
+            return {{=type_nameCamel}}ToString(value);{{/primitive}}
+        default:
+            throw new IllegalStateException(type.name());
+        }
+    }
+{{#primitive}}
+    public final static Object {{=type_nameCamel}}FromString(String string){
+        if (null == string)
+            return null;
+        else {{{#String}}
+            return string;{{/String}}{{#Boolean}}
+            return new Boolean(string);{{/Boolean}}{{#Byte}}
+            return new Byte(string);{{/Byte}}{{#Short}}
+            return new Short(string);{{/Short}}{{#Integer}}
+            return new Integer(string);{{/Integer}}{{#Long}}
+            return new Long(string);{{/Long}}{{#Float}}
+            return new Float(string);{{/Float}}{{#Double}}
+            return new Double(string);{{/Double}}{{#Date}}
+            return gap.Date.ParseRFC1123(string);{{/Date}}{{#Category}}
+            return new Category(string);{{/Category}}{{#Email}}
+            return new Email(string);{{/Email}}{{#GeoPt}}
+            StringTokenizer strtok = new StringTokenizer(string,",: ");
+            if (2 == strtok.countTokens()){
+                float lat = Float.parseFloat(strtok.nextToken());
+                float lon = Float.parseFloat(strtok.nextToken());
+                return new GeoPt(lat,lon);
+            }
+            else
+                return null;{{/GeoPt}}{{#Link}}
+            return new Link(string);{{/Link}}{{#PhoneNumber}}
+            return new PhoneNumber(string);{{/PhoneNumber}}{{#PostalAddress}}
+            return new PostalAddress(string);{{/PostalAddress}}{{#Rating}}
+            return new Rating(Integer.parseInt(string));{{/Rating}}{{#Text}}
+            return new Text(string);{{/Text}}
+        }
+    }
+    public final static String {{=type_nameCamel}}ToString({{=type_name}} value){
+        if (null == value)
+            return null;
+        else {{{#String}}
+            return value;{{/String}}{{#Boolean}}
+            return value.toString();{{/Boolean}}{{#Byte}}
+            return value.toString();{{/Byte}}{{#Short}}
+            return value.toString();{{/Short}}{{#Integer}}
+            return value.toString();{{/Integer}}{{#Long}}
+            return value.toString();{{/Long}}{{#Float}}
+            return value.toString();{{/Float}}{{#Double}}
+            return value.toString();{{/Double}}{{#Date}}
+            return gap.Date.FormatRFC1123(string);{{/Date}}{{#Category}}
+            return value.getCategory();{{/Category}}{{#Email}}
+            return value.getEmail();{{/Email}}{{#GeoPt}}
+            StringBuilder strbuf = new StringBuilder();
+            strbuf.append(value.getLatitude());
+            strbuf.append(',');
+            strbuf.append(value.getLongitude());
+            return strbuf.toString();{{/GeoPt}}{{#Link}}
+            return value.getValue();{{/Link}}{{#PhoneNumber}}
+            return value.getNumber();{{/PhoneNumber}}{{#PostalAddress}}
+            return value.getAddress();{{/PostalAddress}}{{#Rating}}
+            return String.valueOf(value.getRating());{{/Rating}}{{#Text}}
+            return value.getValue();{{/Text}}
+        }
+    }
+{{/primitive}}
+}
+{{#primitives}}
