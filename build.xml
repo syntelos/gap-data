@@ -28,10 +28,6 @@
   </condition>
   <fail unless="project.target" message="Unrecognized configuration, see build."/>
 
-  <property name="project.vendor" value="Team FREDNET"/>
-
-  <property name="project.target.version" value="1"/>
-
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.version.xml"/>
   <import file="ant/build.in.odl.xml"/>
@@ -119,8 +115,6 @@
     <copy todir="${out}" overwrite="true">
       <filterset>
         <filter token="ProjectTarget"        value="${project.target}"/>
-        <filter token="ProjectTargetVersion" value="${project.target.version}"/>
-        <filter token="ProjectVendor"        value="${project.vendor}"/>
         <filter token="VersionName"          value="${ant.project.name}"/>
         <filter token="VersionMajor"         value="${version.major}"/>
         <filter token="VersionMinor"         value="${version.minor}"/>
@@ -177,7 +171,13 @@
 
   <target name="odl" description="Generate 'src/pkg/*.java' files from 'odl/pkg/*.odl' files.  Requires prequisite plain 'ant' run.">
 
-    <odl-write classpath.id="lib.path"/>
+    <odl-write-oso-data classpath.id="lib.path"/>
+
+    <odl-write-oso-data-servlet classpath.id="lib.path"/>
+
+    <odl-write-oso-data-validate-top classpath.id="lib.path"/>
+
+    <odl-write-oso-data-validate classpath.id="lib.path"/>
 
   </target>
 

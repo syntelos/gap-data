@@ -62,7 +62,7 @@ public class OD
         if (null != xtm && null != pkg && null != imports && null != cd && null != out){
             TemplateCache loader = new TemplateCache(xtm.getParent());
             Template template = loader.getTemplate(xtm.getPath());
-            TemplateDictionary data = new TemplateDictionary();
+            TemplateDictionary top = new TemplateDictionary();
 
             String packageName = pkg.getName();
             if (null == packageName || 0 == packageName.length())
@@ -85,24 +85,39 @@ public class OD
             /*
              * Tool globals
              */
-            data.putVariable("odl_gen_xtm_src",xtm.getPath());
-            data.putVariable("odl_gen_odl_src",packageName);
-            data.putVariable("odl_gen_timestamp",(gap.Date.FormatISO8601(System.currentTimeMillis())));
+            top.putVariable("odl_gen_xtm_src",xtm.getPath());
+            top.putVariable("odl_gen_odl_src",packageName);
+            top.putVariable("odl_gen_timestamp",(gap.Date.FormatISO8601(System.currentTimeMillis())));
+
+            /*
+             * General 
+             */
+            {
+                TemplateDictionary primitives = top.addSection("primitives");
+                for (gap.Primitive type : gap.Primitive.values()){
+                    TemplateDictionary primitive = primitives.addSection("primitives");
+                    String type_name = type.name();
+                    primitive.setVariable("type_name",type_name);
+                    primitive.setVariable("type_nameCamel",type_name);
+                    primitive.setVariable("type_nameDecamel",Decamel(type_name));
+                    primitive.addSection(type_name);
+                }
+            }
 
             /*
              * Class globals
              */
-            data.putVariable("package_name", packageName);
-            data.putVariable("class_name", className);
-            data.putVariable("class_nameDecamel", classNameDecamel);
-            data.putVariable("class_version",classVersion);
-            data.putVariable("class_kind", classKind);
+            top.putVariable("package_name", packageName);
+            top.putVariable("class_name", className);
+            top.putVariable("class_nameDecamel", classNameDecamel);
+            top.putVariable("class_version",classVersion);
+            top.putVariable("class_kind", classKind);
 
             if (cd instanceof ClassDescriptor.Implements){
                 ClassDescriptor.Implements cdi = (ClassDescriptor.Implements)cd;
                 if (cdi.hasInterfaces()){
                     for (Object inf : cdi.getInterfaces()){
-                        TemplateDictionary ind = data.addSection("implements");
+                        TemplateDictionary ind = top.addSection("implements");
                         ind.setVariable("interface",ToString(inf));
                     }
                 }
@@ -115,7 +130,7 @@ public class OD
              * Imports
              */
             for (ImportDescriptor imp : imports){
-                TemplateDictionary imd = data.addSection("import");
+                TemplateDictionary imd = top.addSection("import");
                 if (imp.hasPackageSpec())
                     imd.putVariable("import_spec",imp.getPackageSpec());
                 else if (imp.hasClassName())
@@ -124,7 +139,7 @@ public class OD
 
             String[] interfaces = ClassImplements(cd);
             for (String inf : interfaces){
-                TemplateDictionary ind = data.addSection("implements");
+                TemplateDictionary ind = top.addSection("implements");
                 ind.putVariable("interface_class",inf);
             }
 
@@ -140,31 +155,42 @@ public class OD
                     String fieldName = field.getName();
                     String fieldNameCamel = Camel(fieldName);
                     String fieldType = field.getType().toString();
+                    String fieldTypeClean = CleanTypeName(fieldType);
                     Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
                     String[] fieldTypeParameters = FieldTypeParameters(fieldType);
 
                     if (IsFieldPersistent(field)){
 
-                        TemplateDictionary dataField = data.addSection("pfield");
+                        TemplateDictionary dataField = top.addSection("pfield");
 
                         dataField.putVariable("field_name",fieldName);
                         dataField.putVariable("field_nameCamel",fieldNameCamel);
                         dataField.putVariable("field_class",fieldType);
+                        dataField.putVariable("field_classClean",fieldTypeClean);
 
                         if (IsFieldHashUnique(field)){
 
+                            dataField.addSection("field_is_not_unique");
+
+                            TemplateDictionary field_is = dataField.addSection("field_is_hash_unique");
+
                             if (IsTypeClassKey(fieldTypeClass)){
+
+                                dataField.addSection("field_is_key");
+
                                 if (null == key){
                                     key = field;
 
-                                    data.putVariable("field_key_name",fieldName);
-                                    data.putVariable("field_key_nameCamel",fieldNameCamel);
-                                    data.putVariable("field_key_class",fieldType);
+                                    top.putVariable("field_key_name",fieldName);
+                                    top.putVariable("field_key_nameCamel",fieldNameCamel);
+                                    top.putVariable("field_key_class",fieldType);
+                                    top.putVariable("field_key_classClean",fieldTypeClean);
                                 }
                             }
                             else if (IsTypeClassIndexed(fieldTypeClass)){
 
-                                TemplateDictionary field_is = dataField.addSection("field_is_hash_unique");
+                                dataField.addSection("field_is_not_key");
+
                                 field_is.putVariable("data_model","*hash-unique");
 
                                 if (IsTypeClassString(fieldTypeClass)){
@@ -172,7 +198,7 @@ public class OD
                                     dataField.putVariable("field_to_string_suffix","");
                                 }
                                 else if (IsTypeClassDate(fieldTypeClass)){
-                                    dataField.putVariable("field_to_string_prefix","oso.Date.FormatISO8601(");
+                                    dataField.putVariable("field_to_string_prefix","gap.Date.FormatISO8601(");
                                     dataField.putVariable("field_to_string_suffix",")");
                                 }
                                 else {
@@ -186,10 +212,11 @@ public class OD
                             }
                             else if (IsTypeClassList(fieldTypeClass)){
 
+                                dataField.addSection("field_is_not_key");
+
                                 if (1 == fieldTypeParameters.length){
                                     String typeComponent = fieldTypeParameters[0];
 
-                                    TemplateDictionary field_is = dataField.addSection("field_is_hash_unique");
                                     field_is.putVariable("data_model","*hash-unique");
 
                                     dataField.putVariable("field_to_string_prefix","gap.data.Hash.For"+typeComponent+"(");
@@ -211,7 +238,7 @@ public class OD
                             /*
                              * Global section 'field_hash_unique'
                              */
-                            TemplateDictionary dataFieldH = data.addSection("field_hash_unique");
+                            TemplateDictionary dataFieldH = top.addSection("field_hash_unique");
 
 
                             dataField = dataFieldH.addSection("field");
@@ -219,42 +246,54 @@ public class OD
                             dataField.putVariable("field_name",fieldName);
                             dataField.putVariable("field_nameCamel",fieldNameCamel);
                             dataField.putVariable("field_class",fieldType);
+                            dataField.putVariable("field_classClean",fieldTypeClean);
                         }
                         else if (IsFieldUnique(field)){
 
+                            dataField.addSection("field_is_not_hash_unique");
+
+                            TemplateDictionary field_is = dataField.addSection("field_is_unique");
+
                             if (IsTypeClassKey(fieldTypeClass)){
+
+                                dataField.addSection("field_is_key");
+
                                 if (null == key){
                                     key = field;
 
-                                    data.putVariable("field_key_name",fieldName);
-                                    data.putVariable("field_key_nameCamel",fieldNameCamel);
-                                    data.putVariable("field_key_class",fieldType);
+                                    top.putVariable("field_key_name",fieldName);
+                                    top.putVariable("field_key_nameCamel",fieldNameCamel);
+                                    top.putVariable("field_key_class",fieldType);
+                                    top.putVariable("field_key_classClean",fieldTypeClean);
                                 }
                             }
                             else if (IsTypeClassString(fieldTypeClass)){
+
+                                dataField.addSection("field_is_not_key");
 
                                 if (null == unique){
 
                                     unique = field;
 
-                                    TemplateDictionary field_is = dataField.addSection("field_is_unique");
                                     field_is.putVariable("data_model","*unique");
 
                                     /*
                                      * Global section 'field_unique'
                                      */
-                                    TemplateDictionary dataFieldU = data.addSection("field_unique");
+                                    TemplateDictionary dataFieldU = top.addSection("field_unique");
 
                                     dataFieldU.putVariable("field_name",fieldName);
                                     dataFieldU.putVariable("field_nameCamel",fieldNameCamel);
                                     dataFieldU.putVariable("field_class",fieldType);
+                                    dataFieldU.putVariable("field_classClean",fieldTypeClean);
 
                                     /*
                                      * Global field 'unique' references
                                      */
-                                    data.putVariable("field_unique_name",fieldName);
-                                    data.putVariable("field_unique_nameCamel",fieldNameCamel);
-                                    data.putVariable("field_unique_class",fieldType);
+                                    top.putVariable("field_unique_name",fieldName);
+                                    top.putVariable("field_unique_nameCamel",fieldNameCamel);
+                                    top.putVariable("field_unique_class",fieldType);
+                                    top.putVariable("field_unique_classClean",fieldTypeClean);
                                 }
                                 else
                                     throw new ODStateException(field,"Model has more than one '*unique' field, '"+unique.getName()+"' and '"+fieldName+"'.");
@@ -263,35 +302,60 @@ public class OD
                                 throw new ODStateException(field,"Model '*unique' field type is not string '"+fieldTypeClass+"'.");
                         }
                         else if (IsTypeClassKey(fieldTypeClass)){
+
+                            dataField.addSection("field_is_not_unique");
+                            dataField.addSection("field_is_not_hash_unique");
+
+                            TemplateDictionary field_is = dataField.addSection("field_is_key");
+
                             if (null == key){
                                 key = field;
 
-                                data.putVariable("field_key_name",fieldName);
-                                data.putVariable("field_key_nameCamel",fieldNameCamel);
-                                data.putVariable("field_key_class",fieldType);
+                                top.putVariable("field_key_name",fieldName);
+                                top.putVariable("field_key_nameCamel",fieldNameCamel);
+                                top.putVariable("field_key_class",fieldType);
+                                top.putVariable("field_key_classClean",fieldTypeClean);
                             }
                         }
                         else if (IsTypeClassList(fieldTypeClass)){
 
+                            dataField.addSection("field_is_not_key");
+                            dataField.addSection("field_is_not_unique");
+                            dataField.addSection("field_is_not_hash_unique");
+
                             if (1 == fieldTypeParameters.length){
-                                TemplateDictionary field_is_list = dataField.addSection("field_is_list");
+
+                                TemplateDictionary field_is = dataField.addSection("field_is_list");
+
                                 String typeComponent = fieldTypeParameters[0];
-                                field_is_list.putVariable("field_list_component",typeComponent);
+                                field_is.putVariable("field_list_component",typeComponent);
                             }
                             else
                                 throw new ODStateException(field,"Field '"+fieldName+"' type list missing type parameter.");
                         }
                         else if (IsTypeClassMap(fieldTypeClass)){
 
+                            dataField.addSection("field_is_not_key");
+                            dataField.addSection("field_is_not_unique");
+                            dataField.addSection("field_is_not_hash_unique");
+
                             if (2 == fieldTypeParameters.length){
-                                TemplateDictionary field_is_map = dataField.addSection("field_is_map");
+
+                                TemplateDictionary field_is = dataField.addSection("field_is_map");
+
                                 String typeComponentFrom = fieldTypeParameters[0];
                                 String typeComponentTo = fieldTypeParameters[1];
-                                field_is_map.putVariable("field_map_component_from",typeComponentFrom);
-                                field_is_map.putVariable("field_map_component_to",typeComponentTo);
+                                field_is.putVariable("field_map_component_from",typeComponentFrom);
+                                field_is.putVariable("field_map_component_to",typeComponentTo);
                             }
                             else
                                 throw new ODStateException(field,"Field '"+fieldName+"' type map missing type parameter.");
+                        }
+                        else {
+
+                            dataField.addSection("field_is_not_key");
+                            dataField.addSection("field_is_not_unique");
+                            dataField.addSection("field_is_not_hash_unique");
                         }
                     }
                     else if (IsFieldRelationChild(field)){
@@ -299,15 +363,16 @@ public class OD
                         if (null != fieldTypeClass && IsNotTypeClassBigTable(fieldTypeClass))
                             throw new ODStateException(field,"Relation field '"+fieldName+"' is not a subclass of 'gap.data.BigTable'.");
                         else {
-                            TemplateDictionary dataField = data.addSection("rfield");
+                            TemplateDictionary dataField = top.addSection("rfield");
 
                             dataField.putVariable("field_name",fieldName);
                             dataField.putVariable("field_nameCamel",fieldNameCamel);
                             dataField.putVariable("field_class",fieldType);
+                            dataField.putVariable("field_classClean",fieldTypeClean);
                         }
                     }
                     else {
-                        TemplateDictionary dataField = data.addSection("tfield");
+                        TemplateDictionary dataField = top.addSection("tfield");
                         {
                             TemplateDictionary field_is = dataField.addSection("field_is_transient");
                             field_is.putVariable("data_model","*transient");
@@ -316,6 +381,7 @@ public class OD
                         dataField.putVariable("field_name",fieldName);
                         dataField.putVariable("field_nameCamel",fieldNameCamel);
                         dataField.putVariable("field_class",fieldType);
+                        dataField.putVariable("field_classClean",fieldTypeClean);
                     }
                 }
             }
@@ -326,7 +392,7 @@ public class OD
                 /*
                  * Run template
                  */
-                template.render(data,out); 
+                template.render(top,out); 
             }
             else
                 throw new ODStateException(cd,"Model requires a field having type 'com.google.appengine.api.datastore.Key'.");

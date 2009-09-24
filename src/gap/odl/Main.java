@@ -63,13 +63,15 @@ public final class Main
      * Run on directories
      * @return List of target products
      */
-    public final static List<File> Process(File xtmFile, File odlDir, File outDir)
+    public final static List<File> Process(File xtmFile, File odlDir, File outDir, String outFext)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         List<File> products = new java.util.ArrayList<File>();
         String xtmName = xtmFile.getName();
         if (xtmName.endsWith(".xtm")){
-            String outFext = xtmName.substring(0,xtmName.length()-4);
+            if (null == outFext)
+                outFext = xtmName.substring(0,xtmName.length()-4);
+
             String[] odlList = odlDir.list();
             for (String odlName : odlList){
                 if (odlName.endsWith(".odl")){
@@ -109,7 +111,7 @@ public final class Main
         out.println();
         out.println("Usage");
         out.println();
-        out.println("  gap.odl.Main lang.xtm odl/source/dir out/target/dir");
+        out.println("  gap.odl.Main lang.xtm odl/source/dir out/target/dir [outFext]");
         out.println();
         out.println("Description");
         out.println();
@@ -117,10 +119,14 @@ public final class Main
         out.println("     generate a collection of targets given a collection of sources.");
         out.println("     The template file must have the '.xtm' filename extension.");
         out.println();
+        out.println("     Optionally define the output filename extension.");
+        out.println();
     }
 
     public final static void main(String[] argv){
-        if (3 == argv.length){
+
+        if (3 <= argv.length){
+
             File xtmFile = new File(argv[0]);
             File odlFile = new File(argv[1]);
             File outFile = new File(argv[2]);
@@ -153,11 +159,15 @@ public final class Main
                     }
                 }
 
+                String outFext = null;
+                if (3 < argv.length)
+                    outFext = argv[3];
+
                 try {
                     System.out.println("Template: "+xtmFile.getPath());
                     System.out.println("Source: "+odlFile.getPath());
                     System.out.println("Target: "+outFile.getPath());
-                    List<File> products = Main.Process(xtmFile,odlFile,outFile);
+                    List<File> products = Main.Process(xtmFile,odlFile,outFile,outFext);
                     for (File product : products){
                         System.out.println("Product: "+product.getPath());
                     }

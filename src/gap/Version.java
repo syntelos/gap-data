@@ -39,7 +39,7 @@ public final class Version {
     /**
      * Build sequence number.
      */
-    public final static int Build = 15;
+    public final static int Build = 16;
     /**
      * HTTP Product Token plus comment build date and time.  
      * As in <code>" Major '.' Minor '.' Build "</code>.
@@ -53,8 +53,6 @@ public final class Version {
     public final static boolean IsTest = (Target.contains("-test"));
 
     public final static boolean IsProd = (!IsTest);
-
-    public final static int TargetVersion = 1;
 
     public final static java.lang.String ToStringLong(String name){
         return (name+'/'+Long);
