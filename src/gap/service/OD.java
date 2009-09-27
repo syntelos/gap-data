@@ -392,7 +392,12 @@ public class OD
                 /*
                  * Run template
                  */
-                template.render(top,out); 
+                try {
+                    template.render(top,out); 
+                }
+                catch (TemplateException exc){
+                    throw new TemplateException("In "+xtm.getPath(),exc);
+                }
             }
             else
                 throw new ODStateException(cd,"Model requires a field having type 'com.google.appengine.api.datastore.Key'.");

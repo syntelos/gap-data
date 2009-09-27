@@ -24,6 +24,7 @@ import gap.service.od.ImportDescriptor;
 import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -34,6 +35,9 @@ public final class Import
     extends Object
     implements ImportDescriptor
 {
+    public final static Pattern Statement = Pattern.compile("^import [\\w\\._]+\\s*;?\\s*");
+
+
     public final static java.lang.Class Find(Package pkg, List<ImportDescriptor> imports, String type){
         type = Clean(type);
         try {
@@ -62,6 +66,8 @@ public final class Import
     }
 
 
+    private Comment comment;
+
     public final String packageName, packageSpec, className;
 
     public final boolean classNameInner;
@@ -71,37 +77,33 @@ public final class Import
         throws IOException, Syntax
     {
         super();
-        String packageName = null, className = null;
-        for (String line : reader){
-            line = line.trim();
-            if (line.startsWith("#") || 0 == line.length())
-                continue;
-            else if (line.startsWith("import")){
-                StringTokenizer strtok = new StringTokenizer(line," \t;");
-                if (2 == strtok.countTokens()){
-                    strtok.nextToken();
-                    String expr = strtok.nextToken();
-                    if (expr.endsWith(".*")){
-                        this.packageSpec = expr;
-                        this.packageName = expr.substring(0,expr.length()-2);
-                        this.className = null;
-                        this.classNameInner = false;
-                    }
-                    else {
-                        this.packageName = null;
-                        this.packageSpec = null;
-                        this.className = expr;
-                        this.classNameInner = (0 < expr.indexOf('$'));
-                    }
-                    return;
+        this.comment = reader.comment();
+        String line = reader.getNext(Statement);
+        if (null != line){
+            StringTokenizer strtok = new StringTokenizer(line," \t;");
+            if (2 == strtok.countTokens()){
+                strtok.nextToken();
+
+                String expr = strtok.nextToken();
+                if (expr.endsWith(".*")){
+                    this.packageSpec = expr;
+                    this.packageName = expr.substring(0,expr.length()-2);
+                    this.className = null;
+                    this.classNameInner = false;
                 }
-                else
-                    throw new Syntax("Malformed ODL package statement '"+line+"'.");
+                else {
+                    this.packageName = null;
+                    this.packageSpec = null;
+                    this.className = expr;
+                    this.classNameInner = (0 < expr.indexOf('$'));
+                }
+                return;
             }
             else
-                throw new Jump(reader,line);
+                throw new Syntax("Malformed statement '"+line+"'.");
         }
-        throw new Syntax("ODL class declaration not found.");
+        else 
+            throw new Jump();
     }
 
 
@@ -117,13 +119,19 @@ public final class Import
     public String getPackageSpec(){
         return this.packageSpec;
     }
-
     public boolean isPackage(){
         return (null != this.packageName);
     }
     public boolean isClass(){
         return (null != this.className);
     }
+    public boolean hasComment(){
+        return (null != this.comment);
+    }
+    public Comment getComment(){
+        return this.comment;
+    }
+
     public java.lang.Class classFor(String typeName){
         if (this.isClass()){
             if (this.classNameInner){

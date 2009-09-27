@@ -1,0 +1,67 @@
+body {
+ z-index: 0;
+ margin: 0px;
+ padding: 20px;
+ font-family: Arial, sans-serif;
+ color: #073763;
+ background-color: #ffffff;
+}
+div {
+ font-family: Arial, sans-serif;
+ width: 80%;
+}
+div.block {
+ margin-left: 40px;
+ background-color: #f6f6f6;
+
+ padding-left: 0px;
+ padding-top: 6px;
+ padding-bottom: 6px;
+ padding-right: 8px;
+}
+div.block.inside {
+ background-color: #ffffff;
+ border-top: 0.5px solid #073763;
+}
+
+h1 {
+ background-color: #cfe2f3;
+ border-left: 0.5px solid #073763;
+ border-right: 0.5px solid #073763;
+ padding: 6px;
+ padding-left: 18px;
+ margin-left: 0px;
+}
+
+h2 {
+ background-color: #cfe2f3;
+ border-left: 0.5px solid #073763;
+ border-right: 0.5px solid #073763;
+ padding: 4px;
+ padding-left: 24px;
+ margin-left: 0px;
+}
+a {
+ color: #073763;
+ text-decoration: none;
+}
+a.gap.data {
+ font: 20px Courier, monospace;
+ font-weight: 700;
+ font-style: italic;
+ margin-left: 2px;
+ margin-right: 2px;
+}
+p {
+ padding-left: 24px;
+}
+div.logo.rhs {
+ position: absolute;
+ right: 0px;
+ bottom: 240px;
+ width: 200px;
+ height: 50px;
+ background-image: url(icons/powered-by-gap-data-rhs-200x50.png);
+ cursor: pointer;
+ cursor: hand;
+}

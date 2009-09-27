@@ -346,7 +346,11 @@ public final class {{=class_name}}
     }
 {{/field_hash_unique}}
 
-    public void init(){
+    public void onread(){
+{{#method_onread_body}}{{/method_onread_body}}
+    }
+    public void onwrite(){
+{{#method_onwrite_body}}{{/method_onwrite_body}}
     }
 
 {{#pfield}}

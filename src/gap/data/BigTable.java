@@ -177,7 +177,14 @@ public abstract class BigTable
      * The fromDatastore field value is defined before this
      * method is called.
      */
-    public abstract void init();
+    public abstract void onread();
+    /**
+     * Called once by the Store layer before storing an instance
+     * object to the datastore or memcache.  Subclasses may perform
+     * operations updating their state.  Called after {@link
+     * LastModified} and before storage.
+     */
+    public abstract void onwrite();
 
     /**
      * The transient field "from datastore" employed by the {@link

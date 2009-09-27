@@ -104,21 +104,21 @@ public final class Method
     public String toString(){
         switch (this.type){
         case UNKNOWN:
-            return "UNKNOWN";
+            return name;
         case GET:
-            return "GET";
+            return Names.GET;
         case HEAD:
-            return "HEAD";
+            return Names.HEAD;
         case POST:
-            return "POST";
+            return Names.POST;
         case PUT:
-            return "PUT";
+            return Names.PUT;
         case DELETE:
-            return "DELETE";
+            return Names.DELETE;
         case OPTIONS:
-            return "OPTIONS";
+            return Names.OPTIONS;
         case TRACE:
-            return "TRACE";
+            return Names.TRACE;
         default:
             throw new IllegalStateException();
         }

@@ -375,7 +375,9 @@ public final class Person
     }
 
 
-    public void init(){
+    public void onread(){
+    }
+    public void onwrite(){
     }
 
 

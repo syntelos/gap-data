@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="gap-data" default="write">
+<project name="gap-data" default="jar">
   <tstamp/>
   <property name="compiler.source" value="1.6"/>
   <property name="compiler.target" value="1.6"/>
@@ -69,6 +69,30 @@
   <path id="jar.pack.path.joda-time">
     <fileset dir="${lib}">
       <include name="**/joda-time-*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="jar.pack.path.cos">
+    <fileset dir="${lib}">
+      <include name="**/cos-*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="jar.pack.path.jela">
+    <fileset dir="${lib}">
+      <include name="**/jela-*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="jar.pack.path.jbxml">
+    <fileset dir="${lib}">
+      <include name="**/jbxml-*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="jar.pack.path.gson">
+    <fileset dir="${lib}">
+      <include name="**/gson-*.jar"/>
     </fileset>
   </path>
 
@@ -161,6 +185,10 @@
         <zipfileset src="${toString:jar.pack.path.hapax}"/>
         <zipfileset src="${toString:jar.pack.path.appengine}"/>
         <zipfileset src="${toString:jar.pack.path.joda-time}"/>
+        <zipfileset src="${toString:jar.pack.path.cos}"/>
+        <zipfileset src="${toString:jar.pack.path.jela}"/>
+        <zipfileset src="${toString:jar.pack.path.jbxml}"/>
+        <zipfileset src="${toString:jar.pack.path.gson}"/>
         <fileset dir="${odl}">
           <include name="**/*.xtm" />
         </fileset>

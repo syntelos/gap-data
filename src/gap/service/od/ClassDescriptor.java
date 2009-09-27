@@ -26,7 +26,9 @@ import java.util.List;
  * 
  * @author jdp
  */
-public interface ClassDescriptor {
+public interface ClassDescriptor
+    extends HasName
+{
 
     /**
      * Optional field 'version' will default to "one".
@@ -48,6 +50,7 @@ public interface ClassDescriptor {
         public boolean hasInterfaces();
         /**
          * @return List of objects for toString
+         * @see HasName
          */
         public List<Object> getInterfaces();
     }
@@ -59,10 +62,23 @@ public interface ClassDescriptor {
         extends ClassDescriptor
     {
         public boolean hasKind();
-        /**
-         * @return List of objects for toString
-         */
+
         public String getKind();
+    }
+
+    /**
+     * 
+     */
+    public interface Relation 
+        extends ClassDescriptor
+    {
+        public enum Type {
+            None, Parent, Child;
+        }
+
+        public boolean hasRelation();
+
+        public Type getRelation();
     }
 
     /**
@@ -78,7 +94,14 @@ public interface ClassDescriptor {
     public List<FieldDescriptor> getFields();
 
     /**
-     * field 'definitionClassName'
+     * field 'methods'
+     */
+    public boolean hasMethods();
+
+    public List<MethodDescriptor> getMethods();
+
+    /**
+     * field 'definitionClassName' is employed by the OD service.
      */
     public boolean hasDefinitionClassName();
 

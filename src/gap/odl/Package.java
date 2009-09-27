@@ -21,6 +21,7 @@ package gap.odl;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -31,6 +32,10 @@ public final class Package
     extends Object
     implements gap.service.od.PackageDescriptor
 {
+    public final static Pattern Statement = Pattern.compile("^package [\\w\\._]+\\s*;?\\s*");
+
+
+    private Comment comment;
 
     public final String name;
 
@@ -38,28 +43,29 @@ public final class Package
         throws IOException, Syntax
     {
         super();
-        String packageName = null, className = null;
-        for (String line : reader){
-            line = line.trim();
-            if (line.startsWith("#") || 0 == line.length())
-                continue;
-            else if (line.startsWith("package")){
-                StringTokenizer strtok = new StringTokenizer(line," \t;");
-                if (2 == strtok.countTokens()){
-                    strtok.nextToken();
-                    this.name = strtok.nextToken();
-                    return;
-                }
-                else
-                    throw new Syntax("Malformed ODL package statement '"+line+"'.");
+        this.comment = reader.comment();
+        String line = reader.getNext(Statement);
+        if (null != line){
+            StringTokenizer strtok = new StringTokenizer(line," \t;");
+            if (2 == strtok.countTokens()){
+                strtok.nextToken();
+                this.name = strtok.nextToken();
+                return;
             }
-            else 
-                throw new Jump(reader,line);
+            else
+                throw new Syntax("Malformed ODL package statement '"+line+"'.");
         }
-        throw new Syntax("Missing ODL package statement.");
+        else 
+            throw new Syntax("Package statement not found.");
     }
 
     public String getName(){
         return this.name;
+    }
+    public boolean hasComment(){
+        return (null != this.comment);
+    }
+    public Comment getComment(){
+        return this.comment;
     }
 }

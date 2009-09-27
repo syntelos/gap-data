@@ -83,7 +83,7 @@ public final class Store
                 if (null != entity){
                     BigTable gdo = BigTable.From(entity);
                     gdo.setFromDatastore();
-                    gdo.init();
+                    gdo.onread();
                     return gdo;
                 }
                 else
@@ -99,7 +99,7 @@ public final class Store
             for (Entity entity : map.values()){
                 BigTable gdo = BigTable.From(entity);
                 gdo.setFromDatastore();
-                gdo.init();
+                gdo.onread();
                 list.add(gdo);
             }
             return list;
@@ -129,7 +129,7 @@ public final class Store
             else {
                 BigTable gdo = BigTable.From(entity);
                 gdo.setFromDatastore();
-                gdo.init();
+                gdo.onread();
                 return gdo;
             }
         }
@@ -148,7 +148,7 @@ public final class Store
             for (Entity entity : it){
                 BigTable gdo = BigTable.From(entity);
                 gdo.setFromDatastore();
-                gdo.init();
+                gdo.onread();
                 list.add(gdo);
             }
             return list;
@@ -226,7 +226,7 @@ public final class Store
                 BigTable gdo = (BigTable)mc.get(ck);
                 if (null != gdo){
                     gdo.setFromMemcache();
-                    gdo.init();
+                    gdo.onread();
                     return gdo;
                 }
                 else 
@@ -256,7 +256,7 @@ public final class Store
 
                 if (null != gdo){
                     gdo.setFromMemcache();
-                    gdo.init();
+                    gdo.onread();
                     list.add(gdo);
                 }
                 else {
@@ -264,7 +264,7 @@ public final class Store
                         gdo = BigTable.From(ds.get(key));
                         if (null != gdo){
                             gdo.setFromDatastore();
-                            gdo.init();
+                            gdo.onread();
                             list.add(gdo);
                             mc.put(key,gdo);
                         }
@@ -340,6 +340,8 @@ public final class Store
         if (table instanceof LastModified){
             ((LastModified)table).setLastModified(System.currentTimeMillis());
         }
+
+        table.onwrite();
 
         table = P.Put(table);
 

@@ -89,12 +89,12 @@ public abstract class AbstractServlet
     {
         this.service( (HttpServletRequest)req, (HttpServletResponse)rep);
     }
-    protected void serviceEnter(Method method, HttpServletRequest req, HttpServletResponse rep){
+    protected void serviceEnter(Method method, Protocol protocol, HttpServletRequest req, HttpServletResponse rep){
         Store.Enter();
         Remote.Enter();
         XMessaging.Enter();
     }
-    protected void serviceExit(Method method, HttpServletRequest req, HttpServletResponse rep){
+    protected void serviceExit(Method method, Protocol protocol, HttpServletRequest req, HttpServletResponse rep){
         Store.Exit();
         Remote.Exit();
         Logon.Exit();
@@ -106,9 +106,14 @@ public abstract class AbstractServlet
         throws IOException, ServletException
     {
         Method method = Method.Enter(req);
-
-        this.serviceEnter(method,req,rep);
+        Protocol protocol = Protocol.Enter(req);
+        this.serviceEnter(method,protocol,req,rep);
+        Path path = new Path(req);
+        Accept accept = new Accept(req);
+        Logon logon = null;
         try {
+            logon = this.logon(req,accept);
+
             switch (method.type){
             case Method.GET:{
                 long lastModified = this.getLastModified(req);
@@ -124,16 +129,16 @@ public abstract class AbstractServlet
 
                             MaybeSetLastModified(rep, lastModified);
 
-                            this.doGet(req, rep);
+                            this.doGet(path,accept,logon,req,rep);
                         }
                         else 
                             rep.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     }
                     else
-                        this.doGet(req, rep);
+                        this.doGet(path,accept,logon,req,rep);
                 }
                 else
-                    this.doGet(req, rep);
+                    this.doGet(path,accept,logon,req,rep);
                 return;
             }
             case Method.HEAD:{
@@ -152,37 +157,93 @@ public abstract class AbstractServlet
                             rep.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     }
                 }
-                this.doHead(req, rep);
+                this.doHead(path,accept,logon,req,rep);
                 return;
             }
             case Method.POST:
-                this.doPost(req, rep);
+                this.doPost(path,accept,logon,req,rep);
                 return;
             case Method.PUT:
-                this.doPut(req, rep);
+                this.doPut(path,accept,logon,req,rep);
                 return;
             case Method.DELETE:
-                this.doDelete(req, rep);
+                this.doDelete(path,accept,logon,req,rep);
                 return;
             case Method.OPTIONS:
-                this.doOptions(req, rep);
+                this.doOptions(path,accept,logon,req,rep);
                 return;
             case Method.TRACE:
-                this.doTrace(req, rep);
+                this.doTrace(path,accept,logon,req,rep);
                 return;
             default:
-                this.doMethod(method,req,rep);
+                this.doMethod(path,accept,logon,method,req,rep);
                 return;
             }
         }
         finally {
-            this.serviceExit(method,req,rep);
+            this.serviceExit(method,protocol,req,rep);
         }
+
     }
-    protected void doMethod(Method method, HttpServletRequest req, HttpServletResponse rep)
+    protected void doGet(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doHead(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doPost(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doPut(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doDelete(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doOptions(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doTrace(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doMethod(Path path, Accept accept, Logon logon, Method method, HttpServletRequest req, HttpServletResponse rep)
         throws IOException, ServletException
     {
+        this.undefined(path,accept,logon,method,req,rep);
+    }
+    protected void error(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage)
+        throws IOException, ServletException
+    {
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void undefined(Path path, Accept accept, Logon logon, Method method, HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
         rep.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+method+"' not implemented");
+    }
+    protected void render(Path path, Accept accept, Logon logon, TemplateDictionary top, HttpServletResponse rep)
+        throws IOException, ServletException
+    {
+        
+    }
+    protected void redirectToItem(Path path, Accept accept, Logon logon, Method method, String id, HttpServletResponse rep)
+        throws IOException, ServletException
+    {
+
     }
 
     /*

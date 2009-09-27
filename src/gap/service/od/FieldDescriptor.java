@@ -25,7 +25,9 @@ package gap.service.od;
  * 
  * @author jdp
  */
-public interface FieldDescriptor {
+public interface FieldDescriptor
+    extends HasName
+{
 
     /**
      * Fields are persistent by default.
@@ -84,6 +86,7 @@ public interface FieldDescriptor {
 
     /**
      * @return An object for toString
+     * @see HasName
      */
     public Object getType();
 

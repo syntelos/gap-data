@@ -28,6 +28,7 @@ import java.lang.reflect.TypeVariable;
 import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -40,6 +41,10 @@ public final class Field
                FieldDescriptor.Uniqueness,
                FieldDescriptor.Relation
 {
+    public final static Pattern Statement = Pattern.compile("[\\s\\w\\._]+;?\\s*");
+
+
+    private Comment comment;
 
     public final String typeName, name;
 
@@ -50,82 +55,77 @@ public final class Field
     public final Relation.Type relational;
 
 
-    public Field(Reader reader, Package pkg)
+    public Field(Reader reader)
         throws IOException, Syntax
     {
         super();
-        String fieldName = null, className = null;
-        for (String line : reader){
-            line = line.trim();
-            if (line.startsWith("#") || 0 == line.length())
-                continue;
-            else if (line.startsWith("}"))
-                throw new Jump.EOF(reader);
-            else {
-                StringTokenizer strtok = new StringTokenizer(line," \t;");
-                switch (strtok.countTokens()){
+        this.comment = reader.comment();
+        String line = reader.getNext(Statement);
+        if (null != line){
+            StringTokenizer strtok = new StringTokenizer(line," \t;");
+            switch (strtok.countTokens()){
 
-                case 2:
+            case 2:
 
-                    String s = strtok.nextToken();
-                    if ("*child".equals(s)){
+                String s = strtok.nextToken();
+                if ("*child".equals(s)){
 
-                        this.uniqueness = Uniqueness.Type.Undefined;
-                        this.persistence = Persistence.Type.Transient;
-                        this.relational = Relation.Type.Child;
+                    this.uniqueness = Uniqueness.Type.Undefined;
+                    this.persistence = Persistence.Type.Transient;
+                    this.relational = Relation.Type.Child;
 
-                        this.typeName = strtok.nextToken();
-                        this.name = Class.Decamel(this.typeName);
-                    }
-                    else {
-                        this.typeName = s;
-                        this.name = strtok.nextToken();
-                        this.uniqueness = Uniqueness.Type.Undefined;
-                        this.persistence = Persistence.Type.Persistent;
-                        this.relational = Relation.Type.None;
-                    }
-                    return;
-
-                case 3:
-                    String qualifier = strtok.nextToken();
                     this.typeName = strtok.nextToken();
-                    this.name = strtok.nextToken();
-
-                    if ("*unique".equalsIgnoreCase(qualifier)){
-
-                        this.uniqueness = Uniqueness.Type.Unique;
-                        this.persistence = Persistence.Type.Persistent;
-                        this.relational = Relation.Type.None;
-                    }
-                    else if ("*hash-unique".equalsIgnoreCase(qualifier)){
-
-                        this.uniqueness = Uniqueness.Type.HashUnique;
-                        this.persistence = Persistence.Type.Persistent;
-                        this.relational = Relation.Type.None;
-                    }
-                    else if ("*transient".equalsIgnoreCase(qualifier)){
-
-                        this.uniqueness = Uniqueness.Type.Undefined;
-                        this.persistence = Persistence.Type.Transient;
-                        this.relational = Relation.Type.None;
-                    }
-                    else if ("*child".equalsIgnoreCase(qualifier)){
-
-                        this.uniqueness = Uniqueness.Type.Undefined;
-                        this.persistence = Persistence.Type.Transient;
-                        this.relational = Relation.Type.Child;
-                    }
-                    else 
-                        throw new Syntax("Unrecognized field qualifier in '"+line+"'.");
-
-                    return;
-
-                default:
-                    throw new Syntax("Malformed ODL field statement '"+line+"'.");
+                    this.name = Class.Decamel(this.typeName);
                 }
+                else {
+                    this.typeName = s;
+                    this.name = strtok.nextToken();
+                    this.uniqueness = Uniqueness.Type.Undefined;
+                    this.persistence = Persistence.Type.Persistent;
+                    this.relational = Relation.Type.None;
+                }
+                return;
+
+            case 3:
+                String qualifier = strtok.nextToken();
+                this.typeName = strtok.nextToken();
+                this.name = strtok.nextToken();
+
+                if ("*unique".equalsIgnoreCase(qualifier)){
+
+                    this.uniqueness = Uniqueness.Type.Unique;
+                    this.persistence = Persistence.Type.Persistent;
+                    this.relational = Relation.Type.None;
+                }
+                else if ("*hash-unique".equalsIgnoreCase(qualifier)){
+
+                    this.uniqueness = Uniqueness.Type.HashUnique;
+                    this.persistence = Persistence.Type.Persistent;
+                    this.relational = Relation.Type.None;
+                }
+                else if ("*transient".equalsIgnoreCase(qualifier)){
+
+                    this.uniqueness = Uniqueness.Type.Undefined;
+                    this.persistence = Persistence.Type.Transient;
+                    this.relational = Relation.Type.None;
+                }
+                else if ("*child".equalsIgnoreCase(qualifier)){
+
+                    this.uniqueness = Uniqueness.Type.Undefined;
+                    this.persistence = Persistence.Type.Transient;
+                    this.relational = Relation.Type.Child;
+                }
+                else 
+                    throw new Syntax("Unrecognized field qualifier in '"+line+"'.");
+
+                return;
+
+            default:
+                throw new Syntax("Malformed ODL field statement '"+line+"'.");
             }
         }
-        throw new Syntax("Missing class close '}' not found.");
+        else
+            throw new Jump();
     }
 
 
@@ -152,6 +152,12 @@ public final class Field
     }
     public Relation.Type getRelation(){
         return this.relational;
+    }
+    public boolean hasComment(){
+        return (null != this.comment);
+    }
+    public Comment getComment(){
+        return this.comment;
     }
 
 }
