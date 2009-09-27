@@ -48,7 +48,7 @@ public final class Version {
 
     public final static java.lang.String Name = "gap-data";
 
-    public final static java.lang.String Target = "gap-data-test";
+    public final static java.lang.String Target = "${project.target}";
 
     public final static boolean IsTest = (Target.contains("-test"));
 
