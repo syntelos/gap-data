@@ -28,6 +28,7 @@ import java.lang.reflect.TypeVariable;
 import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -37,6 +38,10 @@ import java.util.StringTokenizer;
 public final class Interface
     extends Object
 {
+    public final static Pattern Statement = Pattern.compile("^implements [\\w\\._]+\\s*;?\\s*");
+
+
+    private Comment comment;
 
     public final String typeName;
 
@@ -47,45 +52,32 @@ public final class Interface
         throws IOException, Syntax
     {
         super();
-        String interfaceName = null, className = null;
-        for (String line : reader){
-            line = line.trim();
-            if (line.startsWith("#") || 0 == line.length())
-                continue;
-            else if (line.startsWith("{"))
-                throw new Jump(reader);
-            else {
-                StringTokenizer strtok = new StringTokenizer(line," \t;");
-                switch (strtok.countTokens()){
+        this.comment = reader.comment();
+        String line = reader.getNext(Statement);
+        if (null != line){
+            StringTokenizer strtok = new StringTokenizer(line," \t;");
+            if (2 == strtok.countTokens()){
+                strtok.nextToken();
 
-                case 2:
+                this.typeName = strtok.nextToken();
 
-                    String s = strtok.nextToken();
-                    if ("implements".equals(s)){
+                this.typeClass = Import.Find(pkg,imports,this.typeName);
 
-                        this.typeName = strtok.nextToken();
+                if (null == this.typeClass)
 
-                        this.typeClass = Import.Find(pkg,imports,this.typeName);
+                    throw new Syntax("Unrecognized class not found '"+this.typeName+"' in '"+line+"'.");
 
-                        if (null == typeClass)
-                            throw new Syntax("Unrecognized class at 'implements' expression, '"+line+"'.");
+                else if (!this.typeClass.isInterface())
 
-                        else if (!this.typeClass.isInterface())
-                            throw new Syntax("Invalid class is not an interface, '"+line+"'.");
-
-                        else
-                            return;
-                    }
-                    else {
-                        throw new Syntax("Unrecognized input at 'implements type' expression, '"+line+"'.");
-                    }
-
-                default:
-                    throw new Syntax("Malformed ODL implements statement '"+line+"'.");
-                }
+                    throw new Syntax("Class '"+this.typeClass.getName()+"' is not an interface in '"+line+"'.");
+                else
+                    return;
             }
+            else
+                throw new Syntax("Malformed statement '"+line+"'.");
         }
-        throw new Syntax("Missing class open '{' not found.");
+        else
+            throw new Jump();
     }
 
 
@@ -100,5 +92,11 @@ public final class Interface
     }
     public String toString(){
         return this.typeName;
+    }
+    public boolean hasComment(){
+        return (null != this.comment);
+    }
+    public Comment getComment(){
+        return this.comment;
     }
 }

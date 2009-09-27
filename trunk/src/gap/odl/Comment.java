@@ -17,21 +17,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.service.od;
+package gap.odl;
 
+import gap.service.od.ImportDescriptor;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
- * The object data model requires a package name.
  * 
+ * @see Class
  * @author jdp
  */
-public interface PackageDescriptor
-    extends HasName
+public final class Comment
+    extends Object
 {
-    /**
-     * @return A non null, not empty, fully qualified package name
-     * without a trailing dot.
-     */
-    public String getName();
+    public final static Pattern Line = Pattern.compile("\\s*#\\s*(.*)");
+    public final static Pattern MultiLine = Pattern.compile("\\s\\/\\*(.*)\\*\\/",Pattern.MULTILINE);
+
+
+    public final String text;
+
+
+    public Comment(Reader reader)
+        throws IOException, Syntax
+    {
+        super();
+        String text = reader.getNext(Line);
+        if (null != text)
+            this.text = text;
+        else {
+            text = reader.getNext(MultiLine);
+            if (null != text)
+                this.text = text;
+            else
+                throw new Jump();
+        }
+    }
 
 }

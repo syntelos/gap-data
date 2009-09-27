@@ -22,10 +22,13 @@ package gap.odl;
 import gap.service.od.ClassDescriptor;
 import gap.service.od.FieldDescriptor;
 import gap.service.od.ImportDescriptor;
+import gap.service.od.MethodDescriptor;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 /**
  * <h3>Purpose</h3>
@@ -121,20 +124,29 @@ import java.util.StringTokenizer;
 public final class Class
     extends Object
     implements ClassDescriptor.Version,
-               ClassDescriptor.Implements
+               ClassDescriptor.Implements,
+               ClassDescriptor.Relation
 {
+    public final static Pattern Open = Pattern.compile("^(class|parent|child).*");
+
 
     public final Package pack;
 
     public final String name, nameDecamel;
 
+    public final Relation.Type relation;
+
     public final String version;
 
     public final List<ImportDescriptor> imports = new java.util.ArrayList<ImportDescriptor>();
 
+    private Comment comment;
+
     public final List<Object> interfaces = new java.util.ArrayList<Object>();
 
     public final List<FieldDescriptor> fields = new java.util.ArrayList<FieldDescriptor>();
+
+    public final List<MethodDescriptor> methods = new java.util.ArrayList<MethodDescriptor>();
 
     private String definitionClassName;
 
@@ -144,12 +156,13 @@ public final class Class
     {
         super();
         Package pack = null;
-        String name = null;
+        String spec = null, name = null;
         Import imp = null;
         Field field = null;
+        Method method = null;
         long version = 1L;
 
-        while (reader.hasNext()){
+        while (true){
             try {
                 if (null == pack)
                     pack = new Package(reader);
@@ -159,18 +172,17 @@ public final class Class
                         this.imports.add(imp);
                     }
                     catch (Jump local){
-                        String line = reader.next();
-                        if (line.startsWith("#") || 0 == line.length())
-                            continue;
-                        else if (line.startsWith("class ")){
+                        this.comment = reader.comment();
+                        String line = reader.getNext(Open);
+                        if (null != line){
                             StringTokenizer strtok = new StringTokenizer(line, " \t{");
                             switch (strtok.countTokens()){
                             case 2:
-                                strtok.nextToken();
+                                spec = strtok.nextToken();
                                 name = strtok.nextToken();
                                 break;
                             case 4:
-                                strtok.nextToken();
+                                spec = strtok.nextToken();
                                 name = strtok.nextToken();
                                 if ("version".equals(strtok.nextToken()))
                                     version = Long.parseLong(strtok.nextToken());
@@ -182,8 +194,7 @@ public final class Class
                             }
 
                             if (!line.endsWith("{")){
-
-                                while (reader.hasNext()){
+                                while (true){
                                     Interface inf = new Interface(reader, pack, this.imports);
                                     this.interfaces.add(inf);
                                 }
@@ -194,14 +205,21 @@ public final class Class
                     }
                 }
                 else {
-                    field = new Field(reader, pack);
-                    this.fields.add(field);
+                    try {
+                        method = new Method(reader);
+                        this.methods.add(method);
+                    }
+                    catch (Jump to){
+
+                        field = new Field(reader);
+                        this.fields.add(field);
+                    }
                 }
             }
             catch (Jump global){
                 continue;
             }
-            catch (Jump.EOF eof){
+            catch (NoSuchElementException eof){
                 break;
             }
         }
@@ -211,7 +229,15 @@ public final class Class
         else
             throw new Syntax("Syntax error missing package.");
 
-        if (null != name){
+        if (null != spec && null != name){
+
+            if ("parent".equals(spec))
+                this.relation = Relation.Type.Parent;
+            else if ("child".equals(spec))
+                this.relation = Relation.Type.Child;
+            else
+                this.relation = Relation.Type.None;
+
             this.name = name;
             this.nameDecamel = Decamel(name);
         }
@@ -227,6 +253,12 @@ public final class Class
     public String getName(){
         return this.name;
     }
+    public boolean hasRelation(){
+        return true;
+    }
+    public Relation.Type getRelation(){
+        return this.relation;
+    }
     public boolean hasVersion(){
         return (null != this.version);
     }
@@ -236,11 +268,23 @@ public final class Class
     public boolean hasImports(){
         return (!this.imports.isEmpty());
     }
+    public boolean hasComment(){
+        return (null != this.comment);
+    }
+    public Comment getComment(){
+        return this.comment;
+    }
     public boolean hasFields(){
         return (!this.fields.isEmpty());
     }
     public List<FieldDescriptor> getFields(){
         return this.fields;
+    }
+    public boolean hasMethods(){
+        return (!this.methods.isEmpty());
+    }
+    public List<MethodDescriptor> getMethods(){
+        return this.methods;
     }
 
     public boolean hasDefinitionClassName(){

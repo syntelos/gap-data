@@ -19,8 +19,17 @@
  */
 package gap.odl;
 
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.Charset;
+import java.util.Locale;
+import java.util.Scanner;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -28,82 +37,64 @@ import java.io.IOException;
  * @author jdp
  */
 public final class Reader
-    extends Object
-    implements java.lang.Iterable<String>,
-               java.util.Iterator<String>
+    extends gap.util.Scanner
 {
 
-    private BufferedReader in;
-
-    private String next, unext;
+    private Comment comment;
 
 
-    public Reader(java.io.File file)
-        throws IOException
+    public Reader(Readable source){
+        super(source);
+    }
+    public Reader(InputStream source){
+        super(source);
+    }
+    public Reader(InputStream source, Charset cs){
+        super(source,cs);
+    }
+    public Reader(File source)
+        throws java.io.FileNotFoundException
     {
-        this(new java.io.FileReader(file));
+        super(source);
     }
-    public Reader(java.io.Reader reader)
-        throws IOException
+    public Reader(File source, Charset cs)
+        throws java.io.FileNotFoundException
     {
-        super();
-        if (reader instanceof BufferedReader)
-            this.in = (BufferedReader)reader;
-        else
-            this.in = new BufferedReader(reader);
-
-        this.next = this.in.readLine();
-
-        if (null == this.next)
-            this.in.close();
+        super(source,cs);
+    }
+    public Reader(String source){
+        super(source);
+    }
+    public Reader(ReadableByteChannel source){
+        super(source);
+    }
+    public Reader(ReadableByteChannel source, Charset cs){
+        super(source,cs);
     }
 
 
-    public boolean hasNext(){
-        return (null != this.next || null != this.unext);
-    }
-    public String next(){
-        String s = this.unext;
-        if (null != s){
-            this.unext = null;
-            return s;
-        }
-        s = this.next;
-        if (null != s){
+    public Comment comment()
+        throws IOException, Syntax
+    {
+        Comment comment = this.comment;
+        if (null != comment)
+            this.comment = null;
+        else {
             try {
-                String n = this.in.readLine();
-                if (null != n)
-                    this.next = n.trim();
-                else {
-                    this.in.close();
-                    this.next = null;
-                }
+                comment = new Comment(this);
+                this.comment = comment;
             }
-            catch (IOException exc){
-                this.next = null;
+            catch (Jump to){
             }
-            return s;
         }
-        else
-            throw new java.util.NoSuchElementException();
+        return comment;
     }
-    public void remove(){
-        throw new UnsupportedOperationException();
+    public String getNext(Pattern pattern){
+        this.comment = null;
+        return super.getNext(pattern);
     }
-    public void unread(String line){
-        if (null == this.unext)
-            this.unext = line;
-        else
-            throw new IllegalStateException();
-    }
-    public java.util.Iterator<String> iterator(){
-        return this;
-    }
-    public void close(){
-        try {
-            this.in.close();
-        }
-        catch (IOException exc){
-        }
+    public MatchResult getNextResult(Pattern pattern){
+        this.comment = null;
+        return super.getNextResult(pattern);
     }
 }

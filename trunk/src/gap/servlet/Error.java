@@ -17,21 +17,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.service.od;
+package gap.servlet;
+
+import gap.service.Logon;
+
+import oso.data.Person;
+
+import hapax.TemplateDictionary;
+
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.security.Principal;
 
 
-/**
- * The object data model requires a package name.
- * 
- * @author jdp
- */
-public interface PackageDescriptor
-    extends HasName
+public class Error
+    extends gap.service.AbstractServlet
 {
-    /**
-     * @return A non null, not empty, fully qualified package name
-     * without a trailing dot.
-     */
-    public String getName();
+
+
+
+    public Error(){
+        super();
+    }
+
+
 
 }

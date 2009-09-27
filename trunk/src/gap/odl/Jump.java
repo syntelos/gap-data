@@ -20,27 +20,15 @@
 package gap.odl;
 
 /**
- * Parse process flow jump.
+ * Parse process flow jump out of constructor.
  * 
  * @author jdp
  */
-public final class Jump
+final class Jump
     extends java.lang.RuntimeException
 {
-    public static class EOF
-        extends java.lang.RuntimeException
-    {
-        public EOF(Reader r){
-            super();
-            r.close();
-        }
-    }
 
-    public Jump(Reader r, String s){
-        super();
-        r.unread(s);
-    }
-    public Jump(Reader r){
+    Jump(){
         super();
     }
 }

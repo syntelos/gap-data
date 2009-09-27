@@ -32,7 +32,7 @@ import javax.annotation.Generated;
  * Data binding methods.
  */
 @Generated(value={"gap.od","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
-public abstract class {{=class_name}}Servlet
+public abstract class {{=class_name}}
     extends gap.service.AbstractServlet
 {
 
@@ -43,26 +43,19 @@ public abstract class {{=class_name}}Servlet
 
 
 
-    public {{=class_name}}Servlet(){
+    public {{=class_name}}(){
         super();
     }
 
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse rep)
+    protected void doGet(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
         throws ServletException, IOException
     {
-        Path path = new Path(req);
-        Accept accept = new Accept(req);
-        Logon logon = null;
-        try {
-            logon = this.logon(req,accept);
             if (accept.accept("text/html")){
 
                 TemplateDictionary top = logon.dict;
 
                 if (logon.isLoggedIn()){
-
-                    this.viewer(logon,top);
 
                     String id = path.get(0);
                     if (null != id){
@@ -80,7 +73,7 @@ public abstract class {{=class_name}}Servlet
                             }
                         }
                         else {
-                            this.error(req,rep,path,accept,logon,404,"Not found.");
+                            this.error(path,accept,logon,method,req,rep,404,"Not found.");
                             return;
                         }
                     }
@@ -120,35 +113,17 @@ public abstract class {{=class_name}}Servlet
             else
                 rep.setStatus(400);
 
-        }
-        catch (Exception exc){
-            LogRecord rec = new LogRecord(Level.SEVERE,"error");
-            rec.setThrown(exc);
-            Log.log(rec);
-            int s = 500;
-            String m = "Internal error";
-            rep.setStatus(s,m);
-            Error.Attribute.Value.Setup(req,path,s,m,exc);
-            this.error(req,rep,path,accept,logon,s,m);
-        }
     }
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse rep)
+    protected void doPost(Path path, Accept accept, Logon logon, Method method, HttpServletRequest req, HttpServletResponse rep)
         throws ServletException, IOException
     {
 
-        Path path = new Path(req);
-        Accept accept = new Accept(req);
-        Logon logon = null;
-        try {
-            logon = this.logon(req,accept);
             if (accept.accept("text/html")){
 
                 TemplateDictionary top = logon.dict;
 
                 if (logon.isLoggedIn()){
-
-                    Person viewer = logon.getPerson();
 
                     String opString = req.getParameter("op");
                     if (null != opString){
@@ -292,23 +267,6 @@ public abstract class {{=class_name}}Servlet
             }
             else
                 rep.setStatus(400);
-        }
-        catch (Exception exc){
-            LogRecord rec = new LogRecord(Level.SEVERE,"error");
-            rec.setThrown(exc);
-            Log.log(rec);
-            int s = 500;
-            String m = "Internal error";
-            rep.setStatus(s,m);
-            Error.Attribute.Value.Setup(req,path,s,m,exc);
-            this.error(req,rep,path,accept,logon,s,m);
-        }
     }
-
-    protected abstract void render(TemplateDictionary top, HttpServletResponse rep);
-
-    protected abstract void redirectToItem(String id);
-
-    protected abstract void error(HttpServletRequest req, HttpServletResponse rep, Path path, Accept accept, Logon logon, int status, String statusMessage);
 
 }

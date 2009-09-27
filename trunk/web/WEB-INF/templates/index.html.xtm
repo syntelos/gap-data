@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>An Experiment</title>
+  <link rel="stylesheet" type="text/css" href="top.css" />
+  </head>
+  <body>
+    <div class="block">
+      <div class="block inside">
+        <p> <a class="gap data"
+               href="http://gap-data.appspot.com/">gap-data</a> is an
+          experiment in internet economics, to find a way to pay for
+          shared services. </p>
+        
+        <p> We'll start with a model, and then evolve it to support
+          our costs. </p>
+      </div>
+      <div class="block">
+        <div class="block inside">
+          <p><a href="http://code.google.com/p/gap-data">Gap Data is open source.</a></p>
+          
+          <p><a href="http://code.google.com/p/gap-data">Gap Data</a> runs on <a class="gap data" href="http://gap-data.appspot.com/">gap-data</a></p>
+          
+          <p><a href="http://code.google.com/p/gap-data">Gap Data</a> stores logical data an <a href="http://atompub.org/">Atom pub</a> interface to the  <a href="http://appengine.google.com/">appengine datastore</a>.</p>
+
+          <div class="block drawing">
+            <img src="images/gap-data-1-400x252.png" width="400" height="252" />
+          </div>
+          
+          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
+            is economically self sustaining, group sharing on the
+            appengine model. </p>
+          
+          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
+            exposes its configuration to its site administrators,
+            including content and programming. </p>
+          
+          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
+            site administrators can adapt its web based programming to
+            create groups or roles or capabilities' delegations as
+            desired. </p>
+
+          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
+            is an <i>"application wiki"</i>.
+          </p>
+
+          <p> Sign in, find a friend or a project.  Create a project.  java, java, java.
+          </p>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="logo rhs" onclick="javascript:document.location = 'http://gap-data.appspot.com/'; return true;">
+    </div>
+    <div class="copyrights">
+      <p> <a href="http://www.java.com/">Java</a> is a trademark of <a href="http://www.sun.com/">Sun Microsystems</a>.</p>
+      <p> <a href="http://appengine.google.com/">Appengine</a> is a service of <a href="http://www.google.com/">Google</a>.</p>
+      <p> <a href="http://gap-data.appspot.com/">Gap Data</a> is a service from <a href="http://www.syntelos.org/">Folks around here</a>.</p>
+    </div>
+  </body>
+</html>
