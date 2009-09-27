@@ -22,14 +22,9 @@
   <!-- 
      - Application
     -->
-  <basename property="project.dirn" file="${basedir}"/>
+  <property file="project.application"/>
 
-  <condition property="project.application" value="gap-data">
-
-    <equals arg1="${project.dirn}" arg2="trunk"/>
-
-  </condition>
-  <fail unless="project.application" message="Unrecognized configuration, see build."/>
+  <fail unless="project.application" message="Unrecognized configuration, missing 'project.application'."/>
 
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.version.xml"/>
@@ -149,6 +144,8 @@
       </filterset>
       <fileset dir="${ver.web}">
         <include name="**/*.xml"/>
+        <include name="**/*.html"/>
+        <include name="**/*.properties"/>
       </fileset>
     </copy>
 
