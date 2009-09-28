@@ -50,6 +50,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.LogRecord;
 
 /**
  * Instantiated per request for infinite many locations and stateful
@@ -63,6 +66,13 @@ public class FileManager
     implements gap.jac.tools.JavaFileManager
 {
     public final static Charset UTF8 = Charset.forName("UTF-8");
+
+    /**
+     * Subclass usage should be qualified as
+     * <code>"FileManager.Log"</code> or
+     * <code>"gap.service.FileManager.Log"</code>.
+     */
+    protected final static Logger Log = Logger.getLogger("FileManager");
 
 
     public final static FileManager Get(){
@@ -175,24 +185,39 @@ public class FileManager
 
 
     public String getTemplatePath(TemplateDescriptor templateD){
-//         String name = templateD.getName();
-//         String base = templateD.getBase();
-//         if (null != name){
-//             if (null == base)
-//                 return name;
-//             else
-//                 return base+'/'+name;
-//         }
-//         else if (null == base)
-//             return null;
-//         else
-//             return base;
-        return null;
+        String base = null;// templateD.getBase();
+        String name = null;// templateD.getName();
+        return this.getTemplatePath(base,name);
+    }
+    public String getTemplatePath(String base, String name){
+        if (null != name){
+            if (null == base)
+                return name;
+            else
+                return base+'/'+name;
+        }
+        else if (null == base)
+            return null;
+        else
+            return base;
+    }
+    public String getTemplatePath(Path path){
+        String base = null;
+        String name = null;
+        if (path.hasSource()){
+            if (path.hasGroup()){
+                base = path.getSource();
+                name = path.getGroup();
+            }
+            else {
+                name = path.getSource();
+            }
+        }
+        return getTemplatePath(base,name);
     }
     public Template getTemplate(String path)
         throws TemplateException
     {
-
         if (null != path){
 
             Template template = this.templates.get(path);
@@ -204,6 +229,30 @@ public class FileManager
         }
         else
             return null;
+    }
+    public Template getTemplate(Path path){
+        Template template = null;
+        try {
+            TemplateDescriptor templateD = GetTemplateDescriptor(path);
+            if (null != templateD){
+                template = this.getTemplate(templateD);
+                if (null != template)
+                    return template;
+            }
+
+            String pathString = this.getTemplatePath(path);
+            template = this.templates.get(pathString);
+            if (null == template){
+                template = Templates.GetTemplate(this.templatesContext,templateD,pathString);
+                if (null == template)
+                    template = Templates.GetTemplate(pathString);
+                else 
+                    this.templates.put(pathString,template);
+            }
+        }
+        catch (TemplateException ignore){
+        }
+        return template;
     }
     public Template getTemplate(TemplateDescriptor templateD)
         throws TemplateException
@@ -224,18 +273,58 @@ public class FileManager
         else
             return null;
     }
+    public Servlet getServlet(Path path){
+
+        String base = "";
+        String name = null;
+        if (path.hasSource()){
+            if (path.hasGroup()){
+                base = path.getSource();
+                name = path.getGroup();
+            }
+            else {
+                name = path.getSource();
+            }
+        }
+        else {
+            name = "";
+        }
+
+        Servlet servlet = null;
+
+        ServletDescriptor servletD = ServletDescriptor.ForBaseName(base,name);
+        if (null != servletD)
+            servlet = this.getServlet(servletD);
+
+        return servlet;
+    }
     public Servlet getServlet(ServletDescriptor servletD){
 
-//         String servletClassName = servletD.getServletClassName();
-//         if (null != servletClassName){
-//             Class jclass = this.findClass(servletClassName);
-//             if (null == jclass){
-//                 jclass = this.define(servletD);
-//             }
-//             return jclass;
-//         }
-//         else
-        return null;
+        String servletClassName = null;// servletD.getServletClassName();
+        if (null != servletClassName){
+            try {
+                Class jclass;
+                try {
+                    jclass = this.findClass(servletClassName);
+                }
+                catch (ClassNotFoundException not){
+
+                    jclass = this.define(servletD);
+                }
+
+                Servlet servlet = (Servlet)jclass.newInstance();
+                servlet.init(Servlet.Config);
+                return servlet;
+            }
+            catch (Exception any){
+                LogRecord rec = new LogRecord(Level.SEVERE,"error");
+                rec.setThrown(any);
+                FileManager.Log.log(rec);
+                return null;
+            }
+        }
+        else
+            return null;
     }
     public boolean compile(ServletDescriptor servletD)
         throws java.io.IOException
@@ -396,6 +485,26 @@ public class FileManager
     }
 
 
+    public final static TemplateDescriptor GetTemplateDescriptor(Path path){
+
+        String base = "";
+        String name = null;
+        if (path.hasSource()){
+            if (path.hasGroup()){
+                base = path.getSource();
+                name = path.getGroup();
+            }
+            else {
+                name = path.getSource();
+            }
+        }
+        else {
+            name = "";
+        }
+
+        return TemplateDescriptor.ForBaseName(base,name);
+    }
+
     private final static List<String> Options;
     static {
         List<String> list = new java.util.ArrayList<String>();
@@ -409,4 +518,5 @@ public class FileManager
         list.add("1.6");
         Options = Collections.unmodifiableList(list);
     }
+
 }

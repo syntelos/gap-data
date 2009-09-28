@@ -73,6 +73,7 @@ public class Servlet
      */
     protected final static Logger Log = Logger.getLogger("Servlet");
 
+    protected volatile static ServletConfig Config;
 
 
     public Servlet(){
@@ -82,6 +83,10 @@ public class Servlet
 
     @Override
     public final void init(ServletConfig config) throws ServletException {
+
+        if (null == Config)
+            Config = config;
+
         this.serviceEnter();
         try {
             super.init(config);
@@ -141,40 +146,13 @@ public class Servlet
                                  HttpServletRequest req, HttpServletResponse rep)
         throws IOException, ServletException, TemplateException
     {
-        String base = "";
-        String name = null;
-        if (path.hasSource()){
-            if (path.hasGroup()){
-                base = path.getSource();
-                name = path.getGroup();
-            }
-            else {
-                name = path.getSource();
-            }
-        }
-        else {
-            name = "";
-        }
-        Servlet servlet = null;
+
         Template template = null;
-        ServletDescriptor servletD = ServletDescriptor.ForBaseName(base,name);
-        if (null != servletD){
-            servlet = fm.getServlet(servletD);
-            if (null == servlet){
-                this.error(path,accept,logon,req,rep,403,"Incomplete servlet.");
-                return;
-            }
-        }
-        else {
-            TemplateDescriptor templateD = TemplateDescriptor.ForBaseName(base,name);
-            if (null != templateD){
-                template = fm.getTemplate(templateD);
-                if (null == template){
-                    this.error(path,accept,logon,req,rep,403,"Incomplete template.");
-                    return;
-                }
-            }
-        }
+
+        Servlet servlet = fm.getServlet(path);
+        if (null == servlet)
+            template = fm.getTemplate(path);
+
         /*
          */
         switch (method.type){

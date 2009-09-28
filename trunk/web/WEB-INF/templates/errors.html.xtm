@@ -5,6 +5,8 @@
     <link rel="icon" href="/icons/favicon.ico" />
   </head>
   <body>
+    <div class="logon">{{>logon}}
+    </div>
     <div class="block">
       {{#error}}
       <div class="block inside">
