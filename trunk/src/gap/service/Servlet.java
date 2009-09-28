@@ -572,10 +572,11 @@ public class Servlet
         throws IOException, ServletException, TemplateException
     {
         rep.setCharacterEncoding("UTF-8");
-        ServletCountDownOutputStream counter = new ServletCountDownOutputStream(rep);
-        this.render(path,accept,logon,template,top,rep,(new PrintWriter(new OutputStreamWriter(counter,UTF8))));
-        counter.flush();
-        Stats.SetBytesDown(counter.getCount());
+        //ServletCountDownOutputStream counter = new ServletCountDownOutputStream(rep);
+        //this.render(path,accept,logon,template,top,rep,(new PrintWriter(new OutputStreamWriter(counter,UTF8))));
+        this.render(path,accept,logon,template,top,rep,rep.getWriter());
+        //counter.flush();
+        //Stats.SetBytesDown(counter.getCount());
     }
     private void render(Path path, Accept accept, Logon logon, Template template, TemplateDictionary top, HttpServletResponse rep, PrintWriter out)
         throws IOException, ServletException, TemplateException
