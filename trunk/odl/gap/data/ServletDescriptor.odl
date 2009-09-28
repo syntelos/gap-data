@@ -1,0 +1,15 @@
+package gap.data
+
+import com.google.appengine.api.datastore.*
+import java.util.*
+import java.io.Serializable
+
+class ServletDescriptor version 1 {
+    Key key
+    *unique String id
+    *hash-unique String base
+    *hash-unique String name
+    Category tag
+    Text source
+    Blob classfile
+}

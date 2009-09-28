@@ -66,3 +66,7 @@ div.logo.rhs {
  cursor: pointer;
  cursor: hand;
 }
+div.copyrights {
+ font: 12px Lucida Typewriter, Verdana, sans-serif;
+ color: #000;
+}

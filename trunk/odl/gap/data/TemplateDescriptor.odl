@@ -1,0 +1,14 @@
+package gap.data
+
+import com.google.appengine.api.datastore.*
+import java.util.*
+import java.io.Serializable
+
+class TemplateDescriptor version 1 {
+    Key key
+    *unique String id
+    *hash-unique String base
+    *hash-unique String name
+    Category Tag;
+    Text source
+}

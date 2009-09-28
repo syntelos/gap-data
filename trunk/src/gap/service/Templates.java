@@ -19,30 +19,45 @@
  */
 package gap.service;
 
+import gap.data.TemplateDescriptor;
+import gap.jac.tools.JavaFileManager.Location;
+
 import hapax.Template;
 import hapax.TemplateDictionary;
 import hapax.TemplateException;
 import hapax.TemplateLoader;
+import hapax.TemplateLoaderContext;
 
 import javax.servlet.ServletResponse;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
+ * Used by {@link FileManager}.
  * 
+ * @author jdp
  */
 public final class Templates
     extends hapax.TemplateCache
 {
-    public final static String TemplatesLocation = "WEB-INF/templates";
-
+    /**
+     * Default data dictionary variables.
+     */
     private static TemplateDictionary TemplateDictionaryDefault = TemplateDictionary.create();
     static {
         TemplateDictionaryDefault.putVariable("gap_version_short",gap.Version.Short);
         TemplateDictionaryDefault.putVariable("gap_version_long",gap.Version.Long);
     }
-    private static Templates Instance = new Templates();
+    /**
+     * Templates file cache location
+     */
+    public final static String TemplatesLocation = "WEB-INF/templates";
+    /**
+     * Shared templates file cache instance
+     */
+    private final static Templates Instance = new Templates();
 
 
     public static void Render(String name, TemplateDictionary td, PrintWriter writer)
@@ -88,10 +103,40 @@ public final class Templates
         else
             throw new IllegalStateException();
     }
+    public static File GetTemplatesLocation(){
+        return Instance.getTemplatesLocation();
+    }
+    public static Template GetTemplate(TemplateLoaderContext context, TemplateDescriptor resource,
+                                       String path)
+        throws TemplateException
+    {
+        return Instance.getTemplate(context,resource,path);
+    }
+    static TemplateLoaderContext CreateTemplateLoaderContext(FileManager fm, Location fmLocation){
+
+        return new TemplateLoaderContext(Instance,fmLocation.getName());
+    }
+
+
+    private final File templatesLocation;
 
 
     private Templates(){
         super(TemplatesLocation);
+        this.templatesLocation = new File(TemplatesLocation);
     }
 
+
+    public File getTemplatesLocation(){
+        return this.templatesLocation;
+    }
+    public Template getTemplate(TemplateLoaderContext context, TemplateDescriptor resource, String path)
+        throws TemplateException
+    {
+        String source = null;//= resource.getTemplateSourceText();
+        if (null != source)
+            return new Template(source,context);
+        else
+            return null;
+    }
 }

@@ -103,7 +103,12 @@ public class Error {
         public final static class ToString {
 
             public final static java.lang.String Exception(HttpServletRequest req){
+                return Exception(req,null);
+            }
+            public final static java.lang.String Exception(HttpServletRequest req, Throwable any){
                 Throwable value = Attribute.Value.Exception(req);
+                if (null == value)
+                    value = any;
                 if (null != value){
                     java.io.CharArrayWriter buffer = new java.io.CharArrayWriter();
                     java.io.PrintWriter err = new java.io.PrintWriter(buffer);
@@ -120,10 +125,28 @@ public class Error {
                 else
                     return "";
             }
+            public final static java.lang.String Status(HttpServletRequest req, Throwable any){
+                Object value = Attribute.Value.Status(req);
+                if (null != value)
+                    return value.toString();
+                else if (null != any)
+                    return "500";
+                else
+                    return "";
+            }
             public final static java.lang.String Message(HttpServletRequest req){
                 Object value = Attribute.Value.Message(req);
                 if (null != value)
                     return value.toString();
+                else
+                    return "";
+            }
+            public final static java.lang.String Message(HttpServletRequest req, Throwable any){
+                Object value = Attribute.Value.Message(req);
+                if (null != value)
+                    return value.toString();
+                else if (null != any)
+                    return any.getMessage();
                 else
                     return "";
             }
@@ -134,6 +157,15 @@ public class Error {
                 else
                     return "";
             }
+            public final static java.lang.String Type(HttpServletRequest req, Throwable any){
+                Object value = Attribute.Value.Type(req);
+                if (null != value)
+                    return value.toString();
+                else if (null != any)
+                    return any.getClass().getName();
+                else
+                    return "";
+            }
             public final static java.lang.String URI(HttpServletRequest req){
                 Object value = Attribute.Value.URI(req);
                 if (null != value)
@@ -141,58 +173,13 @@ public class Error {
                 else
                     return "";
             }
-        }
-    }
-
-    public final static void Response(HttpServletRequest req, HttpServletResponse rep, Path path, Accept accept, Logon logon, int status, String statusMessage, String from, String top)
-        throws IOException, TemplateException
-    {
-        if (accept.accept("text/html")){
-
-            TemplateDictionary dict;
-            if (null != logon)
-                dict = logon.dict;
-            else
-                dict = Templates.CreateDictionary();
-
-            rep.resetBuffer();
-
-            if (null == from)
-                from = "error";
-
-            TemplateDictionary error = dict.addSection(from);
-
-            String errors_exception = Attribute.ToString.Exception(req);
-            String errors_status;
-            String errors_type = Attribute.ToString.Type(req);
-            String errors_uri = Attribute.ToString.URI(req);
-            if (0 < status){
-                rep.setStatus(status,statusMessage);
-
-                errors_status = String.valueOf(status);
-
-                error.putVariable("error_message",statusMessage);
+            public final static java.lang.String URI(HttpServletRequest req, Throwable any){
+                Object value = Attribute.Value.URI(req);
+                if (null != value)
+                    return value.toString();
+                else
+                    return "";
             }
-            else {
-                errors_status = Attribute.ToString.Status(req);
-
-                error.putVariable("error_message",Attribute.ToString.Message(req));
-            }
-            error.putVariable("error_exception",errors_exception);
-            error.putVariable("error_status",errors_status);
-
-            error.putVariable("error_type",errors_type);
-            error.putVariable("error_uri",errors_uri);
-
-            if (null == top)
-                top = "top";
-
-            Templates.Render(top,dict,rep);
-
-            rep.setHeader("Content-Type","text/html;charset=UTF-8");
-        }
-        else if (0 < status){
-            rep.setStatus(status,statusMessage);
         }
     }
 }
