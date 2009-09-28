@@ -11,41 +11,38 @@
                href="http://gap-data.appspot.com/">gap-data</a> is an
           experiment in internet economics, to find a way to pay for
           shared services. </p>
-        
+
         <p> We'll start with a model, and then evolve it to support
           our costs. </p>
 
         <div class="block inside">
           <div class="block inside">
             <p><a href="http://code.google.com/p/gap-data">Gap Data is open source.</a></p>
-          
+
             <p><a href="http://code.google.com/p/gap-data">Gap Data</a> runs on <a class="gap data" href="http://gap-data.appspot.com/">gap-data</a></p>
-          
+
             <p><a href="http://code.google.com/p/gap-data">Gap Data</a> is a web interface for <a href="http://appengine.google.com/">appengine development</a>.</p>
 
-            <div class="block drawing">
+            <div class="block">
               <img src="images/gap-data-1-400x252.png" width="400" height="252" />
             </div>
-          
-            <div class="block">
 
-              <div class="block inside">
-                <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-                  exposes its configuration to its site administrators,
-                  including all site content and programming. </p>
-          
-                <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-                  site administrators may adapt its web based programming to
-                  create groups or roles or capabilities' delegations to
-                  other web logons as desired. </p>
+            <div class="block inside">
+              <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
+              exposes its configuration to its site administrators,
+              including all site content and programming. </p>
 
-                <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-                  is like an <i>"application wiki"</i>.
-                </p>
+              <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
+              site administrators may adapt its web based programming to
+              create groups or roles or capabilities' delegations to
+              other web logons as desired. </p>
 
-                <p> Sign in, find a friend or a project.  Create a project.  
-                </p>
-              </div>
+              <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
+              is like a <i>"java application wiki"</i>.
+              </p>
+
+              <p> Sign in, find a friend or a project.  Create a project.
+              </p>
             </div>
           </div>
         </div>
@@ -56,7 +53,7 @@
     <div class="copyrights">
       <p> <a href="http://www.java.com/">Java</a> is a trademark of <a href="http://www.sun.com/">Sun Microsystems</a>.</p>
       <p> <a href="http://appengine.google.com/">Appengine</a> is a service of <a href="http://www.google.com/">Google</a>.</p>
-      <p> <a href="http://gap-data.appspot.com/">Gap Data is a service from these folks, here</a>.</p>
+      <p> <a href="http://gap-data.appspot.com/">Gap Data is a service from some folks around here</a>.</p>
     </div>
   </body>
 </html>

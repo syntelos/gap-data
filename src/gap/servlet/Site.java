@@ -19,11 +19,15 @@
  */
 package gap.servlet;
 
+import gap.data.TemplateDescriptor;
 import gap.service.Accept;
+import gap.service.FileManager;
 import gap.service.Logon;
 import gap.service.Path;
 
+import hapax.Template;
 import hapax.TemplateDictionary;
+import hapax.TemplateException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,17 +35,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
- * Bound to path <code>'/errors/*'</code>
+ * Bound to path <code>'/*'</code>
  */
-public class Error
+public class Site
     extends gap.service.Servlet
 {
 
 
-    public Error(){
+    public Site(){
         super();
     }
 
@@ -49,8 +54,21 @@ public class Error
     protected void doGet(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
         throws ServletException, IOException
     {
-        if (accept.accept("text/html"))
-            this.error(path,accept,logon,req,rep);
+        if (accept.accept("text/html")){
+            try {
+                Template template = FileManager.Get().getTemplate("index.html");
+                if (null != template)
+                    this.render(path, accept, logon, template, logon.dict, rep);
+                else
+                    this.error(path,accept,logon,req,rep,404,"Not found.");
+            }
+            catch (TemplateException exc){
+                LogRecord rec = new LogRecord(Level.SEVERE,"error");
+                rec.setThrown(exc);
+                Log.log(rec);
+                this.error(path,accept,logon,req,rep,500,"Internal error.",exc);
+            }
+        }
         else
             rep.setStatus(400,"Unrecognized request.");
     }

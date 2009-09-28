@@ -4,8 +4,22 @@
   <display-name>@ProjectTarget@</display-name>
 
   <!-- 
+     - Context 
+    -->
+
+  <listener>
+    <listener-class>gap.context.Site</listener-class>
+  </listener>
+
+
+  <!-- 
      - Servlet
     -->
+
+  <servlet>
+    <servlet-name>Site</servlet-name>
+    <servlet-class>gap.servlet.Site</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>Errors</servlet-name>
@@ -15,6 +29,11 @@
   <!-- 
      - Mapping
     -->
+
+  <servlet-mapping>
+    <servlet-name>Site</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>Errors</servlet-name>

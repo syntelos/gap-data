@@ -17,40 +17,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.service;
+package gap.util;
 
-import gap.service.jac.FileManager;
-
-import java.io.OutputStream;
-import java.io.Reader;
-import java.util.List;
-
+import java.io.IOException;
 
 /**
- * Compile java source to binary.
  * 
  * @author jdp
  */
-public class Jac
-    extends java.lang.ClassLoader
+public class DevNullOutputStream
+    extends java.io.OutputStream
 {
-    /**
-     * Compile JPL sourcecode into output.
-     * 
-     * @exception java.io.IOException Error writing to output.
-     */
-    public final static boolean CompileSource(String className, Reader in, OutputStream err, OutputStream bin)
-        throws java.io.IOException
-    {
-        if (null != className && null != in && null != bin){
-            FileManager fm = FileManager.Get();
-            if (null != fm)
-                return fm.compile(className,in,err,bin);
-            else
-                throw new IllegalStateException();
-        }
+
+
+    private boolean open;
+
+    private int count;
+
+
+    public DevNullOutputStream(){
+        super();
+    }
+
+
+    public int getCount(){
+        return this.count;
+    }
+    public void write(int b) throws IOException {
+        if (this.open)
+            this.count += 1;
         else
-            throw new IllegalArgumentException();
+            throw new java.io.IOException("closed");
+    }
+    public void close() throws IOException {
+        this.open = false;
     }
 
 }

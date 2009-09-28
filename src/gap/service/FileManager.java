@@ -17,7 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.service.jac;
+package gap.service;
+
+import gap.data.TemplateDescriptor;
+import gap.data.ServletDescriptor;
+import gap.service.jac.JavaClassOutput;
+import gap.service.jac.JavaSourceInput;
 
 import gap.jac.tools.FileObject;
 import gap.jac.tools.JavaCompiler;
@@ -28,6 +33,11 @@ import gap.jac.tools.JavaFileManager.Location;
 import gap.jac.tools.JavaFileManager;
 import gap.jac.tools.ToolProvider;
 
+import hapax.Template;
+import hapax.TemplateException;
+import hapax.TemplateLoaderContext;
+
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -88,17 +98,22 @@ public class FileManager
         }
         public StringLocation(String name, boolean canOutput){
             super();
-            if (null != name && 0 != name.length()){
+            if (null != name){
                 this.name = name;
                 this.isOutput = canOutput;
             }
-            else
-                throw new IllegalArgumentException();
+            else {
+                this.name = "";
+                this.isOutput = canOutput;
+            }
         }
 
 
         public String getName(){
             return this.name;
+        }
+        public boolean isRoot(){
+            return (0 == name.length());
         }
         public boolean isOutputLocation(){
             return this.isOutput;
@@ -111,6 +126,10 @@ public class FileManager
     public final Map<URI,JavaClassOutput> output = new java.util.HashMap<URI,JavaClassOutput>();
 
     public final Map<URI,JavaSourceInput> input = new java.util.HashMap<URI,JavaSourceInput>();
+
+    public final Map<String,Template> templates = new java.util.HashMap<String,Template>();
+
+    public final TemplateLoaderContext templatesContext;
 
     /**
      * Use parent class loader
@@ -125,6 +144,7 @@ public class FileManager
         super(parent);
         if (null != location){
             this.location = location;
+            this.templatesContext = Templates.CreateTemplateLoaderContext(this,location);
         }
         else
             throw new IllegalArgumentException();
@@ -146,6 +166,7 @@ public class FileManager
         if (null != location){
             this.location = location;
             current.setContextClassLoader(this);
+            this.templatesContext = Templates.CreateTemplateLoaderContext(this,location);
         }
         else
             throw new IllegalArgumentException();
@@ -153,33 +174,119 @@ public class FileManager
 
 
 
-    public boolean compile(String className, Reader in, OutputStream err, OutputStream bin)
+    public String getTemplatePath(TemplateDescriptor templateD){
+//         String name = templateD.getName();
+//         String base = templateD.getBase();
+//         if (null != name){
+//             if (null == base)
+//                 return name;
+//             else
+//                 return base+'/'+name;
+//         }
+//         else if (null == base)
+//             return null;
+//         else
+//             return base;
+        return null;
+    }
+    public Template getTemplate(String path)
+        throws TemplateException
+    {
+
+        if (null != path){
+
+            Template template = this.templates.get(path);
+
+            if (null == template)
+                template = Templates.GetTemplate(path);
+
+            return template;
+        }
+        else
+            return null;
+    }
+    public Template getTemplate(TemplateDescriptor templateD)
+        throws TemplateException
+    {
+
+        String path = this.getTemplatePath(templateD);
+        if (null != path){
+            Template template = this.templates.get(path);
+            if (null == template){
+                template = Templates.GetTemplate(this.templatesContext,templateD,path);
+                if (null == template)
+                    template = Templates.GetTemplate(path);
+                else 
+                    this.templates.put(path,template);
+            }
+            return template;
+        }
+        else
+            return null;
+    }
+    public Servlet getServlet(ServletDescriptor servletD){
+
+//         String servletClassName = servletD.getServletClassName();
+//         if (null != servletClassName){
+//             Class jclass = this.findClass(servletClassName);
+//             if (null == jclass){
+//                 jclass = this.define(servletD);
+//             }
+//             return jclass;
+//         }
+//         else
+        return null;
+    }
+    public boolean compile(ServletDescriptor servletD)
         throws java.io.IOException
     {
-        URI uri = FileManager.ToUri(className);
+        String className = null;//servletD.getServletClassName()
+        String sourceText = null;//Unwrap(servletD.getServletSource());
 
-        List<JavaFileObject> units = new java.util.ArrayList<JavaFileObject>(1);
-        {
-            units.add(new JavaSourceInput(uri,in));
+        if (null != className && null != sourceText){
+
+            Reader in = new java.io.StringReader(sourceText); 
+            ByteArrayOutputStream err = new ByteArrayOutputStream();
+            ByteArrayOutputStream bin = new ByteArrayOutputStream();
+
+            URI uri = FileManager.ToUri(className);
+
+            List<JavaFileObject> units = new java.util.ArrayList<JavaFileObject>(1);
+            {
+                units.add(new JavaSourceInput(uri,in));
+            }
+
+            this.output.put(uri,new JavaClassOutput(uri,bin));
+
+            JavaCompiler tool  = new gap.jac.api.JavacTool();
+            try {
+                gap.jac.tools.JavaCompiler.CompilationTask task =
+                    tool.getTask((new OutputStreamWriter(err,UTF8)), this, null, Options, null, units);
+
+                if (task.call()){
+                    //servletD.setServletTargetBinary(bin.toByteArray());
+                    return true;
+                }
+                else
+                    return false;//throw new CompileError(servletD,err);
+            }
+            finally {
+                tool.destroy();
+            }
         }
-
-        this.output.put(uri,new JavaClassOutput(uri,bin));
-
-        JavaCompiler tool  = new gap.jac.api.JavacTool();
-        try {
-            gap.jac.tools.JavaCompiler.CompilationTask task =
-                tool.getTask((new OutputStreamWriter(err,UTF8)), this, null, Options, null, units);
-
-            return task.call();
-        }
-        finally {
-            tool.destroy();
-        }
+        else 
+            return false;
     }
 
-    public Class define(String className, byte[] b){
-
-        return super.defineClass(className,b,0,b.length);
+    public Class define(ServletDescriptor servletD){
+        //return this.define(servletD.getServletClassName(),servletD.getServletTargetBinary());
+        return null;
+    }
+    protected Class define(String className, byte[] b){
+        if (null != b)
+            return super.defineClass(className,b,0,b.length);
+        else
+            return null;
     }
     /*
      */
