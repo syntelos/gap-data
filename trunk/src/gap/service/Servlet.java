@@ -511,43 +511,60 @@ public class Servlet
         throws IOException, ServletException
     {
 
-        if (accept.accept("text/html")){
+        TemplateDictionary dict;
+        if (null != logon)
+            dict = logon.dict;
+        else
+            dict = Templates.CreateDictionary();
 
-            TemplateDictionary dict;
-            if (null != logon)
-                dict = logon.dict;
-            else
-                dict = Templates.CreateDictionary();
+        rep.resetBuffer();
 
-            rep.resetBuffer();
+        String from = "error";
 
-            String from = "error";
+        TemplateDictionary error = dict.addSection(from);
 
-            TemplateDictionary error = dict.addSection(from);
+        String errors_exception = Error.Attribute.ToString.Exception(req,any);
+        String errors_status, errors_message;
+        String errors_type = Error.Attribute.ToString.Type(req,any);
+        String errors_uri = Error.Attribute.ToString.URI(req,any);
+        if (0 < status){
+            rep.setStatus(status,statusMessage);
 
-            String errors_exception = Error.Attribute.ToString.Exception(req,any);
-            String errors_status;
-            String errors_type = Error.Attribute.ToString.Type(req,any);
-            String errors_uri = Error.Attribute.ToString.URI(req,any);
-            if (0 < status){
-                rep.setStatus(status,statusMessage);
+            errors_status = String.valueOf(status);
+            errors_message = statusMessage;
+        }
+        else {
+            errors_status = Error.Attribute.ToString.Status(req,any);
+            errors_message = Error.Attribute.ToString.Message(req,any);
+        }
+        error.putVariable("error_message",errors_message);
+        error.putVariable("error_exception",errors_exception);
+        error.putVariable("error_status",errors_status);
 
-                errors_status = String.valueOf(status);
+        error.putVariable("error_type",errors_type);
+        error.putVariable("error_uri",errors_uri);
 
-                error.putVariable("error_message",statusMessage);
-            }
-            else {
-                errors_status = Error.Attribute.ToString.Status(req,any);
 
-                error.putVariable("error_message",Error.Attribute.ToString.Message(req,any));
-            }
-            error.putVariable("error_exception",errors_exception);
-            error.putVariable("error_status",errors_status);
+        String top = null;
+        /*
+         */
+        if (accept.accept("text/html"))
+            top = "errors.html";
 
-            error.putVariable("error_type",errors_type);
-            error.putVariable("error_uri",errors_uri);
+        else if (accept.accept("application/json")){
+            error.putVariable("error_exception_json",QuoteJson(errors_exception));
+            error.putVariable("error_message_json",QuoteJson(errors_message));
+            top = "errors.json";
+        }
+        else if (accept.accept("text/xml"))
+            top = "errors.xml";
 
-            String top = "errors.html";
+        else if (accept.accept("application/xml"))
+            top = "errors.xml";
+
+        /*
+         */
+        if (null != top){
             try {
                 Template template = FileManager.Get().getTemplate(top);
                 if (null != template)
@@ -559,24 +576,39 @@ public class Servlet
                 Log.log(rec);
             }
         }
-        else if (0 < status){
-            rep.setStatus(status,statusMessage);
-        }
     }
     protected void undefined(Path path, Accept accept, Logon logon, Method method, HttpServletRequest req, HttpServletResponse rep)
         throws ServletException, IOException
     {
-        rep.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+method+"' not implemented");
+        this.error(path,accept,logon,req,rep,HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+method+"' not implemented");
+    }
+    protected void render(Path path, Accept accept, Logon logon, String templateName, HttpServletRequest req, HttpServletResponse rep)
+        throws IOException, ServletException
+    {
+        try {
+            Template template = FileManager.Get().getTemplate(templateName);
+            if (null != template)
+                this.render(path, accept, logon, template, logon.dict, rep);
+            else
+                this.error(path,accept,logon,req,rep,404,"Not found.");
+        }
+        catch (TemplateException exc){
+            LogRecord rec = new LogRecord(Level.SEVERE,"error");
+            rec.setThrown(exc);
+            Log.log(rec);
+            this.error(path,accept,logon,req,rep,500,"Internal error.",exc);
+        }
     }
     protected void render(Path path, Accept accept, Logon logon, Template template, TemplateDictionary top, HttpServletResponse rep)
         throws IOException, ServletException, TemplateException
     {
         rep.setCharacterEncoding("UTF-8");
-        //ServletCountDownOutputStream counter = new ServletCountDownOutputStream(rep);
-        //this.render(path,accept,logon,template,top,rep,(new PrintWriter(new OutputStreamWriter(counter,UTF8))));
-        this.render(path,accept,logon,template,top,rep,rep.getWriter());
-        //counter.flush();
-        //Stats.SetBytesDown(counter.getCount());
+        ServletCountDownOutputStream counter = new ServletCountDownOutputStream(rep);
+        PrintWriter out = (new PrintWriter(new OutputStreamWriter(counter,UTF8)));
+        this.render(path,accept,logon,template,top,rep,out);
+        //this.render(path,accept,logon,template,top,rep,rep.getWriter());
+        out.flush();
+        Stats.SetBytesDown(counter.getCount());
     }
     private void render(Path path, Accept accept, Logon logon, Template template, TemplateDictionary top, HttpServletResponse rep, PrintWriter out)
         throws IOException, ServletException, TemplateException
@@ -670,4 +702,67 @@ public class Servlet
         else if (0 <= lastModified)
             rep.setDateHeader(HEADER_LASTMOD, lastModified);
     }
+    /**
+     */
+    protected final static String QuoteJson(String string){
+        if (null == string)
+            return null;
+        else {
+            StringBuilder re = new StringBuilder();
+            char[] cary = string.toCharArray();
+            for (int cc = 0, count = cary.length; cc < count; cc++){
+                char ch = cary[cc];
+                switch (ch){
+                case '\b':
+                    re.append("\\b");
+                    break;
+                case '\r':
+                    re.append("\\r");
+                    break;
+                case '\n':
+                    re.append("\\n");
+                    break;
+                case '\t':
+                    re.append("\\t");
+                    break;
+                case '\f':
+                    re.append("\\f");
+                    break;
+                case '"':
+                    re.append("\\\"");
+                    break;
+                case '\\':
+                    re.append("\\\\");
+                    break;
+                case '/':
+                    re.append("\\/");
+                    break;
+                case 0x2028:
+                case 0x2029:
+                    break;
+                default:
+                    int code = ch;
+                    if ((0x20 > code)||(0x7e < code && 0xa0 > code))
+                        break;
+                    else if (0x7e < code){
+
+                        re.append("\\u")
+                            .append(HEX[(code >>> 12) & 0xf])
+                            .append(HEX[(code >>> 8) & 0xf])
+                            .append(HEX[(code >>> 4) & 0xf])
+                            .append(HEX[code & 0xf]);
+                        break;
+                    }
+                    else {
+                        re.append(ch);
+                        break;
+                    }
+                }
+            }
+            return re.toString();
+        }
+    }
+    private static final char[] HEX = {
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+    };
 }

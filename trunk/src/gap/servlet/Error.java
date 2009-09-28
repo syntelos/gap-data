@@ -49,9 +49,6 @@ public class Error
     protected void doGet(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
         throws ServletException, IOException
     {
-        if (accept.accept("text/html"))
-            this.error(path,accept,logon,req,rep);
-        else
-            rep.setStatus(400,"Unrecognized request.");
+        this.error(path,accept,logon,req,rep);
     }
 }

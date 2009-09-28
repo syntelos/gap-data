@@ -23,6 +23,9 @@ div.block.inside {
  background-color: #ffffff;
  border-top: 0.5px solid #073763;
 }
+div.block.inside.heavy {
+ border-top: 2.5px solid #073763;
+}
 
 h1 {
  background-color: #cfe2f3;
@@ -69,4 +72,24 @@ div.logo.rhs {
 div.copyrights {
  font: 12px Lucida Typewriter, Verdana, sans-serif;
  color: #000;
+}
+div.logon {
+ position: absolute;
+ right: 0px;
+ top: 0px;
+ margin: 0px;
+ width: 50%;
+ height: 32px;
+ float: right;
+ text-align: right;
+ padding: 4px;
+ padding-right: 16px;
+}
+span.tool {
+ margin: 0px;
+ margin-right: 6px;
+ padding: 0px;
+ padding-right: 6px;
+ border-right: 0.5px solid #073763;
+ border-bottom: 0.5px solid #073763;
 }
