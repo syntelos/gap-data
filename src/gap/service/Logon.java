@@ -115,6 +115,7 @@ public class Logon
 
             TemplateDictionary logon = dict.showSection("logon").get(0);
             logon.putVariable("logon_url",loginUrl);
+            logon.putVariable("logon_url_text","Sign-in");
             logon.putVariable("logon_class","logon off");
             logon.hideSection("with_login");
             logon.showSection("without_login");
@@ -133,6 +134,7 @@ public class Logon
             String email = guser.getEmail();
             this.serviceLogon = email;
 
+            dict.putVariable("logon_url_text",email);
             dict.putVariable("logon_identifier",email);
 
 

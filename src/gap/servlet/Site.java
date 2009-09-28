@@ -55,19 +55,13 @@ public class Site
         throws ServletException, IOException
     {
         if (accept.accept("text/html")){
-            try {
-                Template template = FileManager.Get().getTemplate("index.html");
-                if (null != template)
-                    this.render(path, accept, logon, template, logon.dict, rep);
-                else
-                    this.error(path,accept,logon,req,rep,404,"Not found.");
-            }
-            catch (TemplateException exc){
-                LogRecord rec = new LogRecord(Level.SEVERE,"error");
-                rec.setThrown(exc);
-                Log.log(rec);
-                this.error(path,accept,logon,req,rep,500,"Internal error.",exc);
-            }
+
+            TemplateDictionary top = logon.dict;
+
+            top.setVariable("logon","div.logon.html");
+
+
+            this.render(path, accept, logon, "index.html", req, rep);
         }
         else
             rep.setStatus(400,"Unrecognized request.");
