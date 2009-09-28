@@ -57,12 +57,4 @@ public class ServletCountDownOutputStream
         this.count += len;
         this.out.write(bary,ofs,len);
     }
-    @Override
-    public void flush() throws IOException {
-        this.out.flush();
-    }
-    @Override
-    public void close() throws IOException {
-        this.out.close();
-    }
 }
