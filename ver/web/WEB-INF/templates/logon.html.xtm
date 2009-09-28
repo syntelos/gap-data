@@ -6,6 +6,8 @@
     <base href="http://@ProjectTarget@.appspot.com/" />
   </head>
   <body>
+    <div class="logon">{{>logon}}
+    </div>
     <div class="block">
       <div class="block inside">
         <p> Services provided without warranty or obligation of any kind. </p>
