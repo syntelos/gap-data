@@ -8,7 +8,7 @@
   <body>
     <div class="logon">{{>logon}}
     </div>
-    {{>tools_overlay}}
+{{>tools_overlay}}
     <div class="block">
       <div class="block inside">
         <p> <a class="gap data"
@@ -55,7 +55,7 @@
       <p> <a href="http://gap-data.appspot.com/">Gap Data is a service from some folks around here</a>.</p>
     </div>
     <div class="tools">
-      {{>tool}}
+     {{>tool}}
     </div>
     <div class="logo rhs" onclick="javascript:document.location = 'http://gap-data.appspot.com/'; return true;">
     </div>

@@ -147,12 +147,12 @@ div.over {
  margin-left: 10%;
  padding: 3px;
  width: 80%;
- height: 80%;
  text-align: center;
  z-index: 2;
  opacity: 1.0;
+ background-repeat: no-repeat;
+ background-attachment: fixed;
 }
-
 div.logo {
  position: absolute;
  right: 0px;
