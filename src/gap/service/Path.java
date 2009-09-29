@@ -210,6 +210,53 @@ public final class Path
     public boolean hasNotItem(){
         return (3 > this.size);
     }
+    /**
+     * The "base" is the path components excepting an optional last
+     * component.  One path component is the "base".  Users can employ
+     * a base with no name as a name.
+     */
+    public boolean hasBase(){
+
+        return (0 < this.size);
+    }
+    public boolean hasNotBase(){
+
+        return (1 > this.size);
+    }
+    public String getBase(){
+        if (2 < this.size){
+            StringBuilder strbuf = new StringBuilder();
+            for (String component : this.components){
+                if (0 != strbuf.length())
+                    strbuf.append('/');
+                strbuf.append(component);
+            }
+            return strbuf.toString();
+        }
+        else if (0 < this.size)
+            return this.components[0];
+        else
+            return null;
+    }
+    /**
+     * The "name" is the last path component after a "base".  
+     */
+    public boolean hasName(){
+
+        return (1 < this.size);
+    }
+    public boolean hasNotName(){
+
+        return (2 > this.size);
+    }
+    public String getName(){
+        if (1 < this.size){
+            String[] components = this.components;
+            return components[components.length-1];
+        }
+        else
+            return null;
+    }
     public boolean isMe(){
         return Special.Me.equals(this.getSource());
     }

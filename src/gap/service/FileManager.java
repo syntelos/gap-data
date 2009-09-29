@@ -204,13 +204,13 @@ public class FileManager
     public String getTemplatePath(Path path){
         String base = null;
         String name = null;
-        if (path.hasSource()){
-            if (path.hasGroup()){
-                base = path.getSource();
-                name = path.getGroup();
+        if (path.hasBase()){
+            if (path.hasName()){
+                base = path.getBase();
+                name = path.getName();
             }
             else {
-                name = path.getSource();
+                name = path.getBase();
             }
         }
         return getTemplatePath(base,name);
@@ -275,13 +275,13 @@ public class FileManager
 
         String base = "";
         String name = null;
-        if (path.hasSource()){
-            if (path.hasGroup()){
-                base = path.getSource();
-                name = path.getGroup();
+        if (path.hasBase()){
+            if (path.hasName()){
+                base = path.getBase();
+                name = path.getName();
             }
             else {
-                name = path.getSource();
+                name = path.getBase();
             }
         }
         else {
@@ -487,13 +487,13 @@ public class FileManager
 
         String base = "";
         String name = null;
-        if (path.hasSource()){
-            if (path.hasGroup()){
-                base = path.getSource();
-                name = path.getGroup();
+        if (path.hasBase()){
+            if (path.hasName()){
+                base = path.getBase();
+                name = path.getName();
             }
             else {
-                name = path.getSource();
+                name = path.getBase();
             }
         }
         else {

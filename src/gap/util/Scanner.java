@@ -53,8 +53,6 @@ public class Scanner
 
     private boolean open;
 
-    private int next;
-
 
     public Scanner(Readable source){
         super();
@@ -63,8 +61,7 @@ public class Scanner
             this.buffer = CharBuffer.allocate(0x200);
             this.buffer.limit(0);
             this.open = true;
-            this.read(0);
-            this.next = 0;
+            this.read();
         }
         else
             throw new IllegalArgumentException();
@@ -118,55 +115,44 @@ public class Scanner
     public MatchResult getNextResult(Pattern pattern){
 
         CharBuffer buf = this.buffer;
-
-        int mark = this.next;
-        buf.position(mark);
-        buf.mark();
-
-        Matcher matcher = pattern.matcher(this.buffer);
+        Matcher matcher;
         while (true){
+
+            matcher = pattern.matcher(buf);
+
             if (matcher.lookingAt()){
 
-                this.next = matcher.end();
+                int next = matcher.end();
+                buf.position(next);
+                buf.compact();
 
                 return matcher;
             }
             else if (matcher.hitEnd()){
 
-                CharBuffer buf2 = this.read(mark);
+                buf = this.read();
+
                 if (null == buf)
-
                     return null;
-
-                else if (buf2 != buf){
-                    buf = buf2;
-                    matcher = pattern.matcher(buf);
-                }
             }
             else {
-                buf.reset();
                 return null;
             }
         }
     }
 
-    private CharBuffer read(int mark){
+    private CharBuffer read(){
 
         CharBuffer buf = this.buffer;
 
         if (this.open){
-            int head = buf.position();
 
             if (buf.limit() == buf.capacity()){
-                buf.reset();
                 CharBuffer copier = CharBuffer.allocate(buf.capacity()+0x200);
                 copier.put(buf);
                 copier.flip();
                 buf = copier;
                 this.buffer = buf;
-                buf.position(mark);
-                buf.mark();
-                //buf.position(head)//
             }
             /*
              * flip to tail for fill
@@ -190,7 +176,7 @@ public class Scanner
              * flip to head for consumer
              */
             buf.limit(buf.position());
-            buf.position(head);
+            buf.position(0);
 
             return buf;
         }

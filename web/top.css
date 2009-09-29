@@ -105,6 +105,7 @@ div.tools {
  margin: 0px;
  float: right;
  z-index: 2;
+ opacity: 1.0;
 }
 div.tool {
  right: 0px;
@@ -115,19 +116,22 @@ div.tool {
  cursor: pointer;
  cursor: hand;
  z-index: 2;
- opacity: 0.9;
+ opacity: 1.0;
 }
 input.tool {
  padding-top: 2px;
  padding-left: 4px;
  padding-right: 4px;
  padding-bottom: 2px;
- border: 0.5px solid #032753;
+ border: 1.5px solid #032753;
  background-color: #fefefe;
  color: #032753;
- font-family: Arial, sans-serif;
  z-index: 2;
  opacity: 1.0;
+}
+input.tool.button {
+ font-family: Arial, sans-serif;
+ font-weight: 600;
 }
 div.overlay {
  position: absolute;
@@ -148,10 +152,10 @@ div.over {
  padding: 3px;
  width: 80%;
  text-align: center;
- z-index: 2;
- opacity: 1.0;
  background-repeat: no-repeat;
  background-attachment: fixed;
+ z-index: 2;
+ opacity: 1.0;
 }
 div.logo {
  position: absolute;
@@ -164,6 +168,7 @@ div.logo {
  cursor: pointer;
  cursor: hand;
  z-index: 0;
+ opacity: 1.0;
 }
 div.copyrights {
  float: left;
@@ -175,4 +180,5 @@ div.copyrights {
  font: 12px Lucida Typewriter, Verdana, sans-serif;
  color: #000;
  z-index: 0;
+ opacity: 0.8;
 }
