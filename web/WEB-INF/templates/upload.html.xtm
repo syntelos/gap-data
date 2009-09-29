@@ -8,18 +8,7 @@
   <body>
     <div class="logon">{{>logon}}
     </div>
-    <div class="overlay tool" id="tool">
-      <div class="over">
-        <form name="tool" method="post" onsubmit="javascript:return toolClose();">
-          <input type="hidden" name="op" id="tool_op" value=""/>
-          {{>tool_form}}
-          <div class="over">
-            <input class="tool" type="submit" name="cancel" value="Cancel" onlclick="javascript:return toolCancel();"/>
-            <input class="tool" type="submit" name="send" value="Send"/>
-          </div>
-        </form>
-      </div>
-    </div>
+    {{>tools_overlay}}
     <div class="block">
       <div class="block inside">
 
