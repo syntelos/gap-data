@@ -88,13 +88,7 @@ public class Servlet
         if (null == Config)
             Config = config;
 
-        this.serviceEnter();
-        try {
-            super.init(config);
-        }
-        finally {
-            this.serviceExit();
-        }
+        super.init(config);
     }
     /**
      * This method injects store enter and exit, and defines an
