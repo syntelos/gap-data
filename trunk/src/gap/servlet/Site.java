@@ -62,67 +62,76 @@ public class Site
         boolean canUpdate = this.canUpdate(path,accept,logon);
         boolean canGoto = this.canGoto(path,accept,logon);
         boolean canDelete = this.canDelete(path,accept,logon);
+        boolean usingTools = false;
 
 
         TemplateDictionary head;
         if (canUpdate){
+            usingTools = true;
             head = top.addSection("tool_head","head.tool.html");
             head.setVariable("tool_name","update");
             head.setVariable("tool_nameCamel","Update");
         }
         if (canCreate){
+            usingTools = true;
             head = top.addSection("tool_head","head.tool.html");
             head.setVariable("tool_name","create");
             head.setVariable("tool_nameCamel","Create");
         }
         if (canGoto){
+            usingTools = true;
             head = top.addSection("tool_head","head.tool.html");
             head.setVariable("tool_name","goto");
             head.setVariable("tool_nameCamel","Goto");
         }
         if (canDelete){
+            usingTools = true;
             head = top.addSection("tool_head","head.tool.html");
             head.setVariable("tool_name","delete");
             head.setVariable("tool_nameCamel","Delete");
         }
-        TemplateDictionary body;
-        if (canUpdate){
-            body = top.addSection("tool","div.tool.html");
-            body.setVariable("tool_name","update");
-            body.setVariable("tool_nameCamel","Update");
-            if (admin)
-                body.setVariable("tool_bgUri","icons/update-up-200x50-a00.png");
-            else
-                body.setVariable("tool_bgUri","icons/update-up-200x50-000.png");
+        if (usingTools){
+            TemplateDictionary body;
+            if (canUpdate){
+                body = top.addSection("tool","div.tool.html");
+                body.setVariable("tool_name","update");
+                body.setVariable("tool_nameCamel","Update");
+                if (admin)
+                    body.setVariable("tool_bgUri","icons/update-up-200x50-a00.png");
+                else
+                    body.setVariable("tool_bgUri","icons/update-up-200x50-000.png");
+            }
+            if (canCreate){
+                body = top.addSection("tool","div.tool.html");
+                body.setVariable("tool_name","create");
+                body.setVariable("tool_nameCamel","Create");
+                if (admin)
+                    body.setVariable("tool_bgUri","icons/create-cr-200x50-a00.png");
+                else
+                    body.setVariable("tool_bgUri","icons/create-cr-200x50-000.png");
+            }
+            if (canGoto){
+                body = top.addSection("tool","div.tool.html");
+                body.setVariable("tool_name","goto");
+                body.setVariable("tool_nameCamel","Goto");
+                if (admin)
+                    body.setVariable("tool_bgUri","icons/goto-gt-200x50-a00.png");
+                else
+                    body.setVariable("tool_bgUri","icons/goto-gt-200x50-000.png");
+            }
+            if (canDelete){
+                body = top.addSection("tool","div.tool.html");
+                body.setVariable("tool_name","delete");
+                body.setVariable("tool_nameCamel","Delete");
+                if (admin)
+                    body.setVariable("tool_bgUri","icons/delete-de-200x50-a00.png");
+                else
+                    body.setVariable("tool_bgUri","icons/delete-de-200x50-000.png");
+            }
+            /*
+             */
+            body = top.addSection("tools_overlay","div.overlay.html");
         }
-        if (canCreate){
-            body = top.addSection("tool","div.tool.html");
-            body.setVariable("tool_name","create");
-            body.setVariable("tool_nameCamel","Create");
-            if (admin)
-                body.setVariable("tool_bgUri","icons/create-cr-200x50-a00.png");
-            else
-                body.setVariable("tool_bgUri","icons/create-cr-200x50-000.png");
-        }
-        if (canGoto){
-            body = top.addSection("tool","div.tool.html");
-            body.setVariable("tool_name","goto");
-            body.setVariable("tool_nameCamel","Goto");
-            if (admin)
-                body.setVariable("tool_bgUri","icons/goto-gt-200x50-a00.png");
-            else
-                body.setVariable("tool_bgUri","icons/goto-gt-200x50-000.png");
-        }
-        if (canDelete){
-            body = top.addSection("tool","div.tool.html");
-            body.setVariable("tool_name","delete");
-            body.setVariable("tool_nameCamel","Delete");
-            if (admin)
-                body.setVariable("tool_bgUri","icons/delete-de-200x50-a00.png");
-            else
-                body.setVariable("tool_bgUri","icons/delete-de-200x50-000.png");
-        }
-
         return top;
     }
     @Override
