@@ -215,17 +215,16 @@ public class FileManager
         }
         return getTemplatePath(base,name);
     }
-    public Template getTemplate(String path)
+    public Template getTemplate(String pathString)
         throws TemplateException
     {
-        if (null != path){
+        if (null != pathString){
 
-            Template template = this.templates.get(path);
+            pathString = Templates.Clean(pathString);
 
-            if (null == template)
-                template = Templates.GetTemplate(path);
+            Path path = new Path(pathString);
 
-            return template;
+            return this.getTemplate(path);
         }
         else
             return null;
@@ -233,7 +232,7 @@ public class FileManager
     public Template getTemplate(Path path){
         Template template = null;
         try {
-            TemplateDescriptor templateD = GetTemplateDescriptor(path);
+            TemplateDescriptor templateD = FileManager.GetTemplateDescriptor(path);
             if (null != templateD){
                 template = this.getTemplate(templateD);
                 if (null != template)
@@ -257,7 +256,6 @@ public class FileManager
     public Template getTemplate(TemplateDescriptor templateD)
         throws TemplateException
     {
-
         String path = this.getTemplatePath(templateD);
         if (null != path){
             Template template = this.templates.get(path);

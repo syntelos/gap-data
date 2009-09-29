@@ -1,0 +1,2 @@
+<div class="tool rhs" onclick="javascript:return callTool{{=tool_nameCamel}}();" style="background-image: url({{=tool_bgUri}});">
+</div>

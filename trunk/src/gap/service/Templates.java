@@ -54,6 +54,7 @@ public final class Templates
      * Templates file cache location
      */
     public final static String TemplatesLocation = "WEB-INF/templates";
+    public final static int TemplatesLocationLen = TemplatesLocation.length();
     /**
      * Shared templates file cache instance
      */
@@ -115,6 +116,19 @@ public final class Templates
     static TemplateLoaderContext CreateTemplateLoaderContext(FileManager fm, Location fmLocation){
 
         return new TemplateLoaderContext(Instance,fmLocation.getName());
+    }
+    static String Clean(String path){
+
+        if (null != path){
+
+            int idx = path.indexOf(Templates.TemplatesLocation);
+            if (-1 != idx)
+                return path.substring(idx+Templates.TemplatesLocationLen+1);
+            else 
+                return path;
+        }
+        else
+            return null;
     }
 
 

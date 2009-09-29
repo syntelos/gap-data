@@ -1,3 +1,6 @@
+/*
+ * common
+ */
 body {
  z-index: 0;
  margin: 0px;
@@ -59,20 +62,6 @@ a.gap.data {
 p {
  padding-left: 24px;
 }
-div.logo.rhs {
- position: absolute;
- right: 0px;
- bottom: 240px;
- width: 200px;
- height: 50px;
- background-image: url(icons/powered-by-gap-data-rhs-200x50.png);
- cursor: pointer;
- cursor: hand;
-}
-div.copyrights {
- font: 12px Lucida Typewriter, Verdana, sans-serif;
- color: #000;
-}
 div.logon {
  position: absolute;
  right: 0px;
@@ -88,8 +77,102 @@ div.logon {
 span.tool {
  margin: 0px;
  margin-right: 6px;
+ z-index: 2;
  padding: 0px;
  padding-right: 6px;
  border-right: 0.5px solid #032753;
  border-bottom: 0.5px solid #032753;
+}
+h1.errors {
+ padding-left: 18px;
+}
+pre.errors {
+ padding-left: 6px;
+}
+p.errors {
+ color: #af0000;
+}
+/*
+ * layers
+ */
+div.tools {
+ position: absolute;
+ right: 0px;
+ top: 40px;
+ width: 200px;
+ height: 50px;
+ padding: 0px;
+ margin: 0px;
+ float: right;
+ z-index: 2;
+}
+div.tool {
+ right: 0px;
+ margin: 0px;
+ margin-top: 12px;
+ width: 200px;
+ height: 50px;
+ cursor: pointer;
+ cursor: hand;
+ z-index: 2;
+ opacity: 90%;
+}
+input.tool {
+ padding-top: 2px;
+ padding-left: 4px;
+ padding-right: 4px;
+ padding-bottom: 2px;
+ border: 0.5px solid #032753;
+ background-color: #fefefe;
+ color: #032753;
+ font-family: Arial, sans-serif;
+ z-index: 2;
+ opacity: 80%;
+}
+div.overlay {
+ position: absolute;
+ visibility: hidden;
+ margin: 0;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background-color: #fefefe;
+ z-index: 1;
+ opacity: 10%;
+}
+div.over {
+ margin: 0px;
+ margin-top: 10%;
+ margin-left: 10%;
+ padding: 3px;
+ width: 80%;
+ height: 80%;
+ text-align: center;
+ z-index: 2;
+ opacity: 80%;
+}
+
+div.logo {
+ position: absolute;
+ right: 0px;
+ bottom: 240px;
+ width: 200px;
+ height: 50px;
+ float: right;
+ background-image: url(icons/powered-by-gap-data-rhs-200x50.png);
+ cursor: pointer;
+ cursor: hand;
+ z-index: 0;
+}
+div.copyrights {
+ position: absolute;
+ float: left;
+ left: 12px;
+ bottom: 40px;
+ width: 50%;
+ height: 120px;
+ font: 12px Lucida Typewriter, Verdana, sans-serif;
+ color: #000;
+ z-index: 0;
 }
