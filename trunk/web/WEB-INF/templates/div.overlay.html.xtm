@@ -4,8 +4,8 @@
           <input type="hidden" name="op" id="tool_op" value=""/>
           {{>tool_form}}
           <div class="over">
-            <input class="tool" type="submit" name="cancel" value="Cancel" onlclick="javascript:return tool{{=tool_nameCamel}}Cancel();"/>
-            <input class="tool" type="submit" name="send" value="Send"/>
+            <input class="tool button" type="submit" name="cancel" value="Cancel" onlclick="javascript:return tool{{=tool_nameCamel}}Cancel();"/>
+            <input class="tool button" type="submit" name="send" value="Send"/>
           </div>
         </form>
       </div>

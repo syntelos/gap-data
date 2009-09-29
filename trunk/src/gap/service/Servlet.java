@@ -672,8 +672,8 @@ public class Servlet
 
             rep.sendRedirect(logon.requestUrl);
 
-        else if (path.hasSource()){
-            String base = path.getSource();
+        else if (path.hasBase()){
+            String base = path.getBase();
 
             rep.sendRedirect("/"+base+'/'+id);
         }

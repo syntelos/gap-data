@@ -163,37 +163,53 @@ public class Site
     protected TemplateDictionary doGetDefineUpdate(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","update");
         tool.setVariable("tool_nameCamel","Update");
-        if (logon.serviceAdmin)
-            tool.setVariable("tool_bgUri","/icons/update-up-200x50-a00.png");
-        else
-            tool.setVariable("tool_bgUri","/icons/update-up-200x50-000.png");
+        if (logon.serviceAdmin){
+            tool.setVariable("tool_titleUri","/icons/update-up-200x50-a00.png");
+            tool.setVariable("tool_buttonUri","/icons/update-up-b-200x50-a00.png");
+        }
+        else {
+            tool.setVariable("tool_titleUri","/icons/update-up-200x50-000.png");
+            tool.setVariable("tool_buttonUri","/icons/update-up-b-200x50-000.png");
+        }
         return tool;
     }
     protected TemplateDictionary doGetDefineCreate(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","create");
         tool.setVariable("tool_nameCamel","Create");
-        if (logon.serviceAdmin)
-            tool.setVariable("tool_bgUri","/icons/create-cr-200x50-a00.png");
-        else
-            tool.setVariable("tool_bgUri","/icons/create-cr-200x50-000.png");
+        if (logon.serviceAdmin){
+            tool.setVariable("tool_titleUri","/icons/create-cr-200x50-a00.png");
+            tool.setVariable("tool_buttonUri","/icons/create-cr-b-200x50-a00.png");
+        }
+        else {
+            tool.setVariable("tool_titleUri","/icons/create-cr-200x50-000.png");
+            tool.setVariable("tool_buttonUri","/icons/create-cr-b-200x50-000.png");
+        }
         return tool;
     }
     protected TemplateDictionary doGetDefineGoto(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","goto");
         tool.setVariable("tool_nameCamel","Goto");
-        if (logon.serviceAdmin)
-            tool.setVariable("tool_bgUri","/icons/goto-gt-200x50-a00.png");
-        else
-            tool.setVariable("tool_bgUri","/icons/goto-gt-200x50-000.png");
+        if (logon.serviceAdmin){
+            tool.setVariable("tool_titleUri","/icons/goto-gt-200x50-a00.png");
+            tool.setVariable("tool_buttonUri","/icons/goto-gt-b-200x50-a00.png");
+        }
+        else {
+            tool.setVariable("tool_titleUri","/icons/goto-gt-200x50-000.png");
+            tool.setVariable("tool_buttonUri","/icons/goto-gt-b-200x50-000.png");
+        }
         return tool;
     }
     protected TemplateDictionary doGetDefineDelete(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","delete");
         tool.setVariable("tool_nameCamel","Delete");
-        if (logon.serviceAdmin)
-            tool.setVariable("tool_bgUri","/icons/delete-de-200x50-a00.png");
-        else
-            tool.setVariable("tool_bgUri","/icons/delete-de-200x50-000.png");
+        if (logon.serviceAdmin){
+            tool.setVariable("tool_titleUri","/icons/delete-de-200x50-a00.png");
+            tool.setVariable("tool_buttonUri","/icons/delete-de-b-200x50-a00.png");
+        }
+        else {
+            tool.setVariable("tool_titleUri","/icons/delete-de-200x50-000.png");
+            tool.setVariable("tool_buttonUri","/icons/delete-de-b-200x50-000.png");
+        }
         return tool;
     }
     @Override
