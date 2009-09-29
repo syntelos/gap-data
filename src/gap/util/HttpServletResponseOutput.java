@@ -20,37 +20,36 @@
 package gap.util;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 
  * @author jdp
  */
-public class DevNullOutputStream
-    extends javax.servlet.ServletOutputStream
+public class HttpServletResponseOutput
+    extends javax.servlet.http.HttpServletResponseWrapper
 {
 
+    private ServletOutputStream out;
 
-    private boolean open;
-
-    private int count;
+    private PrintWriter wri;
 
 
-    public DevNullOutputStream(){
-        super();
+    public HttpServletResponseOutput(HttpServletResponse rep, ServletOutputStream out, PrintWriter wri)
+        throws IOException
+    {
+        super(rep);
+        this.out = out;
+        this.wri = wri;
     }
 
 
-    public int getCount(){
-        return this.count;
+    public ServletOutputStream getOutputStream() throws IOException {
+        return this.out;
+    } 
+    public PrintWriter getWriter() throws IOException {
+        return this.wri;
     }
-    public void write(int b) throws IOException {
-        if (this.open)
-            this.count += 1;
-        else
-            throw new java.io.IOException("closed");
-    }
-    public void close() throws IOException {
-        this.open = false;
-    }
-
 }

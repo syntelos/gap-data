@@ -46,9 +46,13 @@ public class Error
     }
 
 
-    protected void doGet(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.error(path,accept,logon,req,rep);
+    @Override
+    protected TemplateDictionary doGetDefine(Path path, Accept accept, Logon logon){
+
+        TemplateDictionary top = logon.dict;
+
+        top.setVariable("logon","div.logon.html");
+
+        return top;
     }
 }
