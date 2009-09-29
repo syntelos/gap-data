@@ -57,7 +57,6 @@ public class Site
 
         top.setVariable("logon","div.logon.html");
 
-        boolean admin = logon.serviceAdmin;
         boolean canCreate = this.canCreate(path,accept,logon);
         boolean canUpdate = this.canUpdate(path,accept,logon);
         boolean canGoto = this.canGoto(path,accept,logon);
@@ -97,12 +96,7 @@ public class Site
                 tool = top.addSection("tool","div.tool.html");
                 boolean once = true;
                 do {
-                    tool.setVariable("tool_name","update");
-                    tool.setVariable("tool_nameCamel","Update");
-                    if (admin)
-                        tool.setVariable("tool_bgUri","/icons/update-up-200x50-a00.png");
-                    else
-                        tool.setVariable("tool_bgUri","/icons/update-up-200x50-000.png");
+                    this.doGetDefineUpdate(path,accept,logon,tool,once);
 
                     if (once){
                         once = false;
@@ -118,12 +112,7 @@ public class Site
                 tool = top.addSection("tool","div.tool.html");
                 boolean once = true;
                 do {
-                    tool.setVariable("tool_name","create");
-                    tool.setVariable("tool_nameCamel","Create");
-                    if (admin)
-                        tool.setVariable("tool_bgUri","/icons/create-cr-200x50-a00.png");
-                    else
-                        tool.setVariable("tool_bgUri","/icons/create-cr-200x50-000.png");
+                    this.doGetDefineCreate(path,accept,logon,tool,once);
 
                     if (once){
                         once = false;
@@ -139,12 +128,7 @@ public class Site
                 tool = top.addSection("tool","div.tool.html");
                 boolean once = true;
                 do {
-                    tool.setVariable("tool_name","goto");
-                    tool.setVariable("tool_nameCamel","Goto");
-                    if (admin)
-                        tool.setVariable("tool_bgUri","/icons/goto-gt-200x50-a00.png");
-                    else
-                        tool.setVariable("tool_bgUri","/icons/goto-gt-200x50-000.png");
+                    this.doGetDefineGoto(path,accept,logon,tool,once);
 
                     if (once){
                         once = false;
@@ -160,12 +144,7 @@ public class Site
                 tool = top.addSection("tool","div.tool.html");
                 boolean once = true;
                 do {
-                    tool.setVariable("tool_name","delete");
-                    tool.setVariable("tool_nameCamel","Delete");
-                    if (admin)
-                        tool.setVariable("tool_bgUri","/icons/delete-de-200x50-a00.png");
-                    else
-                        tool.setVariable("tool_bgUri","/icons/delete-de-200x50-000.png");
+                    this.doGetDefineDelete(path,accept,logon,tool,once);
 
                     if (once){
                         once = false;
@@ -180,6 +159,42 @@ public class Site
             }
         }
         return top;
+    }
+    protected TemplateDictionary doGetDefineUpdate(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+        tool.setVariable("tool_name","update");
+        tool.setVariable("tool_nameCamel","Update");
+        if (logon.serviceAdmin)
+            tool.setVariable("tool_bgUri","/icons/update-up-200x50-a00.png");
+        else
+            tool.setVariable("tool_bgUri","/icons/update-up-200x50-000.png");
+        return tool;
+    }
+    protected TemplateDictionary doGetDefineCreate(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+        tool.setVariable("tool_name","create");
+        tool.setVariable("tool_nameCamel","Create");
+        if (logon.serviceAdmin)
+            tool.setVariable("tool_bgUri","/icons/create-cr-200x50-a00.png");
+        else
+            tool.setVariable("tool_bgUri","/icons/create-cr-200x50-000.png");
+        return tool;
+    }
+    protected TemplateDictionary doGetDefineGoto(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+        tool.setVariable("tool_name","goto");
+        tool.setVariable("tool_nameCamel","Goto");
+        if (logon.serviceAdmin)
+            tool.setVariable("tool_bgUri","/icons/goto-gt-200x50-a00.png");
+        else
+            tool.setVariable("tool_bgUri","/icons/goto-gt-200x50-000.png");
+        return tool;
+    }
+    protected TemplateDictionary doGetDefineDelete(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+        tool.setVariable("tool_name","delete");
+        tool.setVariable("tool_nameCamel","Delete");
+        if (logon.serviceAdmin)
+            tool.setVariable("tool_bgUri","/icons/delete-de-200x50-a00.png");
+        else
+            tool.setVariable("tool_bgUri","/icons/delete-de-200x50-000.png");
+        return tool;
     }
     @Override
     protected Template doGetTemplate(Path path, Accept accept, Logon logon, FileManager fm)
