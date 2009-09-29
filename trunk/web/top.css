@@ -166,10 +166,10 @@ div.logo {
  z-index: 0;
 }
 div.copyrights {
- position: absolute;
  float: left;
- left: 12px;
- bottom: 40px;
+ margin-top: 24px;
+ margin-left: 12px;
+ margin-bottom: 0px;
  width: 50%;
  height: 120px;
  font: 12px Lucida Typewriter, Verdana, sans-serif;
