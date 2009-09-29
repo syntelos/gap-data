@@ -20,10 +20,13 @@
 package gap.servlet;
 
 import gap.service.Accept;
+import gap.service.FileManager;
 import gap.service.Logon;
 import gap.service.Path;
 
+import hapax.Template;
 import hapax.TemplateDictionary;
+import hapax.TemplateException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +40,7 @@ import java.util.logging.LogRecord;
  * Bound to path <code>'/errors/*'</code>
  */
 public class Error
-    extends gap.service.Servlet
+    extends Site
 {
 
 
@@ -47,12 +50,10 @@ public class Error
 
 
     @Override
-    protected TemplateDictionary doGetDefine(Path path, Accept accept, Logon logon){
-
-        TemplateDictionary top = logon.dict;
-
-        top.setVariable("logon","div.logon.html");
-
-        return top;
+    protected Template doGetTemplate(Path path, Accept accept, Logon logon, FileManager fm)
+        throws TemplateException
+    {
+        return null;
     }
+
 }

@@ -177,6 +177,10 @@ public class Servlet
                 servlet.doGet(path,accept,logon,req,rep);
                 return;
             }
+            else if (accept.accept("text/html") && path.hasNotSource()){
+                rep.sendRedirect("index.html");
+                return;
+            }
             else {
                 this.doGet(path,accept,logon,req,rep);
                 return;
@@ -207,6 +211,10 @@ public class Servlet
 
             if (null != servlet)
                 servlet.doGet(path,accept,logon,req,wrapper);
+            else if (accept.accept("text/html") && path.hasNotSource()){
+                rep.sendRedirect("index.html");
+                return;
+            }
             else 
                 this.doGet(path,accept,logon,req,wrapper);
 
@@ -273,6 +281,20 @@ public class Servlet
             }
         }
     }
+
+    protected boolean canCreate(Path path, Accept accept, Logon logon){
+        return (logon.serviceAdmin);
+    }
+    protected boolean canUpdate(Path path, Accept accept, Logon logon){
+        return (logon.serviceAdmin);
+    }
+    protected boolean canGoto(Path path, Accept accept, Logon logon){
+        return (logon.serviceAdmin);
+    }
+    protected boolean canDelete(Path path, Accept accept, Logon logon){
+        return (logon.serviceAdmin);
+    }
+
     protected TemplateDictionary doGetDefine(Path path, Accept accept, Logon logon){
         return logon.dict;
     }

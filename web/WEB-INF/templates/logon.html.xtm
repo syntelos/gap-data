@@ -3,10 +3,22 @@
     <title>Gap Data Logon</title>
     <link rel="stylesheet" type="text/css" href="top.css" />
     <link rel="icon" href="/icons/favicon.ico" />
-    <base href="http://@ProjectTarget@.appspot.com/" />
+    {{>tool_head}}
   </head>
   <body>
     <div class="logon">{{>logon}}
+    </div>
+    <div class="overlay tool" id="tool">
+      <div class="over">
+        <form name="tool" method="post" onsubmit="javascript:return toolClose();">
+          <input type="hidden" name="op" id="tool_op" value=""/>
+          {{>tool_form}}
+          <div class="over">
+            <input class="tool" type="submit" name="cancel" value="Cancel" onlclick="javascript:return toolCancel();"/>
+            <input class="tool" type="submit" name="send" value="Send"/>
+          </div>
+        </form>
+      </div>
     </div>
     <div class="block">
       <div class="block inside">
@@ -15,6 +27,9 @@
         <p> This service is managed for the best evolution of the experiment. </p>
         <p> Data or service or access may be lost or unavailable at any time for any reason. </p>
       </div>
+    </div>
+    <div class="tools">
+      {{>tool}}
     </div>
     <div class="logo rhs" onclick="javascript:document.location = 'http://gap-data.appspot.com/'; return true;">
     </div>

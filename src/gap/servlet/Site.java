@@ -19,7 +19,6 @@
  */
 package gap.servlet;
 
-import gap.data.TemplateDescriptor;
 import gap.service.Accept;
 import gap.service.FileManager;
 import gap.service.Logon;
@@ -57,6 +56,72 @@ public class Site
         TemplateDictionary top = super.doGetDefine(path,accept,logon);
 
         top.setVariable("logon","div.logon.html");
+
+        boolean admin = logon.serviceAdmin;
+        boolean canCreate = this.canCreate(path,accept,logon);
+        boolean canUpdate = this.canUpdate(path,accept,logon);
+        boolean canGoto = this.canGoto(path,accept,logon);
+        boolean canDelete = this.canDelete(path,accept,logon);
+
+
+        TemplateDictionary head;
+        if (canUpdate){
+            head = top.addSection("tool_head","head.tool.html");
+            head.setVariable("tool_name","update");
+            head.setVariable("tool_nameCamel","Update");
+        }
+        if (canCreate){
+            head = top.addSection("tool_head","head.tool.html");
+            head.setVariable("tool_name","create");
+            head.setVariable("tool_nameCamel","Create");
+        }
+        if (canGoto){
+            head = top.addSection("tool_head","head.tool.html");
+            head.setVariable("tool_name","goto");
+            head.setVariable("tool_nameCamel","Goto");
+        }
+        if (canDelete){
+            head = top.addSection("tool_head","head.tool.html");
+            head.setVariable("tool_name","delete");
+            head.setVariable("tool_nameCamel","Delete");
+        }
+        TemplateDictionary body;
+        if (canUpdate){
+            body = top.addSection("tool","div.tool.html");
+            body.setVariable("tool_name","update");
+            body.setVariable("tool_nameCamel","Update");
+            if (admin)
+                body.setVariable("tool_bgUri","icons/update-up-200x50-a00.png");
+            else
+                body.setVariable("tool_bgUri","icons/update-up-200x50-000.png");
+        }
+        if (canCreate){
+            body = top.addSection("tool","div.tool.html");
+            body.setVariable("tool_name","create");
+            body.setVariable("tool_nameCamel","Create");
+            if (admin)
+                body.setVariable("tool_bgUri","icons/create-cr-200x50-a00.png");
+            else
+                body.setVariable("tool_bgUri","icons/create-cr-200x50-000.png");
+        }
+        if (canGoto){
+            body = top.addSection("tool","div.tool.html");
+            body.setVariable("tool_name","goto");
+            body.setVariable("tool_nameCamel","Goto");
+            if (admin)
+                body.setVariable("tool_bgUri","icons/goto-gt-200x50-a00.png");
+            else
+                body.setVariable("tool_bgUri","icons/goto-gt-200x50-000.png");
+        }
+        if (canDelete){
+            body = top.addSection("tool","div.tool.html");
+            body.setVariable("tool_name","delete");
+            body.setVariable("tool_nameCamel","Delete");
+            if (admin)
+                body.setVariable("tool_bgUri","icons/delete-de-200x50-a00.png");
+            else
+                body.setVariable("tool_bgUri","icons/delete-de-200x50-000.png");
+        }
 
         return top;
     }

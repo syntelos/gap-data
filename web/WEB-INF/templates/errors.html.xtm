@@ -11,9 +11,9 @@
       {{#error}}
       <div class="block inside">
         <h1 class="errors"> {{=error_status}}</h1>
-        <p> {{=error_message}}
+        <p class="errors"> {{=error_message}}
         </p>
-        <pre>
+        <pre class="errors">
 {{=error_exception}}
         </pre>
       </div>
