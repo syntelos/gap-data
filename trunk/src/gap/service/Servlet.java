@@ -24,6 +24,7 @@ import gap.data.ServletDescriptor;
 import gap.data.TemplateDescriptor;
 import gap.util.DevNullOutputStream;
 import gap.util.ServletCountDownOutputStream;
+import gap.util.HttpServletResponseOutput;
 
 import hapax.Template;
 import hapax.TemplateException;
@@ -147,11 +148,7 @@ public class Servlet
         throws IOException, ServletException, TemplateException
     {
 
-        Template template = null;
-
         Servlet servlet = fm.getServlet(path);
-        if (null == servlet)
-            template = fm.getTemplate(path);
 
         /*
          */
@@ -180,10 +177,6 @@ public class Servlet
                 servlet.doGet(path,accept,logon,req,rep);
                 return;
             }
-            else if (null != template){
-                this.render(path,accept,logon,template,logon.dict,rep);
-                return;
-            }
             else {
                 this.doGet(path,accept,logon,req,rep);
                 return;
@@ -207,18 +200,16 @@ public class Servlet
                     }
                 }
             }
-            DevNullOutputStream buffer = new DevNullOutputStream();
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(buffer,UTF8));
+            final DevNullOutputStream buffer = new DevNullOutputStream();
+            final PrintWriter out = new PrintWriter(new OutputStreamWriter(buffer,UTF8));
 
-            if (null != servlet){
-                servlet.doHead(path,accept,logon,req,rep,out);
-            }
-            else if (null != template){
-                this.render(path,accept,logon,template,logon.dict,rep,out);
-            }
-            else {
-                this.doHead(path,accept,logon,req,rep,out);
-            }
+            HttpServletResponseOutput wrapper = new HttpServletResponseOutput(rep,buffer,out);
+
+            if (null != servlet)
+                servlet.doGet(path,accept,logon,req,wrapper);
+            else 
+                this.doGet(path,accept,logon,req,wrapper);
+
 
             int contentLength = buffer.getCount();
             if (0 < contentLength)
@@ -227,34 +218,86 @@ public class Servlet
             return;
         }
         case Method.POST:
-            this.doPost(path,accept,logon,req,rep);
-            return;
+            if (null != servlet){
+                servlet.doPost(path,accept,logon,req,rep);
+                return;
+            }
+            else {
+                this.doPost(path,accept,logon,req,rep);
+                return;
+            }
         case Method.PUT:
-            this.doPut(path,accept,logon,req,rep);
-            return;
+            if (null != servlet){
+                servlet.doPut(path,accept,logon,req,rep);
+                return;
+            }
+            else {
+                this.doPut(path,accept,logon,req,rep);
+                return;
+            }
         case Method.DELETE:
-            this.doDelete(path,accept,logon,req,rep);
-            return;
+            if (null != servlet){
+                servlet.doDelete(path,accept,logon,req,rep);
+                return;
+            }
+            else {
+                this.doDelete(path,accept,logon,req,rep);
+                return;
+            }
         case Method.OPTIONS:
-            this.doOptions(path,accept,logon,req,rep);
-            return;
+            if (null != servlet){
+                servlet.doOptions(path,accept,logon,req,rep);
+                return;
+            }
+            else {
+                this.doOptions(path,accept,logon,req,rep);
+                return;
+            }
         case Method.TRACE:
-            this.doTrace(path,accept,logon,req,rep);
-            return;
+            if (null != servlet){
+                servlet.doTrace(path,accept,logon,req,rep);
+                return;
+            }
+            else {
+                this.doTrace(path,accept,logon,req,rep);
+                return;
+            }
         default:
-            this.doMethod(path,accept,logon,method,req,rep);
-            return;
+            if (null != servlet){
+                servlet.doMethod(path,accept,logon,method,req,rep);
+                return;
+            }
+            else {
+                this.doMethod(path,accept,logon,method,req,rep);
+                return;
+            }
         }
+    }
+    protected TemplateDictionary doGetDefine(Path path, Accept accept, Logon logon){
+        return logon.dict;
+    }
+    protected Template doGetTemplate(Path path, Accept accept, Logon logon, FileManager fm)
+        throws TemplateException
+    {
+        return null;
     }
     protected void doGet(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
         throws ServletException, IOException
     {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doHead(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep, PrintWriter out)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
+        TemplateDictionary top = this.doGetDefine(path,accept,logon);
+        try {
+            Template template = this.doGetTemplate(path,accept,logon,FileManager.Get());
+            if (null != template){
+                this.render(path,accept,logon,template,top,rep);
+                return ;
+            }
+        }
+        catch (TemplateException exc){
+            LogRecord rec = new LogRecord(Level.SEVERE,"error");
+            rec.setThrown(exc);
+            Servlet.Log.log(rec);
+        }
+        this.error(path,accept,logon,req,rep);
     }
     protected void doPost(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
         throws ServletException, IOException

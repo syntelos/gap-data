@@ -127,7 +127,7 @@ public final class Class
                ClassDescriptor.Implements,
                ClassDescriptor.Relation
 {
-    public final static Pattern Open = Pattern.compile("^(class|parent|child).*");
+    public final static Pattern Open = Pattern.compile("^(?:class|parent|child).*");
 
 
     public final Package pack;

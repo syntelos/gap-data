@@ -51,19 +51,23 @@ public class Site
     }
 
 
-    protected void doGet(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        if (accept.accept("text/html")){
+    @Override
+    protected TemplateDictionary doGetDefine(Path path, Accept accept, Logon logon){
 
-            TemplateDictionary top = logon.dict;
+        TemplateDictionary top = super.doGetDefine(path,accept,logon);
 
-            top.setVariable("logon","div.logon.html");
+        top.setVariable("logon","div.logon.html");
 
-
-            this.render(path, accept, logon, "index.html", req, rep);
-        }
-        else
-            rep.setStatus(400,"Unrecognized request.");
+        return top;
     }
+    @Override
+    protected Template doGetTemplate(Path path, Accept accept, Logon logon, FileManager fm)
+        throws TemplateException
+    {
+        if (accept.accept("text/html"))
+            return fm.getTemplate("index.html");
+        else
+            return null;
+    }
+
 }
