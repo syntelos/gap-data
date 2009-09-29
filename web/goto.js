@@ -1,6 +1,15 @@
+function toolCancel(did){
 
+    var tel = document.getElementById(did);
+    if (tel)
+        tel.style.visibility = 'hidden';
+
+}
 function callToolGoto(){
-    var tel = document.getElementById('tool');
+    toolCancel('toolCreate');
+    toolCancel('toolDelete');
+    toolCancel('toolUpdate');
+    var tel = document.getElementById('toolGoto');
     if (tel)
         tel.style.visibility = 'visible';
 
@@ -16,18 +25,18 @@ function callToolGoto(){
     return false;
 }
 
-function toolCancel(){
+function toolGotoCancel(){
 
-    var tel = document.getElementById('tool');
+    var tel = document.getElementById('toolGoto');
     if (tel)
         tel.style.visibility = 'hidden';
 
     return false;
 }
 
-function toolClose(){
+function toolGotoClose(){
 
-    var tel = document.getElementById('tool');
+    var tel = document.getElementById('toolGoto');
     if (tel)
         tel.style.visibility = 'hidden';
 
