@@ -61,102 +61,115 @@ public class Site
         boolean canUpdate = this.canUpdate(path,accept,logon);
         boolean canGoto = this.canGoto(path,accept,logon);
         boolean canDelete = this.canDelete(path,accept,logon);
-        boolean usingTools = false;
 
 
         TemplateDictionary head;
         if (canUpdate){
-            usingTools = true;
             head = top.addSection("tool_head","head.tool.html");
             head.setVariable("tool_name","update");
             head.setVariable("tool_nameCamel","Update");
         }
         if (canCreate){
-            usingTools = true;
             head = top.addSection("tool_head","head.tool.html");
             head.setVariable("tool_name","create");
             head.setVariable("tool_nameCamel","Create");
         }
         if (canGoto){
-            usingTools = true;
             head = top.addSection("tool_head","head.tool.html");
             head.setVariable("tool_name","goto");
             head.setVariable("tool_nameCamel","Goto");
         }
         if (canDelete){
-            usingTools = true;
             head = top.addSection("tool_head","head.tool.html");
             head.setVariable("tool_name","delete");
             head.setVariable("tool_nameCamel","Delete");
         }
-        if (usingTools){
 
-            TemplateDictionary tool;
-            if (canUpdate){
-                tool = top.addSection("tool","div.tool.html");
-                boolean once = true;
-                do {
-                    this.doGetDefineUpdate(path,accept,logon,tool,once);
 
-                    if (once){
-                        once = false;
-                        tool = top.addSection("tools_overlay","div.overlay.html");
-                        tool.addSection("tool_form","form.update.html");
-                    }
-                    else
-                        break;
+        TemplateDictionary tool;
+        if (canUpdate){
+            tool = top.addSection("tool","div.tool.html");
+            boolean once = true;
+            do {
+                this.doGetDefineUpdate(path,accept,logon,tool,once);
+
+                if (once){
+                    once = false;
+                    tool = top.addSection("tools_overlay","div.overlay.html");
+                    tool.addSection("tool_form","form.update.html");
                 }
-                while (true);
+                else
+                    break;
             }
-            if (canCreate){
-                tool = top.addSection("tool","div.tool.html");
-                boolean once = true;
-                do {
-                    this.doGetDefineCreate(path,accept,logon,tool,once);
+            while (true);
+        }
+        else {
+            tool = top.addSection("tool","div.tool.off.html");
 
-                    if (once){
-                        once = false;
-                        tool = top.addSection("tools_overlay","div.overlay.html");
-                        tool.addSection("tool_form","form.create.html");
-                    }
-                    else
-                        break;
+            this.doGetDefineUpdate(path,accept,logon,tool,true);
+        }
+        if (canCreate){
+            tool = top.addSection("tool","div.tool.html");
+            boolean once = true;
+            do {
+                this.doGetDefineCreate(path,accept,logon,tool,once);
+
+                if (once){
+                    once = false;
+                    tool = top.addSection("tools_overlay","div.overlay.html");
+                    tool.addSection("tool_form","form.create.html");
                 }
-                while (true);
+                else
+                    break;
             }
-            if (canGoto){
-                tool = top.addSection("tool","div.tool.html");
-                boolean once = true;
-                do {
-                    this.doGetDefineGoto(path,accept,logon,tool,once);
+            while (true);
+        }
+        else {
+            tool = top.addSection("tool","div.tool.off.html");
 
-                    if (once){
-                        once = false;
-                        tool = top.addSection("tools_overlay","div.overlay.html");
-                        tool.addSection("tool_form","form.goto.html");
-                    }
-                    else
-                        break;
+            this.doGetDefineCreate(path,accept,logon,tool,true);
+        }
+        if (canGoto){
+            tool = top.addSection("tool","div.tool.html");
+            boolean once = true;
+            do {
+                this.doGetDefineGoto(path,accept,logon,tool,once);
+
+                if (once){
+                    once = false;
+                    tool = top.addSection("tools_overlay","div.overlay.html");
+                    tool.addSection("tool_form","form.goto.html");
                 }
-                while (true);
+                else
+                    break;
             }
-            if (canDelete){
-                tool = top.addSection("tool","div.tool.html");
-                boolean once = true;
-                do {
-                    this.doGetDefineDelete(path,accept,logon,tool,once);
+            while (true);
+        }
+        else {
+            tool = top.addSection("tool","div.tool.off.html");
 
-                    if (once){
-                        once = false;
-                        tool = top.addSection("tools_overlay","div.overlay.html");
-                        tool.addSection("tool_form","form.delete.html");
-                    }
-                    else
-                        break;
+            this.doGetDefineGoto(path,accept,logon,tool,true);
+        }
+        if (canDelete){
+            tool = top.addSection("tool","div.tool.html");
+            boolean once = true;
+            do {
+                this.doGetDefineDelete(path,accept,logon,tool,once);
+
+                if (once){
+                    once = false;
+                    tool = top.addSection("tools_overlay","div.overlay.html");
+                    tool.addSection("tool_form","form.delete.html");
                 }
-                while (true);
-
+                else
+                    break;
             }
+            while (true);
+        }
+        else {
+            tool = top.addSection("tool","div.tool.off.html");
+
+            this.doGetDefineDelete(path,accept,logon,tool,true);
         }
         return top;
     }
@@ -166,10 +179,12 @@ public class Site
         if (logon.serviceAdmin){
             tool.setVariable("tool_titleUri","/icons/update-up-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/update-up-b-200x50-a00.png");
+            tool.setVariable("tool_buttonOffUri","/icons/update-up-b-200x50-aaa.png");
         }
         else {
             tool.setVariable("tool_titleUri","/icons/update-up-200x50-000.png");
             tool.setVariable("tool_buttonUri","/icons/update-up-b-200x50-000.png");
+            tool.setVariable("tool_buttonOffUri","/icons/update-up-b-200x50-aaa.png");
         }
         return tool;
     }
@@ -179,10 +194,12 @@ public class Site
         if (logon.serviceAdmin){
             tool.setVariable("tool_titleUri","/icons/create-cr-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/create-cr-b-200x50-a00.png");
+            tool.setVariable("tool_buttonOffUri","/icons/create-cr-b-200x50-aaa.png");
         }
         else {
             tool.setVariable("tool_titleUri","/icons/create-cr-200x50-000.png");
             tool.setVariable("tool_buttonUri","/icons/create-cr-b-200x50-000.png");
+            tool.setVariable("tool_buttonOffUri","/icons/create-cr-b-200x50-aaa.png");
         }
         return tool;
     }
@@ -192,10 +209,12 @@ public class Site
         if (logon.serviceAdmin){
             tool.setVariable("tool_titleUri","/icons/goto-gt-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/goto-gt-b-200x50-a00.png");
+            tool.setVariable("tool_buttonOffUri","/icons/goto-gt-b-200x50-aaa.png");
         }
         else {
             tool.setVariable("tool_titleUri","/icons/goto-gt-200x50-000.png");
             tool.setVariable("tool_buttonUri","/icons/goto-gt-b-200x50-000.png");
+            tool.setVariable("tool_buttonOffUri","/icons/goto-gt-b-200x50-aaa.png");
         }
         return tool;
     }
@@ -205,10 +224,12 @@ public class Site
         if (logon.serviceAdmin){
             tool.setVariable("tool_titleUri","/icons/delete-de-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/delete-de-b-200x50-a00.png");
+            tool.setVariable("tool_buttonOffUri","/icons/delete-de-b-200x50-aaa.png");
         }
         else {
             tool.setVariable("tool_titleUri","/icons/delete-de-200x50-000.png");
             tool.setVariable("tool_buttonUri","/icons/delete-de-b-200x50-000.png");
+            tool.setVariable("tool_buttonOffUri","/icons/delete-de-b-200x50-aaa.png");
         }
         return tool;
     }
