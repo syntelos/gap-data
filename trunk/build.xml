@@ -44,10 +44,10 @@
     <fileset dir="${lib}">
       <include name="**/*.jar" />
     </fileset>
-    <fileset dir="${out.lib}">
+    <fileset dir="${gap.sdk.dir}/lib/shared">
       <include name="**/*.jar" />
     </fileset>
-    <fileset dir="${gap.sdk.dir}/lib/shared">
+    <fileset dir="${gap.sdk.dir}/lib/user">
       <include name="**/*.jar" />
     </fileset>
   </path>
@@ -59,8 +59,8 @@
   </path>
 
   <path id="jar.pack.path.appengine">
-    <fileset dir="${out.lib}">
-      <include name="**/appengine-api-1.0-sdk-*.jar"/>
+    <fileset dir="${gap.sdk.dir}/lib/user">
+      <include name="**/appengine-api-1.0-sdk-*.jar" />
     </fileset>
   </path>
 
@@ -95,7 +95,7 @@
   </path>
 
   <target name="init" description="">
-
+    <mkdir dir="${out.lib}"/>
     <copy todir="${out.lib}" flatten="true">
 
       <fileset dir="${lib}">
@@ -103,6 +103,7 @@
       </fileset>
       <fileset dir="${gap.sdk.dir}/lib/user">
         <include name="**/*.jar" />
+        <exclude name="**/orm/**"/>
       </fileset>
     </copy>
 

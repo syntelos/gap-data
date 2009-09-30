@@ -118,6 +118,9 @@ div.tool {
  z-index: 2;
  opacity: 1.0;
 }
+div.tool.off {
+ opacity: 0.5;
+}
 input.tool {
  padding-top: 2px;
  padding-left: 4px;
