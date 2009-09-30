@@ -11,16 +11,10 @@
 {{>tools_overlay}}
     <div class="block">
       <div class="block inside">
-        <p> <a class="gap data"
-               href="http://gap-data.appspot.com/">gap-data</a> is an
-          experiment in internet economics, to find a way to pay for
-          shared services. </p>
+
+        <p><a href="http://code.google.com/p/gap-data">Gap Data is open source.</a></p>
 
         <div class="block inside heavy">
-
-          <p><a href="http://code.google.com/p/gap-data">Gap Data is open source.</a></p>
-
-          <p><a href="http://code.google.com/p/gap-data">Gap Data</a> runs on <a class="gap data" href="http://gap-data.appspot.com/">gap-data.appspot.com</a></p>
 
           <p><a href="http://code.google.com/p/gap-data">Gap Data</a> is a web interface for <a href="http://appengine.google.com/">appengine development</a>.</p>
 
