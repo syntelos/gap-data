@@ -135,7 +135,7 @@ public class Scanner
 
             if (matcher.lookingAt()){
 
-                next = matcher.end();
+                this.next = matcher.end();
 
                 return matcher;
             }

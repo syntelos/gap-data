@@ -17,44 +17,48 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.odl;
+package gap.data;
 
-import gap.service.od.ImportDescriptor;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.regex.Pattern;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Query;
 
 /**
+
  * 
- * @see Class
  * @author jdp
  */
-public final class Comment
-    extends Object
+public interface Map<K,V>
+    extends Iterable<V>
 {
-    public final static Pattern Line = Pattern.compile("\\s*#.*");
-    public final static Pattern MultiLine = Pattern.compile("\\s*\\/[#\\*].*[#\\*]\\/\\s*",Pattern.MULTILINE);
 
-
-
-    public final String text;
-
-
-    public Comment(Reader reader)
-        throws IOException, Syntax
+    public interface Short<K,V>
+        extends Map<K,V>
     {
-        super();
-        String text = reader.getNext(Line);
-        if (null != text)
-            this.text = text;
-        else {
-            text = reader.getNext(MultiLine);
-            if (null != text)
-                this.text = text;
-            else 
-                throw new Jump();
-        }
+        public Key getAncestor();
+
+        public Map<K,V> add(V value);
+
+        public Map<K,V> remove(K key);
     }
 
+    public interface Long<K,V>
+        extends Map<K,V>
+    {
+        public Query getQuery();
+
+        public int getStartIndex();
+
+        public int getCount();
+    }
+
+
+    public String getValueClassKeyFieldName();
+
+    public int size();
+
+    public boolean isEmpty();
+
+    public boolean isNotEmpty();
+
+    public V get(K key);
 }

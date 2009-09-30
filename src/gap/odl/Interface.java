@@ -55,7 +55,7 @@ public final class Interface
         this.comment = reader.comment();
         String line = reader.getNext(Statement);
         if (null != line){
-            StringTokenizer strtok = new StringTokenizer(line," \t;");
+            StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
             if (2 == strtok.countTokens()){
                 strtok.nextToken();
 

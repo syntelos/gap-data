@@ -41,7 +41,7 @@ public final class Field
                FieldDescriptor.Uniqueness,
                FieldDescriptor.Relation
 {
-    public final static Pattern Statement = Pattern.compile("[\\s\\w\\._]+;?.*");
+    public final static Pattern Statement = Pattern.compile("\\s*[\\w\\.\\*\\-<>,\\s]+\\s*[\\w]+\\s*[;\\s]*");
 
 
     private Comment comment;
@@ -62,7 +62,7 @@ public final class Field
         this.comment = reader.comment();
         String line = reader.getNext(Statement);
         if (null != line){
-            StringTokenizer strtok = new StringTokenizer(line," \t;");
+            StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
             switch (strtok.countTokens()){
 
             case 2:
