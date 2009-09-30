@@ -28,37 +28,21 @@ import com.google.appengine.api.datastore.Query;
  * @author jdp
  */
 public interface Map<K,V>
-    extends Iterable<V>
+    extends Collection<V>
 {
 
     public interface Short<K,V>
-        extends Map<K,V>
+        extends Map<K,V>, Collection.Short<V>
     {
-        public Key getAncestor();
-
-        public Map<K,V> add(V value);
+        public Map<K,V> add(K key);
 
         public Map<K,V> remove(K key);
     }
 
     public interface Long<K,V>
-        extends Map<K,V>
+        extends Map<K,V>, Collection.Long<V>
     {
-        public Query getQuery();
-
-        public int getStartIndex();
-
-        public int getCount();
     }
-
-
-    public String getValueClassKeyFieldName();
-
-    public int size();
-
-    public boolean isEmpty();
-
-    public boolean isNotEmpty();
 
     public V get(K key);
 }
