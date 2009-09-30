@@ -35,7 +35,7 @@ public final class Import
     extends Object
     implements ImportDescriptor
 {
-    public final static Pattern Statement = Pattern.compile("^import [\\w\\._]+\\s*;?\\s*");
+    public final static Pattern Statement = Pattern.compile("^import [\\w\\.\\*_]+\\s*;?.*");
 
 
     public final static java.lang.Class Find(Package pkg, List<ImportDescriptor> imports, String type){

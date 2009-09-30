@@ -53,6 +53,8 @@ public class Scanner
 
     private boolean open;
 
+    private int next;
+
 
     public Scanner(Readable source){
         super();
@@ -115,16 +117,25 @@ public class Scanner
     public MatchResult getNextResult(Pattern pattern){
 
         CharBuffer buf = this.buffer;
-        Matcher matcher;
-        while (true){
 
+        int next = this.next;
+        if (0 != next){
+            this.next = 0;
+            /*
+             * Change buffer state after previous match result has
+             * been consumed.
+             */
+            buf.position(next);
+            buf.compact().flip();
+        }
+
+        Matcher matcher;
+        do {
             matcher = pattern.matcher(buf);
 
             if (matcher.lookingAt()){
 
-                int next = matcher.end();
-                buf.position(next);
-                buf.compact();
+                next = matcher.end();
 
                 return matcher;
             }
@@ -139,6 +150,7 @@ public class Scanner
                 return null;
             }
         }
+        while (true);
     }
 
     private CharBuffer read(){

@@ -32,7 +32,7 @@ public final class Package
     extends Object
     implements gap.service.od.PackageDescriptor
 {
-    public final static Pattern Statement = Pattern.compile("^package [\\w\\._]+\\s*;?\\s*");
+    public final static Pattern Statement = Pattern.compile("^package [\\w\\._]+\\s*;?.*");
 
 
     private Comment comment;
