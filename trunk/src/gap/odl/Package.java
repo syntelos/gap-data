@@ -32,7 +32,7 @@ public final class Package
     extends Object
     implements gap.service.od.PackageDescriptor
 {
-    public final static Pattern Statement = Pattern.compile("^package [\\w\\._]+\\s*;?.*");
+    public final static Pattern Statement = Pattern.compile("^package [\\w\\._]+[;\\s]*");
 
 
     private Comment comment;
@@ -46,7 +46,7 @@ public final class Package
         this.comment = reader.comment();
         String line = reader.getNext(Statement);
         if (null != line){
-            StringTokenizer strtok = new StringTokenizer(line," \t;");
+            StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
             if (2 == strtok.countTokens()){
                 strtok.nextToken();
                 this.name = strtok.nextToken();

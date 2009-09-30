@@ -54,6 +54,10 @@ public interface List<V>
 
     public int size();
 
+    public boolean isEmpty();
+
+    public boolean isNotEmpty();
+
     public V get(int index);
 
 }

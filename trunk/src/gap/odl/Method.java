@@ -63,7 +63,7 @@ public final class Method
     implements MethodDescriptor.Arguments,
                MethodDescriptor.Exceptions
 {
-    public final static Pattern Open = Pattern.compile("\\s*method\\s+[\\w\\s]+\\",Pattern.MULTILINE);
+    public final static Pattern Open = Pattern.compile("\\s*method\\s+[\\w\\s]+\\s*",Pattern.MULTILINE);
     public final static Pattern Arguments = Pattern.compile("\\([\\w\\s,\\._]*\\)",Pattern.MULTILINE);
     public final static Pattern Exceptions = Pattern.compile("\\s*throws\\s*[\\w\\s,\\._]*\\s*",Pattern.MULTILINE);
     public final static Pattern Block = Pattern.compile(".*[{}]",Pattern.MULTILINE);

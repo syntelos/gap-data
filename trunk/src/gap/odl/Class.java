@@ -80,31 +80,31 @@ import java.util.regex.Pattern;
  * <h3>Example</h3>
  * 
  * <pre>
- * # gap odl 'class Bar'
- * #
- * package foo
- * import java.io.*
+ * /# gap odl 'class Bar'
+ *  #/
+ * package foo;
+ * import java.io.*;
  * class Bar version 2 {
- *   *unique String uniqueId
- *   *hash-unique String uniqueName
- *   Serializable fieldValue
- *   List<String> aChangeSinceVersionOne
+ *   *unique String uniqueId;
+ *   *hash-unique String uniqueName;
+ *   Serializable fieldValue;
+ *   List<String> aChangeSinceVersionOne;
  * }
  * </pre>
  * 
  * <pre>
- * # gap odl 'class Bar'
- * #
- * package foo
- * import java.io.*
+ * /# gap odl 'class Bar'
+ *  #/
+ * package foo;
+ * import java.io.*;
  * class Bar version 3
  *   implements Interface1
  *   implements Interface2
  * {
- *   *unique String uniqueId
- *   *hash-unique String uniqueName
- *   Serializable fieldValue
- *   List<String> aChangeSinceVersionOne
+ *   *unique String uniqueId;
+ *   *hash-unique String uniqueName;
+ *   Serializable fieldValue;
+ *   List<String> aChangeSinceVersionOne;
  * }
  * </pre>
  * 
@@ -175,7 +175,7 @@ public final class Class
                         this.comment = reader.comment();
                         String line = reader.getNext(Open);
                         if (null != line){
-                            StringTokenizer strtok = new StringTokenizer(line, " \t{");
+                            StringTokenizer strtok = new StringTokenizer(line, " \t\r\n{");
                             switch (strtok.countTokens()){
                             case 2:
                                 spec = strtok.nextToken();
@@ -216,10 +216,7 @@ public final class Class
                     }
                 }
             }
-            catch (Jump global){
-                continue;
-            }
-            catch (NoSuchElementException eof){
+            catch (Jump terminal){
                 break;
             }
         }
