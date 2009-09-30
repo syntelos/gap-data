@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 public final class Interface
     extends Object
 {
-    public final static Pattern Statement = Pattern.compile("^implements [\\w\\._]+\\s*;?\\s*");
+    public final static Pattern Statement = Pattern.compile("^implements [\\w\\._]+\\s*;?.*");
 
 
     private Comment comment;

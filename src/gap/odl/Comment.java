@@ -33,8 +33,8 @@ import java.util.regex.Pattern;
 public final class Comment
     extends Object
 {
-    public final static Pattern Line = Pattern.compile("\\s*#\\s*(.*)");
-    public final static Pattern MultiLine = Pattern.compile("\\s\\/\\*(.*)\\*\\/",Pattern.MULTILINE);
+    public final static Pattern Line = Pattern.compile("\\s*#\\s*.*");
+    public final static Pattern MultiLine = Pattern.compile("\\s\\/\\*.*\\*\\/",Pattern.MULTILINE);
 
 
     public final String text;
