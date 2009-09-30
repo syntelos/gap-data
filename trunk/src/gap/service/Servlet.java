@@ -73,7 +73,9 @@ public class Servlet
      * <code>"gap.service.Servlet.Log"</code>.
      */
     protected final static Logger Log = Logger.getLogger("Servlet");
-
+    /**
+     * One servlet config in the classloader scope.
+     */
     protected volatile static ServletConfig Config;
 
 
