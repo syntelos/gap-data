@@ -17,42 +17,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.data;
+package gap.util;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.PostalAddress;
+
 
 /**
- * A list has features of a set, it should never contain an element
- * twice.
+
  * 
  * @author jdp
  */
-public interface List<V>
-    extends Collection<V>
+public class ListPrimitivePostalAddress
+    extends AbstractListPrimitive<PostalAddress>
 {
 
-    public interface Primitive<V>
-        extends List<V>, Collection.PrimitiveC<V>
-    {
-        public List<V> add(V instance);
-
-        public List<V> remove(V instance);
+    public ListPrimitivePostalAddress(){
+        super();
     }
-
-    public interface Short<V>
-        extends List<V>, Collection.ShortC<V>
-    {
-        public List<V> add(V instance);
-
-        public List<V> remove(V instance);
-    }
-
-    public interface Long<V>
-        extends List<V>, Collection.LongC<V>
-    {
-    }
-
-    public V get(int index);
 
 }

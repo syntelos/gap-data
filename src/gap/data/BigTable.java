@@ -27,10 +27,6 @@ import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.datastore.ShortBlob;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
-
 /**
  * The gap data object handled by the {@link Store} API for memcache
  * and datastore.  All datastore objects are cached via the normal
@@ -61,7 +57,7 @@ public abstract class BigTable
     extends java.lang.Object
     implements java.io.Serializable
 {
-    protected final static Set<String> Imports = new java.util.HashSet<String>();
+    protected final static java.util.Set<String> Imports = new java.util.HashSet<String>();
 
     protected final static void Register(Class dc){
         String pkg = dc.getPackage().getName();
@@ -248,7 +244,7 @@ public abstract class BigTable
      * A static value enumerating the persistent (not transient)
      * fields of this class.
      */
-    public abstract List<Field> getClassFields();
+    public abstract List.Primitive<Field> getClassFields();
 
     public abstract Field getClassFieldByName(String name);
 
@@ -327,22 +323,11 @@ public abstract class BigTable
             String fieldName = field.getFieldName();
             java.io.Serializable value = this.valueOf(field);
             if (null != value){
-                /*
-                 * Serialization strategy
-                 */
-                if (value instanceof Blob){
 
-                    Blob blob = Serialize.To(field,value);
-                    entity.setUnindexedProperty(fieldName, blob);
-                }
-                else if (IsIndexed(value))
-
+                if (IsIndexed(value))
                     entity.setProperty(fieldName, value);
-                else {
-
-                    Blob blob = Serialize.To(field,value);
-                    entity.setUnindexedProperty(fieldName, blob);
-                }
+                else 
+                    entity.setUnindexedProperty(fieldName, value);
             }
             else if (null != entity.getProperty(fieldName))
                 entity.removeProperty(fieldName);
@@ -355,19 +340,8 @@ public abstract class BigTable
         for (Field field: this.getClassFields()){
 
             java.io.Serializable object = (java.io.Serializable)entity.getProperty(field.getFieldName());
-            if (null != object){
-                /*
-                 * Serialization strategy
-                 */
-                if (object instanceof Blob){
-                    java.io.Serializable deser = Serialize.From(field, ((Blob)object));
-                    this.define(field,deser);
-                }
-                else 
-                    this.define(field,object);
-            }
-            else
-                this.define(field,object);
+
+            this.define(field,object);
         }
         this.defineKeyFrom(entity);
         return entity;

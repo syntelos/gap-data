@@ -1,8 +1,5 @@
 package oso.data;
 
-import com.google.appengine.api.datastore.*;
-import java.io.Serializable;
-
 class Person version 2 {
     Key key;
     *unique String id;

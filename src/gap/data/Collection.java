@@ -23,20 +23,64 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
 /**
-
+ * Base class common to {@link List} and {@link Map}.
  * 
  * @author jdp
  */
 public interface Collection<V>
-    extends Iterable<V>
+    extends java.lang.Iterable<V>,
+            java.lang.Comparable<Collection<V>>,
+            java.io.Serializable,
+            java.lang.Cloneable
 {
-
-    public interface Short<V>
-        extends Collection<V>
-    {
+    /**
+     * Set comparisons for comparable interface return value.
+     */
+    public final static class Compares {
+        /**
+         * less-than
+         */
+        public final static int Intersects = -1;
+        /**
+         * greater-than
+         */
+        public final static int NoIntersection = 1;
+        /**
+         * equal
+         */
+        public final static int Equivalent = 0;
     }
 
-    public interface Long<V>
+    /**
+     * As a field type, "V" is a member of {@link gap.Primitive}.
+     * This kind of list is an entity property value.
+     */
+    public interface PrimitiveC<V>
+        extends Collection<V>
+    {
+        public boolean contains(V instance);
+
+        public boolean containsNot(V instance);
+    }
+
+    /**
+     * As a field type, "V" is a member of {@link gap.data.BigTable}.
+     * This kind of list is an entity group from the containing
+     * instance key.
+     */
+    public interface ShortC<V>
+        extends Collection<V>
+    {
+        public boolean contains(V instance);
+
+        public boolean containsNot(V instance);
+    }
+
+    /**
+     * As a field type, "V" is a member of {@link gap.data.BigTable}.
+     * This kind of list is a collection of top level entities.
+     */
+    public interface LongC<V>
         extends Collection<V>
     {
         public Query getQuery();

@@ -61,30 +61,16 @@ public class Site
         boolean canUpdate = this.canUpdate(path,accept,logon);
         boolean canGoto = this.canGoto(path,accept,logon);
         boolean canDelete = this.canDelete(path,accept,logon);
+        boolean canExport = this.canExport(path,accept,logon);
+        boolean canImport = this.canImport(path,accept,logon);
 
 
-        TemplateDictionary head;
-        if (canUpdate){
-            head = top.addSection("tool_head","head.tool.html");
-            head.setVariable("tool_name","update");
-            head.setVariable("tool_nameCamel","Update");
-        }
-        if (canCreate){
-            head = top.addSection("tool_head","head.tool.html");
-            head.setVariable("tool_name","create");
-            head.setVariable("tool_nameCamel","Create");
-        }
-        if (canGoto){
-            head = top.addSection("tool_head","head.tool.html");
-            head.setVariable("tool_name","goto");
-            head.setVariable("tool_nameCamel","Goto");
-        }
-        if (canDelete){
-            head = top.addSection("tool_head","head.tool.html");
-            head.setVariable("tool_name","delete");
-            head.setVariable("tool_nameCamel","Delete");
-        }
-
+        //        TemplateDictionary head;
+        //         if (canUpdate){
+        //             head = top.addSection("head","head.tool.html");
+        //             head.setVariable("tool_name","update");
+        //             head.setVariable("tool_nameCamel","Update");
+        //         }
 
         TemplateDictionary tool;
         if (canUpdate){
@@ -95,7 +81,7 @@ public class Site
 
                 if (once){
                     once = false;
-                    tool = top.addSection("tools_overlay","div.overlay.html");
+                    tool = top.addSection("overlay","div.overlay.html");
                     tool.addSection("tool_form","form.update.html");
                 }
                 else
@@ -116,7 +102,7 @@ public class Site
 
                 if (once){
                     once = false;
-                    tool = top.addSection("tools_overlay","div.overlay.html");
+                    tool = top.addSection("overlay","div.overlay.html");
                     tool.addSection("tool_form","form.create.html");
                 }
                 else
@@ -137,7 +123,7 @@ public class Site
 
                 if (once){
                     once = false;
-                    tool = top.addSection("tools_overlay","div.overlay.html");
+                    tool = top.addSection("overlay","div.overlay.html");
                     tool.addSection("tool_form","form.goto.html");
                 }
                 else
@@ -158,7 +144,7 @@ public class Site
 
                 if (once){
                     once = false;
-                    tool = top.addSection("tools_overlay","div.overlay.html");
+                    tool = top.addSection("overlay","div.overlay.html");
                     tool.addSection("tool_form","form.delete.html");
                 }
                 else
@@ -170,6 +156,48 @@ public class Site
             tool = top.addSection("tool","div.tool.off.html");
 
             this.doGetDefineDelete(path,accept,logon,tool,true);
+        }
+        if (canExport){
+            tool = top.addSection("tool","div.tool.html");
+            boolean once = true;
+            do {
+                this.doGetDefineExport(path,accept,logon,tool,once);
+
+                if (once){
+                    once = false;
+                    tool = top.addSection("overlay","div.overlay.html");
+                    tool.addSection("tool_form","form.export.html");
+                }
+                else
+                    break;
+            }
+            while (true);
+        }
+        else {
+            tool = top.addSection("tool","div.tool.off.html");
+
+            this.doGetDefineExport(path,accept,logon,tool,true);
+        }
+        if (canImport){
+            tool = top.addSection("tool","div.tool.html");
+            boolean once = true;
+            do {
+                this.doGetDefineImport(path,accept,logon,tool,once);
+
+                if (once){
+                    once = false;
+                    tool = top.addSection("overlay","div.overlay.html");
+                    tool.addSection("tool_form","form.import.html");
+                }
+                else
+                    break;
+            }
+            while (true);
+        }
+        else {
+            tool = top.addSection("tool","div.tool.off.html");
+
+            this.doGetDefineImport(path,accept,logon,tool,true);
         }
         return top;
     }
@@ -230,6 +258,36 @@ public class Site
             tool.setVariable("tool_titleUri","/icons/delete-de-200x50-000.png");
             tool.setVariable("tool_buttonUri","/icons/delete-de-b-200x50-000.png");
             tool.setVariable("tool_buttonOffUri","/icons/delete-de-b-200x50-aaa.png");
+        }
+        return tool;
+    }
+    protected TemplateDictionary doGetDefineExport(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+        tool.setVariable("tool_name","export");
+        tool.setVariable("tool_nameCamel","Export");
+        if (logon.serviceAdmin){
+            tool.setVariable("tool_titleUri","/icons/export-ex-200x50-a00.png");
+            tool.setVariable("tool_buttonUri","/icons/export-ex-b-200x50-a00.png");
+            tool.setVariable("tool_buttonOffUri","/icons/export-ex-b-200x50-aaa.png");
+        }
+        else {
+            tool.setVariable("tool_titleUri","/icons/export-ex-200x50-000.png");
+            tool.setVariable("tool_buttonUri","/icons/export-ex-b-200x50-000.png");
+            tool.setVariable("tool_buttonOffUri","/icons/export-ex-b-200x50-aaa.png");
+        }
+        return tool;
+    }
+    protected TemplateDictionary doGetDefineImport(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+        tool.setVariable("tool_name","import");
+        tool.setVariable("tool_nameCamel","Import");
+        if (logon.serviceAdmin){
+            tool.setVariable("tool_titleUri","/icons/import-im-200x50-a00.png");
+            tool.setVariable("tool_buttonUri","/icons/import-im-b-200x50-a00.png");
+            tool.setVariable("tool_buttonOffUri","/icons/import-im-b-200x50-aaa.png");
+        }
+        else {
+            tool.setVariable("tool_titleUri","/icons/import-im-200x50-000.png");
+            tool.setVariable("tool_buttonUri","/icons/import-im-b-200x50-000.png");
+            tool.setVariable("tool_buttonOffUri","/icons/import-im-b-200x50-aaa.png");
         }
         return tool;
     }

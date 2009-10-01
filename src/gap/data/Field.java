@@ -31,5 +31,23 @@ package gap.data;
  */
 public interface Field {
 
+    public final static class List
+        extends gap.util.AbstractListPrimitive<Field>
+    {
+        public List(){
+            super();
+        }
+        public List(Field[] fields){
+            super();
+            for (Field field : fields)
+                this.add(field);
+        }
+        public List(Iterable<Field> fields){
+            super();
+            for (Field field : fields)
+                this.add(field);
+        }
+    }
+
     public String getFieldName();
 }

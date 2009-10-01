@@ -85,6 +85,7 @@ public class OD
             /*
              * Tool globals
              */
+            top.putVariable("odl_gen_class","gap.service.OD");
             top.putVariable("odl_gen_xtm_src",xtm.getPath());
             top.putVariable("odl_gen_odl_src",packageName);
             top.putVariable("odl_gen_timestamp",(gap.Date.FormatISO8601(System.currentTimeMillis())));
@@ -238,10 +239,10 @@ public class OD
                             /*
                              * Global section 'field_hash_unique'
                              */
-                            TemplateDictionary dataFieldH = top.addSection("field_hash_unique");
+                            TemplateDictionary topDataFieldH = top.showSection("field_hash_unique").get(0);
 
 
-                            dataField = dataFieldH.addSection("field");
+                            dataField = topDataFieldH.addSection("field");
 
                             dataField.putVariable("field_name",fieldName);
                             dataField.putVariable("field_nameCamel",fieldNameCamel);
@@ -280,12 +281,12 @@ public class OD
                                     /*
                                      * Global section 'field_unique'
                                      */
-                                    TemplateDictionary dataFieldU = top.addSection("field_unique");
+                                    TemplateDictionary topDataFieldU = top.showSection("field_unique").get(0);
 
-                                    dataFieldU.putVariable("field_name",fieldName);
-                                    dataFieldU.putVariable("field_nameCamel",fieldNameCamel);
-                                    dataFieldU.putVariable("field_class",fieldType);
-                                    dataFieldU.putVariable("field_classClean",fieldTypeClean);
+                                    topDataFieldU.putVariable("field_name",fieldName);
+                                    topDataFieldU.putVariable("field_nameCamel",fieldNameCamel);
+                                    topDataFieldU.putVariable("field_class",fieldType);
+                                    topDataFieldU.putVariable("field_classClean",fieldTypeClean);
 
                                     /*
                                      * Global field 'unique' references
@@ -632,7 +633,7 @@ public class OD
     }
     public final static boolean IsTypeClassList(java.lang.Class fieldType){
         if (null != fieldType)
-            return (java.util.List.class.equals(fieldType));
+            return (gap.data.List.class.equals(fieldType));
         else
             return false;
     }
@@ -650,7 +651,7 @@ public class OD
     }
     public final static boolean IsTypeClassMap(java.lang.Class fieldType){
         if (null != fieldType)
-            return (java.util.Map.class.equals(fieldType));
+            return (gap.data.Map.class.isAssignableFrom(fieldType));
         else
             return false;
     }

@@ -23,7 +23,8 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
 /**
-
+ * The map key for a mapped value is the value of a field of the
+ * mapped value.
  * 
  * @author jdp
  */
@@ -32,7 +33,7 @@ public interface Map<K,V>
 {
 
     public interface Short<K,V>
-        extends Map<K,V>, Collection.Short<V>
+        extends Map<K,V>, Collection.ShortC<V>
     {
         public Map<K,V> add(K key);
 
@@ -40,7 +41,7 @@ public interface Map<K,V>
     }
 
     public interface Long<K,V>
-        extends Map<K,V>, Collection.Long<V>
+        extends Map<K,V>, Collection.LongC<V>
     {
     }
 
