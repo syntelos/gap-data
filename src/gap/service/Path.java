@@ -272,6 +272,21 @@ public final class Path
     public void dictionaryInto(TemplateDictionary dict){
     }
 
+    public String toString(){
+        return this.full;
+    }
+    public int hashCode(){
+        return this.full.hashCode();
+    }
+    public boolean equals(Object that){
+        if (that == this)
+            return true;
+        else if (null == that)
+            return false;
+        else 
+            return this.full.equals(that.toString());
+    }
+
     private final static String Clean(String string){
         if (null == string || 0 == string.length())
             return "";

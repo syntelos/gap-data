@@ -1,14 +1,12 @@
 
 package {{=package_name}};
+{{#import}}
+import {{=import_spec}};{{/import}}
 
 import gap.data.*;
 import gap.service.Templates;
 
 import hapax.TemplateDictionary;
-
-{{#import}}
-import {{=import_spec}};
-{{/import}}
 
 import com.google.appengine.api.datastore.*;
 

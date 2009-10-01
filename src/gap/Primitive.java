@@ -22,6 +22,13 @@ package gap;
 /**
  * The gap primitive types from java lang and google datastore.
  * 
+ * <h3>Special note for Key type</h3>
+ * 
+ * Instances of the Key type should be complete -- depending on the
+ * context -- before being stored.  Stored incomplete keys have a name
+ * component and are retrieved for a unique value.
+ * 
+ * 
  * @author jdp
  */
 public enum Primitive {
@@ -37,6 +44,7 @@ public enum Primitive {
     Category(com.google.appengine.api.datastore.Category.class),
     Email(com.google.appengine.api.datastore.Email.class),
     GeoPt(com.google.appengine.api.datastore.GeoPt.class),
+    Key(com.google.appengine.api.datastore.Key.class),
     Link(com.google.appengine.api.datastore.Link.class),
     PhoneNumber(com.google.appengine.api.datastore.PhoneNumber.class),
     PostalAddress(com.google.appengine.api.datastore.PostalAddress.class),

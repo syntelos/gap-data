@@ -113,22 +113,45 @@ public final class Store
         }
         protected static BigTable Query1(Query query){
             DatastoreService ds = Get();
-            PreparedQuery stmt = ds.prepare(query);
-
-            Entity entity = stmt.asSingleEntity();/* This expression requires that a key having name
-                                                   * but not id resolve to one id.
-                                                   * 
-                                                   * Key.name identity code needs to be aware that
-                                                   * the datastore key can have multiple key.id's
-                                                   * for a key.name.
-                                                   */
-            if (null == entity)
-                return null;
-            else {
-                BigTable gdo = BigTable.From(entity);
-                gdo.setFromDatastore();
-                gdo.onread();
-                return gdo;
+            try {
+                PreparedQuery stmt = ds.prepare(query);
+                Entity entity = stmt.asSingleEntity();
+                if (null == entity)
+                    return null;
+                else {
+                    BigTable gdo = BigTable.From(entity);
+                    gdo.setFromDatastore();
+                    gdo.onread();
+                    return gdo;
+                }
+            }
+            catch (com.google.appengine.api.datastore.PreparedQuery.TooManyResultsException exc){
+                query.setKeysOnly();
+                PreparedQuery stmt = ds.prepare(query);
+                Key highKey = null;
+                long highId = 0;
+                for (Entity ent : stmt.asIterable()){
+                    Key key = ent.getKey();
+                    long keyId = key.getId();
+                    if (keyId > highId){
+                        highId = keyId;
+                        highKey = key;
+                    }
+                }
+                try {
+                    Entity entity = ds.get(highKey);
+                    if (null == entity)
+                        return null;
+                    else {
+                        BigTable gdo = BigTable.From(entity);
+                        gdo.setFromDatastore();
+                        gdo.onread();
+                        return gdo;
+                    }
+                }
+                catch (com.google.appengine.api.datastore.EntityNotFoundException err){
+                    return null;
+                }
             }
         }
         protected static List.Primitive<BigTable> QueryN(Query query, FetchOptions page){
@@ -155,19 +178,29 @@ public final class Store
             query.setKeysOnly();
 
             DatastoreService ds = Get();
-            PreparedQuery stmt = ds.prepare(query);
+            try {
+                PreparedQuery stmt = ds.prepare(query);
+                Entity entity = stmt.asSingleEntity();
+                if (null == entity)
+                    return null;
+                else 
+                    return entity.getKey();
+            }
+            catch (com.google.appengine.api.datastore.PreparedQuery.TooManyResultsException exc){
 
-            Entity entity = stmt.asSingleEntity();/* This expression requires that a key having name
-                                                   * but not id resolve to one id.
-                                                   * 
-                                                   * Key.name identity code needs to be aware that
-                                                   * the datastore key can have multiple key.id's
-                                                   * for a key.name.
-                                                   */
-            if (null == entity)
-                return null;
-            else 
-                return entity.getKey();
+                PreparedQuery stmt = ds.prepare(query);
+                Key highKey = null;
+                long highId = 0;
+                for (Entity ent : stmt.asIterable()){
+                    Key key = ent.getKey();
+                    long keyId = key.getId();
+                    if (keyId > highId){
+                        highId = keyId;
+                        highKey = key;
+                    }
+                }
+                return highKey;
+            }
         }
         protected static List.Primitive<Key> QueryKeyN(Query query, FetchOptions page){
             query.setKeysOnly();
