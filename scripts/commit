@@ -1,0 +1,41 @@
+#!/bin/bash
+
+if [ -f build.version ]
+then
+ version_major=$(egrep 'major=' build.version | sed 's/.*=//; s/ //g;')
+ version_minor=$(egrep 'minor=' build.version | sed 's/.*=//; s/ //g;')
+ version_build=$(egrep 'build=' build.version | sed 's/.*=//; s/ //g;')
+ if [ -n "${version_major}" ]&&[ -n "${version_minor}" ]&&[ -n "${version_build}" ]
+ then
+  version="${version_major}.${version_minor}.${version_build}"
+  unset msg
+  for m in $* 
+  do
+   if [ -n "${msg}" ]
+   then
+    msg="${msg} ${m}"
+   else
+    msg="${m}"
+   fi
+  done
+  if [ -z "${msg}" ]
+  then
+   msg="upd ${version}"
+  else
+   msg="${msg} ${version}"
+  fi
+  set -x
+  svn commit -m "${msg}"
+
+ else
+  cat<<EOF
+Missing version informaiton from file 'build.version'.
+EOF
+  exit 1
+ fi
+else
+ cat<<EOF
+Missing file 'build.version'.
+EOF
+ exit 1
+ fi
