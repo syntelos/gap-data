@@ -92,11 +92,24 @@ public abstract class AbstractListPrimitive<V>
     public Key getValueClassAncestorKey(){
         return this.ancestorKey;
     }
+    public boolean hasValueClassAncestorKey(){
+        return (null != this.ancestorKey);
+    }
+    public boolean isCompleteValueClassAncestorKey(){
+        Key ancestorKey = this.ancestorKey;
+        if (null != ancestorKey)
+            return ancestorKey.isComplete();
+        else
+            return false;
+    }
     public void setValueClassAncestorKey(Key key){
         this.ancestorKey = key;
     }
     public String getValueClassAncestorKeyFieldName(){
         return this.ancestorFieldName;
+    }
+    public boolean hasValueClassAncestorKeyFieldName(){
+        return (null != this.ancestorFieldName);
     }
     public void setValueClassAncestorKeyFieldName(String name){
         this.ancestorFieldName = name;

@@ -92,8 +92,18 @@ public interface Collection<V>
 
 
     public Key getValueClassAncestorKey();
+    /**
+     * @return False when get key returns null
+     */
+    public boolean hasValueClassAncestorKey();
+    /**
+     * @return False for no key or incomplete key
+     */
+    public boolean isCompleteValueClassAncestorKey();
 
     public String getValueClassAncestorKeyFieldName();
+
+    public boolean hasValueClassAncestorKeyFieldName();
 
     public int size();
 
