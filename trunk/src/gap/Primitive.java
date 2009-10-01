@@ -25,21 +25,46 @@ package gap;
  * @author jdp
  */
 public enum Primitive {
-    String,
-    Boolean,
-    Byte,
-    Short,
-    Integer, 
-    Long,
-    Float,
-    Double,
-    Date,
-    Category,
-    Email,
-    GeoPt,
-    Link,
-    PhoneNumber,
-    PostalAddress,
-    Rating,
-    Text;
+    String(java.lang.String.class),
+    Boolean(java.lang.Boolean.class),
+    Byte(java.lang.Byte.class),
+    Short(java.lang.Short.class),
+    Integer(java.lang.Integer.class), 
+    Long(java.lang.Long.class),
+    Float(java.lang.Float.class),
+    Double(java.lang.Double.class),
+    Date(java.util.Date.class),
+    Category(com.google.appengine.api.datastore.Category.class),
+    Email(com.google.appengine.api.datastore.Email.class),
+    GeoPt(com.google.appengine.api.datastore.GeoPt.class),
+    Link(com.google.appengine.api.datastore.Link.class),
+    PhoneNumber(com.google.appengine.api.datastore.PhoneNumber.class),
+    PostalAddress(com.google.appengine.api.datastore.PostalAddress.class),
+    Rating(com.google.appengine.api.datastore.Rating.class),
+    Text(com.google.appengine.api.datastore.Text.class);
+
+
+    public final Class type;
+
+    private Primitive(Class impl){
+        this.type = impl;
+    }
+
+
+
+    public final static boolean Is(String name){
+        return (null != gap.Primitive.valueOf(name));
+    }
+    public final static boolean Is(Class type){
+        return (null != Map.get(type));
+    }
+    private final static java.util.Map<Class,Primitive> Map = new java.util.HashMap<Class,Primitive>();
+    static {
+        for (Primitive type : Primitive.values()){
+            Map.put(type.type,type);
+        }
+    }
+    public final static Primitive For(Class type){
+        return Map.get(type);
+    }
 }

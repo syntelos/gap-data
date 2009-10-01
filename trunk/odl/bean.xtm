@@ -10,16 +10,19 @@ import hapax.TemplateDictionary;
 import {{=import_spec}};
 {{/import}}
 
+import com.google.appengine.api.datastore.*;
+
+import java.io.Serializable;
 import javax.annotation.Generated;
 
-/** 
+/**
  * Generated from "{{=odl_gen_odl_src}}" with "{{=odl_gen_xtm_src}}".
  *
  */
-@Generated(value={"gap.od","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
+@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
 public final class {{=class_name}}
     extends gap.data.BigTable{{#implements}}
-{{#implements_it_First}}    implements {{/implements_it_First}}{{#implements_it_NotFirst}}               {{/implements_it_NotFirst}}{{=interface}}{{/implements}}
+{{#implements_it_First}}    implements {{/implements_it_First}}{{#implements_it_NotFirst}}               {{/implements_it_NotFirst}}{{=interface}}{{#implements_it_NotLast}},{{/implements_it_NotLast}}{{/implements}}
 {
 
     private final static long serialVersionUID = {{=class_version}};
@@ -486,10 +489,7 @@ public final class {{=class_name}}
         return "{{=field_key_name}}";
     }
     public List<gap.data.Field> getClassFields(){
-        List<gap.data.Field> list = new java.util.ArrayList<gap.data.Field>();
-        for (gap.data.Field field : Field.values())
-            list.add(field);
-        return list;
+        return (new gap.data.Field.List(Field.values()));
     }
     public gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);

@@ -65,7 +65,7 @@ public class Servlet
      * Defined operations available via POST method.
      */
     public enum Op {
-        Create, Update, Goto, Delete;
+        Create, Update, Goto, Delete, Export, Import;
     }
     /**
      * Subclass usage should be qualified as
@@ -290,6 +290,12 @@ public class Servlet
     protected boolean canDelete(Path path, Accept accept, Logon logon){
         return (logon.serviceAdmin);
     }
+    protected boolean canExport(Path path, Accept accept, Logon logon){
+        return (logon.serviceAdmin);
+    }
+    protected boolean canImport(Path path, Accept accept, Logon logon){
+        return (logon.serviceAdmin);
+    }
 
     protected TemplateDictionary doGetDefine(Path path, Accept accept, Logon logon){
         return logon.dict;
@@ -370,6 +376,26 @@ public class Servlet
                             this.doPostDeleteTemplate(path,accept,logon,parameters,req,rep);
                         else
                             this.doPostDelete(path,accept,logon,parameters,req,rep);
+                        return;
+
+                    case Export:
+                        if (formatServlet)
+                            this.doPostExportServlet(path,accept,logon,parameters,req,rep);
+
+                        else if (formatTemplate)
+                            this.doPostExportTemplate(path,accept,logon,parameters,req,rep);
+                        else
+                            this.doPostExport(path,accept,logon,parameters,req,rep);
+                        return;
+
+                    case Import:
+                        if (formatServlet)
+                            this.doPostImportServlet(path,accept,logon,parameters,req,rep);
+
+                        else if (formatTemplate)
+                            this.doPostImportTemplate(path,accept,logon,parameters,req,rep);
+                        else
+                            this.doPostImport(path,accept,logon,parameters,req,rep);
                         return;
                     default:
                         this.undefined(path,accept,logon,Method.Get(),req,rep);
@@ -506,6 +532,50 @@ public class Servlet
         this.undefined(path,accept,logon,Method.Get(),req,rep);
     }
     protected void doPostDelete(Path path, Accept accept, Logon logon, Parameters parameters,
+                                HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doPostExportServlet(Path path, Accept accept, Logon logon, Parameters parameters,
+                                HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doPostExportTemplate(Path path, Accept accept, Logon logon, Parameters parameters,
+                                HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doPostExport(Path path, Accept accept, Logon logon, Parameters parameters,
+                                HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doPostImportServlet(Path path, Accept accept, Logon logon, Parameters parameters,
+                                HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doPostImportTemplate(Path path, Accept accept, Logon logon, Parameters parameters,
+                                HttpServletRequest req, HttpServletResponse rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(path,accept,logon,Method.Get(),req,rep);
+    }
+    protected void doPostImport(Path path, Accept accept, Logon logon, Parameters parameters,
                                 HttpServletRequest req, HttpServletResponse rep)
         throws ServletException, IOException
     {

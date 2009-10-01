@@ -1,15 +1,13 @@
 
 package oso.data;
 
-
+import gap.data.*;
 import gap.service.Templates;
 
 import hapax.TemplateDictionary;
 
 
 import com.google.appengine.api.datastore.*;
-
-import java.util.*;
 
 import java.io.Serializable;
 
@@ -233,7 +231,7 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public final static List QueryN(Query query, FetchOptions page){
+    public final static List.Primitive QueryN(Query query, FetchOptions page){
         if (null != query)
             return gap.data.Store.QueryN(query,page);
         else
@@ -245,7 +243,7 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public final static List<Key> QueryKeyN(Query query, FetchOptions page){
+    public final static List.Primitive<Key> QueryKeyN(Query query, FetchOptions page){
         if (null != query)
             return gap.data.Store.QueryKeyN(query,page);
         else
@@ -266,7 +264,7 @@ public final class Person
         Attributes("attributes");
 
 
-        private final static Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
+        private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
         public static final String[] AllNames;
         static {
             Field[] allFields = Field.values();
@@ -313,7 +311,7 @@ public final class Person
                 instance.setLogonId( (String)value);
                 return;
             case Roles:
-                instance.setRoles( (List<String>)value);
+                instance.setRoles( (List.Primitive<String>)value);
                 return;
             case Attributes:
                 instance.setAttributes( (Map<String,Serializable>)value);
@@ -344,7 +342,7 @@ public final class Person
     private volatile Key key;    
     private volatile String id;    // *unique
     private volatile String logonId;    // *hash-unique
-    private volatile List<String> roles;    
+    private volatile List.Primitive<String> roles;    
     private volatile Map<String,Serializable> attributes;    
 
 
@@ -458,28 +456,28 @@ public final class Person
         else
             return false;
     }
-    public List<String> getRoles(){
+    public List.Primitive<String> getRoles(){
         return this.roles;
     }
-    public void setRoles(List<String> roles){
+    public void setRoles(List.Primitive<String> roles){
         this.roles = roles;
     }
     public int sizeRoles(){
-        List<String> list = this.roles;
+        List.Primitive<String> list = this.roles;
         if (null != list)
             return list.size();
         else
             return 0;
     }
     public boolean isEmptyRoles(){
-        List<String> list = this.roles;
+        List.Primitive<String> list = this.roles;
         if (null != list)
             return list.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyRoles(){
-        List<String> list = this.roles;
+        List.Primitive<String> list = this.roles;
         if (null != list)
             return (!list.isEmpty());
         else
@@ -487,7 +485,7 @@ public final class Person
     }
     public boolean containsRoles(String rolesItem){
         if (null != rolesItem){
-            List<String> list = this.roles;
+            List.Primitive<String> list = this.roles;
             if (null != list)
                 return list.contains(rolesItem);
             else
@@ -498,7 +496,7 @@ public final class Person
     }
     public String getRoles(gap.data.ListFilter<String> filter){
         if (null != filter){
-            List<String> list = this.roles;
+            List.Primitive<String> list = this.roles;
             if (null != list){
                 for (String item : list){
                     if (filter.accept(item))
@@ -512,42 +510,15 @@ public final class Person
     }
     public void addRoles(String rolesItem){
         if (null != rolesItem){
-            List<String> list = this.roles;
+            List.Primitive<String> list = this.roles;
             if (null == list){
-                list = new java.util.ArrayList<String>();
+                list = new gap.util.ListPrimitiveString();
                 this.roles = list;
             }
             else if (list.contains(rolesItem))
                 return;
 
             list.add(rolesItem);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public boolean removeRoles(String rolesItem){
-        if (null != rolesItem){
-            List<String> list = this.roles;
-            if (null != list)
-                return list.remove(rolesItem);
-            else
-                return false;
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public boolean removeRoles(gap.data.ListFilter<String> filter){
-        if (null != filter){
-            List<String> list = this.roles;
-            if (null != list){
-                for (String item : list){
-                    if (filter.accept(item)){
-                        list.remove(item);
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
         else
             throw new IllegalArgumentException();
@@ -594,28 +565,6 @@ public final class Person
         else
             return false;
     }
-    public boolean containsKeyAttributes(String attributesKey){
-        if (null != attributesKey){
-            Map<String,Serializable> map = this.attributes;
-            if (null != map)
-                return map.containsKey(attributesKey);
-            else
-                return false;
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public boolean containsValueAttributes(Serializable attributesValue){
-        if (null != attributesValue){
-            Map<String,Serializable> map = this.attributes;
-            if (null != map)
-                return map.containsValue(attributesValue);
-            else
-                return false;
-        }
-        else
-            throw new IllegalArgumentException();
-    }
     public Serializable getAttributes(String attributesKey){
         if (null != attributesKey){
             Map<String,Serializable> map = this.attributes;
@@ -627,30 +576,6 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public Serializable putAttributes(String attributesKey, Serializable attributesValue){
-        if (null != attributesKey && null != attributesValue){
-            Map<String,Serializable> map = this.attributes;
-            if (null == map){
-                map = new java.util.HashMap<String,Serializable>();
-                this.attributes = map;
-            }
-            return map.put(attributesKey, attributesValue);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public Serializable removeAttributes(String attributesKey){
-        if (null != attributesKey){
-            Map<String,Serializable> map = this.attributes;
-            if (null != map)
-                return map.remove(attributesKey);
-            else
-                return null;
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-
 
 
 
@@ -673,11 +598,8 @@ public final class Person
     public String getClassFieldKeyName(){
         return "key";
     }
-    public List<gap.data.Field> getClassFields(){
-        List<gap.data.Field> list = new java.util.ArrayList<gap.data.Field>();
-        for (gap.data.Field field : Field.values())
-            list.add(field);
-        return list;
+    public List.Primitive<gap.data.Field> getClassFields(){
+        return (new gap.data.Field.List(Field.values()));
     }
     public gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);

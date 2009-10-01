@@ -19,6 +19,8 @@
  */
 package gap.data;
 
+import gap.util.AbstractListPrimitive;
+
 import javax.cache.Cache;
 import javax.cache.CacheException;
 import javax.cache.CacheFactory;
@@ -37,11 +39,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
 import javax.servlet.ServletContext;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -93,9 +91,9 @@ public final class Store
                 return null;
             }
         }
-        protected static List<BigTable> Get(java.lang.Iterable<Key> keys){
-            List<BigTable> list = new java.util.ArrayList<BigTable>();
-            Map <Key,Entity> map = Get().get(keys);
+        protected static List.Primitive<BigTable> Get(java.lang.Iterable<Key> keys){
+            List.Primitive<BigTable> list = new AbstractListPrimitive.Any<BigTable>();
+            java.util.Map <Key,Entity> map = Get().get(keys);
             for (Entity entity : map.values()){
                 BigTable gdo = BigTable.From(entity);
                 gdo.setFromDatastore();
@@ -133,7 +131,7 @@ public final class Store
                 return gdo;
             }
         }
-        protected static List<BigTable> QueryN(Query query, FetchOptions page){
+        protected static List.Primitive<BigTable> QueryN(Query query, FetchOptions page){
             DatastoreService ds = Get();
             PreparedQuery stmt = ds.prepare(query);
 
@@ -143,7 +141,7 @@ public final class Store
             else
                 it = stmt.asIterable();
 
-            List<BigTable> list = new java.util.ArrayList<BigTable>();
+            List.Primitive<BigTable> list = new AbstractListPrimitive.Any<BigTable>();
 
             for (Entity entity : it){
                 BigTable gdo = BigTable.From(entity);
@@ -171,7 +169,7 @@ public final class Store
             else 
                 return entity.getKey();
         }
-        protected static List<Key> QueryKeyN(Query query, FetchOptions page){
+        protected static List.Primitive<Key> QueryKeyN(Query query, FetchOptions page){
             query.setKeysOnly();
 
             DatastoreService ds = Get();
@@ -183,7 +181,7 @@ public final class Store
             else
                 it = stmt.asIterable();
 
-            List<Key> list = new java.util.ArrayList<Key>();
+            List.Primitive<Key> list = new AbstractListPrimitive.Any<Key>();
 
             for (Entity entity : it){
 
@@ -237,10 +235,10 @@ public final class Store
                 return null;
             }
         }
-        protected static List<BigTable> Get(java.lang.Iterable<Key> keys){
+        protected static List.Primitive<BigTable> Get(java.lang.Iterable<Key> keys){
             MemcacheService mc = Store.C.Get();
             DatastoreService ds = Store.P.Get();
-            List<BigTable> list = new java.util.ArrayList<BigTable>();
+            List.Primitive<BigTable> list = new AbstractListPrimitive.Any<BigTable>();
             for (Key key : keys){
                 
                 String ck = BigTable.ToString(key);
@@ -319,20 +317,20 @@ public final class Store
         else
             throw new IllegalArgumentException("Incomplete key '"+key+"'.");
     }
-    public static List<BigTable> Get(Iterable<Key> keys){
+    public static List.Primitive<BigTable> Get(Iterable<Key> keys){
 
         return C.Get(keys);
     }
     public static BigTable Query1(Query q){
         return Store.P.Query1(q);
     }
-    public static List<BigTable> QueryN(Query q, FetchOptions p){
+    public static List.Primitive<BigTable> QueryN(Query q, FetchOptions p){
         return Store.P.QueryN(q,p);
     }
     public static Key QueryKey1(Query q){
         return Store.P.QueryKey1(q);
     }
-    public static List<Key> QueryKeyN(Query q, FetchOptions p){
+    public static List.Primitive<Key> QueryKeyN(Query q, FetchOptions p){
         return Store.P.QueryKeyN(q,p);
     }
     public static BigTable Put(BigTable table){
