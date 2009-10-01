@@ -31,6 +31,51 @@ import com.google.appengine.api.datastore.Query;
 public interface List<V>
     extends Collection<V>
 {
+    public enum Type {
+        ListPrimitive("List.Primitive",gap.data.List.Primitive.class),
+        ListShort("List.Short",gap.data.List.Short.class),
+        ListLong("List.Long",gap.data.List.Long.class);
+
+
+        public final String dotName;
+        public final Class type;
+
+        private Type(String dotName, Class impl){
+            this.dotName = dotName;
+            this.type = impl;
+        }
+
+
+
+        public final static boolean Is(String name){
+            return (null != List.Type.For(name));
+        }
+        public final static boolean Is(Class type){
+            return (null != ClassMap.get(type));
+        }
+        private final static java.util.Map<Class,List.Type> ClassMap = new java.util.HashMap<Class,List.Type>();
+        static {
+            for (List.Type type : List.Type.values()){
+                ClassMap.put(type.type,type);
+            }
+        }
+        public final static List.Type For(Class type){
+            return ClassMap.get(type);
+        }
+        private final static java.util.Map<String,List.Type> DotNameMap = new java.util.HashMap<String,List.Type>();
+        static {
+            for (List.Type type : List.Type.values()){
+                DotNameMap.put(type.dotName,type);
+            }
+        }
+        public final static List.Type For(String name){
+            List.Type type = DotNameMap.get(name);
+            if (null != type)
+                return type;
+            else
+                return List.Type.valueOf(name);
+        }
+    }
 
     public interface Primitive<V>
         extends List<V>, Collection.PrimitiveC<V>

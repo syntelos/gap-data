@@ -480,29 +480,44 @@ public class OD
     }
     public final static Class FieldClass(String pkg, String fieldType, List<ImportDescriptor> imports){
         String cleanTypeName = CleanTypeName(fieldType);
-        try {
-            return java.lang.Class.forName(cleanTypeName);
+        gap.Primitive primitive = gap.Primitive.valueOf(cleanTypeName);
+        if (null != primitive)
+            return primitive.type;
+        else {
+            gap.data.List.Type listType = gap.data.List.Type.For(cleanTypeName);
+            if (null != listType)
+                return listType.type;
+            else {
+                gap.data.Map.Type mapType = gap.data.Map.Type.For(cleanTypeName);
+                if (null != mapType)
+                    return mapType.type;
+                else {
+                    try {
+                        return java.lang.Class.forName(cleanTypeName);
+                    }
+                    catch (java.lang.ClassNotFoundException exc){
+                    }
+                    for (ImportDescriptor imp : imports){
+                        java.lang.Class clas = ClassFor(cleanTypeName,imp);
+                        if (null != clas)
+                            return clas;
+                    }
+                    try {
+                        String classname = pkg+'.'+cleanTypeName;
+                        return java.lang.Class.forName(classname);
+                    }
+                    catch (java.lang.ClassNotFoundException exc){
+                    }
+                    try {
+                        String classname = "java.lang."+cleanTypeName;
+                        return java.lang.Class.forName(classname);
+                    }
+                    catch (java.lang.ClassNotFoundException exc){
+                    }
+                    return null;
+                }
+            }
         }
-        catch (java.lang.ClassNotFoundException exc){
-        }
-        for (ImportDescriptor imp : imports){
-            java.lang.Class clas = ClassFor(cleanTypeName,imp);
-            if (null != clas)
-                return clas;
-        }
-        try {
-            String classname = pkg+'.'+cleanTypeName;
-            return java.lang.Class.forName(classname);
-        }
-        catch (java.lang.ClassNotFoundException exc){
-        }
-        try {
-            String classname = "java.lang."+cleanTypeName;
-            return java.lang.Class.forName(classname);
-        }
-        catch (java.lang.ClassNotFoundException exc){
-        }
-        return null;
     }
     public final static String[] FieldTypeParameters(String typeName){
         int start = typeName.indexOf('<');

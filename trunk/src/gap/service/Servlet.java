@@ -177,6 +177,13 @@ public class Servlet
                 rep.sendRedirect("index.html");
                 return;
             }
+            else if (path.equals("/version.txt")){
+                rep.setCharacterEncoding("UTF-8");
+                PrintWriter out = rep.getWriter();
+                out.println(gap.Version.Name+' '+gap.Version.Target+' '+gap.Version.Long);
+                rep.setContentType("text/plain");
+                return;
+            }
             else {
                 this.doGet(path,accept,logon,req,rep);
                 return;

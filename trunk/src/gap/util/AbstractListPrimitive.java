@@ -35,6 +35,9 @@ public abstract class AbstractListPrimitive<V>
 {
     private final static long serialVersionUID = 1L;
 
+    /**
+     * List implementation used by {@link Store}
+     */
     public final static class Any<V>
         extends AbstractListPrimitive<V>
     {

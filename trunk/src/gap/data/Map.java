@@ -31,6 +31,62 @@ import com.google.appengine.api.datastore.Query;
 public interface Map<K,V>
     extends Collection<V>
 {
+    public enum Type {
+        MapPrimitive("Map.Primitive",gap.data.Map.Primitive.class),
+        MapShort("Map.Short",gap.data.Map.Short.class),
+        MapLong("Map.Long",gap.data.Map.Long.class);
+
+
+        public final String dotName;
+        public final Class type;
+
+        private Type(String dotName, Class impl){
+            this.dotName = dotName;
+            this.type = impl;
+        }
+
+
+
+        public final static boolean Is(String name){
+            return (null != Map.Type.For(name));
+        }
+        public final static boolean Is(Class type){
+            return (null != ClassMap.get(type));
+        }
+        private final static java.util.Map<Class,Map.Type> ClassMap = new java.util.HashMap<Class,Map.Type>();
+        static {
+            for (Map.Type type : Map.Type.values()){
+                ClassMap.put(type.type,type);
+            }
+        }
+        public final static Map.Type For(Class type){
+            return ClassMap.get(type);
+        }
+        private final static java.util.Map<String,Map.Type> DotNameMap = new java.util.HashMap<String,Map.Type>();
+        static {
+            for (Map.Type type : Map.Type.values()){
+                DotNameMap.put(type.dotName,type);
+            }
+        }
+        public final static Map.Type For(String name){
+            Map.Type type = DotNameMap.get(name);
+            if (null != type)
+                return type;
+            else
+                return Map.Type.valueOf(name);
+        }
+    }
+
+    /**
+     * Keys and values are both primitive types.
+     */
+    public interface Primitive<K,V>
+        extends Map<K,V>, Collection.PrimitiveC<V>
+    {
+        public Map<K,V> add(K key);
+
+        public Map<K,V> remove(K key);
+    }
 
     public interface Short<K,V>
         extends Map<K,V>, Collection.ShortC<V>
