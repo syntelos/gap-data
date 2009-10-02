@@ -261,7 +261,7 @@ public final class {{=class_name}}
         {{=field_nameCamel}}("{{=field_name}}"){{#pfield_it_NotLast}},{{/pfield_it_NotLast}}{{#pfield_it_Last}};{{/pfield_it_Last}}{{/pfield}}
 
 
-        private final static Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
+        private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
         public static final String[] AllNames;
         static {
             Field[] allFields = Field.values();

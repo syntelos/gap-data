@@ -1,24 +1,22 @@
 
 package oso.data;
 
+
 import gap.data.*;
 import gap.service.Templates;
 
 import hapax.TemplateDictionary;
 
-
 import com.google.appengine.api.datastore.*;
 
 import java.io.Serializable;
-
-
 import javax.annotation.Generated;
 
-/** 
- * Generated from "oso.data" with "odl/java.xtm".
+/**
+ * Generated from "oso.data" with "odl/bean.xtm".
  *
  */
-@Generated(value={"gap.od","odl/java.xtm"},date="2009-09-23T21:54:45.812Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-02T05:13:06.603Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
 {
@@ -231,7 +229,7 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public final static List.Primitive QueryN(Query query, FetchOptions page){
+    public final static List QueryN(Query query, FetchOptions page){
         if (null != query)
             return gap.data.Store.QueryN(query,page);
         else
@@ -243,7 +241,7 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public final static List.Primitive<Key> QueryKeyN(Query query, FetchOptions page){
+    public final static List<Key> QueryKeyN(Query query, FetchOptions page){
         if (null != query)
             return gap.data.Store.QueryKeyN(query,page);
         else
@@ -259,9 +257,7 @@ public final class Person
 
         Key("key"),
         Id("id"),
-        LogonId("logonId"),
-        Roles("roles"),
-        Attributes("attributes");
+        LogonId("logonId");
 
 
         private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -290,10 +286,6 @@ public final class Person
                 return instance.getId();
             case LogonId:
                 return instance.getLogonId();
-            case Roles:
-                return instance.getRoles();
-            case Attributes:
-                return instance.getAttributes();
             default:
                 throw new IllegalArgumentException(field.toString()+" in Person");
             }
@@ -309,12 +301,6 @@ public final class Person
                 return;
             case LogonId:
                 instance.setLogonId( (String)value);
-                return;
-            case Roles:
-                instance.setRoles( (List.Primitive<String>)value);
-                return;
-            case Attributes:
-                instance.setAttributes( (Map<String,Serializable>)value);
                 return;
             default:
                 throw new IllegalArgumentException(field.toString()+" in Person");
@@ -342,8 +328,6 @@ public final class Person
     private volatile Key key;    
     private volatile String id;    // *unique
     private volatile String logonId;    // *hash-unique
-    private volatile List.Primitive<String> roles;    
-    private volatile Map<String,Serializable> attributes;    
 
 
 
@@ -374,8 +358,10 @@ public final class Person
 
 
     public void onread(){
+
     }
     public void onwrite(){
+
     }
 
 
@@ -442,140 +428,6 @@ public final class Person
         this.logonId = logonId;
     }
 
-    public boolean hasRoles(){
-        return (null != this.roles);
-    }
-    public boolean hasNotRoles(){
-        return (null == this.roles);
-    }
-    public boolean dropRoles(){
-        if (null != this.roles){
-            this.roles = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public List.Primitive<String> getRoles(){
-        return this.roles;
-    }
-    public void setRoles(List.Primitive<String> roles){
-        this.roles = roles;
-    }
-    public int sizeRoles(){
-        List.Primitive<String> list = this.roles;
-        if (null != list)
-            return list.size();
-        else
-            return 0;
-    }
-    public boolean isEmptyRoles(){
-        List.Primitive<String> list = this.roles;
-        if (null != list)
-            return list.isEmpty();
-        else
-            return true;
-    }
-    public boolean isNotEmptyRoles(){
-        List.Primitive<String> list = this.roles;
-        if (null != list)
-            return (!list.isEmpty());
-        else
-            return false;
-    }
-    public boolean containsRoles(String rolesItem){
-        if (null != rolesItem){
-            List.Primitive<String> list = this.roles;
-            if (null != list)
-                return list.contains(rolesItem);
-            else
-                return false;
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public String getRoles(gap.data.ListFilter<String> filter){
-        if (null != filter){
-            List.Primitive<String> list = this.roles;
-            if (null != list){
-                for (String item : list){
-                    if (filter.accept(item))
-                        return item;
-                }
-            }
-            return null;
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public void addRoles(String rolesItem){
-        if (null != rolesItem){
-            List.Primitive<String> list = this.roles;
-            if (null == list){
-                list = new gap.util.ListPrimitiveString();
-                this.roles = list;
-            }
-            else if (list.contains(rolesItem))
-                return;
-
-            list.add(rolesItem);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-
-    public boolean hasAttributes(){
-        return (null != this.attributes);
-    }
-    public boolean hasNotAttributes(){
-        return (null == this.attributes);
-    }
-    public boolean dropAttributes(){
-        if (null != this.attributes){
-            this.attributes = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public Map<String,Serializable> getAttributes(){
-        return this.attributes;
-    }
-    public void setAttributes(Map<String,Serializable> attributes){
-        this.attributes = attributes;
-    }
-    public int sizeAttributes(){
-        Map<String,Serializable> map = this.attributes;
-        if (null != map)
-            return map.size();
-        else
-            return 0;
-    }
-    public boolean isEmptyAttributes(){
-        Map<String,Serializable> map = this.attributes;
-        if (null != map)
-            return map.isEmpty();
-        else
-            return true;
-    }
-    public boolean isNotEmptyAttributes(){
-        Map<String,Serializable> map = this.attributes;
-        if (null != map)
-            return (!map.isEmpty());
-        else
-            return false;
-    }
-    public Serializable getAttributes(String attributesKey){
-        if (null != attributesKey){
-            Map<String,Serializable> map = this.attributes;
-            if (null != map)
-                return map.get(attributesKey);
-            else
-                return null;
-        }
-        else
-            throw new IllegalArgumentException();
-    }
 
 
 
@@ -598,7 +450,7 @@ public final class Person
     public String getClassFieldKeyName(){
         return "key";
     }
-    public List.Primitive<gap.data.Field> getClassFields(){
+    public List<gap.data.Field> getClassFields(){
         return (new gap.data.Field.List(Field.values()));
     }
     public gap.data.Field getClassFieldByName(String name){

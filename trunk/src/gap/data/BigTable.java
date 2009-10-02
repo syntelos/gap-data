@@ -244,7 +244,7 @@ public abstract class BigTable
      * A static value enumerating the persistent (not transient)
      * fields of this class.
      */
-    public abstract List.Primitive<Field> getClassFields();
+    public abstract List<Field> getClassFields();
 
     public abstract Field getClassFieldByName(String name);
 
