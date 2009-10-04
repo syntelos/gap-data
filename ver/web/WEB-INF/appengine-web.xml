@@ -6,7 +6,8 @@
   <!-- inbound-services>
     <service>xmpp_message</service>
   </inbound-services  -->
-  <!-- system-properties>
+  <system-properties>
     <property name="com.google.gdata.DisableCookieHandler" value="true"/>
-  </system-properties -->
+    <property name="com.google.appengine.repackaged.com.google.common.base.FinalizableReferenceQueue.level" value="DEBUG"/>
+  </system-properties>
 </appengine-web-app>
