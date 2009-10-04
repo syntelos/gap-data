@@ -1,10 +1,4 @@
 #summary Guide to the codebase
 #labels Featured,Documentation
 
-= Overview =
-
-The Gap Data project checks-out into an appengine application skeleton.  
-
-The skeleton requires servlets and their configuration in the web xml file.
-
-The persistent data classes require definition in ODL and generation to sourcecode.
+ The source repo checks- out into the gap-data appengine application. Edit "project.application" to point it to your own appengine instance.
