@@ -1,17 +1,3 @@
 #summary Principal elements of the future course of development
 
-= Configuration =
-
-The checkout, configure, build, and update usage needs to be developed.  At the moment it's not truly designed for this, but for manual editing and maintenance.
-
-= Automation =
-
-The plan, visible in the codebase, is for the ODL description to be augmented in future by a usage starting from a plain old java bean marked up with "gap.data" annotations.  The same model expressed in ODL will be able to be expressed in JPL in the bean.
-
-In this case, the bean will be rewritten in the compilation phase to extend a superclass that is the current generated code.  
-
-Programming from the user bean will access all of the functions and methods currently available, and to be developed.
-
-= Persistent Bean Features =
-
-To be developed are list/set and map by reference collection classes.  This effort will solve the tag problem for a list of tags on a bean.
+ The direction is for web based application development, with a commercial component to be developed.
