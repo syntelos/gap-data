@@ -1,0 +1,13 @@
+#summary Intro to developing Gap Data
+#labels Featured
+
+= Programming =
+
+ Of course we follow the traditions with the all or nothing access
+ model of most open source projects.  We need to get to know you
+ before flipping the switch.
+
+= How To =
+
+ Please send mail letting us know your interest in contributing to
+ Gap Data.
