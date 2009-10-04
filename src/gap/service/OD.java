@@ -82,6 +82,8 @@ public class OD
 
             String classKind = ClassKind(cd);
 
+            String defaultSortBy = null;
+
             /*
              * Tool globals
              */
@@ -207,9 +209,8 @@ public class OD
                                     dataField.putVariable("field_to_string_suffix",".toString()");
                                 }
 
-                                /*
-                                 * unique hash
-                                 */
+                                if (null == defaultSortBy)
+                                    defaultSortBy = fieldName;
                             }
                             else if (IsTypeClassList(fieldTypeClass)){
 
@@ -226,9 +227,6 @@ public class OD
                                     TemplateDictionary field_is_list = dataField.addSection("field_is_list");
                                     field_is_list.putVariable("field_list_component",typeComponent);
 
-                                    /*
-                                     * unique hash
-                                     */
                                 }
                                 else
                                     throw new ODStateException(field,"Field '"+fieldName+"' type list missing type parameter.");
@@ -390,6 +388,9 @@ public class OD
              * Current template model requires 'key'.
              */
             if (null != key){
+
+                top.setVariable("class_defaultSortBy", defaultSortBy);
+
                 /*
                  * Run template
                  */
@@ -460,6 +461,40 @@ public class OD
             }
         }
         return cd.getName();
+    }
+    public final static String ClassSortBy(ClassDescriptor cd){
+        if (cd instanceof ClassDescriptor.SortBy){
+            ClassDescriptor.SortBy cdk = (ClassDescriptor.SortBy)cd;
+            if (cdk.hasSortBy())
+                return cdk.getSortBy();
+        }
+        String definitionClassName = cd.getDefinitionClassName();
+        if (null != definitionClassName){
+            try {
+                Class clas = null;
+                try {
+                    clas = Class.forName(definitionClassName,true,Thread.currentThread().getContextClassLoader());
+                }
+                catch (SecurityException retry){
+                    clas = Class.forName(definitionClassName);
+                }
+                return ClassSortBy(clas);
+            }
+            catch (Exception exc){
+            }
+        }
+        return null;
+    }
+    public final static String ClassSortBy(Class<? extends gap.data.BigTable> table){
+        if (null != table){
+            try {
+                java.lang.reflect.Field fieldDefaultSortBy = table.getField("DefaultSortBy");
+                return (String)fieldDefaultSortBy.get(null);
+            }
+            catch (Exception exc){
+            }
+        }
+        return null;
     }
     public final static String[] ClassImplements(ClassDescriptor cd){
         if (cd instanceof ClassDescriptor.Implements){

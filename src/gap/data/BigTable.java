@@ -82,6 +82,24 @@ public abstract class BigTable
         }
         throw new ClassNotFoundException(kind);
     }
+    public final static boolean IsAdmin(String kind){
+        if (null != kind){
+            try {
+                return IsAdmin(Find(kind));
+            }
+            catch (ClassNotFoundException exc){
+                return false;
+            }
+        }
+        else
+            return false;
+    }
+    public final static boolean IsAdmin(Class kind){
+        if (null != kind)
+            return (AdminReadWrite.class.isAssignableFrom(kind));
+        else
+            return false;
+    }
 
     /**
      * An independent "key to string" ensures that any upstream code

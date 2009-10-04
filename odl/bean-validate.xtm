@@ -1,11 +1,11 @@
 
 package {{=package_name}}.validate;
+{{#import}}
+import {{=import_spec}};{{/import}}
 
 import {{=package_name}}.*;
 import static {{=package_name}}.{{=class_name}}.Field.*;
 
-{{#import}}import {{=import_spec}};
-{{/import}}
 import gap.service.Accept;
 import gap.service.Error;
 import gap.service.Logon;
@@ -24,8 +24,8 @@ import java.io.IOException;
 /**
  * Data validation functions.
  */
-public abstract class {{=class_name}}Validate
-    extends AbstractValidate
+public abstract class {{=class_name}}
+    extends gap.Strings
 {
     public final static Object FromString({{=class_name}}.Field field, String string){
         switch(field){

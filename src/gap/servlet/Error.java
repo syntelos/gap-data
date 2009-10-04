@@ -19,10 +19,8 @@
  */
 package gap.servlet;
 
-import gap.service.Accept;
-import gap.service.FileManager;
-import gap.service.Logon;
-import gap.service.Path;
+import gap.Request;
+import gap.Response;
 
 import hapax.Template;
 import hapax.TemplateDictionary;
@@ -50,7 +48,7 @@ public class Error
 
 
     @Override
-    protected Template doGetTemplate(Path path, Accept accept, Logon logon, FileManager fm)
+    protected Template doGetTemplate(Request req, Response rep)
         throws TemplateException
     {
         return null;

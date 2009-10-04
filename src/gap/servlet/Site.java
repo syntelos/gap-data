@@ -19,9 +19,13 @@
  */
 package gap.servlet;
 
+import gap.Request;
+import gap.Response;
+
 import gap.service.Accept;
 import gap.service.FileManager;
 import gap.service.Logon;
+import gap.service.Parameters;
 import gap.service.Path;
 
 import hapax.Template;
@@ -51,18 +55,18 @@ public class Site
 
 
     @Override
-    protected TemplateDictionary doGetDefine(Path path, Accept accept, Logon logon){
+    protected TemplateDictionary doGetDefine(Request req, Response rep){
 
-        TemplateDictionary top = super.doGetDefine(path,accept,logon);
+        TemplateDictionary top = super.doGetDefine(req,rep);
 
         top.setVariable("logon","div.logon.html");
 
-        boolean canCreate = this.canCreate(path,accept,logon);
-        boolean canUpdate = this.canUpdate(path,accept,logon);
-        boolean canGoto = this.canGoto(path,accept,logon);
-        boolean canDelete = this.canDelete(path,accept,logon);
-        boolean canExport = this.canExport(path,accept,logon);
-        boolean canImport = this.canImport(path,accept,logon);
+        boolean canCreate = this.canCreate(req);
+        boolean canUpdate = this.canUpdate(req);
+        boolean canGoto = this.canGoto(req);
+        boolean canDelete = this.canDelete(req);
+        boolean canExport = this.canExport(req);
+        boolean canImport = this.canImport(req);
 
 
         //        TemplateDictionary head;
@@ -77,7 +81,7 @@ public class Site
             tool = top.addSection("tool","div.tool.html");
             boolean once = true;
             do {
-                this.doGetDefineUpdate(path,accept,logon,tool,once);
+                this.doGetDefineUpdate(req,rep,tool,once);
 
                 if (once){
                     once = false;
@@ -92,13 +96,13 @@ public class Site
         else {
             tool = top.addSection("tool","div.tool.off.html");
 
-            this.doGetDefineUpdate(path,accept,logon,tool,true);
+            this.doGetDefineUpdate(req,rep,tool,true);
         }
         if (canCreate){
             tool = top.addSection("tool","div.tool.html");
             boolean once = true;
             do {
-                this.doGetDefineCreate(path,accept,logon,tool,once);
+                this.doGetDefineCreate(req,rep,tool,once);
 
                 if (once){
                     once = false;
@@ -113,13 +117,13 @@ public class Site
         else {
             tool = top.addSection("tool","div.tool.off.html");
 
-            this.doGetDefineCreate(path,accept,logon,tool,true);
+            this.doGetDefineCreate(req,rep,tool,true);
         }
         if (canGoto){
             tool = top.addSection("tool","div.tool.html");
             boolean once = true;
             do {
-                this.doGetDefineGoto(path,accept,logon,tool,once);
+                this.doGetDefineGoto(req,rep,tool,once);
 
                 if (once){
                     once = false;
@@ -134,13 +138,13 @@ public class Site
         else {
             tool = top.addSection("tool","div.tool.off.html");
 
-            this.doGetDefineGoto(path,accept,logon,tool,true);
+            this.doGetDefineGoto(req,rep,tool,true);
         }
         if (canDelete){
             tool = top.addSection("tool","div.tool.html");
             boolean once = true;
             do {
-                this.doGetDefineDelete(path,accept,logon,tool,once);
+                this.doGetDefineDelete(req,rep,tool,once);
 
                 if (once){
                     once = false;
@@ -155,13 +159,13 @@ public class Site
         else {
             tool = top.addSection("tool","div.tool.off.html");
 
-            this.doGetDefineDelete(path,accept,logon,tool,true);
+            this.doGetDefineDelete(req,rep,tool,true);
         }
         if (canExport){
             tool = top.addSection("tool","div.tool.html");
             boolean once = true;
             do {
-                this.doGetDefineExport(path,accept,logon,tool,once);
+                this.doGetDefineExport(req,rep,tool,once);
 
                 if (once){
                     once = false;
@@ -176,13 +180,13 @@ public class Site
         else {
             tool = top.addSection("tool","div.tool.off.html");
 
-            this.doGetDefineExport(path,accept,logon,tool,true);
+            this.doGetDefineExport(req,rep,tool,true);
         }
         if (canImport){
             tool = top.addSection("tool","div.tool.html");
             boolean once = true;
             do {
-                this.doGetDefineImport(path,accept,logon,tool,once);
+                this.doGetDefineImport(req,rep,tool,once);
 
                 if (once){
                     once = false;
@@ -197,14 +201,14 @@ public class Site
         else {
             tool = top.addSection("tool","div.tool.off.html");
 
-            this.doGetDefineImport(path,accept,logon,tool,true);
+            this.doGetDefineImport(req,rep,tool,true);
         }
         return top;
     }
-    protected TemplateDictionary doGetDefineUpdate(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+    protected TemplateDictionary doGetDefineUpdate(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","update");
         tool.setVariable("tool_nameCamel","Update");
-        if (logon.serviceAdmin){
+        if (req.isAdmin()){
             tool.setVariable("tool_titleUri","/icons/update-up-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/update-up-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/update-up-b-200x50-aaa.png");
@@ -216,10 +220,10 @@ public class Site
         }
         return tool;
     }
-    protected TemplateDictionary doGetDefineCreate(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+    protected TemplateDictionary doGetDefineCreate(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","create");
         tool.setVariable("tool_nameCamel","Create");
-        if (logon.serviceAdmin){
+        if (req.isAdmin()){
             tool.setVariable("tool_titleUri","/icons/create-cr-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/create-cr-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/create-cr-b-200x50-aaa.png");
@@ -231,10 +235,10 @@ public class Site
         }
         return tool;
     }
-    protected TemplateDictionary doGetDefineGoto(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+    protected TemplateDictionary doGetDefineGoto(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","goto");
         tool.setVariable("tool_nameCamel","Goto");
-        if (logon.serviceAdmin){
+        if (req.isAdmin()){
             tool.setVariable("tool_titleUri","/icons/goto-gt-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/goto-gt-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/goto-gt-b-200x50-aaa.png");
@@ -246,10 +250,10 @@ public class Site
         }
         return tool;
     }
-    protected TemplateDictionary doGetDefineDelete(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+    protected TemplateDictionary doGetDefineDelete(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","delete");
         tool.setVariable("tool_nameCamel","Delete");
-        if (logon.serviceAdmin){
+        if (req.isAdmin()){
             tool.setVariable("tool_titleUri","/icons/delete-de-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/delete-de-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/delete-de-b-200x50-aaa.png");
@@ -261,10 +265,10 @@ public class Site
         }
         return tool;
     }
-    protected TemplateDictionary doGetDefineExport(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+    protected TemplateDictionary doGetDefineExport(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","export");
         tool.setVariable("tool_nameCamel","Export");
-        if (logon.serviceAdmin){
+        if (req.isAdmin()){
             tool.setVariable("tool_titleUri","/icons/export-ex-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/export-ex-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/export-ex-b-200x50-aaa.png");
@@ -276,10 +280,10 @@ public class Site
         }
         return tool;
     }
-    protected TemplateDictionary doGetDefineImport(Path path, Accept accept, Logon logon, TemplateDictionary tool, boolean isDivTool){
+    protected TemplateDictionary doGetDefineImport(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","import");
         tool.setVariable("tool_nameCamel","Import");
-        if (logon.serviceAdmin){
+        if (req.isAdmin()){
             tool.setVariable("tool_titleUri","/icons/import-im-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/import-im-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/import-im-b-200x50-aaa.png");
@@ -292,11 +296,11 @@ public class Site
         return tool;
     }
     @Override
-    protected Template doGetTemplate(Path path, Accept accept, Logon logon, FileManager fm)
+    protected Template doGetTemplate(Request req, Response rep)
         throws TemplateException
     {
-        if (accept.accept("text/html"))
-            return fm.getTemplate("index.html");
+        if (req.accept("text/html"))
+            return req.getTemplate("index.html");
         else
             return null;
     }

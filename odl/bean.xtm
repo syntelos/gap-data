@@ -29,6 +29,8 @@ public final class {{=class_name}}
 
     public final static String ClassName = "{{=class_name}}";
 
+    public final static String DefaultSortBy = "{{=class_defaultSortBy}}";
+
     static {
         Register({{=class_name}}.class);{{#rfield}}
         Register({{=field_class}}.class);{{/rfield}}
@@ -498,24 +500,15 @@ public final class {{=class_name}}
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
     }
-    public int updateFrom(gap.service.Parameters params, {{=class_name}} request){
-        /*
-         * 
-         */
-        return 0;
-    }
-    public TemplateDictionary dictionaryFor(){
-        return this.dictionaryInto(Templates.CreateDictionary());
-    }
     public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary dict){
         if (null != params && params.hasFields()){
-
+            TemplateDictionary data = dict.addSection(ClassName);
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
                     java.lang.Object value = Field.Get(field,this);
                     if (null != value){
-                        dict.putVariable(field.toString(),value.toString());
+                        data.putVariable(field.toString(),value.toString());
                     }
                 }
             }
@@ -525,17 +518,14 @@ public final class {{=class_name}}
             return this.dictionaryInto(dict);
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary dict){
-
+        TemplateDictionary data = dict.addSection(ClassName);
         for (Field field : Field.values()){
             java.lang.Object value = Field.Get(field,this);
             if (null != value){
-                dict.putVariable(field.toString(),value.toString());
+                data.putVariable(field.toString(),value.toString());
             }
         }
         return dict;
-    }
-    public TemplateDictionary dictionaryFor(gap.service.Parameters params){
-        return this.dictionaryInto(params,Templates.CreateDictionary());
     }
     public void drop(){
         Delete(this);

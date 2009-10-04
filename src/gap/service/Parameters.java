@@ -314,13 +314,13 @@ public final class Parameters
             public final Query.SortDirection sortOrder;
 
 
-            public Sort(Map<String,String[]> parameters){
+            public Sort(Map<String,String[]> parameters, String defaultSortBy){
                 super();
                 String[] sortBy = parameters.get(SortBy);
                 if (null != sortBy && 0 != sortBy.length)
                     this.sortBy = sortBy[0];
                 else
-                    this.sortBy = null;
+                    this.sortBy = defaultSortBy;
 
                 Query.SortDirection sortOrder = null;
 
@@ -372,20 +372,7 @@ public final class Parameters
     public final Special.Since since;
 
 
-    public Parameters(HttpServletRequest req){
-        super();
-        Map<String,String[]> parameters = (Map<String,String[]>)req.getParameterMap();
-        this.parameters = parameters;
-        this.size = parameters.size();
-        this.page = new Special.Page(parameters,20);
-        this.filter = new Special.Filter(parameters);
-        this.format = new Special.Format(parameters);
-        this.fields = new Special.Fields(parameters);
-        this.networkDistance = new Special.NetworkDistance(parameters);
-        this.sort = new Special.Sort(parameters);
-        this.since = new Special.Since(parameters);
-    }
-    public Parameters(HttpServletRequest req, int page){
+    public Parameters(HttpServletRequest req, int page, Class<? extends gap.data.BigTable> table){
         super();
         Map<String,String[]> parameters = (Map<String,String[]>)req.getParameterMap();
         this.parameters = parameters;
@@ -395,7 +382,7 @@ public final class Parameters
         this.format = new Special.Format(parameters);
         this.fields = new Special.Fields(parameters);
         this.networkDistance = new Special.NetworkDistance(parameters);
-        this.sort = new Special.Sort(parameters);
+        this.sort = new Special.Sort(parameters, OD.ClassSortBy(table));
         this.since = new Special.Since(parameters);
     }
 

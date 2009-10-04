@@ -1,0 +1,91 @@
+
+package {{=package_name}}.servlet;
+
+{{#import}}import {{=import_spec}};
+{{/import}}
+import {{=package_name}}.*;
+
+import gap.Request;
+import gap.Response;
+import gap.data.* ;
+
+import gap.service.Accept;
+import gap.service.Error;
+import gap.service.Logon;
+import gap.service.Path;
+import gap.service.Parameters;
+import gap.service.Templates;
+
+import hapax.TemplateDictionary;
+import hapax.TemplateException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.LogRecord;
+
+import javax.annotation.Generated;
+
+/**
+ * Data binding methods.
+ */
+@Generated(value={"gap.od","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
+public class {{=class_name}}
+    extends gap.servlet.Site
+{
+    public final static Class<? extends BigTable> BigTableClass = {{=package_name}}.{{=class_name}}.class;
+
+
+    public {{=class_name}}(){
+        super();
+    }
+
+
+    protected Parameters createParameters(Request req){
+        return new Parameters(req,20,BigTableClass);
+    }
+    protected TemplateDictionary doGetDefine(Request req, Response rep){
+
+        TemplateDictionary top = req.getTop();
+
+        if (this.canRead(req)){
+
+            String id = path.get(0);
+            if (null != id){
+
+                {{=class_name}} instance = {{=class_name}}.For{{=field_unique_nameCamel}}(id);
+
+                if (null != instance){
+
+                    instance.dictionaryInto(top);
+
+                    return top;
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                req.parameters.dictionaryInto(databases);
+
+                com.google.appengine.api.datastore.Query query = {{=class_name}}.CreateQueryFor();
+
+                com.google.appengine.api.datastore.FetchOptions page = com.google.appengine.api.datastore.FetchOptions.Builder.withLimit(control.page.count).offset(control.page.startIndex);
+
+                List<{{=class_name}}> list = (List<{{=class_name}}>){{=class_name}}.QueryN(query,page);
+
+                for ({{=class_name}} instance : list){
+
+                    instance.dictionaryInto(item);
+                }
+            }
+        }
+        return top;
+    }
+
+}
