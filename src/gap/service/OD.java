@@ -23,6 +23,7 @@ import gap.service.od.ClassDescriptor;
 import gap.service.od.FieldDescriptor;
 import gap.service.od.HasName;
 import gap.service.od.ImportDescriptor;
+import gap.service.od.MethodDescriptor;
 import gap.service.od.ODStateException;
 import gap.service.od.PackageDescriptor;
 
@@ -384,6 +385,78 @@ public class OD
                     }
                 }
             }
+
+            /*
+             * Methods
+             */
+            if (cd.hasMethods()){
+
+                for (MethodDescriptor method: cd.getMethods()){
+
+                    String method_name = method.getName();
+                    if (null != method_name){
+                        String method_body = gap.Strings.TextToString(method.getBody());
+                        if (null != method_body){
+
+                            TemplateDictionary methods = top.addSection("method");
+                            methods.setVariable("method_name",method_name);
+                            methods.setVariable("method_body",method_body);
+
+                            TemplateDictionary mb = top.addSection("method_"+method_name+"_with_body");
+                            mb.setVariable("body",method_body);
+
+                            String method_type = ToString(method.getType());
+                            if (null != method_type){
+                                TemplateDictionary ma = top.addSection("method_"+method_name+"_with_type");
+                                ma.setVariable("type",method_type);
+                                methods.setVariable("method_type",method_type);
+                            }
+                            else
+                                top.showSection("method_"+method_name+"_without_type");
+
+                            if (method instanceof MethodDescriptor.Arguments){
+                                MethodDescriptor.Arguments ma = (MethodDescriptor.Arguments)method;
+                                if (ma.hasArguments()){
+                                    String method_arguments = ma.getArguments();
+                                    if (null != method_arguments){
+                                        TemplateDictionary td = top.addSection("method_"+method_name+"_with_args");
+                                        td.setVariable("args",method_arguments);
+                                        methods.setVariable("method_arguments",method_arguments);
+                                    }
+                                    else
+                                        top.showSection("method_"+method_name+"_without_args");
+                                }
+                                else
+                                    top.showSection("method_"+method_name+"_without_args");
+                            }
+                            else
+                                top.showSection("method_"+method_name+"_without_args");
+
+                            if (method instanceof MethodDescriptor.Exceptions){
+                                MethodDescriptor.Exceptions ma = (MethodDescriptor.Exceptions)method;
+                                if (ma.hasExceptions()){
+                                    String method_exceptions = ma.getExceptions();
+                                    if (null != method_exceptions){
+                                        TemplateDictionary td = top.addSection("method_"+method_name+"_with_excs");
+                                        td.setVariable("excs",method_exceptions);
+                                        methods.setVariable("method_exceptions",method_exceptions);
+                                    }
+                                    else
+                                        top.showSection("method_"+method_name+"_without_excs");
+                                }
+                                else
+                                    top.showSection("method_"+method_name+"_without_excs");
+                            }
+                            else
+                                top.showSection("method_"+method_name+"_without_excs");
+                        }
+                        else {
+                            top.showSection("method_"+method_name+"_without_body");
+                        }
+                    }
+                }
+            }
+
             /*
              * Current template model requires 'key'.
              */

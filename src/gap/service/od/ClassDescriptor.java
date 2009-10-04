@@ -56,7 +56,9 @@ public interface ClassDescriptor
     }
 
     /**
-     * Optional field 'kind'
+     * Optional field 'kind' is typically the class name.  It
+     * identifies the datastore table that the data bean class is
+     * associated to.
      */
     public interface Kind
         extends ClassDescriptor
@@ -67,7 +69,8 @@ public interface ClassDescriptor
     }
 
     /**
-     * Optional field 'sortBy'
+     * Optional field 'sortBy' for the class default sort ordering
+     * field name.
      */
     public interface SortBy
         extends ClassDescriptor
@@ -78,7 +81,9 @@ public interface ClassDescriptor
     }
 
     /**
-     * 
+     * The class relation position as parent or child.  None is
+     * generally equivalent to parent in that there's no relation to
+     * another class as parent.
      */
     public interface Relation 
         extends ClassDescriptor
@@ -93,19 +98,20 @@ public interface ClassDescriptor
     }
 
     /**
-     * field 'name'
+     * Class name (not qualified with {@link Package} name).
      */
     public String getName();
 
     /**
-     * field 'fields'
+     * Instance fields of the data bean class.
      */
     public boolean hasFields();
 
     public List<FieldDescriptor> getFields();
 
     /**
-     * field 'methods'
+     * Methods of the data bean class bind into a template (bean, bean
+     * servlet, etc) by name.
      */
     public boolean hasMethods();
 

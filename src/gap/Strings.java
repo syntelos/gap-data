@@ -118,119 +118,218 @@ public abstract class Strings {
     }
 
     public final static java.lang.String StringFromString(java.lang.String string){
-        return string;
+        if (null != string)
+            return string;
+        else
+            return null;
     }
     public final static java.lang.String StringToString(java.lang.String instance){
-        return (java.lang.String)instance;
+        if (null != instance)
+            return (java.lang.String)instance;
+        else
+            return null;
     }
     public final static java.lang.Boolean BooleanFromString(java.lang.String string){
-        return new Boolean(string);
+        if (null != string)
+            return new Boolean(string);
+        else
+            return null;
     }
     public final static java.lang.String BooleanToString(java.lang.Boolean instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static java.lang.Byte ByteFromString(java.lang.String string){
-        return new java.lang.Byte(string);
+        if (null != string)
+            return new java.lang.Byte(string);
+        else
+            return null;
     }
     public final static java.lang.String ByteToString(java.lang.Byte instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static java.lang.Short ShortFromString(java.lang.String string){
-        return new java.lang.Short(string);
+        if (null != string)
+            return new java.lang.Short(string);
+        else
+            return null;
     }
     public final static java.lang.String ShortToString(java.lang.Short instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static java.lang.Long LongFromString(java.lang.String string){
-        return new java.lang.Long(string);
+        if (null != string)
+            return new java.lang.Long(string);
+        else
+            return null;
     }
     public final static java.lang.String LongToString(java.lang.Long instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static java.lang.Float FloatFromString(java.lang.String string){
-        return new java.lang.Float(string);
+        if (null != string)
+            return new java.lang.Float(string);
+        else
+            return null;
     }
     public final static java.lang.String FloatToString(java.lang.Float instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static java.lang.Double DoubleFromString(java.lang.String string){
-        return new java.lang.Double(string);
+        if (null != string)
+            return new java.lang.Double(string);
+        else
+            return null;
     }
     public final static java.lang.String DoubleToString(java.lang.Double instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static java.util.Date DateFromString(java.lang.String string){
-        return gap.Date.ParseRFC1123(string);
+        if (null != string)
+            return gap.Date.ParseRFC1123(string);
+        else
+            return null;
     }
     public final static java.lang.String DateToString(java.util.Date instance){
-        return gap.Date.FormatRFC1123(instance);
+        if (null != instance)
+            return gap.Date.FormatRFC1123(instance);
+        else
+            return null;
     }
     public final static com.google.appengine.api.datastore.Category CategoryFromString(java.lang.String string){
-        return new com.google.appengine.api.datastore.Category(string);
+        if (null != string)
+            return new com.google.appengine.api.datastore.Category(string);
+        else
+            return null;
     }
     public final static java.lang.String CategoryToString(com.google.appengine.api.datastore.Category instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static com.google.appengine.api.datastore.Email EmailFromString(java.lang.String string){
-        return new com.google.appengine.api.datastore.Email(string);
+        if (null != string)
+            return new com.google.appengine.api.datastore.Email(string);
+        else
+            return null;
     }
     public final static java.lang.String EmailToString(com.google.appengine.api.datastore.Email instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static com.google.appengine.api.datastore.GeoPt GeoPtFromString(java.lang.String string){
-        java.util.StringTokenizer strtok = new java.util.StringTokenizer(string,",: ");
-        if (2 == strtok.countTokens()){
-            float lat = java.lang.Float.parseFloat(strtok.nextToken());
-            float lon = java.lang.Float.parseFloat(strtok.nextToken());
-            return new com.google.appengine.api.datastore.GeoPt(lat,lon);
+        if (null != string){
+            java.util.StringTokenizer strtok = new java.util.StringTokenizer(string,",: ");
+            if (2 == strtok.countTokens()){
+                float lat = java.lang.Float.parseFloat(strtok.nextToken());
+                float lon = java.lang.Float.parseFloat(strtok.nextToken());
+                return new com.google.appengine.api.datastore.GeoPt(lat,lon);
+            }
+        }
+        return null;
+    }
+    public final static java.lang.String GeoPtToString(com.google.appengine.api.datastore.GeoPt instance){
+        if (null != instance){
+            java.lang.StringBuilder strbuf = new java.lang.StringBuilder();
+            strbuf.append(instance.getLatitude());
+            strbuf.append(',');
+            strbuf.append(instance.getLongitude());
+            return strbuf.toString();
         }
         else
             return null;
     }
-    public final static java.lang.String GeoPtToString(com.google.appengine.api.datastore.GeoPt instance){
-        java.lang.StringBuilder strbuf = new java.lang.StringBuilder();
-        strbuf.append(instance.getLatitude());
-        strbuf.append(',');
-        strbuf.append(instance.getLongitude());
-        return strbuf.toString();
-    }
     public final static com.google.appengine.api.datastore.Key KeyFromString(java.lang.String string){
-
-        return com.google.appengine.api.datastore.KeyFactory.stringToKey(string);
+        if (null != string)
+            return com.google.appengine.api.datastore.KeyFactory.stringToKey(string);
+        else
+            return null;
     }
     public final static java.lang.String KeyToString(com.google.appengine.api.datastore.Key instance){
-
-        return com.google.appengine.api.datastore.KeyFactory.keyToString(instance);
+        if (null != instance)
+            return com.google.appengine.api.datastore.KeyFactory.keyToString(instance);
+        else
+            return null;
     }
     public final static com.google.appengine.api.datastore.Link LinkFromString(java.lang.String string){
-        return new com.google.appengine.api.datastore.Link(string);
+        if (null != string)
+            return new com.google.appengine.api.datastore.Link(string);
+        else
+            return null;
     }
     public final static java.lang.String LinkToString(com.google.appengine.api.datastore.Link instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static com.google.appengine.api.datastore.PhoneNumber PhoneNumberFromString(java.lang.String string){
-        return new com.google.appengine.api.datastore.PhoneNumber(string);
+        if (null != string)
+            return new com.google.appengine.api.datastore.PhoneNumber(string);
+        else
+            return null;
     }
     public final static java.lang.String PhoneNumberToString(com.google.appengine.api.datastore.PhoneNumber instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static com.google.appengine.api.datastore.PostalAddress PostalAddressFromString(java.lang.String string){
-        return new com.google.appengine.api.datastore.PostalAddress(string);
+        if (null != string)
+            return new com.google.appengine.api.datastore.PostalAddress(string);
+        else
+            return null;
     }
     public final static java.lang.String PostalAddressToString(com.google.appengine.api.datastore.PostalAddress instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
     public final static com.google.appengine.api.datastore.Rating RatingFromString(java.lang.String string){
-        return new com.google.appengine.api.datastore.Rating(java.lang.Integer.parseInt(string));
+        if (null != string)
+            return new com.google.appengine.api.datastore.Rating(java.lang.Integer.parseInt(string));
+        else
+            return null;
     }
     public final static java.lang.String RatingToString(com.google.appengine.api.datastore.Rating instance){
-        return java.lang.String.valueOf(instance.getRating());
+        if (null != instance)
+            return java.lang.String.valueOf(instance.getRating());
+        else
+            return null;
     }
     public final static com.google.appengine.api.datastore.Text TextFromString(java.lang.String string){
-        return new com.google.appengine.api.datastore.Text(string);
+        if (null != string)
+            return new com.google.appengine.api.datastore.Text(string);
+        else
+            return null;
     }
     public final static java.lang.String TextToString(com.google.appengine.api.datastore.Text instance){
-        return instance.toString();
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
     }
 
 
