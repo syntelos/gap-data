@@ -19,6 +19,7 @@
  */
 package gap.data;
 
+import gap.service.Logon;
 import gap.util.AbstractListPrimitive;
 
 import javax.cache.Cache;
@@ -80,6 +81,11 @@ public final class Store
                 Entity entity = Get().get(key);
                 if (null != entity){
                     BigTable gdo = BigTable.From(entity);
+                    if (gdo instanceof AdminReadWrite){
+
+                        if (!Logon.IsAdmin())
+                            throw new AdminAccessException();
+                    }
                     gdo.setFromDatastore();
                     gdo.onread();
                     return gdo;
@@ -96,6 +102,11 @@ public final class Store
             java.util.Map <Key,Entity> map = Get().get(keys);
             for (Entity entity : map.values()){
                 BigTable gdo = BigTable.From(entity);
+                if (gdo instanceof AdminReadWrite){
+
+                    if (!Logon.IsAdmin())
+                        throw new AdminAccessException();
+                }
                 gdo.setFromDatastore();
                 gdo.onread();
                 list.add(gdo);
@@ -103,13 +114,24 @@ public final class Store
             return list;
         }
         protected static BigTable Put(BigTable table){
+            if (table instanceof AdminReadWrite){
+
+                if (!Logon.IsAdmin())
+                    throw new AdminAccessException();
+            }
             Entity entity = table.fillToDatastoreEntity();
             Key key = Get().put(entity);
             return table.setFromDatastore(key);
         }
         protected static void Delete(Key key){
-            if (null != key)
+            if (null != key){
+                if (BigTable.IsAdmin(key.getKind())){
+
+                    if (!Logon.IsAdmin())
+                        throw new AdminAccessException();
+                }
                 Get().delete(new Key[]{key});
+            }
         }
         protected static BigTable Query1(Query query){
             DatastoreService ds = Get();
@@ -120,6 +142,11 @@ public final class Store
                     return null;
                 else {
                     BigTable gdo = BigTable.From(entity);
+                    if (gdo instanceof AdminReadWrite){
+
+                        if (!Logon.IsAdmin())
+                            throw new AdminAccessException();
+                    }
                     gdo.setFromDatastore();
                     gdo.onread();
                     return gdo;
@@ -144,6 +171,11 @@ public final class Store
                         return null;
                     else {
                         BigTable gdo = BigTable.From(entity);
+                        if (gdo instanceof AdminReadWrite){
+
+                            if (!Logon.IsAdmin())
+                                throw new AdminAccessException();
+                        }
                         gdo.setFromDatastore();
                         gdo.onread();
                         return gdo;
@@ -168,6 +200,11 @@ public final class Store
 
             for (Entity entity : it){
                 BigTable gdo = BigTable.From(entity);
+                if (gdo instanceof AdminReadWrite){
+
+                    if (!Logon.IsAdmin())
+                        throw new AdminAccessException();
+                }
                 gdo.setFromDatastore();
                 gdo.onread();
                 list.add(gdo);
@@ -175,6 +212,11 @@ public final class Store
             return list;
         }
         protected static Key QueryKey1(Query query){
+            if (BigTable.IsAdmin(query.getKind())){
+
+                if (!Logon.IsAdmin())
+                    throw new AdminAccessException();
+            }
             query.setKeysOnly();
 
             DatastoreService ds = Get();
@@ -203,6 +245,11 @@ public final class Store
             }
         }
         protected static List.Primitive<Key> QueryKeyN(Query query, FetchOptions page){
+            if (BigTable.IsAdmin(query.getKind())){
+
+                if (!Logon.IsAdmin())
+                    throw new AdminAccessException();
+            }
             query.setKeysOnly();
 
             DatastoreService ds = Get();
@@ -256,6 +303,11 @@ public final class Store
             try {
                 BigTable gdo = (BigTable)mc.get(ck);
                 if (null != gdo){
+                    if (gdo instanceof AdminReadWrite){
+
+                        if (!Logon.IsAdmin())
+                            throw new AdminAccessException();
+                    }
                     gdo.setFromMemcache();
                     gdo.onread();
                     return gdo;
@@ -286,6 +338,11 @@ public final class Store
                 }
 
                 if (null != gdo){
+                    if (gdo instanceof AdminReadWrite){
+
+                        if (!Logon.IsAdmin())
+                            throw new AdminAccessException();
+                    }
                     gdo.setFromMemcache();
                     gdo.onread();
                     list.add(gdo);
@@ -294,6 +351,11 @@ public final class Store
                     try {
                         gdo = BigTable.From(ds.get(key));
                         if (null != gdo){
+                            if (gdo instanceof AdminReadWrite){
+
+                                if (!Logon.IsAdmin())
+                                    throw new AdminAccessException();
+                            }
                             gdo.setFromDatastore();
                             gdo.onread();
                             list.add(gdo);
@@ -308,6 +370,11 @@ public final class Store
         }
         protected static BigTable Put(Key key, BigTable table){
 
+            if (table instanceof AdminReadWrite){
+
+                if (!Logon.IsAdmin())
+                    throw new AdminAccessException();
+            }
             String ck = BigTable.ToString(key);
 
             Get().put(ck,table);
@@ -316,6 +383,11 @@ public final class Store
         }
         protected static void Delete(Key key){
             if (null != key){
+                if (BigTable.IsAdmin(key.getKind())){
+
+                    if (!Logon.IsAdmin())
+                        throw new AdminAccessException();
+                }
 
                 String ck = BigTable.ToString(key);
 
@@ -390,7 +462,9 @@ public final class Store
         C.Delete(key);
     }
     public static void DeleteCollection(Query query){
+        if (BigTable.IsAdmin(query.getKind())){
 
+        }
         query.setKeysOnly();
 
         DatastoreService ds = Store.P.Get();

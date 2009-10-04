@@ -19,18 +19,17 @@
  */
 package gap.service;
 
+import gap.Request;
+import gap.Response;
+
 import gap.data.Store;
 import gap.data.ServletDescriptor;
 import gap.data.TemplateDescriptor;
-import gap.util.DevNullOutputStream;
-import gap.util.ServletCountDownOutputStream;
-import gap.util.HttpServletResponseOutput;
 
 import hapax.Template;
 import hapax.TemplateException;
 import hapax.TemplateDictionary;
 
-import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import javax.servlet.ServletConfig;
@@ -110,27 +109,37 @@ public class Servlet
     protected final void service(HttpServletRequest req, HttpServletResponse rep)
         throws IOException, ServletException
     {
-        Stats stats = Stats.Enter(req);
-        Method method = Method.Enter(req);
-        Protocol protocol = Protocol.Enter(req);
         this.serviceEnter();
+        Method method  = Method.Enter(req);
+        Protocol protocol = Protocol.Enter(req);
         Path path = new Path(req);
         Accept accept = new Accept(req);
         FileManager fm = new FileManager(path.get(0));
-        Logon logon = null;
+        String uri = req.getParameter("uri");
+        if (null == uri){
+            uri = req.getRequestURI();
+        }
+        Request request = null;
         try {
-            logon = this.logon(path,accept,fm,req);
+            TemplateDictionary top = Templates.CreateDictionary();
+            Logon logon = Logon.Enter(new Logon(req.getUserPrincipal(),uri,top,UserServiceFactory.getUserService()));
 
-            this.service(method,protocol,path,accept,fm,logon,req,rep);
+            request = this.createRequest(req,method,protocol,path,accept,fm,logon,uri,top);
+
+            Response response = this.createResponse(request,rep);
+            if (null != response)
+                this.service(request, response);
         }
         catch (Exception any){
             LogRecord rec = new LogRecord(Level.SEVERE,"error");
             rec.setThrown(any);
             Log.log(rec);
-            this.error(path,accept,logon,req,rep,500,"Internal error.",any);
+            if (null != request)
+                this.error(request,rep,500,"Internal error.",any);
+            else
+                this.error(req,rep,500,"Internal error.",any);
         }
         finally {
-            Stats.Exit(stats,logon);
             this.serviceExit();
         }
     }
@@ -138,17 +147,12 @@ public class Servlet
      * This is marked final for performance, and thinking it's
      * unlikely anyone would want to override it.  
      */
-    protected final void service(Method method, Protocol protocol, 
-                                 Path path, Accept accept, FileManager fm, Logon logon,
-                                 HttpServletRequest req, HttpServletResponse rep)
+    protected final void service(Request req, Response rep)
         throws IOException, ServletException, TemplateException
     {
+        Servlet servlet = req.getServlet();
 
-        Servlet servlet = fm.getServlet(path);
-
-        /*
-         */
-        switch (method.type){
+        switch (req.method.type){
         case Method.GET:{
             long lastModified = this.getLastModified(req);
             if (0 < lastModified){
@@ -170,22 +174,21 @@ public class Servlet
                 }
             }
             if (null != servlet){
-                servlet.doGet(path,accept,logon,req,rep);
+                servlet.doGet(req,rep);
                 return;
             }
-            else if (accept.accept("text/html") && path.hasNotSource()){
-                rep.sendRedirect("index.html");
+            else if (req.accept("text/html") && req.hasNotSource()){
+                rep.sendRedirect("/index.html");
                 return;
             }
-            else if (path.equals("/version.txt")){
-                rep.setCharacterEncoding("UTF-8");
+            else if (req.isPath("/version.txt")){
                 PrintWriter out = rep.getWriter();
                 out.println(gap.Version.Name+' '+gap.Version.Target+' '+gap.Version.Long);
                 rep.setContentType("text/plain");
                 return;
             }
             else {
-                this.doGet(path,accept,logon,req,rep);
+                this.doGet(req,rep);
                 return;
             }
         }
@@ -207,590 +210,515 @@ public class Servlet
                     }
                 }
             }
-            final DevNullOutputStream buffer = new DevNullOutputStream();
-            final PrintWriter out = new PrintWriter(new OutputStreamWriter(buffer,UTF8));
-
-            HttpServletResponseOutput wrapper = new HttpServletResponseOutput(rep,buffer,out);
-
-            if (null != servlet)
-                servlet.doGet(path,accept,logon,req,wrapper);
-            else if (accept.accept("text/html") && path.hasNotSource()){
-                rep.sendRedirect("index.html");
-                return;
+            rep.openDevNull();
+            try {
+                if (null != servlet)
+                    servlet.doGet(req,rep);
+                else if (req.accept("text/html") && req.hasNotSource())
+                    rep.sendRedirect("/index.html");
+                else if (req.isPath("/version.txt")){
+                    PrintWriter out = rep.getWriter();
+                    out.println(gap.Version.Name+' '+gap.Version.Target+' '+gap.Version.Long);
+                    rep.setContentType("text/plain");
+                }
+                else 
+                    this.doGet(req,rep);
             }
-            else 
-                this.doGet(path,accept,logon,req,wrapper);
-
-
-            int contentLength = buffer.getCount();
-            if (0 < contentLength)
-                rep.setContentLength(contentLength);
-
+            finally {
+                rep.setContentLength();
+            }
             return;
         }
         case Method.POST:
-            if (null != servlet){
-                servlet.doPost(path,accept,logon,req,rep);
-                return;
-            }
-            else {
-                this.doPost(path,accept,logon,req,rep);
-                return;
-            }
+            if (null != servlet)
+                servlet.doPost(req,rep);
+            else 
+                this.doPost(req,rep);
+            return;
+
         case Method.PUT:
-            if (null != servlet){
-                servlet.doPut(path,accept,logon,req,rep);
-                return;
-            }
-            else {
-                this.doPut(path,accept,logon,req,rep);
-                return;
-            }
+            if (null != servlet)
+                servlet.doPut(req,rep);
+            else 
+                this.doPut(req,rep);
+            return;
+
         case Method.DELETE:
-            if (null != servlet){
-                servlet.doDelete(path,accept,logon,req,rep);
-                return;
-            }
-            else {
-                this.doDelete(path,accept,logon,req,rep);
-                return;
-            }
+            if (null != servlet)
+                servlet.doDelete(req,rep);
+            else 
+                this.doDelete(req,rep);
+            return;
+
         case Method.OPTIONS:
-            if (null != servlet){
-                servlet.doOptions(path,accept,logon,req,rep);
-                return;
-            }
-            else {
-                this.doOptions(path,accept,logon,req,rep);
-                return;
-            }
+            if (null != servlet)
+                servlet.doOptions(req,rep);
+            else 
+                this.doOptions(req,rep);
+            return;
+
         case Method.TRACE:
-            if (null != servlet){
-                servlet.doTrace(path,accept,logon,req,rep);
-                return;
-            }
-            else {
-                this.doTrace(path,accept,logon,req,rep);
-                return;
-            }
+            if (null != servlet)
+                servlet.doTrace(req,rep);
+            else 
+                this.doTrace(req,rep);
+            return;
+
         default:
-            if (null != servlet){
-                servlet.doMethod(path,accept,logon,method,req,rep);
-                return;
-            }
-            else {
-                this.doMethod(path,accept,logon,method,req,rep);
-                return;
-            }
+            if (null != servlet)
+                servlet.doMethod(req,rep);
+            else 
+                this.doMethod(req,rep);
+            return;
         }
     }
 
-    protected boolean canCreate(Path path, Accept accept, Logon logon){
-        return (logon.serviceAdmin);
+    protected boolean canRead(Request req){
+        return true;
     }
-    protected boolean canUpdate(Path path, Accept accept, Logon logon){
-        return (logon.serviceAdmin);
+    protected boolean canCreate(Request req){
+        return (req.isAdmin());
     }
-    protected boolean canGoto(Path path, Accept accept, Logon logon){
-        return (logon.serviceAdmin);
+    protected boolean canUpdate(Request req){
+        return (req.isAdmin());
     }
-    protected boolean canDelete(Path path, Accept accept, Logon logon){
-        return (logon.serviceAdmin);
+    protected boolean canGoto(Request req){
+        return (req.isAdmin());
     }
-    protected boolean canExport(Path path, Accept accept, Logon logon){
-        return (logon.serviceAdmin);
+    protected boolean canDelete(Request req){
+        return (req.isAdmin());
     }
-    protected boolean canImport(Path path, Accept accept, Logon logon){
-        return (logon.serviceAdmin);
+    protected boolean canExport(Request req){
+        return (req.isAdmin());
+    }
+    protected boolean canImport(Request req){
+        return (req.isAdmin());
     }
 
-    protected TemplateDictionary doGetDefine(Path path, Accept accept, Logon logon){
-        return logon.dict;
+    protected TemplateDictionary doGetDefine(Request req, Response rep){
+        return req.getTop();
     }
-    protected Template doGetTemplate(Path path, Accept accept, Logon logon, FileManager fm)
+    protected Template doGetTemplate(Request req, Response rep)
         throws TemplateException
     {
         return null;
     }
-    protected void doGet(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
+    protected void doGet(Request req, Response rep)
         throws ServletException, IOException
     {
-        TemplateDictionary top = this.doGetDefine(path,accept,logon);
-        try {
-            Template template = this.doGetTemplate(path,accept,logon,FileManager.Get());
-            if (null != template){
-                this.render(path,accept,logon,template,top,rep);
-                return ;
-            }
-        }
-        catch (TemplateException exc){
-            LogRecord rec = new LogRecord(Level.SEVERE,"error");
-            rec.setThrown(exc);
-            Servlet.Log.log(rec);
-        }
-        this.error(path,accept,logon,req,rep);
-    }
-    protected void doPost(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        if (logon.serviceAdmin){
-            Parameters parameters = new Parameters(req);
-            String opStrary[] = parameters.get("op");
-            String opString = (null != opStrary && 0 != opStrary.length)?(opStrary[0]):(null);
-            String formatStrary[] = parameters.get("format");
-            String formatString = (null != formatStrary && 0 != formatStrary.length)?(formatStrary[0]):(null);
-            if (null != opString && null != formatString){
-                Op op = Op.valueOf(opString);
-                if (null != op){
-                    boolean formatServlet = ("servlet".equals(formatString));
-                    boolean formatTemplate = ("template".equals(formatString));
-                    switch (op){
-                    case Create:{
-                        if (formatServlet)
-                            this.doPostCreateServlet(path,accept,logon,parameters,req,rep);
-
-                        else if (formatTemplate)
-                            this.doPostCreateTemplate(path,accept,logon,parameters,req,rep);
-                        else
-                            this.doPostCreate(path,accept,logon,parameters,req,rep);
-                        return;
-                    }
-                    case Update:{
-                        if (formatServlet)
-                            this.doPostUpdateServlet(path,accept,logon,parameters,req,rep);
-
-                        else if (formatTemplate)
-                            this.doPostUpdateTemplate(path,accept,logon,parameters,req,rep);
-                        else
-                            this.doPostUpdate(path,accept,logon,parameters,req,rep);
-                        return;
-                    }
-                    case Goto:{
-                        if (formatServlet)
-                            this.doPostGotoServlet(path,accept,logon,parameters,req,rep);
-
-                        else if (formatTemplate)
-                            this.doPostGotoTemplate(path,accept,logon,parameters,req,rep);
-                        else
-                            this.doPostGoto(path,accept,logon,parameters,req,rep);
-                        return;
-                    }
-                    case Delete:
-                        if (formatServlet)
-                            this.doPostDeleteServlet(path,accept,logon,parameters,req,rep);
-
-                        else if (formatTemplate)
-                            this.doPostDeleteTemplate(path,accept,logon,parameters,req,rep);
-                        else
-                            this.doPostDelete(path,accept,logon,parameters,req,rep);
-                        return;
-
-                    case Export:
-                        if (formatServlet)
-                            this.doPostExportServlet(path,accept,logon,parameters,req,rep);
-
-                        else if (formatTemplate)
-                            this.doPostExportTemplate(path,accept,logon,parameters,req,rep);
-                        else
-                            this.doPostExport(path,accept,logon,parameters,req,rep);
-                        return;
-
-                    case Import:
-                        if (formatServlet)
-                            this.doPostImportServlet(path,accept,logon,parameters,req,rep);
-
-                        else if (formatTemplate)
-                            this.doPostImportTemplate(path,accept,logon,parameters,req,rep);
-                        else
-                            this.doPostImport(path,accept,logon,parameters,req,rep);
-                        return;
-                    default:
-                        this.undefined(path,accept,logon,Method.Get(),req,rep);
-                        return;
-                    }
-                }
-                else
-                    this.error(path,accept,logon,req,rep,400,"Unrecognized value for parameter 'op': '"+opString+"'.");
-            }
-            else 
-                this.error(path,accept,logon,req,rep,400,"Missing parameter 'op' or 'format'.");
-        }
-        else 
-            this.error(path,accept,logon,req,rep,403,"Access not granted");
-    }
-    /*
-     */
-    protected void doPostCreateServlet(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        String requestType = req.getContentType();
-        if ("application/x-www-form-urlencoded".equals(requestType)){
-            /*
-             * Form edit
-             */
-        }
-        else if ("multipart/form-data".equals(requestType)){
-            /*
-             * File upload
-             */
-        }
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostCreateTemplate(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        String requestType = req.getContentType();
-        if ("application/x-www-form-urlencoded".equals(requestType)){
-            /*
-             * Form edit
-             */
-        }
-        else if ("multipart/form-data".equals(requestType)){
-            /*
-             * File upload
-             */
-        }
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostCreate(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostUpdateServlet(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        String requestType = req.getContentType();
-        if ("application/x-www-form-urlencoded".equals(requestType)){
-            /*
-             * Form edit
-             */
-        }
-        else if ("multipart/form-data".equals(requestType)){
-            /*
-             * File upload
-             */
-        }
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostUpdateTemplate(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        String requestType = req.getContentType();
-        if ("application/x-www-form-urlencoded".equals(requestType)){
-            /*
-             * Form edit
-             */
-        }
-        else if ("multipart/form-data".equals(requestType)){
-            /*
-             * File upload
-             */
-        }
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostUpdate(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostGotoServlet(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        /*
-         */
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostGotoTemplate(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        /*
-         */
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostGoto(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostDeleteServlet(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        /*
-         */
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostDeleteTemplate(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        /*
-         */
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostDelete(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostExportServlet(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        /*
-         */
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostExportTemplate(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        /*
-         */
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostExport(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostImportServlet(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        /*
-         */
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostImportTemplate(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        /*
-         */
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPostImport(Path path, Accept accept, Logon logon, Parameters parameters,
-                                HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doPut(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doDelete(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doOptions(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doTrace(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
-        throws ServletException, IOException
-    {
-        this.undefined(path,accept,logon,Method.Get(),req,rep);
-    }
-    protected void doMethod(Path path, Accept accept, Logon logon, Method method, HttpServletRequest req, HttpServletResponse rep)
-        throws IOException, ServletException
-    {
-        this.undefined(path,accept,logon,method,req,rep);
-    }
-    protected void error(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep)
-        throws IOException, ServletException
-    {
-        this.error(path, accept, logon, req, rep, 0, null, null);
-    }
-    protected void error(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage)
-        throws IOException, ServletException
-    {
-        this.error(path, accept, logon, req, rep, status, statusMessage, null);
-    }
-    protected void error(Path path, Accept accept, Logon logon, HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage, Throwable any)
-        throws IOException, ServletException
-    {
-
-        TemplateDictionary dict;
-        if (null != logon)
-            dict = logon.dict;
-        else
-            dict = Templates.CreateDictionary();
-
-        rep.resetBuffer();
-
-        String from = "error";
-
-        TemplateDictionary error = dict.addSection(from);
-
-        String errors_exception = Error.Attribute.ToString.Exception(req,any);
-        String errors_status, errors_message;
-        String errors_type = Error.Attribute.ToString.Type(req,any);
-        String errors_uri = Error.Attribute.ToString.URI(req,any);
-        if (0 < status){
-            rep.setStatus(status,statusMessage);
-
-            errors_status = String.valueOf(status);
-            errors_message = statusMessage;
-        }
-        else {
-            errors_status = Error.Attribute.ToString.Status(req,any);
-            errors_message = Error.Attribute.ToString.Message(req,any);
-        }
-        error.putVariable("error_message",errors_message);
-        error.putVariable("error_exception",errors_exception);
-        error.putVariable("error_status",errors_status);
-
-        error.putVariable("error_type",errors_type);
-        error.putVariable("error_uri",errors_uri);
-
-
-        String top = null;
-        /*
-         */
-        if (accept.accept("text/html"))
-            top = "errors.html";
-
-        else if (accept.accept("application/json")){
-            error.putVariable("error_exception_json",QuoteJson(errors_exception));
-            error.putVariable("error_message_json",QuoteJson(errors_message));
-            top = "errors.json";
-        }
-        else if (accept.accept("text/xml"))
-            top = "errors.xml";
-
-        else if (accept.accept("application/xml"))
-            top = "errors.xml";
-
-        /*
-         */
+        TemplateDictionary top = this.doGetDefine(req,rep);
         if (null != top){
             try {
-                Template template = FileManager.Get().getTemplate(top);
-                if (null != template)
-                    this.render(path, accept, logon, template, error, rep);
+                Template template = this.doGetTemplate(req,rep);
+                if (null != template){
+                    this.render(req,rep,template,top);
+                    return ;
+                }
             }
             catch (TemplateException exc){
                 LogRecord rec = new LogRecord(Level.SEVERE,"error");
                 rec.setThrown(exc);
-                Log.log(rec);
+                Servlet.Log.log(rec);
             }
+            this.error(req,rep);
         }
+        else
+            this.error(req,rep,404,"Not found.");
     }
-    protected void undefined(Path path, Accept accept, Logon logon, Method method, HttpServletRequest req, HttpServletResponse rep)
+    protected void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
-        this.error(path,accept,logon,req,rep,HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+method+"' not implemented");
+
+        String opString = req.getParameter("op");
+        String formatString = req.getParameter("format");
+        if (null != opString && null != formatString){
+            Op op = Op.valueOf(opString);
+            if (null != op){
+                boolean formatServlet = ("servlet".equals(formatString));
+                boolean formatTemplate = ("template".equals(formatString));
+                switch (op){
+                case Create:{
+                    if (formatServlet)
+                        this.doPostCreateServlet(req,rep);
+
+                    else if (formatTemplate)
+                        this.doPostCreateTemplate(req,rep);
+                    else
+                        this.doPostCreate(req,rep);
+                    return;
+                }
+                case Update:{
+                    if (formatServlet)
+                        this.doPostUpdateServlet(req,rep);
+
+                    else if (formatTemplate)
+                        this.doPostUpdateTemplate(req,rep);
+                    else
+                        this.doPostUpdate(req,rep);
+                    return;
+                }
+                case Goto:{
+                    if (formatServlet)
+                        this.doPostGotoServlet(req,rep);
+
+                    else if (formatTemplate)
+                        this.doPostGotoTemplate(req,rep);
+                    else
+                        this.doPostGoto(req,rep);
+                    return;
+                }
+                case Delete:
+                    if (formatServlet)
+                        this.doPostDeleteServlet(req,rep);
+
+                    else if (formatTemplate)
+                        this.doPostDeleteTemplate(req,rep);
+                    else
+                        this.doPostDelete(req,rep);
+                    return;
+
+                case Export:
+                    if (formatServlet)
+                        this.doPostExportServlet(req,rep);
+
+                    else if (formatTemplate)
+                        this.doPostExportTemplate(req,rep);
+                    else
+                        this.doPostExport(req,rep);
+                    return;
+
+                case Import:
+                    if (formatServlet)
+                        this.doPostImportServlet(req,rep);
+
+                    else if (formatTemplate)
+                        this.doPostImportTemplate(req,rep);
+                    else
+                        this.doPostImport(req,rep);
+                    return;
+                default:
+                    this.undefined(req,rep);
+                    return;
+                }
+            }
+            else
+                this.error(req,rep,400,"Unrecognized value for parameter 'op': '"+opString+"'.");
+        }
+        else 
+            this.error(req,rep,400,"Missing parameter 'op' or 'format'.");
     }
-    protected void render(Path path, Accept accept, Logon logon, String templateName, HttpServletRequest req, HttpServletResponse rep)
+    /*
+     */
+    protected void doPostCreateServlet(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        String requestType = req.getContentType();
+        if ("application/x-www-form-urlencoded".equals(requestType)){
+            /*
+             * Form edit
+             */
+        }
+        else if ("multipart/form-data".equals(requestType)){
+            /*
+             * File upload
+             */
+        }
+        this.undefined(req,rep);
+    }
+    protected void doPostCreateTemplate(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        String requestType = req.getContentType();
+        if ("application/x-www-form-urlencoded".equals(requestType)){
+            /*
+             * Form edit
+             */
+        }
+        else if ("multipart/form-data".equals(requestType)){
+            /*
+             * File upload
+             */
+        }
+        this.undefined(req,rep);
+    }
+    protected void doPostCreate(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.undefined(req,rep);
+    }
+    protected void doPostUpdateServlet(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        String requestType = req.getContentType();
+        if ("application/x-www-form-urlencoded".equals(requestType)){
+            /*
+             * Form edit
+             */
+        }
+        else if ("multipart/form-data".equals(requestType)){
+            /*
+             * File upload
+             */
+        }
+        this.undefined(req,rep);
+    }
+    protected void doPostUpdateTemplate(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        String requestType = req.getContentType();
+        if ("application/x-www-form-urlencoded".equals(requestType)){
+            /*
+             * Form edit
+             */
+        }
+        else if ("multipart/form-data".equals(requestType)){
+            /*
+             * File upload
+             */
+        }
+        this.undefined(req,rep);
+    }
+    protected void doPostUpdate(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.undefined(req,rep);
+    }
+    protected void doPostGotoServlet(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(req,rep);
+    }
+    protected void doPostGotoTemplate(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(req,rep);
+    }
+    protected void doPostGoto(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.undefined(req,rep);
+    }
+    protected void doPostDeleteServlet(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(req,rep);
+    }
+    protected void doPostDeleteTemplate(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(req,rep);
+    }
+    protected void doPostDelete(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.undefined(req,rep);
+    }
+    protected void doPostExportServlet(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(req,rep);
+    }
+    protected void doPostExportTemplate(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(req,rep);
+    }
+    protected void doPostExport(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.undefined(req,rep);
+    }
+    protected void doPostImportServlet(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(req,rep);
+    }
+    protected void doPostImportTemplate(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        /*
+         */
+        this.undefined(req,rep);
+    }
+    protected void doPostImport(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.undefined(req,rep);
+    }
+    protected void doPut(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.undefined(req,rep);
+    }
+    protected void doDelete(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.undefined(req,rep);
+    }
+    protected void doOptions(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.undefined(req,rep);
+    }
+    protected void doTrace(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.undefined(req,rep);
+    }
+    protected void doMethod(Request req, Response rep)
+        throws IOException, ServletException
+    {
+        this.undefined(req,rep);
+    }
+    protected void error(HttpServletRequest req, HttpServletResponse rep)
+        throws IOException, ServletException
+    {
+        this.error(req, rep, 0, null, null);
+    }
+    protected void error(HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage)
+        throws IOException, ServletException
+    {
+        this.error(req, rep, status, statusMessage, null);
+    }
+    protected void error(HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage, Throwable any)
+        throws IOException, ServletException
+    {
+        if (req instanceof Request && rep instanceof Response){
+            Request request = (Request)req;
+            TemplateDictionary top = ((Request)req).getTop();
+
+            rep.resetBuffer();
+
+            String from = "error";
+
+            TemplateDictionary error = top.addSection(from);
+
+            String errors_exception = Error.Attribute.ToString.Exception(req,any);
+            String errors_status, errors_message;
+            String errors_type = Error.Attribute.ToString.Type(req,any);
+            String errors_uri = Error.Attribute.ToString.URI(req,any);
+            if (0 < status){
+                rep.setStatus(status,statusMessage);
+
+                errors_status = String.valueOf(status);
+                errors_message = statusMessage;
+            }
+            else {
+                errors_status = Error.Attribute.ToString.Status(req,any);
+                errors_message = Error.Attribute.ToString.Message(req,any);
+            }
+            error.putVariable("error_message",errors_message);
+            error.putVariable("error_exception",errors_exception);
+            error.putVariable("error_status",errors_status);
+
+            error.putVariable("error_type",errors_type);
+            error.putVariable("error_uri",errors_uri);
+
+            String templateName = null;
+
+            if (request.accept("text/html"))
+                templateName = "errors.html";
+
+            else if (request.accept("application/json")){
+                error.putVariable("error_exception_json",QuoteJson(errors_exception));
+                error.putVariable("error_message_json",QuoteJson(errors_message));
+                templateName = "errors.json";
+            }
+            else if (request.accept("text/xml"))
+                templateName = "errors.xml";
+
+            else if (request.accept("application/xml"))
+                templateName = "errors.xml";
+
+            if (null != templateName){
+                try {
+                    Template template = FileManager.Get().getTemplate(templateName);
+                    if (null != template)
+                        this.render(request, ((Response)rep), template, error);
+                }
+                catch (TemplateException exc){
+                    LogRecord rec = new LogRecord(Level.SEVERE,"error");
+                    rec.setThrown(exc);
+                    Log.log(rec);
+                }
+            }
+        }
+        else if (0 < status)
+            rep.setStatus(status,statusMessage);
+    }
+    protected void undefined(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        this.error(req,rep,HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+Method.Get()+"' not implemented");
+    }
+    protected void render(Request req, Response rep, String templateName)
         throws IOException, ServletException
     {
         try {
-            Template template = FileManager.Get().getTemplate(templateName);
+            Template template = req.getTemplate(templateName);
             if (null != template)
-                this.render(path, accept, logon, template, logon.dict, rep);
+                this.render(req, rep, template, req.getTop());
             else
-                this.error(path,accept,logon,req,rep,404,"Not found.");
+                this.error(req,rep,404,"Not found.");
         }
         catch (TemplateException exc){
             LogRecord rec = new LogRecord(Level.SEVERE,"error");
             rec.setThrown(exc);
             Log.log(rec);
-            this.error(path,accept,logon,req,rep,500,"Internal error.",exc);
+            this.error(req,rep,500,"Internal error.",exc);
         }
     }
-    protected void render(Path path, Accept accept, Logon logon, Template template, TemplateDictionary top, HttpServletResponse rep)
+    protected void render(Request req, Response rep, Template template, TemplateDictionary top)
         throws IOException, ServletException, TemplateException
     {
-        rep.setCharacterEncoding("UTF-8");
-        ServletCountDownOutputStream counter = new ServletCountDownOutputStream(rep);
-        PrintWriter out = (new PrintWriter(new OutputStreamWriter(counter,UTF8)));
-        this.render(path,accept,logon,template,top,rep,out);
-        //this.render(path,accept,logon,template,top,rep,rep.getWriter());
-        out.flush();
-        Stats.SetBytesDown(counter.getCount());
+        this.render(req,rep,template,top,(rep.getWriter()));
     }
-    private void render(Path path, Accept accept, Logon logon, Template template, TemplateDictionary top, HttpServletResponse rep, PrintWriter out)
+    private void render(Request req, Response rep, Template template, TemplateDictionary top, PrintWriter out)
         throws IOException, ServletException, TemplateException
     {
-
         template.render(top,out);
 
-        if (accept.accept("text/html"))
+        if (req.accept("text/html"))
             rep.setContentType("text/html;charset=utf-8");
 
-        else if (accept.accept("application/json"))
+        else if (req.accept("application/json"))
             rep.setContentType("application/json");
 
-        else if (accept.accept("text/xml"))
+        else if (req.accept("text/xml"))
             rep.setContentType("text/xml");
 
-        else if (accept.accept("application/xml"))
+        else if (req.accept("application/xml"))
             rep.setContentType("application/xml");
     }
-    protected void redirectToItem(Path path, Accept accept, Logon logon, Method method, String id, HttpServletResponse rep)
+    protected void redirectToItem(Request req, Response rep, String id)
         throws IOException, ServletException
     {
-        if (logon.requestUrl.endsWith(id))
+        String path = '/'+id;
+        if (req.userReference.endsWith(path))
 
-            rep.sendRedirect(logon.requestUrl);
+            rep.sendRedirect(req.userReference);
 
-        else if (path.hasBase()){
-            String base = path.getBase();
+        else if (req.hasBase()){
+            String base = req.getBase();
 
-            rep.sendRedirect("/"+base+'/'+id);
+            rep.sendRedirect("/"+base+path);
         }
         else
-            rep.sendRedirect("/"+id);
-    }
-    protected Logon logon(Path path, Accept accept, FileManager fm, HttpServletRequest req){
-        Logon logon = Logon.Get();
-        if (null != logon)
-            return logon;
-        else {
-            Principal principal = req.getUserPrincipal();
-            String uri = this.getUri(accept,req);
-            TemplateDictionary dict = Templates.CreateDictionary();
-
-            return this.logonSimple(principal,uri,dict);
-        }
-    }
-    protected Logon logonSimple(Principal principal, String reqUri, TemplateDictionary dict){
-
-        Logon logon = new Logon(principal,reqUri,dict,UserServiceFactory.getUserService());
-
-        return Logon.Enter(logon);
-    }
-
-    protected final String getUri(Accept accept, HttpServletRequest req){
-        String uri = req.getParameter("uri");
-        if (null != uri)
-            return uri;
-        else if (accept.accept("text/html"))
-            return req.getRequestURI();
-        else {
-            uri = req.getHeader("Referer");
-            if (null != uri)
-                return uri;
-            else
-                return req.getRequestURI();
-        }
+            rep.sendRedirect(path);
     }
     protected void serviceEnter(){
         Store.Enter();
@@ -804,6 +732,26 @@ public class Servlet
         XMessaging.Exit();
         Method.Exit();
         FileManager.Exit();
+    }
+    protected Parameters createParameters(HttpServletRequest req){
+        return new Parameters(req,20,null);
+    }
+    /**
+     * Must not throw an exception.  May only return a null value when
+     * the subsequent call to create response will return a null
+     * value -- otherwise -- must not return a null value.
+     */
+    protected Request createRequest(HttpServletRequest req, Method method, Protocol protocol, Path path, Accept accept,
+                                    FileManager fm, Logon logon, String uri, TemplateDictionary top)
+    {
+        Parameters parameters = this.createParameters(req);
+        return new Request(req,method,protocol,path,accept,fm,logon,uri,top,parameters);
+    }
+    /**
+     * May return null to halt further processing.
+     */
+    protected Response createResponse(Request req, HttpServletResponse rep){
+        return new Response(rep);
     }
     /*
      */

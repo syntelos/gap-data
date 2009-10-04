@@ -67,6 +67,17 @@ public interface ClassDescriptor
     }
 
     /**
+     * Optional field 'sortBy'
+     */
+    public interface SortBy
+        extends ClassDescriptor
+    {
+        public boolean hasSortBy();
+
+        public String getSortBy();
+    }
+
+    /**
      * 
      */
     public interface Relation 

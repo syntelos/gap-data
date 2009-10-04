@@ -35,6 +35,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.security.Principal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.LogRecord;
 
 /**
  * Using the term "logon" as generic of its states "logged- in" or
@@ -61,14 +64,21 @@ import java.security.Principal;
  * 
  * @author jdp
  */
-public class Logon
+public final class Logon
     extends Object
 {
     private final static ThreadLocal<Logon> LTL = new ThreadLocal<Logon>();
 
+    /**
+     * Package protected
+     */
     static Logon Enter(Logon logon){
-        LTL.set(logon);
-        return logon;
+        if (null != LTL.get())
+            throw new java.security.AccessControlException("Incorrect reentry.");
+        else {
+            LTL.set(logon);
+            return logon;
+        }
     }
     static void Exit(){
         LTL.set(null);
@@ -82,6 +92,13 @@ public class Logon
     public static boolean IsAdmin(){
         return LTL.get().serviceAdmin;
     }
+
+    /**
+     * Subclass usage should be qualified as
+     * <code>"Logon.Log"</code> or
+     * <code>"gap.service.Logon.Log"</code>.
+     */
+    protected final static Logger Log = Logger.getLogger("Logon");
 
 
     public final Principal principal;
@@ -110,14 +127,13 @@ public class Logon
             this.serviceLogon = null;
 
 
-            dict.hideSection("with_site_admin");
             dict.showSection("without_site_admin");
 
             TemplateDictionary logon = dict.showSection("logon").get(0);
             logon.putVariable("logon_url",loginUrl);
             logon.putVariable("logon_url_text","Sign-in");
             logon.putVariable("logon_class","logon off");
-            logon.hideSection("with_login");
+
             logon.showSection("without_login");
         }
         else {
@@ -139,11 +155,9 @@ public class Logon
 
 
             if (this.serviceAdmin){
-                dict.hideSection("without_site_admin");
                 dict.showSection("with_site_admin");
             }
             else {
-                dict.hideSection("with_site_admin");
                 dict.showSection("without_site_admin");
             }
 
@@ -151,14 +165,19 @@ public class Logon
 
             logon.putVariable("logon_class","logon on");
 
-            logon.hideSection("without_login");
             logon.showSection("with_login");
-
-            /*
-             * Ensure that every login enters the system, so that
-             * other users' processes can work with this user.
-             */
-            this.person = Person.GetCreate(email);
+            try {
+                /*
+                 * Ensure that every login enters the system, so that
+                 * other users' processes can work with this user.
+                 */
+                this.person = Person.GetCreate(email);
+            }
+            catch (Exception any){
+                LogRecord rec = new LogRecord(Level.SEVERE,"error");
+                rec.setThrown(any);
+                Log.log(rec);
+            }
         }
     }
 

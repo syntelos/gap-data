@@ -17,39 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.util;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+package gap.data;
 
 /**
- * 
- * @author jdp
+ * Marker interface for subclasses of {@link BigTable} for Admin
+ * permissions, implemented at the store level.
  */
-public class HttpServletResponseOutput
-    extends javax.servlet.http.HttpServletResponseWrapper
-{
-
-    private ServletOutputStream out;
-
-    private PrintWriter wri;
-
-
-    public HttpServletResponseOutput(HttpServletResponse rep, ServletOutputStream out, PrintWriter wri)
-        throws IOException
-    {
-        super(rep);
-        this.out = out;
-        this.wri = wri;
-    }
-
-
-    public ServletOutputStream getOutputStream() throws IOException {
-        return this.out;
-    } 
-    public PrintWriter getWriter() throws IOException {
-        return this.wri;
-    }
+public interface AdminReadWrite {
 }

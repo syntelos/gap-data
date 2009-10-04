@@ -17,34 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap;
+package gap.data;
 
 /**
- * The gap permission types.
- * 
- * Note that admin access control is marked on classes with the {@link
- * gap.data.AdminReadWrite} interface.  The admin permission is an aid
- * to avoid admin access exceptions from the store for marked data
- * classes.
- * 
- * @author jdp
+ * Thrown from {@link Store} for violations of the {@link
+ * AdminReadWrite} access control policy.
  */
-public enum Permissions {
-    /**
-     * Public may not be logged- in.
-     */
-    Public,
-    /**
-     * Members are logged- in.
-     */
-    Members,
-    /**
-     * Partners are commercially associated with a resource.
-     */
-    Partners,
-    /**
-     * Admins are configured in the appengine dashboard as the
-     * developers of the appengine application.
-     */
-    Admin;
+public class AdminAccessException
+    extends java.security.AccessControlException
+{
+
+    public AdminAccessException(){
+        super("Requires admin status.");
+    }
+
 }
