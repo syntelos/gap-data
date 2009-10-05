@@ -17,31 +17,26 @@
     <div class="block">
       <div class="block inside">
 
-        <p><a href="http://code.google.com/p/gap-data">Gap Data is open source.</a></p>
+        <p><a href="http://code.google.com/p/gap-data">Gap Data</a> is a web interface for <a href="http://appengine.google.com/">appengine development</a>.</p>
 
-        <div class="block inside heavy">
+        <div class="block">
+          <img src="images/gap-data-1-400x252.png" width="400" height="252" />
+        </div>
 
-          <p><a href="http://code.google.com/p/gap-data">Gap Data</a> is a web interface for <a href="http://appengine.google.com/">appengine development</a>.</p>
+        <div class="block inside">
+          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
+          exposes its configuration to its site administrators,
+          including all site content and programming. </p>
 
-          <div class="block">
-            <img src="images/gap-data-1-400x252.png" width="400" height="252" />
-          </div>
+          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
+          site administrators may adapt its web based programming to
+          create groups or roles or capabilities' delegations to
+          other web logons as desired. </p>
 
-          <div class="block inside">
-            <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-            exposes its configuration to its site administrators,
-            including all site content and programming. </p>
+          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
+          is like a <i>"java application wiki"</i>.
+          </p>
 
-            <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-            site administrators may adapt its web based programming to
-            create groups or roles or capabilities' delegations to
-            other web logons as desired. </p>
-
-            <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-            is like a <i>"java application wiki"</i>.
-            </p>
-
-          </div>
         </div>
       </div>
     </div>
