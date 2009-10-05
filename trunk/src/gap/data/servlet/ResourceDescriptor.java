@@ -1,9 +1,8 @@
 
-package {{=package_name}}.servlet;
+package gap.data.servlet;
 
-{{#import}}import {{=import_spec}};
-{{/import}}
-import {{=package_name}}.*;
+
+import gap.data.*;
 
 import gap.Request;
 import gap.Response;
@@ -36,14 +35,14 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
-public class {{=class_name}}
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-05T06:38:49.805Z",comments="gap.data")
+public class ResourceDescriptor
     extends gap.servlet.Site
 {
-    public final static Class<? extends BigTable> BigTableClass = {{=package_name}}.{{=class_name}}.class;
+    public final static Class<? extends BigTable> BigTableClass = gap.data.ResourceDescriptor.class;
 
 
-    public {{=class_name}}(){
+    public ResourceDescriptor(){
         super();
     }
 
@@ -60,7 +59,7 @@ public class {{=class_name}}
             String id = req.getPath(0);
             if (null != id){
 
-                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.For{{=field_unique_nameCamel}}(id);
+                gap.data.ResourceDescriptor instance = gap.data.ResourceDescriptor.ForId(id);
 
                 if (null != instance){
 
@@ -75,13 +74,13 @@ public class {{=class_name}}
             else {
                 req.parameters.dictionaryInto(top);
 
-                com.google.appengine.api.datastore.Query query = {{=package_name}}.{{=class_name}}.CreateQueryFor();
+                com.google.appengine.api.datastore.Query query = gap.data.ResourceDescriptor.CreateQueryFor();
 
                 com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
-                List<{{=package_name}}.{{=class_name}}> list = (List<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,page);
+                List<gap.data.ResourceDescriptor> list = (List<gap.data.ResourceDescriptor>)gap.data.ResourceDescriptor.QueryN(query,page);
 
-                for ({{=package_name}}.{{=class_name}} instance : list){
+                for (gap.data.ResourceDescriptor instance : list){
 
                     instance.dictionaryInto(top);
                 }

@@ -213,6 +213,20 @@ public abstract class Strings {
         else
             return null;
     }
+    public final static com.google.appengine.api.datastore.Blob BlobFromString(java.lang.String string){
+        if (null != string){
+            byte[] bytes = alto.io.u.B64.decode(string);
+            return new com.google.appengine.api.datastore.Blob(bytes);
+        }
+        else
+            return null;
+    }
+    public final static java.lang.String BlobToString(com.google.appengine.api.datastore.Blob instance){
+        if (null != instance)
+            return alto.io.u.B64.encodeBytes(instance.getBytes());
+        else
+            return null;
+    }
     public final static com.google.appengine.api.datastore.Category CategoryFromString(java.lang.String string){
         if (null != string)
             return new com.google.appengine.api.datastore.Category(string);

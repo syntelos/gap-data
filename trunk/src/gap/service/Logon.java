@@ -89,6 +89,16 @@ public final class Logon
     public static Logon Get(){
         return LTL.get();
     }
+    public static boolean IsPublic(){
+        return true;
+    }
+    public static boolean IsMember(){
+        return LTL.get().isLoggedIn();
+    }
+    public static boolean IsPartner(){
+
+        return false;//(TODO)
+    }
     public static boolean IsAdmin(){
         return LTL.get().serviceAdmin;
     }

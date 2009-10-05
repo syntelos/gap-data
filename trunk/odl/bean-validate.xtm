@@ -15,40 +15,37 @@ import gap.service.Templates;
 
 import hapax.TemplateDictionary;
 
+import com.google.appengine.api.datastore.*;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import javax.annotation.Generated;
+
 /**
  * Data validation functions.
  */
+@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
 public abstract class {{=class_name}}
     extends gap.Strings
 {
-    public final static Object FromString({{=class_name}}.Field field, String string){
-        switch(field){
-{{#pfield}}        case {{=field_nameCamel}}:
-            return {{=field_nameCamel}}FromString(string);{{/pfield}}
+    public final static Object FromString({{=package_name}}.{{=class_name}}.Field field, String string){
+        switch(field){{{#pfield}}
+          case {{=field_nameCamel}}:
+            return {{=field_classClean}}FromString(string);{{/pfield}}
         default:
             throw new IllegalStateException(field.name());
         }
     }
-    public final static String ToString({{=class_name}}.Field field, Object value){
-        switch(field){
-{{#pfield}}        case {{=field_nameCamel}}:
-            return {{=field_nameCamel}}ToString(value);{{/pfield}}
+    public final static String ToString({{=package_name}}.{{=class_name}}.Field field, Object value){
+        switch(field){{{#pfield}}
+          case {{=field_nameCamel}}:
+            return {{=field_classClean}}ToString( ({{=field_classClean}})value);{{/pfield}}
         default:
             throw new IllegalStateException(field.name());
         }
     }
-{{#pfield}}
-    public final static Object {{=field_nameCamel}}FromString(String string){
-        return {{=field_classClean}}FromString(string);
-    }
-    public final static String {{=field_nameCamel}}ToString(Object value){
-        return {{=field_classClean}}ToString(value);
-    }
-{{/pfield}}
 }

@@ -1,5 +1,5 @@
 
-package oso.data;
+package gap.data;
 
 
 import gap.data.*;
@@ -13,23 +13,23 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * Data bean generated from "oso.data".
+ * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-05T06:38:41.758Z",comments="oso.data")
-public final class Person
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-05T06:38:47.081Z",comments="gap.data")
+public final class Partner
     extends gap.data.BigTable
 {
 
-    private final static long serialVersionUID = 2;
+    private final static long serialVersionUID = 1;
 
-    public final static String KIND = "Person";
+    public final static String KIND = "Partner";
 
-    public final static String ClassName = "Person";
+    public final static String ClassName = "Partner";
 
     public final static String DefaultSortBy = "logonId";
 
     static {
-        Register(Person.class);
+        Register(Partner.class);
     }
 
 
@@ -57,49 +57,49 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public final static Person ForLogonId(Key ancestor, String logonId){
+    public final static Partner ForLogonId(Key ancestor, String logonId){
         if (null != logonId){
             Key key = KeyIdFor(ancestor, logonId);
-            Person instance = (Person)gap.data.Store.Get(key);
+            Partner instance = (Partner)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
+                return (Partner)gap.data.Store.Query1(q);
             }
         }
         else
             throw new IllegalArgumentException();
     }
-    public final static Person ForLogonId(String logonId){
+    public final static Partner ForLogonId(String logonId){
         if (null != logonId){
             Key key = KeyIdFor( logonId);
-            Person instance = (Person)gap.data.Store.Get(key);
+            Partner instance = (Partner)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
+                return (Partner)gap.data.Store.Query1(q);
             }
         }
         else
             throw new IllegalArgumentException();
     }
-    public final static Person GetCreate(String logonId){
-        Person person = ForLogonId( logonId);
-        if (null == person){
-            person = new Person( logonId);
-            person = (Person)gap.data.Store.Put(person);
+    public final static Partner GetCreate(String logonId){
+        Partner partner = ForLogonId( logonId);
+        if (null == partner){
+            partner = new Partner( logonId);
+            partner = (Partner)gap.data.Store.Put(partner);
         }
-        return person;
+        return partner;
     }
-    public final static Person GetCreate(Key ancestor, String logonId){
-        Person person = ForLogonId(ancestor, logonId);
-        if (null == person){
-            person = new Person(ancestor, logonId);
-            person = (Person)gap.data.Store.Put(person);
+    public final static Partner GetCreate(Key ancestor, String logonId){
+        Partner partner = ForLogonId(ancestor, logonId);
+        if (null == partner){
+            partner = new Partner(ancestor, logonId);
+            partner = (Partner)gap.data.Store.Put(partner);
         }
-        return person;
+        return partner;
     }
 
 
@@ -112,43 +112,43 @@ public final class Person
     public final static Key KeyFor(Key ancestor, String id){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static Person ForId(Key ancestor, String id){
+    public final static Partner ForId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
             Key key = KeyFor(ancestor,id);
-            Person instance = (Person)gap.data.Store.Get(key);
+            Partner instance = (Partner)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
+                return (Partner)gap.data.Store.Query1(q);
             }
         }
         else
             throw new IllegalArgumentException();
     }
-    public final static Person ForId(String id){
+    public final static Partner ForId(String id){
         if (null != id){
             Key key = KeyFor(id);
-            Person instance = (Person)gap.data.Store.Get(key);
+            Partner instance = (Partner)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
+                return (Partner)gap.data.Store.Query1(q);
             }
         }
         else
             throw new IllegalArgumentException();
     }
 
-    public final static Person Get(Key key){
+    public final static Partner Get(Key key){
         if (null != key){
-            Person instance = (Person)gap.data.Store.Get(key);
+            Partner instance = (Partner)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
+                return (Partner)gap.data.Store.Query1(q);
             }
         }
         else
@@ -186,7 +186,7 @@ public final class Person
      * Drop the instance and any children of its key from the world,
      * memcache and store.
      */
-    public final static void Delete(Person instance){
+    public final static void Delete(Partner instance){
         if (null != instance){
             Key key = instance.getKey();
             gap.data.Store.DeleteCollection(new Query(key));
@@ -196,7 +196,7 @@ public final class Person
     /**
      * Drop the instance from memcache, exclusively.
      */
-    public final static void Clean(Person instance){
+    public final static void Clean(Partner instance){
         if (null != instance){
             Key key = instance.getKey();
             gap.data.Store.Clean(key);
@@ -205,7 +205,7 @@ public final class Person
     /**
      * Store the instance.
      */
-    public final static void Save(Person instance){
+    public final static void Save(Partner instance){
         if (null != instance){
             gap.data.Store.Put(instance);
         }
@@ -213,7 +213,7 @@ public final class Person
     /**
      * Write the instance to store.
      */
-    public final static void Store(Person instance){
+    public final static void Store(Partner instance){
         if (null != instance){
             gap.data.Store.Put(instance);
         }
@@ -224,9 +224,9 @@ public final class Person
     public final static Query CreateQueryFor(Key ancestor){
         return new Query(KIND,ancestor);
     }
-    public final static Person Query1(Query query){
+    public final static Partner Query1(Query query){
         if (null != query)
-            return (Person)gap.data.Store.Query1(query);
+            return (Partner)gap.data.Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
@@ -278,7 +278,7 @@ public final class Person
         public static Field getField(String name) {
             return FieldName.get(name);
         }
-        public static Object Get(Field field, Person instance){
+        public static Object Get(Field field, Partner instance){
             switch(field){
 
             case Key:
@@ -288,10 +288,10 @@ public final class Person
             case LogonId:
                 return instance.getLogonId();
             default:
-                throw new IllegalArgumentException(field.toString()+" in Person");
+                throw new IllegalArgumentException(field.toString()+" in Partner");
             }
         }
-        public static void Set(Field field, Person instance, Object value){
+        public static void Set(Field field, Partner instance, Object value){
             switch(field){
 
             case Key:
@@ -304,7 +304,7 @@ public final class Person
                 instance.setLogonId( (String)value);
                 return;
             default:
-                throw new IllegalArgumentException(field.toString()+" in Person");
+                throw new IllegalArgumentException(field.toString()+" in Partner");
             }
         }
 
@@ -333,14 +333,14 @@ public final class Person
 
 
 
-    public Person() {
+    public Partner() {
         super();
     }
-    public Person(Key child) {
+    public Partner(Key child) {
         super();
         this.setKey(child);
     }
-    public Person(String logonId) {
+    public Partner(String logonId) {
         super();
         this.setLogonId(logonId);
         String id = IdFor( logonId);
@@ -348,7 +348,7 @@ public final class Person
         Key key = KeyFor(id);
         this.setKey(key);
     }
-    public Person(Key ancestor, String logonId) {
+    public Partner(Key ancestor, String logonId) {
         super();
         this.setLogonId(logonId);
         String id = IdFor(ancestor,  logonId);
