@@ -1,5 +1,5 @@
     <div class="overlay tool {{=tool_name}}" id="tool{{=tool_nameCamel}}">
-      <div class="over">
+      <div class="over" style="background-image: url('{{=tool_titleUri}}'); height: 80%; margin-top: 10%;">
         <form name="tool{{=tool_nameCamel}}" method="post" onsubmit="javascript:return tool{{=tool_nameCamel}}Close();">
           <input type="hidden" name="op" id="tool_op" value=""/>
           {{>tool_form}}
