@@ -72,8 +72,14 @@ public interface List<V>
             List.Type type = DotNameMap.get(name);
             if (null != type)
                 return type;
-            else
-                return List.Type.valueOf(name);
+            else {
+                try {
+                    return List.Type.valueOf(name);
+                }
+                catch (IllegalArgumentException exc){
+                    return null;
+                }
+            }
         }
     }
 

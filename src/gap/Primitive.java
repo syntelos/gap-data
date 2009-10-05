@@ -63,18 +63,34 @@ public enum Primitive {
 
 
     public final static boolean Is(String name){
-        return (null != gap.Primitive.valueOf(name));
+        return (null != Primitive.For(name));
     }
     public final static boolean Is(Class type){
-        return (null != Map.get(type));
+        return (null != Primitive.For(type));
     }
-    private final static java.util.Map<Class,Primitive> Map = new java.util.HashMap<Class,Primitive>();
+    private final static java.util.Map<String,Primitive> Map = new java.util.HashMap<String,Primitive>();
     static {
         for (Primitive type : Primitive.values()){
-            Map.put(type.type,type);
+            Map.put(type.type.getName(),type);
         }
     }
     public final static Primitive For(Class type){
-        return Map.get(type);
+        if (null != type)
+            return Map.get(type.getName());
+        else
+            return null;
+    }
+    public final static Primitive For(String name){
+        Primitive type = Map.get(name);
+        if (null != type)
+            return type;
+        else {
+            try {
+                return Primitive.valueOf(name);
+            }
+            catch (IllegalArgumentException exc){
+                return null;
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@
  */
 package gap.service;
 
-import gap.data.ResourceDescriptor;
+import gap.data.Resource;
 import gap.jac.tools.JavaFileManager.Location;
 
 import hapax.Template;
@@ -109,7 +109,7 @@ public final class Templates
     public static File GetTemplatesLocation(){
         return Instance.getTemplatesLocation();
     }
-    public static Template GetTemplate(TemplateLoaderContext context, ResourceDescriptor resource,
+    public static Template GetTemplate(TemplateLoaderContext context, Resource resource,
                                        String path)
         throws TemplateException
     {
@@ -146,7 +146,7 @@ public final class Templates
     public File getTemplatesLocation(){
         return this.templatesLocation;
     }
-    public Template getTemplate(TemplateLoaderContext context, ResourceDescriptor resource, String path)
+    public Template getTemplate(TemplateLoaderContext context, Resource resource, String path)
         throws TemplateException
     {
         if (null != resource){

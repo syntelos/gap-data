@@ -1,6 +1,8 @@
 package gap.data;
 
-child Partner version 1 {
+child Partner version 1 
+    parent Resource
+{
     Key key;
     *unique String id;
     *hash-unique String logonId;

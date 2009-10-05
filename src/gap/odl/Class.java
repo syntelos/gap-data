@@ -84,22 +84,9 @@ import java.util.regex.Pattern;
  *  #/
  * package foo;
  * import java.io.*;
- * class Bar version 2 {
- *   *unique String uniqueId;
- *   *hash-unique String uniqueName;
- *   Serializable fieldValue;
- *   List<String> aChangeSinceVersionOne;
- * }
- * </pre>
- * 
- * <pre>
- * /# gap odl 'class Bar'
- *  #/
- * package foo;
- * import java.io.*;
- * class Bar version 3
- *   implements Interface1
- *   implements Interface2
+ * class Bar version 2
+ *   implements AnInterface
+ *   implements AndAnotherInterface
  * {
  *   *unique String uniqueId;
  *   *hash-unique String uniqueName;
@@ -110,6 +97,24 @@ import java.util.regex.Pattern;
  * 
  * In this example, the value of 'uniqueId' is the gap data hash of
  * 'uniqueName'.
+ * 
+ * <pre>
+ * /# gap odl 'class Whiz'
+ *  #/
+ * package gee;
+ * 
+ * child Whiz version 1
+ *   parent foo.Bar
+ *   implements SomeInterface
+ * {
+ *   *unique String uniqueId;
+ *   *hash-unique String uniqueName;
+ * }
+ * </pre>
+ * 
+ * This example shows the child class declaration.  The parent must be
+ * declared before any interface, and on another line following the
+ * class name and version.
  * 
  * <h3>Notes</h3>
  * 
@@ -128,9 +133,12 @@ public final class Class
                ClassDescriptor.Relation
 {
     public final static Pattern Open = Pattern.compile("^(class|parent|child).*");
+    public final static Pattern Open2 = Pattern.compile("\\s*\\{",Pattern.MULTILINE);
 
 
     public final Package pack;
+
+    public final Parent parent;
 
     public final String name, nameDecamel;
 
@@ -161,6 +169,7 @@ public final class Class
         Field field = null;
         Method method = null;
         long version = 1L;
+        Parent parent = null;
 
         while (true){
             try {
@@ -192,12 +201,21 @@ public final class Class
                             default:
                                 throw new Syntax("Malformed ODL class declaration in '"+line+"'.");
                             }
-
                             if (!line.endsWith("{")){
-                                while (true){
-                                    Interface inf = new Interface(reader, pack, this.imports);
-                                    this.interfaces.add(inf);
+                                try {
+                                    parent = new Parent(reader);
                                 }
+                                catch (Jump to){
+                                }
+                                try {
+                                    while (true){
+                                        Interface inf = new Interface(reader, pack, this.imports);
+                                        this.interfaces.add(inf);
+                                    }
+                                }
+                                catch (Jump to){
+                                }
+                                String open2 = reader.getNext(Open2);
                             }
                         }
                         else
@@ -225,6 +243,8 @@ public final class Class
             this.pack = pack;
         else
             throw new Syntax("Syntax error missing package.");
+
+        this.parent = parent;
 
         if (null != spec && null != name){
 
@@ -299,6 +319,15 @@ public final class Class
     }
     public List<Object> getInterfaces(){
         return this.interfaces;
+    }
+    public boolean hasParent(){
+        return (null != this.parent);
+    }
+    public String getParent(){
+        if (null != this.parent)
+            return this.parent.getName();
+        else
+            return null;
     }
 
     public final static String Decamel(String string){
