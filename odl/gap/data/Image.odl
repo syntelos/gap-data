@@ -1,0 +1,14 @@
+package gap.data;
+
+child Image version 1 
+    parent Resource
+    implements LastModified
+{
+    Key key;
+    *unique String id;
+    *hash-unique String base;
+    *hash-unique String name;
+    long lastModified;
+    String contentType;
+    Blob bytes;
+}

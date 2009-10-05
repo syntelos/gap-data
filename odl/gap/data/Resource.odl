@@ -1,14 +1,21 @@
 package gap.data;
 
-class Resource version 1 {
+parent Resource version 1 
+    implements LastModified
+{
     Key key;
     *unique String id;
     *hash-unique String base;
     *hash-unique String name;
+    long lastModified;
     Category tag;
     String servletClassname;
     Text servletSourceJava;
     Blob servletClassfileJvm;
     Text templateSourceHapax;
-    *child Partner;
+    String templateContentType;
+    List.Long<Partner> partners;
+    List.Long<Account> accounts;
+    List.Long<Image> images;
+    List.Long<Template> templates;
 }
