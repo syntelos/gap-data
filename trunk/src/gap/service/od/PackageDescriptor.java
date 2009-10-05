@@ -26,7 +26,7 @@ package gap.service.od;
  * @author jdp
  */
 public interface PackageDescriptor
-    extends HasName
+    extends gap.data.HasName
 {
     /**
      * @return A non null, not empty, fully qualified package name

@@ -26,7 +26,7 @@ package gap.service.od;
  * @author jdp
  */
 public interface FieldDescriptor
-    extends HasName
+    extends gap.data.HasName
 {
 
     /**
@@ -74,8 +74,13 @@ public interface FieldDescriptor
     public interface Relation 
         extends FieldDescriptor
     {
+        /**
+         * The child relation employs the parent key in its identity,
+         * while the child group relation employs the parent key in
+         * its key.
+         */
         public enum Type {
-            None, Parent, Child;
+            None, Parent, Child, ChildGroup;
         }
 
         public boolean hasRelation();

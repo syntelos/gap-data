@@ -27,7 +27,7 @@ import com.google.appengine.api.datastore.Text;
  * @author jdp
  */
 public interface MethodDescriptor 
-    extends HasName
+    extends gap.data.HasName
 {
 
     /**

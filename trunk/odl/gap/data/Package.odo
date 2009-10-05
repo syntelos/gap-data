@@ -1,0 +1,13 @@
+package gap.data;
+
+import gap.service.od.*;
+
+parent Package version 1 
+    implements PackageDescriptor
+{
+    Key key;
+    *unique String id;
+    *hash-unique String name;
+    List.Short<PackageImport> imports;
+    List.Long<DataType> types;
+}

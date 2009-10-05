@@ -19,9 +19,9 @@
  */
 package gap.service;
 
+import gap.data.HasName;
 import gap.service.od.ClassDescriptor;
 import gap.service.od.FieldDescriptor;
-import gap.service.od.HasName;
 import gap.service.od.ImportDescriptor;
 import gap.service.od.MethodDescriptor;
 import gap.service.od.ODStateException;
@@ -127,6 +127,35 @@ public class OD
                 }
             }
 
+            ClassDescriptor.Relation.Type classRelation = null;
+            String classRelationParent = null;
+            if (cd instanceof ClassDescriptor.Relation){
+                ClassDescriptor.Relation cdr = (ClassDescriptor.Relation)cd;
+                classRelation = cdr.getRelation();
+                classRelationParent = cdr.getParent();
+            }
+            if (null == classRelation || ClassDescriptor.Relation.Type.None.equals(classRelation)){
+                top.addSection("class_re_none");
+            }
+            else if (ClassDescriptor.Relation.Type.Parent.equals(classRelation)){
+                top.addSection("class_re_parent");
+            }
+            else if (ClassDescriptor.Relation.Type.Child.equals(classRelation)){
+                TemplateDictionary child = top.addSection("class_re_child");
+                if (null == classRelationParent)
+                    throw new ODStateException(cd,"The object data model requires a parent class name.");
+                else
+                    child.setVariable("class_parentClass",classRelationParent);
+            }
+            else if (ClassDescriptor.Relation.Type.ChildGroup.equals(classRelation)){
+                TemplateDictionary child = top.addSection("class_re_childgroup");
+                if (null == classRelationParent)
+                    throw new ODStateException(cd,"The object data model requires a parent class name.");
+                else
+                    child.setVariable("class_parentClass",classRelationParent);
+            }
+            else
+                throw new IllegalStateException("Unrecognized class relation "+classRelation.name());
 
             cd.setDefinitionClassName(packageName+'.'+className);
 
@@ -357,7 +386,7 @@ public class OD
                             dataField.addSection("field_is_not_hash_unique");
                         }
                     }
-                    else if (IsFieldRelationChild(field)){
+                    else if (IsFieldRelation(field)){
 
                         if (null != fieldTypeClass && IsNotTypeClassBigTable(fieldTypeClass))
                             throw new ODStateException(field,"Relation field '"+fieldName+"' is not a subclass of 'gap.data.BigTable'.");
@@ -587,7 +616,7 @@ public class OD
     }
     public final static Class FieldClass(String pkg, String fieldType, List<ImportDescriptor> imports){
         String cleanTypeName = CleanTypeName(fieldType);
-        gap.Primitive primitive = gap.Primitive.valueOf(cleanTypeName);
+        gap.Primitive primitive = gap.Primitive.For(cleanTypeName);
         if (null != primitive)
             return primitive.type;
         else {

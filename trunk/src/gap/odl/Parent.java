@@ -28,18 +28,18 @@ import java.util.regex.Pattern;
  * @see Class
  * @author jdp
  */
-public final class Package
+public final class Parent
     extends Object
-    implements gap.service.od.PackageDescriptor
+    implements gap.data.HasName
 {
-    public final static Pattern Statement = Pattern.compile("^package [\\w\\.]+[;\\s]*");
+    public final static Pattern Statement = Pattern.compile("^\\s*parent [\\w\\.]+[;\\s]*");
 
 
     private Comment comment;
 
     public final String name;
 
-    public Package(Reader reader)
+    public Parent(Reader reader)
         throws IOException, Syntax
     {
         super();
@@ -53,10 +53,10 @@ public final class Package
                 return;
             }
             else
-                throw new Syntax("Malformed ODL package statement '"+line+"'.");
+                throw new Syntax("Malformed ODL parent statement '"+line+"'.");
         }
         else 
-            throw new Syntax("Package statement not found.");
+            throw new Jump();
     }
 
     public String getName(){

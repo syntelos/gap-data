@@ -27,7 +27,7 @@ import java.util.List;
  * @author jdp
  */
 public interface ClassDescriptor
-    extends HasName
+    extends gap.data.HasName
 {
 
     /**
@@ -88,13 +88,28 @@ public interface ClassDescriptor
     public interface Relation 
         extends ClassDescriptor
     {
+        /**
+         * The child relation employs the parent key in its identity,
+         * while the child group relation employs the parent key in
+         * its key.
+         */
         public enum Type {
-            None, Parent, Child;
+            None, Parent, Child, ChildGroup;
         }
 
         public boolean hasRelation();
 
         public Type getRelation();
+
+        /**
+         * A child must have a parent.  The parent is a {@link
+         * gap.data.BigTable} class name.  It would be an unqualified
+         * class name when found in the same package, or when an
+         * import expression includes it.
+         */
+        public boolean hasParent();
+
+        public String getParent();
     }
 
     /**

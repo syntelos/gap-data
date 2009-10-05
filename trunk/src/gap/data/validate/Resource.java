@@ -3,7 +3,7 @@ package gap.data.validate;
 
 
 import gap.data.*;
-import static gap.data.ResourceDescriptor.Field.*;
+import static gap.data.Resource.Field.*;
 
 import gap.service.Accept;
 import gap.service.Error;
@@ -27,11 +27,11 @@ import javax.annotation.Generated;
 /**
  * Data validation functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-05T06:38:51.468Z",comments="gap.data")
-public abstract class ResourceDescriptor
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-05T20:55:30.580Z",comments="gap.data")
+public abstract class Resource
     extends gap.Strings
 {
-    public final static Object FromString(gap.data.ResourceDescriptor.Field field, String string){
+    public final static Object FromString(gap.data.Resource.Field field, String string){
         switch(field){
           case Key:
             return KeyFromString(string);
@@ -55,7 +55,7 @@ public abstract class ResourceDescriptor
             throw new IllegalStateException(field.name());
         }
     }
-    public final static String ToString(gap.data.ResourceDescriptor.Field field, Object value){
+    public final static String ToString(gap.data.Resource.Field field, Object value){
         switch(field){
           case Key:
             return KeyToString( (Key)value);

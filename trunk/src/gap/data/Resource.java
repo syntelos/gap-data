@@ -15,21 +15,22 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-05T06:38:47.872Z",comments="gap.data")
-public final class ResourceDescriptor
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-05T20:55:26.854Z",comments="gap.data")
+public final class Resource
     extends gap.data.BigTable
 {
 
     private final static long serialVersionUID = 1;
 
-    public final static String KIND = "ResourceDescriptor";
+    public final static String KIND = "Resource";
 
-    public final static String ClassName = "ResourceDescriptor";
+    public final static String ClassName = "Resource";
 
     public final static String DefaultSortBy = "name";
 
     static {
-        Register(ResourceDescriptor.class);
+        Register(Resource.class);
+        Register(Partner.class);
     }
 
 
@@ -59,49 +60,49 @@ public final class ResourceDescriptor
         else
             throw new IllegalArgumentException();
     }
-    public final static ResourceDescriptor ForBaseName(Key ancestor, String base, String name){
+    public final static Resource ForBaseName(Key ancestor, String base, String name){
         if (null != base && null != name){
             Key key = KeyIdFor(ancestor, base, name);
-            ResourceDescriptor instance = (ResourceDescriptor)gap.data.Store.Get(key);
+            Resource instance = (Resource)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (ResourceDescriptor)gap.data.Store.Query1(q);
+                return (Resource)gap.data.Store.Query1(q);
             }
         }
         else
             throw new IllegalArgumentException();
     }
-    public final static ResourceDescriptor ForBaseName(String base, String name){
+    public final static Resource ForBaseName(String base, String name){
         if (null != base && null != name){
             Key key = KeyIdFor( base, name);
-            ResourceDescriptor instance = (ResourceDescriptor)gap.data.Store.Get(key);
+            Resource instance = (Resource)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (ResourceDescriptor)gap.data.Store.Query1(q);
+                return (Resource)gap.data.Store.Query1(q);
             }
         }
         else
             throw new IllegalArgumentException();
     }
-    public final static ResourceDescriptor GetCreate(String base, String name){
-        ResourceDescriptor resourceDescriptor = ForBaseName( base, name);
-        if (null == resourceDescriptor){
-            resourceDescriptor = new ResourceDescriptor( base, name);
-            resourceDescriptor = (ResourceDescriptor)gap.data.Store.Put(resourceDescriptor);
+    public final static Resource GetCreate(String base, String name){
+        Resource resource = ForBaseName( base, name);
+        if (null == resource){
+            resource = new Resource( base, name);
+            resource = (Resource)gap.data.Store.Put(resource);
         }
-        return resourceDescriptor;
+        return resource;
     }
-    public final static ResourceDescriptor GetCreate(Key ancestor, String base, String name){
-        ResourceDescriptor resourceDescriptor = ForBaseName(ancestor, base, name);
-        if (null == resourceDescriptor){
-            resourceDescriptor = new ResourceDescriptor(ancestor, base, name);
-            resourceDescriptor = (ResourceDescriptor)gap.data.Store.Put(resourceDescriptor);
+    public final static Resource GetCreate(Key ancestor, String base, String name){
+        Resource resource = ForBaseName(ancestor, base, name);
+        if (null == resource){
+            resource = new Resource(ancestor, base, name);
+            resource = (Resource)gap.data.Store.Put(resource);
         }
-        return resourceDescriptor;
+        return resource;
     }
 
 
@@ -114,43 +115,43 @@ public final class ResourceDescriptor
     public final static Key KeyFor(Key ancestor, String id){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static ResourceDescriptor ForId(Key ancestor, String id){
+    public final static Resource ForId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
             Key key = KeyFor(ancestor,id);
-            ResourceDescriptor instance = (ResourceDescriptor)gap.data.Store.Get(key);
+            Resource instance = (Resource)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (ResourceDescriptor)gap.data.Store.Query1(q);
+                return (Resource)gap.data.Store.Query1(q);
             }
         }
         else
             throw new IllegalArgumentException();
     }
-    public final static ResourceDescriptor ForId(String id){
+    public final static Resource ForId(String id){
         if (null != id){
             Key key = KeyFor(id);
-            ResourceDescriptor instance = (ResourceDescriptor)gap.data.Store.Get(key);
+            Resource instance = (Resource)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (ResourceDescriptor)gap.data.Store.Query1(q);
+                return (Resource)gap.data.Store.Query1(q);
             }
         }
         else
             throw new IllegalArgumentException();
     }
 
-    public final static ResourceDescriptor Get(Key key){
+    public final static Resource Get(Key key){
         if (null != key){
-            ResourceDescriptor instance = (ResourceDescriptor)gap.data.Store.Get(key);
+            Resource instance = (Resource)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (ResourceDescriptor)gap.data.Store.Query1(q);
+                return (Resource)gap.data.Store.Query1(q);
             }
         }
         else
@@ -188,7 +189,7 @@ public final class ResourceDescriptor
      * Drop the instance and any children of its key from the world,
      * memcache and store.
      */
-    public final static void Delete(ResourceDescriptor instance){
+    public final static void Delete(Resource instance){
         if (null != instance){
             Key key = instance.getKey();
             gap.data.Store.DeleteCollection(new Query(key));
@@ -198,7 +199,7 @@ public final class ResourceDescriptor
     /**
      * Drop the instance from memcache, exclusively.
      */
-    public final static void Clean(ResourceDescriptor instance){
+    public final static void Clean(Resource instance){
         if (null != instance){
             Key key = instance.getKey();
             gap.data.Store.Clean(key);
@@ -207,7 +208,7 @@ public final class ResourceDescriptor
     /**
      * Store the instance.
      */
-    public final static void Save(ResourceDescriptor instance){
+    public final static void Save(Resource instance){
         if (null != instance){
             gap.data.Store.Put(instance);
         }
@@ -215,7 +216,7 @@ public final class ResourceDescriptor
     /**
      * Write the instance to store.
      */
-    public final static void Store(ResourceDescriptor instance){
+    public final static void Store(Resource instance){
         if (null != instance){
             gap.data.Store.Put(instance);
         }
@@ -226,9 +227,9 @@ public final class ResourceDescriptor
     public final static Query CreateQueryFor(Key ancestor){
         return new Query(KIND,ancestor);
     }
-    public final static ResourceDescriptor Query1(Query query){
+    public final static Resource Query1(Query query){
         if (null != query)
-            return (ResourceDescriptor)gap.data.Store.Query1(query);
+            return (Resource)gap.data.Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
@@ -286,7 +287,7 @@ public final class ResourceDescriptor
         public static Field getField(String name) {
             return FieldName.get(name);
         }
-        public static Object Get(Field field, ResourceDescriptor instance){
+        public static Object Get(Field field, Resource instance){
             switch(field){
 
             case Key:
@@ -308,10 +309,10 @@ public final class ResourceDescriptor
             case TemplateSourceHapax:
                 return instance.getTemplateSourceHapax();
             default:
-                throw new IllegalArgumentException(field.toString()+" in ResourceDescriptor");
+                throw new IllegalArgumentException(field.toString()+" in Resource");
             }
         }
-        public static void Set(Field field, ResourceDescriptor instance, Object value){
+        public static void Set(Field field, Resource instance, Object value){
             switch(field){
 
             case Key:
@@ -342,7 +343,7 @@ public final class ResourceDescriptor
                 instance.setTemplateSourceHapax( (Text)value);
                 return;
             default:
-                throw new IllegalArgumentException(field.toString()+" in ResourceDescriptor");
+                throw new IllegalArgumentException(field.toString()+" in Resource");
             }
         }
 
@@ -377,14 +378,14 @@ public final class ResourceDescriptor
 
 
 
-    public ResourceDescriptor() {
+    public Resource() {
         super();
     }
-    public ResourceDescriptor(Key child) {
+    public Resource(Key child) {
         super();
         this.setKey(child);
     }
-    public ResourceDescriptor(String base, String name) {
+    public Resource(String base, String name) {
         super();
         this.setBase(base);
         this.setName(name);
@@ -393,7 +394,7 @@ public final class ResourceDescriptor
         Key key = KeyFor(id);
         this.setKey(key);
     }
-    public ResourceDescriptor(Key ancestor, String base, String name) {
+    public Resource(Key ancestor, String base, String name) {
         super();
         this.setBase(base);
         this.setName(name);
@@ -607,6 +608,14 @@ public final class ResourceDescriptor
     /*
      * Data addressing supports
      */
+    public Query createQueryForPartner(){
+        Key thisKey = this.getClassFieldKeyValue();
+        if (null != thisKey)
+            return new Query(Partner.KIND,thisKey);
+        else
+            throw new IllegalArgumentException();
+    }
+
 
     /*
      * Data binding supports

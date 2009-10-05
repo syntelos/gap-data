@@ -72,8 +72,14 @@ public interface Map<K,V>
             Map.Type type = DotNameMap.get(name);
             if (null != type)
                 return type;
-            else
-                return Map.Type.valueOf(name);
+            else {
+                try {
+                    return Map.Type.valueOf(name);
+                }
+                catch (IllegalArgumentException exc){
+                    return null;
+                }
+            }
         }
     }
 

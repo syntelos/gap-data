@@ -35,14 +35,14 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-05T06:38:49.805Z",comments="gap.data")
-public class ResourceDescriptor
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-05T20:55:28.897Z",comments="gap.data")
+public class Resource
     extends gap.servlet.Site
 {
-    public final static Class<? extends BigTable> BigTableClass = gap.data.ResourceDescriptor.class;
+    public final static Class<? extends BigTable> BigTableClass = gap.data.Resource.class;
 
 
-    public ResourceDescriptor(){
+    public Resource(){
         super();
     }
 
@@ -59,7 +59,7 @@ public class ResourceDescriptor
             String id = req.getPath(0);
             if (null != id){
 
-                gap.data.ResourceDescriptor instance = gap.data.ResourceDescriptor.ForId(id);
+                gap.data.Resource instance = gap.data.Resource.ForId(id);
 
                 if (null != instance){
 
@@ -74,13 +74,13 @@ public class ResourceDescriptor
             else {
                 req.parameters.dictionaryInto(top);
 
-                com.google.appengine.api.datastore.Query query = gap.data.ResourceDescriptor.CreateQueryFor();
+                com.google.appengine.api.datastore.Query query = gap.data.Resource.CreateQueryFor();
 
                 com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
-                List<gap.data.ResourceDescriptor> list = (List<gap.data.ResourceDescriptor>)gap.data.ResourceDescriptor.QueryN(query,page);
+                List<gap.data.Resource> list = (List<gap.data.Resource>)gap.data.Resource.QueryN(query,page);
 
-                for (gap.data.ResourceDescriptor instance : list){
+                for (gap.data.Resource instance : list){
 
                     instance.dictionaryInto(top);
                 }

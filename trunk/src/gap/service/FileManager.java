@@ -19,7 +19,7 @@
  */
 package gap.service;
 
-import gap.data.ResourceDescriptor;
+import gap.data.Resource;
 import gap.service.jac.JavaClassOutput;
 import gap.service.jac.JavaSourceInput;
 
@@ -137,11 +137,11 @@ public class FileManager
         extends java.lang.IllegalStateException
     {
         public final String classname;
-        public final ResourceDescriptor descriptor;
+        public final Resource descriptor;
         public final String errors;
 
 
-        CompileError(String classname, ResourceDescriptor desc, StringWriter err){
+        CompileError(String classname, Resource desc, StringWriter err){
             super(classname);
             this.classname = classname;
             this.descriptor = desc;
@@ -203,7 +203,7 @@ public class FileManager
 
 
 
-    public String getPath(ResourceDescriptor desc){
+    public String getPath(Resource desc){
         String base = desc.getBase();
         String name = desc.getName();
         return this.getPath(base,name);
@@ -251,7 +251,7 @@ public class FileManager
     public Template getTemplate(Path path){
         Template template = null;
         try {
-            ResourceDescriptor desc = FileManager.GetResourceDescriptor(path);
+            Resource desc = FileManager.GetResource(path);
             if (null != desc){
                 template = this.getTemplate(desc);
                 if (null != template)
@@ -272,7 +272,7 @@ public class FileManager
         }
         return template;
     }
-    public Template getTemplate(ResourceDescriptor desc)
+    public Template getTemplate(Resource desc)
         throws TemplateException
     {
         String path = this.getPath(desc);
@@ -309,13 +309,13 @@ public class FileManager
 
         Servlet servlet = null;
 
-        ResourceDescriptor desc = ResourceDescriptor.ForBaseName(base,name);
+        Resource desc = Resource.ForBaseName(base,name);
         if (null != desc)
             servlet = this.getServlet(desc);
 
         return servlet;
     }
-    public Servlet getServlet(ResourceDescriptor desc){
+    public Servlet getServlet(Resource desc){
 
         String servletClassName = desc.getServletClassname();
         if (null != servletClassName){
@@ -346,7 +346,7 @@ public class FileManager
         else
             return null;
     }
-    public boolean compile(ResourceDescriptor desc)
+    public boolean compile(Resource desc)
         throws java.io.IOException,
                FileManager.CompileError
     {
@@ -389,7 +389,7 @@ public class FileManager
             return false;
     }
 
-    public Class define(ResourceDescriptor desc){
+    public Class define(Resource desc){
         String classname = desc.getServletClassname();
         if (null != classname){
             Blob classfile = desc.getServletClassfileJvm();
@@ -512,7 +512,7 @@ public class FileManager
     }
 
 
-    public final static ResourceDescriptor GetResourceDescriptor(Path path){
+    public final static Resource GetResource(Path path){
 
         String base = "";
         String name = null;
@@ -529,7 +529,7 @@ public class FileManager
             name = "";
         }
 
-        return ResourceDescriptor.ForBaseName(base,name);
+        return Resource.ForBaseName(base,name);
     }
 
     private final static List<String> Options;
