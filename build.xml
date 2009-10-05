@@ -52,6 +52,12 @@
     </fileset>
   </path>
 
+  <path id="jar.pack.path.alto">
+    <fileset dir="${lib}">
+      <include name="**/alto*.jar"/>
+    </fileset>
+  </path>
+
   <path id="jar.pack.path.hapax">
     <fileset dir="${lib}">
       <include name="**/hapax*.jar"/>
@@ -188,6 +194,7 @@
 
     <archive target="${jar.file.name}" bin="${out}/WEB-INF/classes" manifest="${src}/gap/data/Manifest.mf">
       <pack>
+        <zipfileset src="${toString:jar.pack.path.alto}"/>
         <zipfileset src="${toString:jar.pack.path.hapax}"/>
         <zipfileset src="${toString:jar.pack.path.appengine}"/>
         <zipfileset src="${toString:jar.pack.path.joda-time}"/>
@@ -209,9 +216,13 @@
 
     <odl-write-oso-data-servlet classpath.id="lib.path"/>
 
-    <odl-write-oso-data-validate-top classpath.id="lib.path"/>
-
     <odl-write-oso-data-validate classpath.id="lib.path"/>
+
+    <odl-write-gap-data classpath.id="lib.path"/>
+
+    <odl-write-gap-data-servlet classpath.id="lib.path"/>
+
+    <odl-write-gap-data-validate classpath.id="lib.path"/>
 
   </target>
 

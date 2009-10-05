@@ -41,6 +41,7 @@ public enum Primitive {
     Float(java.lang.Float.class),
     Double(java.lang.Double.class),
     Date(java.util.Date.class),
+    Blob(com.google.appengine.api.datastore.Blob.class),
     Category(com.google.appengine.api.datastore.Category.class),
     Email(com.google.appengine.api.datastore.Email.class),
     GeoPt(com.google.appengine.api.datastore.GeoPt.class),
@@ -49,6 +50,7 @@ public enum Primitive {
     PhoneNumber(com.google.appengine.api.datastore.PhoneNumber.class),
     PostalAddress(com.google.appengine.api.datastore.PostalAddress.class),
     Rating(com.google.appengine.api.datastore.Rating.class),
+    ShortBlob(com.google.appengine.api.datastore.ShortBlob.class),
     Text(com.google.appengine.api.datastore.Text.class);
 
 

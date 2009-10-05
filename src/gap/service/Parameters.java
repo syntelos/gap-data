@@ -22,6 +22,7 @@ package gap.service;
 import hapax.TemplateDictionary;
 
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.FetchOptions;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -93,6 +94,9 @@ public final class Parameters
                 dict.setVariable("startIndex",this.startIndex);
                 dict.setVariable("startIndexPrev",this.prevIndex);
                 dict.setVariable("startIndexNext",this.nextIndex);
+            }
+            public FetchOptions createFetchOptions(){
+                return FetchOptions.Builder.withLimit(this.count).offset(this.startIndex);
             }
         }
         /**

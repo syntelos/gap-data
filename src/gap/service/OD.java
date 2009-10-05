@@ -158,7 +158,7 @@ public class OD
 
                     String fieldName = field.getName();
                     String fieldNameCamel = Camel(fieldName);
-                    String fieldType = field.getType().toString();
+                    String fieldType = ToString(field.getType());
                     String fieldTypeClean = CleanTypeName(fieldType);
                     Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
                     String[] fieldTypeParameters = FieldTypeParameters(fieldType);
@@ -210,8 +210,7 @@ public class OD
                                     dataField.putVariable("field_to_string_suffix",".toString()");
                                 }
 
-                                if (null == defaultSortBy)
-                                    defaultSortBy = fieldName;
+                                defaultSortBy = fieldName;
                             }
                             else if (IsTypeClassList(fieldTypeClass)){
 

@@ -1,0 +1,7 @@
+package gap.data;
+
+child Partner version 1 {
+    Key key;
+    *unique String id;
+    *hash-unique String logonId;
+}

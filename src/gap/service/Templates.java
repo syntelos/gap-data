@@ -19,7 +19,7 @@
  */
 package gap.service;
 
-import gap.data.TemplateDescriptor;
+import gap.data.ResourceDescriptor;
 import gap.jac.tools.JavaFileManager.Location;
 
 import hapax.Template;
@@ -27,6 +27,8 @@ import hapax.TemplateDictionary;
 import hapax.TemplateException;
 import hapax.TemplateLoader;
 import hapax.TemplateLoaderContext;
+
+import com.google.appengine.api.datastore.Text;
 
 import javax.servlet.ServletResponse;
 
@@ -107,7 +109,7 @@ public final class Templates
     public static File GetTemplatesLocation(){
         return Instance.getTemplatesLocation();
     }
-    public static Template GetTemplate(TemplateLoaderContext context, TemplateDescriptor resource,
+    public static Template GetTemplate(TemplateLoaderContext context, ResourceDescriptor resource,
                                        String path)
         throws TemplateException
     {
@@ -144,13 +146,14 @@ public final class Templates
     public File getTemplatesLocation(){
         return this.templatesLocation;
     }
-    public Template getTemplate(TemplateLoaderContext context, TemplateDescriptor resource, String path)
+    public Template getTemplate(TemplateLoaderContext context, ResourceDescriptor resource, String path)
         throws TemplateException
     {
-        String source = null;//= resource.getTemplateSourceText();
-        if (null != source)
-            return new Template(source,context);
-        else
-            return null;
+        if (null != resource){
+            String source = gap.Strings.TextToString(resource.getTemplateSourceHapax());
+            if (null != source)
+                return new Template(source,context);
+        }
+        return null;
     }
 }

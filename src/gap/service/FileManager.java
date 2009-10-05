@@ -19,8 +19,7 @@
  */
 package gap.service;
 
-import gap.data.TemplateDescriptor;
-import gap.data.ServletDescriptor;
+import gap.data.ResourceDescriptor;
 import gap.service.jac.JavaClassOutput;
 import gap.service.jac.JavaSourceInput;
 
@@ -37,12 +36,14 @@ import hapax.Template;
 import hapax.TemplateException;
 import hapax.TemplateLoaderContext;
 
+import com.google.appengine.api.datastore.Blob;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -129,6 +130,24 @@ public class FileManager
             return this.isOutput;
         }
     }
+    /**
+     * Complete compilation error results.
+     */
+    public final static class CompileError
+        extends java.lang.IllegalStateException
+    {
+        public final String classname;
+        public final ResourceDescriptor descriptor;
+        public final String errors;
+
+
+        CompileError(String classname, ResourceDescriptor desc, StringWriter err){
+            super(classname);
+            this.classname = classname;
+            this.descriptor = desc;
+            this.errors = err.toString();
+        }
+    }
 
 
     public final Location location;
@@ -184,12 +203,12 @@ public class FileManager
 
 
 
-    public String getTemplatePath(TemplateDescriptor templateD){
-        String base = null;// templateD.getBase();
-        String name = null;// templateD.getName();
-        return this.getTemplatePath(base,name);
+    public String getPath(ResourceDescriptor desc){
+        String base = desc.getBase();
+        String name = desc.getName();
+        return this.getPath(base,name);
     }
-    public String getTemplatePath(String base, String name){
+    public String getPath(String base, String name){
         if (null != name){
             if (null == base)
                 return name;
@@ -201,7 +220,7 @@ public class FileManager
         else
             return base;
     }
-    public String getTemplatePath(Path path){
+    public String getPath(Path path){
         String base = null;
         String name = null;
         if (path.hasBase()){
@@ -213,7 +232,7 @@ public class FileManager
                 name = path.getBase();
             }
         }
-        return getTemplatePath(base,name);
+        return getPath(base,name);
     }
     public Template getTemplate(String pathString)
         throws TemplateException
@@ -232,17 +251,17 @@ public class FileManager
     public Template getTemplate(Path path){
         Template template = null;
         try {
-            TemplateDescriptor templateD = FileManager.GetTemplateDescriptor(path);
-            if (null != templateD){
-                template = this.getTemplate(templateD);
+            ResourceDescriptor desc = FileManager.GetResourceDescriptor(path);
+            if (null != desc){
+                template = this.getTemplate(desc);
                 if (null != template)
                     return template;
             }
 
-            String pathString = this.getTemplatePath(path);
+            String pathString = this.getPath(path);
             template = this.templates.get(pathString);
             if (null == template){
-                template = Templates.GetTemplate(this.templatesContext,templateD,pathString);
+                template = Templates.GetTemplate(this.templatesContext,desc,pathString);
                 if (null == template)
                     template = Templates.GetTemplate(pathString);
                 else 
@@ -253,14 +272,14 @@ public class FileManager
         }
         return template;
     }
-    public Template getTemplate(TemplateDescriptor templateD)
+    public Template getTemplate(ResourceDescriptor desc)
         throws TemplateException
     {
-        String path = this.getTemplatePath(templateD);
+        String path = this.getPath(desc);
         if (null != path){
             Template template = this.templates.get(path);
             if (null == template){
-                template = Templates.GetTemplate(this.templatesContext,templateD,path);
+                template = Templates.GetTemplate(this.templatesContext,desc,path);
                 if (null == template)
                     template = Templates.GetTemplate(path);
                 else 
@@ -290,29 +309,32 @@ public class FileManager
 
         Servlet servlet = null;
 
-        ServletDescriptor servletD = ServletDescriptor.ForBaseName(base,name);
-        if (null != servletD)
-            servlet = this.getServlet(servletD);
+        ResourceDescriptor desc = ResourceDescriptor.ForBaseName(base,name);
+        if (null != desc)
+            servlet = this.getServlet(desc);
 
         return servlet;
     }
-    public Servlet getServlet(ServletDescriptor servletD){
+    public Servlet getServlet(ResourceDescriptor desc){
 
-        String servletClassName = null;// servletD.getServletClassName();
+        String servletClassName = desc.getServletClassname();
         if (null != servletClassName){
             try {
                 Class jclass;
                 try {
-                    jclass = this.findClass(servletClassName);
+                    jclass = Class.forName(servletClassName);
                 }
                 catch (ClassNotFoundException not){
 
-                    jclass = this.define(servletD);
+                    jclass = this.define(desc);
                 }
-
-                Servlet servlet = (Servlet)jclass.newInstance();
-                servlet.init(Servlet.Config);
-                return servlet;
+                if (null != jclass){
+                    Servlet servlet = (Servlet)jclass.newInstance();
+                    servlet.init(Servlet.Config);
+                    return servlet;
+                }
+                else
+                    return null;
             }
             catch (Exception any){
                 LogRecord rec = new LogRecord(Level.SEVERE,"error");
@@ -324,16 +346,17 @@ public class FileManager
         else
             return null;
     }
-    public boolean compile(ServletDescriptor servletD)
-        throws java.io.IOException
+    public boolean compile(ResourceDescriptor desc)
+        throws java.io.IOException,
+               FileManager.CompileError
     {
-        String className = null;//servletD.getServletClassName()
-        String sourceText = null;//Unwrap(servletD.getServletSource());
+        String className = desc.getServletClassname();
+        String sourceText = gap.Strings.TextToString(desc.getServletSourceJava());
 
         if (null != className && null != sourceText){
 
             Reader in = new java.io.StringReader(sourceText); 
-            ByteArrayOutputStream err = new ByteArrayOutputStream();
+            StringWriter err = new StringWriter();
             ByteArrayOutputStream bin = new ByteArrayOutputStream();
 
             URI uri = FileManager.ToUri(className);
@@ -348,14 +371,15 @@ public class FileManager
             JavaCompiler tool  = new gap.jac.api.JavacTool();
             try {
                 gap.jac.tools.JavaCompiler.CompilationTask task =
-                    tool.getTask((new OutputStreamWriter(err,UTF8)), this, null, Options, null, units);
+                    tool.getTask(err, this, null, Options, null, units);
 
                 if (task.call()){
-                    //servletD.setServletTargetBinary(bin.toByteArray());
+                    desc.setServletClassfileJvm(new Blob(bin.toByteArray()));
+                    desc.save();
                     return true;
                 }
                 else
-                    return false;//throw new CompileError(servletD,err);
+                    throw new CompileError(className,desc,err);
             }
             finally {
                 tool.destroy();
@@ -365,8 +389,13 @@ public class FileManager
             return false;
     }
 
-    public Class define(ServletDescriptor servletD){
-        //return this.define(servletD.getServletClassName(),servletD.getServletTargetBinary());
+    public Class define(ResourceDescriptor desc){
+        String classname = desc.getServletClassname();
+        if (null != classname){
+            Blob classfile = desc.getServletClassfileJvm();
+            if (null != classfile)
+                return this.define(classname,classfile.getBytes());
+        }
         return null;
     }
     protected Class define(String className, byte[] b){
@@ -483,7 +512,7 @@ public class FileManager
     }
 
 
-    public final static TemplateDescriptor GetTemplateDescriptor(Path path){
+    public final static ResourceDescriptor GetResourceDescriptor(Path path){
 
         String base = "";
         String name = null;
@@ -500,7 +529,7 @@ public class FileManager
             name = "";
         }
 
-        return TemplateDescriptor.ForBaseName(base,name);
+        return ResourceDescriptor.ForBaseName(base,name);
     }
 
     private final static List<String> Options;

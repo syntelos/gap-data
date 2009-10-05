@@ -23,8 +23,6 @@ import gap.Request;
 import gap.Response;
 
 import gap.data.Store;
-import gap.data.ServletDescriptor;
-import gap.data.TemplateDescriptor;
 
 import hapax.Template;
 import hapax.TemplateException;
@@ -328,7 +326,6 @@ public class Servlet
     protected void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
-
         String opString = req.getParameter("op");
         String formatString = req.getParameter("format");
         if (null != opString && null != formatString){
@@ -412,34 +409,52 @@ public class Servlet
     protected void doPostCreateServlet(Request req, Response rep)
         throws ServletException, IOException
     {
-        String requestType = req.getContentType();
-        if ("application/x-www-form-urlencoded".equals(requestType)){
-            /*
-             * Form edit
-             */
+        if (this.canCreate(req)){
+            String requestType = req.getContentType();
+            if ("application/x-www-form-urlencoded".equals(requestType)){
+                /*
+                 * Form edit
+                 */
+
+                this.undefined(req,rep);
+            }
+            else if ("multipart/form-data".equals(requestType)){
+                /*
+                 * File upload
+                 */
+
+                this.undefined(req,rep);
+            }
+            else
+                this.error(req,rep,400,"Unrecognized request type.");
         }
-        else if ("multipart/form-data".equals(requestType)){
-            /*
-             * File upload
-             */
-        }
-        this.undefined(req,rep);
+        else
+            this.error(req,rep,403,"Access not granted.");
     }
     protected void doPostCreateTemplate(Request req, Response rep)
         throws ServletException, IOException
     {
-        String requestType = req.getContentType();
-        if ("application/x-www-form-urlencoded".equals(requestType)){
-            /*
-             * Form edit
-             */
+        if (this.canCreate(req)){
+            String requestType = req.getContentType();
+            if ("application/x-www-form-urlencoded".equals(requestType)){
+                /*
+                 * Form edit
+                 */
+
+                this.undefined(req,rep);
+            }
+            else if ("multipart/form-data".equals(requestType)){
+                /*
+                 * File upload
+                 */
+
+                this.undefined(req,rep);
+            }
+            else
+                this.error(req,rep,400,"Unrecognized request type.");
         }
-        else if ("multipart/form-data".equals(requestType)){
-            /*
-             * File upload
-             */
-        }
-        this.undefined(req,rep);
+        else
+            this.error(req,rep,403,"Access not granted.");
     }
     protected void doPostCreate(Request req, Response rep)
         throws ServletException, IOException
@@ -449,34 +464,52 @@ public class Servlet
     protected void doPostUpdateServlet(Request req, Response rep)
         throws ServletException, IOException
     {
-        String requestType = req.getContentType();
-        if ("application/x-www-form-urlencoded".equals(requestType)){
-            /*
-             * Form edit
-             */
+        if (this.canUpdate(req)){
+            String requestType = req.getContentType();
+            if ("application/x-www-form-urlencoded".equals(requestType)){
+                /*
+                 * Form edit
+                 */
+
+                this.undefined(req,rep);
+            }
+            else if ("multipart/form-data".equals(requestType)){
+                /*
+                 * File upload
+                 */
+
+                this.undefined(req,rep);
+            }
+            else
+                this.error(req,rep,400,"Unrecognized request type.");
         }
-        else if ("multipart/form-data".equals(requestType)){
-            /*
-             * File upload
-             */
-        }
-        this.undefined(req,rep);
+        else
+            this.error(req,rep,403,"Access not granted.");
     }
     protected void doPostUpdateTemplate(Request req, Response rep)
         throws ServletException, IOException
     {
-        String requestType = req.getContentType();
-        if ("application/x-www-form-urlencoded".equals(requestType)){
-            /*
-             * Form edit
-             */
+        if (this.canUpdate(req)){
+            String requestType = req.getContentType();
+            if ("application/x-www-form-urlencoded".equals(requestType)){
+                /*
+                 * Form edit
+                 */
+
+                this.undefined(req,rep);
+            }
+            else if ("multipart/form-data".equals(requestType)){
+                /*
+                 * File upload
+                 */
+
+                this.undefined(req,rep);
+            }
+            else
+                this.error(req,rep,400,"Unrecognized request type.");
         }
-        else if ("multipart/form-data".equals(requestType)){
-            /*
-             * File upload
-             */
-        }
-        this.undefined(req,rep);
+        else
+            this.error(req,rep,403,"Access not granted.");
     }
     protected void doPostUpdate(Request req, Response rep)
         throws ServletException, IOException
