@@ -19,7 +19,7 @@ import javax.annotation.Generated;
 @Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
 public final class {{=class_name}}
     extends gap.data.BigTable{{#implements}}
-{{#implements_it_First}}    implements {{/implements_it_First}}{{#implements_it_NotFirst}}               {{/implements_it_NotFirst}}{{=interface}}{{#implements_it_NotLast}},{{/implements_it_NotLast}}{{/implements}}
+{{#implements_it_First}}    implements {{/implements_it_First}}{{#implements_it_NotFirst}}               {{/implements_it_NotFirst}}{{=interface_class}}{{#implements_it_NotLast}},{{/implements_it_NotLast}}{{/implements}}
 {
 
     private final static long serialVersionUID = {{=class_version}};

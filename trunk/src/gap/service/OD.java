@@ -117,16 +117,6 @@ public class OD
             top.putVariable("class_version",classVersion);
             top.putVariable("class_kind", classKind);
 
-            if (cd instanceof ClassDescriptor.Implements){
-                ClassDescriptor.Implements cdi = (ClassDescriptor.Implements)cd;
-                if (cdi.hasInterfaces()){
-                    for (Object inf : cdi.getInterfaces()){
-                        TemplateDictionary ind = top.addSection("implements");
-                        ind.setVariable("interface",ToString(inf));
-                    }
-                }
-            }
-
             ClassDescriptor.Relation.Type classRelation = null;
             String classRelationParent = null;
             if (cd instanceof ClassDescriptor.Relation){
