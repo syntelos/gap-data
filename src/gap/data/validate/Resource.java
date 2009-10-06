@@ -27,7 +27,7 @@ import javax.annotation.Generated;
 /**
  * Data validation functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-05T20:55:30.580Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-06T04:21:49.552Z",comments="gap.data")
 public abstract class Resource
     extends gap.Strings
 {
@@ -41,16 +41,6 @@ public abstract class Resource
             return StringFromString(string);
           case Name:
             return StringFromString(string);
-          case Tag:
-            return CategoryFromString(string);
-          case ServletClassname:
-            return StringFromString(string);
-          case ServletSourceJava:
-            return TextFromString(string);
-          case ServletClassfileJvm:
-            return BlobFromString(string);
-          case TemplateSourceHapax:
-            return TextFromString(string);
         default:
             throw new IllegalStateException(field.name());
         }
@@ -65,16 +55,6 @@ public abstract class Resource
             return StringToString( (String)value);
           case Name:
             return StringToString( (String)value);
-          case Tag:
-            return CategoryToString( (Category)value);
-          case ServletClassname:
-            return StringToString( (String)value);
-          case ServletSourceJava:
-            return TextToString( (Text)value);
-          case ServletClassfileJvm:
-            return BlobToString( (Blob)value);
-          case TemplateSourceHapax:
-            return TextToString( (Text)value);
         default:
             throw new IllegalStateException(field.name());
         }

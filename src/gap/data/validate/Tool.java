@@ -27,7 +27,7 @@ import javax.annotation.Generated;
 /**
  * Data validation functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-05T20:55:31.157Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-06T04:21:50.123Z",comments="gap.data")
 public abstract class Tool
     extends gap.Strings
 {
@@ -40,18 +40,6 @@ public abstract class Tool
           case Name:
             return StringFromString(string);
           case NameCamel:
-            return StringFromString(string);
-          case HeadXtm:
-            return StringFromString(string);
-          case OverlayXtm:
-            return StringFromString(string);
-          case FormXtm:
-            return StringFromString(string);
-          case TitleGraphicUri:
-            return StringFromString(string);
-          case ButtonGraphicUri:
-            return StringFromString(string);
-          case ButtonOffGraphicUri:
             return StringFromString(string);
         default:
             throw new IllegalStateException(field.name());
@@ -66,18 +54,6 @@ public abstract class Tool
           case Name:
             return StringToString( (String)value);
           case NameCamel:
-            return StringToString( (String)value);
-          case HeadXtm:
-            return StringToString( (String)value);
-          case OverlayXtm:
-            return StringToString( (String)value);
-          case FormXtm:
-            return StringToString( (String)value);
-          case TitleGraphicUri:
-            return StringToString( (String)value);
-          case ButtonGraphicUri:
-            return StringToString( (String)value);
-          case ButtonOffGraphicUri:
             return StringToString( (String)value);
         default:
             throw new IllegalStateException(field.name());

@@ -1,8 +1,8 @@
 
-package oso.data.servlet;
+package gap.data.servlet;
 
 
-import oso.data.*;
+import gap.data.*;
 
 import gap.Request;
 import gap.Response;
@@ -35,14 +35,14 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-06T04:21:41.855Z",comments="oso.data")
-public class Person
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-06T04:21:48.228Z",comments="gap.data")
+public class Image
     extends gap.servlet.Site
 {
-    public final static Class<? extends BigTable> BigTableClass = oso.data.Person.class;
+    public final static Class<? extends BigTable> BigTableClass = gap.data.Image.class;
 
 
-    public Person(){
+    public Image(){
         super();
     }
 
@@ -59,7 +59,7 @@ public class Person
             String id = req.getPath(0);
             if (null != id){
 
-                oso.data.Person instance = oso.data.Person.ForId(id);
+                gap.data.Image instance = gap.data.Image.ForId(id);
 
                 if (null != instance){
 
@@ -74,13 +74,13 @@ public class Person
             else {
                 req.parameters.dictionaryInto(top);
 
-                com.google.appengine.api.datastore.Query query = oso.data.Person.CreateQueryFor();
+                com.google.appengine.api.datastore.Query query = gap.data.Image.CreateQueryFor();
 
                 com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
-                List<oso.data.Person> list = (List<oso.data.Person>)oso.data.Person.QueryN(query,page);
+                List<gap.data.Image> list = (List<gap.data.Image>)gap.data.Image.QueryN(query,page);
 
-                for (oso.data.Person instance : list){
+                for (gap.data.Image instance : list){
 
                     instance.dictionaryInto(top);
                 }
