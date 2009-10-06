@@ -8,7 +8,7 @@ child Image version 1
     *unique String id;
     *hash-unique String base;
     *hash-unique String name;
-    long lastModified;
+    Long lastModified;
     String contentType;
     Blob bytes;
 }
