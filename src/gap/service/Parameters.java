@@ -48,6 +48,10 @@ public final class Parameters
          * startIndex={startIndex}	Index into a paged collection.
          */
         public final static class Page {
+
+            public final static int Default = 20;
+
+
             public final static String Count = "count";
             public final static String StartIndex = "startIndex";
 

@@ -92,6 +92,9 @@ public abstract class AbstractListPrimitive<V>
     }
 
 
+    public void destroy(){
+        this.list = null;
+    }
     public final Key getValueClassAncestorKey(){
         return this.ancestorKey;
     }

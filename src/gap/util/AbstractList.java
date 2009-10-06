@@ -22,6 +22,7 @@ package gap.util;
 import gap.data.*;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 
 /**
@@ -30,36 +31,11 @@ import com.google.appengine.api.datastore.Query;
  * 
  * @author jdp
  */
-public abstract class AbstractList<V>
+public abstract class AbstractList<V extends BigTable>
     extends Object
     implements List<V>
 {
-    /**
-     * Short list base class.
-     */
-    public abstract static class Short<V>
-        extends AbstractList<V>
-        implements List.Short<V>
-    {
 
-        protected Short(){
-            super();
-        }
-
-    }
-    /**
-     * Long list base class. 
-     */
-    public abstract static class Long<V>
-        extends AbstractList<V>
-        implements List.Long<V>
-    {
-
-        protected Long(){
-            super();
-        }
-
-    }
     /**
      * Buffer iterator. 
      */
@@ -67,12 +43,12 @@ public abstract class AbstractList<V>
         extends Object
         implements java.util.Iterator<V>
     {
-        private final Object[] buffer;
+        private final BigTable[] buffer;
         private final int count;
         private int index;
 
 
-        public BufferIterator(Object[] buffer){
+        public BufferIterator(BigTable[] buffer){
             super();
             this.buffer = buffer;
             this.count = ((null == buffer)?(0):(buffer.length));
@@ -101,7 +77,13 @@ public abstract class AbstractList<V>
 
     protected String ancestorKeyFieldName;
 
-    protected Object[] buffer;
+    protected transient BigTable[] buffer;
+
+    protected Query query;
+
+    protected int startIndex = 0;
+
+    protected int limit = gap.service.Parameters.Special.Page.Default;
 
 
     protected AbstractList(){
@@ -118,8 +100,45 @@ public abstract class AbstractList<V>
     /**
      * Attempt buffer fill every time
      */
-    public abstract void refill();
+    public final void refill(){
+        Query query = this.getQuery();
+        if (null != query){
+            FetchOptions page = FetchOptions.Builder.withLimit(this.limit).offset(this.startIndex);
 
+            Iterable<BigTable> iterable = Store.QueryNIterable(query,page);
+            this.clearBuffer();
+            for (BigTable table: iterable){
+                this.addToBuffer(table);
+            }
+        }
+        else
+            throw new IllegalStateException("Missing query.");
+    }
+    public abstract void destroy();
+
+    public abstract BigTable getParent();
+
+    public final Query getQuery(){
+        return this.query;
+    }
+    public final int getStartIndex(){
+        return this.startIndex;
+    }
+    public final void setStartIndex(int startIndex){
+        if (0 < startIndex)
+            this.startIndex = startIndex;
+        else
+            throw new IllegalArgumentException(String.valueOf(startIndex));
+    }
+    public final int getLimit(){
+        return this.limit;
+    }
+    public final void setLimit(int limit){
+        if (0 < limit)
+            this.limit = limit;
+        else
+            throw new IllegalArgumentException(String.valueOf(limit));
+    }
     public final Key getValueClassAncestorKey(){
         return this.ancestorKey;
     }
@@ -136,6 +155,8 @@ public abstract class AbstractList<V>
     public final void setValueClassAncestorKey(Key key){
         this.ancestorKey = key;
     }
+    public abstract void setValueClassAncestorKey();
+
     public final String getValueClassAncestorKeyFieldName(){
         return this.ancestorKeyFieldName;
     }
@@ -146,7 +167,7 @@ public abstract class AbstractList<V>
         this.ancestorKeyFieldName = name;
     }
     public final int size(){
-        Object[] buffer = this.buffer;
+        BigTable[] buffer = this.buffer;
         if (null == buffer)
             return 0;
         else
@@ -164,11 +185,19 @@ public abstract class AbstractList<V>
     public boolean containsNot(V instance){
         return (-1 == this.indexInBuffer(instance));
     }
+    public V get(int index){
+        if (-1 < index){
+            BigTable[] buffer = this.buffer;
+            if (null != buffer && index < buffer.length)
+                return (V)buffer[index];
+        }
+        throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
+    }
     public AbstractList clone(){
         try {
             AbstractList clone = (AbstractList)super.clone();
             if (null != this.buffer)
-                clone.buffer = (Object[])this.buffer.clone();
+                clone.buffer = (BigTable[])this.buffer.clone();
             return clone;
         }
         catch (java.lang.CloneNotSupportedException exc){
@@ -211,30 +240,31 @@ public abstract class AbstractList<V>
     public final java.util.Iterator<V> iterator(){
         return new BufferIterator<V>(this.buffer);
     }
-    protected final List<V> addToBuffer(V instance){
+    protected final void clearBuffer(){
+        this.buffer = null;
+    }
+    protected final List<V> addToBuffer(BigTable instance){
         if (null != instance){
-            if (this.containsNot(instance)){
-                Object[] buffer = this.buffer;
-                if (null == buffer)
-                    this.buffer = new Object[]{instance};
-                else {
-                    int len = buffer.length;
-                    Object[] copier = new Object[len+1];
-                    System.arraycopy(buffer,0,copier,0,len);
-                    copier[len] = instance;
-                    this.buffer = copier;
-                }
+            BigTable[] buffer = this.buffer;
+            if (null == buffer)
+                this.buffer = new BigTable[]{instance};
+            else {
+                int len = buffer.length;
+                BigTable[] copier = new BigTable[len+1];
+                System.arraycopy(buffer,0,copier,0,len);
+                copier[len] = instance;
+                this.buffer = copier;
             }
             return this;
         }
         else
             throw new IllegalArgumentException();
     }
-    protected final int indexInBuffer(V instance){
-        Object[] buffer = this.buffer;
+    protected final int indexInBuffer(BigTable instance){
+        BigTable[] buffer = this.buffer;
         if (null != buffer){
             for (int cc = 0, count = buffer.length; cc < count; cc++){
-                Object item = buffer[cc];
+                BigTable item = buffer[cc];
                 if (instance == item || item.equals(instance))
                     return cc;
             }

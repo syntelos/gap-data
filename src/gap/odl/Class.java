@@ -83,7 +83,10 @@ import java.util.regex.Pattern;
  * /# gap odl 'class Bar'
  *  #/
  * package foo;
+ * path /barz;
+ * 
  * import java.io.*;
+ * 
  * class Bar version 2
  *   implements AnInterface
  *   implements AndAnotherInterface
@@ -102,6 +105,7 @@ import java.util.regex.Pattern;
  * /# gap odl 'class Whiz'
  *  #/
  * package gee;
+ * path /wizards;
  * 
  * child Whiz version 1
  *   parent foo.Bar
@@ -138,6 +142,8 @@ public final class Class
 
     public final Package pack;
 
+    public final Path path;
+
     public final Parent parent;
 
     public final String name, nameDecamel;
@@ -164,6 +170,7 @@ public final class Class
     {
         super();
         Package pack = null;
+        Path path = null;
         String spec = null, name = null;
         Import imp = null;
         Field field = null;
@@ -175,6 +182,8 @@ public final class Class
             try {
                 if (null == pack)
                     pack = new Package(reader);
+                else if (null == path)
+                    path = new Path(reader);
                 else if (null == name){
                     try {
                         imp = new Import(reader);
@@ -246,6 +255,8 @@ public final class Class
 
         this.parent = parent;
 
+        this.path = path;
+
         if (null != spec && null != name){
 
             if ("parent".equals(spec))
@@ -269,6 +280,12 @@ public final class Class
 
     public String getName(){
         return this.name;
+    }
+    public boolean hasPath(){
+        return true;
+    }
+    public String getPath(){
+        return this.path.getName();
     }
     public boolean hasRelation(){
         return true;

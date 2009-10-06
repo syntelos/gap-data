@@ -211,6 +211,18 @@ public final class Store
             }
             return list;
         }
+        protected static Iterable<BigTable> QueryNIterable(Query query, FetchOptions page){
+            DatastoreService ds = Get();
+            PreparedQuery stmt = ds.prepare(query);
+
+            Iterable<Entity> it;
+            if (null != page)
+                it = stmt.asIterable(page);
+            else
+                it = stmt.asIterable();
+
+            return new BigTableIterator(it);
+        }
         protected static Key QueryKey1(Query query){
             if (BigTable.IsAdmin(query.getKind())){
 
@@ -431,6 +443,9 @@ public final class Store
     }
     public static List.Primitive<BigTable> QueryN(Query q, FetchOptions p){
         return Store.P.QueryN(q,p);
+    }
+    public static Iterable<BigTable> QueryNIterable(Query q, FetchOptions p){
+        return Store.P.QueryNIterable(q,p);
     }
     public static Key QueryKey1(Query q){
         return Store.P.QueryKey1(q);
