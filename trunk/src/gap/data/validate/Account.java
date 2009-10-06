@@ -1,9 +1,9 @@
 
-package oso.data.validate;
+package gap.data.validate;
 
 
-import oso.data.*;
-import static oso.data.Person.Field.*;
+import gap.data.*;
+import static gap.data.Account.Field.*;
 
 import gap.service.Accept;
 import gap.service.Error;
@@ -27,29 +27,33 @@ import javax.annotation.Generated;
 /**
  * Data validation functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-06T04:21:43.530Z",comments="oso.data")
-public abstract class Person
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-06T04:21:50.088Z",comments="gap.data")
+public abstract class Account
     extends gap.Strings
 {
-    public final static Object FromString(oso.data.Person.Field field, String string){
+    public final static Object FromString(gap.data.Account.Field field, String string){
         switch(field){
           case Key:
             return KeyFromString(string);
           case Id:
             return StringFromString(string);
-          case LogonId:
+          case Base:
+            return StringFromString(string);
+          case Name:
             return StringFromString(string);
         default:
             throw new IllegalStateException(field.name());
         }
     }
-    public final static String ToString(oso.data.Person.Field field, Object value){
+    public final static String ToString(gap.data.Account.Field field, Object value){
         switch(field){
           case Key:
             return KeyToString( (Key)value);
           case Id:
             return StringToString( (String)value);
-          case LogonId:
+          case Base:
+            return StringToString( (String)value);
+          case Name:
             return StringToString( (String)value);
         default:
             throw new IllegalStateException(field.name());

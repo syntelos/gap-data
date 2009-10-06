@@ -15,9 +15,10 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-05T20:55:26.854Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-06T04:21:45.336Z",comments="gap.data")
 public final class Resource
     extends gap.data.BigTable
+    implements LastModified
 {
 
     private final static long serialVersionUID = 1;
@@ -30,7 +31,6 @@ public final class Resource
 
     static {
         Register(Resource.class);
-        Register(Partner.class);
     }
 
 
@@ -263,11 +263,17 @@ public final class Resource
         Id("id"),
         Base("base"),
         Name("name"),
+        LastModified("lastModified"),
         Tag("tag"),
         ServletClassname("servletClassname"),
         ServletSourceJava("servletSourceJava"),
         ServletClassfileJvm("servletClassfileJvm"),
-        TemplateSourceHapax("templateSourceHapax");
+        TemplateSourceHapax("templateSourceHapax"),
+        TemplateContentType("templateContentType"),
+        Partners("partners"),
+        Accounts("accounts"),
+        Images("images"),
+        Templates("templates");
 
 
         private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -298,6 +304,8 @@ public final class Resource
                 return instance.getBase();
             case Name:
                 return instance.getName();
+            case LastModified:
+                return instance.getLastModified();
             case Tag:
                 return instance.getTag();
             case ServletClassname:
@@ -308,6 +316,16 @@ public final class Resource
                 return instance.getServletClassfileJvm();
             case TemplateSourceHapax:
                 return instance.getTemplateSourceHapax();
+            case TemplateContentType:
+                return instance.getTemplateContentType();
+            case Partners:
+                return instance.getPartners();
+            case Accounts:
+                return instance.getAccounts();
+            case Images:
+                return instance.getImages();
+            case Templates:
+                return instance.getTemplates();
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
             }
@@ -327,6 +345,9 @@ public final class Resource
             case Name:
                 instance.setName( (String)value);
                 return;
+            case LastModified:
+                instance.setLastModified( (Long)value);
+                return;
             case Tag:
                 instance.setTag( (Category)value);
                 return;
@@ -341,6 +362,21 @@ public final class Resource
                 return;
             case TemplateSourceHapax:
                 instance.setTemplateSourceHapax( (Text)value);
+                return;
+            case TemplateContentType:
+                instance.setTemplateContentType( (String)value);
+                return;
+            case Partners:
+                instance.setPartners( (List.Long<Partner>)value);
+                return;
+            case Accounts:
+                instance.setAccounts( (List.Long<Account>)value);
+                return;
+            case Images:
+                instance.setImages( (List.Long<Image>)value);
+                return;
+            case Templates:
+                instance.setTemplates( (List.Long<Template>)value);
                 return;
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
@@ -369,11 +405,17 @@ public final class Resource
     private volatile String id;    // *unique
     private volatile String base;    // *hash-unique
     private volatile String name;    // *hash-unique
+    private volatile Long lastModified;    
     private volatile Category tag;    
     private volatile String servletClassname;    
     private volatile Text servletSourceJava;    
     private volatile Blob servletClassfileJvm;    
     private volatile Text templateSourceHapax;    
+    private volatile String templateContentType;    
+    private volatile List.Long<Partner> partners;    
+    private volatile List.Long<Account> accounts;    
+    private volatile List.Long<Image> images;    
+    private volatile List.Long<Template> templates;    
 
 
 
@@ -497,6 +539,27 @@ public final class Resource
         this.name = name;
     }
 
+    public boolean hasLastModified(){
+        return (null != this.lastModified);
+    }
+    public boolean hasNotLastModified(){
+        return (null == this.lastModified);
+    }
+    public boolean dropLastModified(){
+        if (null != this.lastModified){
+            this.lastModified = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public Long getLastModified(){
+        return this.lastModified;
+    }
+    public void setLastModified(Long lastModified){
+        this.lastModified = lastModified;
+    }
+
     public boolean hasTag(){
         return (null != this.tag);
     }
@@ -602,20 +665,117 @@ public final class Resource
         this.templateSourceHapax = templateSourceHapax;
     }
 
+    public boolean hasTemplateContentType(){
+        return (null != this.templateContentType);
+    }
+    public boolean hasNotTemplateContentType(){
+        return (null == this.templateContentType);
+    }
+    public boolean dropTemplateContentType(){
+        if (null != this.templateContentType){
+            this.templateContentType = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public String getTemplateContentType(){
+        return this.templateContentType;
+    }
+    public void setTemplateContentType(String templateContentType){
+        this.templateContentType = templateContentType;
+    }
+
+    public boolean hasPartners(){
+        return (null != this.partners);
+    }
+    public boolean hasNotPartners(){
+        return (null == this.partners);
+    }
+    public boolean dropPartners(){
+        if (null != this.partners){
+            this.partners = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public List.Long<Partner> getPartners(){
+        return this.partners;
+    }
+    public void setPartners(List.Long<Partner> partners){
+        this.partners = partners;
+    }
+
+    public boolean hasAccounts(){
+        return (null != this.accounts);
+    }
+    public boolean hasNotAccounts(){
+        return (null == this.accounts);
+    }
+    public boolean dropAccounts(){
+        if (null != this.accounts){
+            this.accounts = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public List.Long<Account> getAccounts(){
+        return this.accounts;
+    }
+    public void setAccounts(List.Long<Account> accounts){
+        this.accounts = accounts;
+    }
+
+    public boolean hasImages(){
+        return (null != this.images);
+    }
+    public boolean hasNotImages(){
+        return (null == this.images);
+    }
+    public boolean dropImages(){
+        if (null != this.images){
+            this.images = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public List.Long<Image> getImages(){
+        return this.images;
+    }
+    public void setImages(List.Long<Image> images){
+        this.images = images;
+    }
+
+    public boolean hasTemplates(){
+        return (null != this.templates);
+    }
+    public boolean hasNotTemplates(){
+        return (null == this.templates);
+    }
+    public boolean dropTemplates(){
+        if (null != this.templates){
+            this.templates = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public List.Long<Template> getTemplates(){
+        return this.templates;
+    }
+    public void setTemplates(List.Long<Template> templates){
+        this.templates = templates;
+    }
+
 
 
 
     /*
      * Data addressing supports
      */
-    public Query createQueryForPartner(){
-        Key thisKey = this.getClassFieldKeyValue();
-        if (null != thisKey)
-            return new Query(Partner.KIND,thisKey);
-        else
-            throw new IllegalArgumentException();
-    }
-
 
     /*
      * Data binding supports
