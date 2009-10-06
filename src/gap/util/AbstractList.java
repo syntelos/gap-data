@@ -25,40 +25,57 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
 /**
-
+ * Short and long list base class.  Instances are generated via {@link
+ * gap.service.OD}.
  * 
  * @author jdp
  */
-public abstract class AbstractListPrimitive<V>
+public abstract class AbstractList<V>
     extends Object
-    implements List.Primitive<V>
+    implements List<V>
 {
-    private final static long serialVersionUID = 1L;
-
     /**
-     * List implementation used by {@link Store}
+     * Short list base class.
      */
-    public final static class Any<V>
-        extends AbstractListPrimitive<V>
+    public abstract static class Short<V>
+        extends AbstractList<V>
+        implements List.Short<V>
     {
-        public Any(){
+
+        protected Short(){
             super();
         }
-    }
 
-    public final class ArrayIterator<V>
+    }
+    /**
+     * Long list base class. 
+     */
+    public abstract static class Long<V>
+        extends AbstractList<V>
+        implements List.Long<V>
+    {
+
+        protected Long(){
+            super();
+        }
+
+    }
+    /**
+     * Buffer iterator. 
+     */
+    public final class BufferIterator<V>
         extends Object
         implements java.util.Iterator<V>
     {
-        private final Object[] list;
+        private final Object[] buffer;
         private final int count;
         private int index;
 
 
-        public ArrayIterator(Object[] list){
+        public BufferIterator(Object[] buffer){
             super();
-            this.list = list;
-            this.count = ((null == list)?(0):(list.length));
+            this.buffer = buffer;
+            this.count = ((null == buffer)?(0):(buffer.length));
         }
 
         public boolean hasNext(){
@@ -67,7 +84,7 @@ public abstract class AbstractListPrimitive<V>
         public V next(){
             int index = this.index;
             if (index < this.count){
-                V next = (V)this.list[index];
+                V next = (V)this.buffer[index];
                 this.index++;
                 return next;
             }
@@ -84,13 +101,24 @@ public abstract class AbstractListPrimitive<V>
 
     protected String ancestorKeyFieldName;
 
-    protected Object[] list;
+    protected Object[] buffer;
 
 
-    protected AbstractListPrimitive(){
+    protected AbstractList(){
         super();
     }
 
+    /**
+     * Attempt buffer fill when empty
+     */
+    public final void fill(){
+        if (this.isEmpty())
+            this.refill();
+    }
+    /**
+     * Attempt buffer fill every time
+     */
+    public abstract void refill();
 
     public final Key getValueClassAncestorKey(){
         return this.ancestorKey;
@@ -118,11 +146,11 @@ public abstract class AbstractListPrimitive<V>
         this.ancestorKeyFieldName = name;
     }
     public final int size(){
-        Object[] list = this.list;
-        if (null == list)
+        Object[] buffer = this.buffer;
+        if (null == buffer)
             return 0;
         else
-            return list.length;
+            return buffer.length;
     }
     public final boolean isEmpty(){
         return (0 == this.size());
@@ -130,71 +158,17 @@ public abstract class AbstractListPrimitive<V>
     public final boolean isNotEmpty(){
         return (0 != this.size());
     }
-    public final boolean contains(V instance){
-        return (-1 != this.indexOf(instance));
+    public boolean contains(V instance){
+        return (-1 != this.indexInBuffer(instance));
     }
-    public final boolean containsNot(V instance){
-        return (-1 == this.indexOf(instance));
+    public boolean containsNot(V instance){
+        return (-1 == this.indexInBuffer(instance));
     }
-    public final List<V> add(V instance){
-        if (null != instance){
-            if (this.containsNot(instance)){
-                Object[] list = this.list;
-                if (null == list)
-                    this.list = new Object[]{instance};
-                else {
-                    int len = list.length;
-                    Object[] copier = new Object[len+1];
-                    System.arraycopy(list,0,copier,0,len);
-                    copier[len] = instance;
-                    this.list = copier;
-                }
-            }
-            return this;
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final List<V> remove(V instance){
-        int index = this.indexOf(instance);
-        if (-1 != index){
-            Object[] list = this.list;
-            int len = list.length;
-            int term = (len-1);
-            Object[] copier = new Object[term];
-            if (0 == index){
-                System.arraycopy(list,1,copier,0,term);
-                this.list = copier;
-            }
-            else if (term == index){
-                System.arraycopy(list,0,copier,0,term);
-                this.list = copier;
-            }
-            else {
-                System.arraycopy(list,0,copier,0,index);
-                System.arraycopy(list,(index+1),copier,index,term-index);
-                this.list = copier;
-            }
-        }
-        return this;
-    }
-    public final V get(int index){
-        if (-1 < index){
-            Object[] list = this.list;
-            if (null != list && index < list.length){
-                return (V)list[index];
-            }
-        }
-        throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
-    }
-    public final java.util.Iterator<V> iterator(){
-        return new ArrayIterator<V>(this.list);
-    }
-    public AbstractListPrimitive clone(){
+    public AbstractList clone(){
         try {
-            AbstractListPrimitive clone = (AbstractListPrimitive)super.clone();
-            if (null != this.list)
-                clone.list = (Object[])this.list.clone();
+            AbstractList clone = (AbstractList)super.clone();
+            if (null != this.buffer)
+                clone.buffer = (Object[])this.buffer.clone();
             return clone;
         }
         catch (java.lang.CloneNotSupportedException exc){
@@ -234,11 +208,33 @@ public abstract class AbstractListPrimitive<V>
                 return Compares.NoIntersection;
         }
     }
-    protected final int indexOf(V instance){
-        Object[] list = this.list;
-        if (null != list){
-            for (int cc = 0, count = list.length; cc < count; cc++){
-                Object item = list[cc];
+    public final java.util.Iterator<V> iterator(){
+        return new BufferIterator<V>(this.buffer);
+    }
+    protected final List<V> addToBuffer(V instance){
+        if (null != instance){
+            if (this.containsNot(instance)){
+                Object[] buffer = this.buffer;
+                if (null == buffer)
+                    this.buffer = new Object[]{instance};
+                else {
+                    int len = buffer.length;
+                    Object[] copier = new Object[len+1];
+                    System.arraycopy(buffer,0,copier,0,len);
+                    copier[len] = instance;
+                    this.buffer = copier;
+                }
+            }
+            return this;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    protected final int indexInBuffer(V instance){
+        Object[] buffer = this.buffer;
+        if (null != buffer){
+            for (int cc = 0, count = buffer.length; cc < count; cc++){
+                Object item = buffer[cc];
                 if (instance == item || item.equals(instance))
                     return cc;
             }

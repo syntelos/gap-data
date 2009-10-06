@@ -30,15 +30,15 @@ import gap.jac.tools.JavaFileObject.Kind;
  * 
  * @author jdp
  */
-public final class JavaSourceInput
+public final class Input
     extends gap.jac.tools.SimpleJavaFileObject
 {
 
     private Reader in;
 
 
-    public JavaSourceInput(URI uri, Reader in) {
-        super(uri, Kind.SOURCE);
+    public Input(URI uri, Kind kind, Reader in) {
+        super(uri, kind);
         this.in = in;
     }
 

@@ -19,7 +19,10 @@
  */
 package gap.odl;
 
+import static gap.data.List.Type.*;
 import gap.service.OD;
+import gap.service.od.FieldDescriptor;
+import gap.service.od.ImportDescriptor;
 import gap.service.od.ODStateException;
 
 import hapax.Template;
@@ -49,77 +52,160 @@ public final class Main
     extends java.lang.Object
 {
     /**
-     * Run on files
+     * Generate bean, validate, servlet and list classes.
      */
-    public final static void Process(File xtm, File odl, PrintWriter out)
+    public final static List<File> ProcessFiles(File beanXtm, File odl, File beanFile)
         throws IOException, TemplateException, Syntax, ODStateException
     {
+        List<File> products = new java.util.ArrayList<File>();
+
         Reader odlReader = new Reader(odl);
         Class odlClass = new Class(odlReader);
+        Package pack = odlClass.pack;
+        List<ImportDescriptor> imports = odlClass.imports;
 
-        OD.GenerateSource(xtm, odlClass.pack, odlClass.imports, odlClass, out);
+        File outDir = beanFile.getParentFile();
+        File odlDir = beanXtm.getParentFile();
+
+        FileWriter out = new FileWriter(beanFile);
+        /*
+         * Bean
+         */
+        try {
+            OD.GenerateBeanSource(beanXtm, pack, imports, odlClass, (new PrintWriter(out)));
+            products.add(beanFile);
+        }
+        finally {
+            out.close();
+        }
+
+        String parentClassName = OD.ClassName(odlClass);
+        /*
+         * Validate
+         */
+        File validateXtm = new File(odlDir,"bean-validate.xtm");
+        File validateFile = new File(outDir,"validate/"+parentClassName+".java");
+        out = new FileWriter(validateFile);
+        try {
+            OD.GenerateBeanSource(validateXtm, pack, imports, odlClass, (new PrintWriter(out)));
+            products.add(validateFile);
+        }
+        finally {
+            out.close();
+        }
+        /*
+         * Servlet
+         */
+        File servletXtm = new File(odlDir,"bean-servlet.xtm");
+        File servletFile = new File(outDir,"servlet/"+parentClassName+".java");
+        out = new FileWriter(servletFile);
+        try {
+            OD.GenerateBeanSource(servletXtm, pack, imports, odlClass, (new PrintWriter(out)));
+            products.add(servletFile);
+        }
+        finally {
+            out.close();
+        }
+        /*
+         * Lists
+         */
+        List<FieldDescriptor> fieldsOfList = OD.FieldsOfTypeList(pack, odlClass, imports);
+        if (!fieldsOfList.isEmpty()){
+            File listShortXtm = new File(odlDir,"list-short.xtm");
+            File listLongXtm = new File(odlDir,"list-long.xtm");
+
+            for (FieldDescriptor field: fieldsOfList){
+                String typeName = OD.ToString(field.getType());
+                gap.data.List.Type listType = gap.data.List.Type.For(typeName);
+                if (null != listType){
+                    switch(listType){
+                    case ListPrimitive:
+                        break;
+                    case ListShort:
+                        if (listShortXtm.isFile()){
+                            String childClassName = OD.ChildClassName(field);
+                            String listClassName = OD.ListShortClassName(parentClassName,childClassName);
+                            if (null != listClassName){
+                                File listFile = new File(outDir,listClassName+".java");
+                                out = new FileWriter(listFile);
+                                try {
+                                    OD.GenerateListSource(listShortXtm, pack, imports, odlClass, field,
+                                                          parentClassName, childClassName, listClassName, listType,
+                                                          (new PrintWriter(out)));
+                                    products.add(listFile);
+                                }
+                                finally {
+                                    out.close();
+                                }
+                            }
+                        }
+                        break;
+                    case ListLong:
+                        if (listLongXtm.isFile()){
+                            String childClassName = OD.ChildClassName(field);
+                            String listClassName = OD.ListLongClassName(parentClassName,childClassName);
+                            if (null != listClassName){
+                                File listFile = new File(outDir,listClassName+".java");
+                                out = new FileWriter(listFile);
+                                try {
+                                    OD.GenerateListSource(listLongXtm, pack, imports, odlClass, field,
+                                                          parentClassName, childClassName, listClassName, listType, 
+                                                          (new PrintWriter(out)));
+                                    products.add(listFile);
+                                }
+                                finally {
+                                    out.close();
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            }
+        }
+        return products;
     }
     /**
      * Run on directories
      * @return List of target products
      */
-    public final static List<File> Process(File xtmFile, File odlDir, File outDir, String outFext)
+    public final static List<File> ProcessDirectories(File xtmFile, File odlDir, File outDir)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         List<File> products = new java.util.ArrayList<File>();
-        String xtmName = xtmFile.getName();
-        if (xtmName.endsWith(".xtm")){
-            if (null == outFext)
-                outFext = xtmName.substring(0,xtmName.length()-4);
 
-            String[] odlList = odlDir.list();
-            for (String odlName : odlList){
-                if (odlName.endsWith(".odl")){
-                    File odlFile = new File(odlDir,odlName);
-                    File outFile = new File(outDir,odlName.substring(0,odlName.length()-3)+outFext);
+        String[] odlList = odlDir.list();
+        for (String odlName : odlList){
+            if (odlName.endsWith(".odl")){
+                File odlFile = new File(odlDir,odlName);
+                File outFile = new File(outDir,odlName.substring(0,odlName.length()-4)+".java");
+                try {
+                    List<File> files = Main.ProcessFiles(xtmFile,odlFile,outFile);
 
-                    FileWriter out = new FileWriter(outFile);
-                    try {
-                        PrintWriter outPrinter = new PrintWriter(out);
-                    
-                        Main.Process(xtmFile,odlFile,outPrinter);
-
-                        products.add(outFile);
-                    }
-                    catch (ODStateException ODStateException){
-                        throw new ODStateException("In '"+odlFile+"'",ODStateException);
-                    }
-                    finally {
-                        out.close();
-                    }
+                    products.addAll(files);
+                }
+                catch (ODStateException ODStateException){
+                    throw new ODStateException("In '"+odlFile+"'",ODStateException);
                 }
             }
-            return products;
         }
-        else
-            throw new IllegalArgumentException(xtmName);
+        return products;
     }
 
     public final static void usage(java.io.PrintStream out){
         out.println("Usage");
         out.println();
-        out.println("  gap.odl.Main template.xtm class.odl file.out");
+        out.println("  gap.odl.Main odl/bean.xtm odl/pkg/Class.odl src/pkg/Class.java");
+        out.println();
+        out.println("  gap.odl.Main odl/bean.xtm odl/package src/package");
         out.println();
         out.println("Description");
         out.println();
-        out.println("     Generate 'file.out' from 'class.odl' via 'template.xtm'.");
-        out.println();
-        out.println("Usage");
-        out.println();
-        out.println("  gap.odl.Main lang.xtm odl/source/dir out/target/dir [outFext]");
-        out.println();
-        out.println("Description");
-        out.println();
-        out.println("     For the template named with the target filename extension,");
-        out.println("     generate a collection of targets given a collection of sources.");
-        out.println("     The template file must have the '.xtm' filename extension.");
-        out.println();
-        out.println("     Optionally define the output filename extension.");
+        out.println("     This process is for generating java output in the Gap ODL");
+        out.println("     framework.  It will generate bean, validation, servlet and list");
+        out.println("     types for the input ODL class or package.");
         out.println();
     }
 
@@ -132,14 +218,12 @@ public final class Main
             File outFile = new File(argv[2]);
             if (xtmFile.isFile() && odlFile.isFile()){
                 try {
-                    FileWriter out = new FileWriter(outFile);
-                    try {
-                        PrintWriter outPrinter = new PrintWriter(out);
-                    
-                        Main.Process(xtmFile,odlFile,outPrinter);
-                    }
-                    finally {
-                        out.close();
+                    System.out.println("Template: "+xtmFile.getPath());
+                    System.out.println("Source: "+odlFile.getPath());
+                    System.out.println("Target: "+outFile.getPath());
+                    List<File> products = Main.ProcessFiles(xtmFile,odlFile,outFile);
+                    for (File product : products){
+                        System.out.println("Product: "+product.getPath());
                     }
                     System.exit(0);
                     return;
@@ -159,15 +243,11 @@ public final class Main
                     }
                 }
 
-                String outFext = null;
-                if (3 < argv.length)
-                    outFext = argv[3];
-
                 try {
                     System.out.println("Template: "+xtmFile.getPath());
                     System.out.println("Source: "+odlFile.getPath());
                     System.out.println("Target: "+outFile.getPath());
-                    List<File> products = Main.Process(xtmFile,odlFile,outFile,outFext);
+                    List<File> products = Main.ProcessDirectories(xtmFile,odlFile,outFile);
                     for (File product : products){
                         System.out.println("Product: "+product.getPath());
                     }

@@ -56,8 +56,8 @@ public class OD
      * @exception java.io.IOException Error writing to output.
      * @exception hapax.TemplateException Error processing template.
      */
-    public final static void GenerateSource(File xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
-                                              ClassDescriptor cd, PrintWriter out)
+    public final static void GenerateBeanSource(File xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
+                                                ClassDescriptor cd, PrintWriter out)
         throws gap.service.od.ODStateException, java.io.IOException, hapax.TemplateException
     {
         if (null != xtm && null != pkg && null != imports && null != cd && null != out){
@@ -65,17 +65,9 @@ public class OD
             Template template = loader.getTemplate(xtm.getPath());
             TemplateDictionary top = new TemplateDictionary();
 
-            String packageName = pkg.getName();
-            if (null == packageName || 0 == packageName.length())
-                throw new ODStateException(pkg,"The object data model requires a package name.");
+            String packageName = PackageName(pkg);
 
-            packageName = Decamel(packageName);
-
-            String className = cd.getName();
-            if (null == className || 0 == className.length())
-                throw new ODStateException(cd,"The object data model requires a class name.");
-            else
-                className = Camel(className);
+            String className = ClassName(cd);
 
             String classNameDecamel = Decamel(className);
 
@@ -527,6 +519,85 @@ public class OD
             throw new IllegalArgumentException();
     }
 
+    public final static void GenerateListSource(File xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
+                                                ClassDescriptor cd, FieldDescriptor field, 
+                                                String parentClassName, String childClassName, 
+                                                String listClassName, gap.data.List.Type listType, 
+                                                PrintWriter out)
+        throws gap.service.od.ODStateException, java.io.IOException, hapax.TemplateException
+    {
+        if (null != xtm && null != pkg && null != imports && null != cd && null != field
+            && null != parentClassName && null != childClassName && null != listClassName
+            && null != listType && null != out)
+        {
+            TemplateCache loader = new TemplateCache(xtm.getParent());
+            Template template = loader.getTemplate(xtm.getPath());
+            TemplateDictionary top = new TemplateDictionary();
+
+            String packageName = PackageName(pkg);
+
+            String classVersion = ClassVersion(cd);
+
+            /*
+             * Tool globals
+             */
+            top.putVariable("odl_gen_class","gap.service.OD");
+            top.putVariable("odl_gen_xtm_src",xtm.getPath());
+            top.putVariable("odl_gen_odl_src",packageName);
+            top.putVariable("odl_gen_timestamp",(gap.Date.FormatISO8601(System.currentTimeMillis())));
+
+            /*
+             * General 
+             */
+            {
+                TemplateDictionary primitives = top.addSection("primitives");
+                for (gap.Primitive type : gap.Primitive.values()){
+                    TemplateDictionary primitive = primitives.addSection("primitives");
+                    String type_name = type.name();
+                    primitive.setVariable("type_name",type_name);
+                    primitive.setVariable("type_nameCamel",type_name);
+                    primitive.setVariable("type_nameDecamel",Decamel(type_name));
+                    primitive.addSection(type_name);
+                }
+            }
+
+            /*
+             * Class globals
+             */
+            top.setVariable("package_name",packageName);
+            top.putVariable("class_version",classVersion);
+            top.setVariable("parent_class_name",parentClassName);
+            top.setVariable("child_class_name",childClassName);
+            top.setVariable("list_class_name",listClassName);
+
+            /*
+             * Run template
+             */
+            try {
+                template.render(top,out); 
+            }
+            catch (TemplateException exc){
+                throw new TemplateException("In "+xtm.getPath(),exc);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static List<FieldDescriptor> FieldsOfTypeList(PackageDescriptor pkg, ClassDescriptor cd, List<ImportDescriptor> imports){
+        List<FieldDescriptor> re = new java.util.ArrayList<FieldDescriptor>();
+        if (cd.hasFields()){
+            String packageName = OD.PackageName(pkg);
+            for (FieldDescriptor field : cd.getFields()){
+                String typeName = OD.ToString(field.getType());
+                Class typeClass = OD.FieldClass(packageName,typeName,imports);
+                if (IsTypeClassList(typeClass)){
+                    re.add(field);
+                }
+            }
+        }
+        return re;
+    }
+
     public final static String Camel(String string){
         if (null != string){
             int strlen = string.length();
@@ -632,6 +703,11 @@ public class OD
         }
         return new String[0];
     }
+    public final static Class FieldClass(PackageDescriptor pkg, FieldDescriptor field, List<ImportDescriptor> imports){
+        String packageName = OD.PackageName(pkg);
+        String typeName = OD.ToString(field.getType());
+        return OD.FieldClass(packageName,typeName,imports);
+    }
     public final static Class FieldClass(String pkg, String fieldType, List<ImportDescriptor> imports){
         String cleanTypeName = CleanTypeName(fieldType);
         gap.Primitive primitive = gap.Primitive.For(cleanTypeName);
@@ -672,6 +748,14 @@ public class OD
                 }
             }
         }
+    }
+    public final static String ChildClassName(FieldDescriptor field){
+        String typeName = OD.ToString(field.getType());
+        String[] parameters = FieldTypeParameters(typeName);
+        if (null != parameters && 1 == parameters.length)
+            return parameters[0];
+        else
+            return null;
     }
     public final static String[] FieldTypeParameters(String typeName){
         int start = typeName.indexOf('<');
@@ -802,7 +886,7 @@ public class OD
     }
     public final static boolean IsTypeClassList(java.lang.Class fieldType){
         if (null != fieldType)
-            return (gap.data.List.class.equals(fieldType));
+            return (gap.data.List.class.isAssignableFrom(fieldType));
         else
             return false;
     }
@@ -836,21 +920,21 @@ public class OD
         else
             return false;
     }
-    final static String CleanTypeName(String name){
+    public final static String CleanTypeName(String name){
         int idx = name.indexOf('<');
         if (-1 != idx)
             return name.substring(0,idx);
         else
             return name;
     }
-    final static String CleanCleanTypeName(String name){
+    public final static String CleanCleanTypeName(String name){
         int idx = name.indexOf('.');
         if (-1 != idx)
             return name.substring(0,idx);
         else
             return name;
     }
-    final static Class ClassFor(String cleanTypeName, ImportDescriptor imp){
+    private final static Class ClassFor(String cleanTypeName, ImportDescriptor imp){
         if (imp.hasPackageSpec()){
             String packageSpec = imp.getPackageSpec();
             if (packageSpec.endsWith(".*")){
@@ -889,5 +973,45 @@ public class OD
             return ((HasName)object).getName();
         else 
             return object.toString();
+    }
+    public final static String PackageName(PackageDescriptor pkg)
+        throws ODStateException
+    {
+        String packageName = pkg.getName();
+        if (null == packageName || 0 == packageName.length())
+            throw new ODStateException(pkg,"The object data model requires a package name.");
+
+        return Decamel(packageName);
+    }
+    public final static String ClassName(ClassDescriptor cd)
+        throws ODStateException
+    {
+        String className = cd.getName();
+        if (null == className || 0 == className.length())
+            throw new ODStateException(cd,"The object data model requires a class name.");
+        else
+            return Camel(className);
+    }
+    public final static String ListShortClassName(ClassDescriptor cd, FieldDescriptor fd){
+        String parentClassName = ClassName(cd);
+        String childClassName = ChildClassName(fd);
+        return ListShortClassName(parentClassName,childClassName);
+    }
+    public final static String ListShortClassName(String parentClassName, String childClassName){
+        if (null != parentClassName && null != childClassName)
+            return "ListShort"+parentClassName+childClassName;
+        else
+            return null;
+    }
+    public final static String ListLongClassName(ClassDescriptor cd, FieldDescriptor fd){
+        String parentClassName = ClassName(cd);
+        String childClassName = ChildClassName(fd);
+        return ListLongClassName(parentClassName,childClassName);
+    }
+    public final static String ListLongClassName(String parentClassName, String childClassName){
+        if (null != parentClassName && null != childClassName)
+            return "ListLong"+parentClassName+childClassName;
+        else
+            return null;
     }
 }

@@ -28,7 +28,7 @@ import gap.jac.tools.JavaFileObject.Kind;
  * 
  * @author jdp
  */
-public final class JavaClassOutput
+public final class Output
     extends gap.jac.tools.SimpleJavaFileObject
 {
 
@@ -39,11 +39,11 @@ public final class JavaClassOutput
     private boolean opened;
 
     
-    public JavaClassOutput(URI uri){
-        super(uri, Kind.CLASS);
+    public Output(URI uri, Kind kind){
+        super(uri, kind);
     }
-    public JavaClassOutput(URI uri, OutputStream out){
-        super(uri, Kind.CLASS);
+    public Output(URI uri, Kind kind, OutputStream out){
+        super(uri, kind);
         this.out = out;
     }
 
@@ -68,7 +68,7 @@ public final class JavaClassOutput
 
                 public void close() throws IOException {
 
-                    JavaClassOutput.this.buffer = this.toByteArray();
+                    Output.this.buffer = this.toByteArray();
                 }
             };
         }
