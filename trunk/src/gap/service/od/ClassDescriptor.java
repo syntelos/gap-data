@@ -118,6 +118,12 @@ public interface ClassDescriptor
     public String getName();
 
     /**
+     * The collection path root, e.g., "/people".
+     */
+    public boolean hasPath();
+    public String getPath();
+
+    /**
      * Instance fields of the data bean class.
      */
     public boolean hasFields();

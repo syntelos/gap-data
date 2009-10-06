@@ -102,10 +102,6 @@ public interface List<V>
         extends List<V>, Collection.ShortC<V>
     {
         public V get(int index);
-
-        public List<V> add(V instance);
-
-        public List<V> remove(V instance);
     }
 
     public interface Long<V>

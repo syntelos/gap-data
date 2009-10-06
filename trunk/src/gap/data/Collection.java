@@ -91,7 +91,7 @@ public interface Collection<V>
 
         public int getStartIndex();
 
-        public int getCount();
+        public int getLimit();
     }
 
 
@@ -112,5 +112,7 @@ public interface Collection<V>
     public boolean isEmpty();
 
     public boolean isNotEmpty();
+
+    public void destroy();
 
 }

@@ -767,7 +767,7 @@ public class Servlet
         FileManager.Exit();
     }
     protected Parameters createParameters(HttpServletRequest req){
-        return new Parameters(req,20,null);
+        return new Parameters(req,Parameters.Special.Page.Default,null);
     }
     /**
      * Must not throw an exception.  May only return a null value when

@@ -75,6 +75,8 @@ public class OD
 
             String classKind = ClassKind(cd);
 
+            String classPath = ClassPath(cd);
+
             String defaultSortBy = null;
 
             /*
@@ -108,6 +110,7 @@ public class OD
             top.putVariable("class_nameDecamel", classNameDecamel);
             top.putVariable("class_version",classVersion);
             top.putVariable("class_kind", classKind);
+            top.putVariable("class_path", classPath);
 
             ClassDescriptor.Relation.Type classRelation = null;
             String classRelationParent = null;
@@ -396,23 +399,61 @@ public class OD
                     }
                     else if (IsFieldRelation(field)){
 
-                        if (null != fieldTypeClass && IsNotTypeClassBigTable(fieldTypeClass))
-                            throw new ODStateException(field,"Relation field '"+fieldName+"' is not a subclass of 'gap.data.BigTable'.");
-                        else {
-                            TemplateDictionary dataField = top.addSection("rfield");
+                        TemplateDictionary dataField = top.addSection("rfield");
 
-                            dataField.putVariable("field_name",fieldName);
-                            dataField.putVariable("field_nameCamel",fieldNameCamel);
-                            dataField.putVariable("field_class",fieldType);
-                            dataField.putVariable("field_classClean",fieldTypeClean);
-                            dataField.putVariable("field_classCleanClean",fieldTypeCleanClean);
+                        if (IsTypeClassKey(fieldTypeClass)){
+
+                            dataField.addSection("field_is_not_unique");
+                            dataField.addSection("field_is_not_hash_unique");
+                            dataField.addSection("field_is_not_map");
+                            dataField.addSection("field_is_not_list");
+                            dataField.addSection("field_is_not_collection");
+
+                            TemplateDictionary field_is = dataField.addSection("field_is_key");
+
+                            if (null == key){
+                                key = field;
+
+                                top.putVariable("field_key_name",fieldName);
+                                top.putVariable("field_key_nameCamel",fieldNameCamel);
+                                top.putVariable("field_key_class",fieldType);
+                                top.putVariable("field_key_classClean",fieldTypeClean);
+                            }
                         }
+                        else if (null != fieldTypeClass && IsNotTypeClassBigTable(fieldTypeClass))
+                            throw new ODStateException(field,"Relation field '"+fieldName+"' is not a subclass of 'gap.data.BigTable'.");
+
+                        dataField.putVariable("field_name",fieldName);
+                        dataField.putVariable("field_nameCamel",fieldNameCamel);
+                        dataField.putVariable("field_class",fieldType);
+                        dataField.putVariable("field_classClean",fieldTypeClean);
+                        dataField.putVariable("field_classCleanClean",fieldTypeCleanClean);
                     }
                     else {
                         TemplateDictionary dataField = top.addSection("tfield");
                         {
                             TemplateDictionary field_is = dataField.addSection("field_is_transient");
                             field_is.putVariable("data_model","*transient");
+                        }
+
+                        if (IsTypeClassKey(fieldTypeClass)){
+
+                            dataField.addSection("field_is_not_unique");
+                            dataField.addSection("field_is_not_hash_unique");
+                            dataField.addSection("field_is_not_map");
+                            dataField.addSection("field_is_not_list");
+                            dataField.addSection("field_is_not_collection");
+
+                            TemplateDictionary field_is = dataField.addSection("field_is_key");
+
+                            if (null == key){
+                                key = field;
+
+                                top.putVariable("field_key_name",fieldName);
+                                top.putVariable("field_key_nameCamel",fieldNameCamel);
+                                top.putVariable("field_key_class",fieldType);
+                                top.putVariable("field_key_classClean",fieldTypeClean);
+                            }
                         }
 
                         dataField.putVariable("field_name",fieldName);
@@ -520,13 +561,13 @@ public class OD
     }
 
     public final static void GenerateListSource(File xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
-                                                ClassDescriptor cd, FieldDescriptor field, 
+                                                ClassDescriptor parent, FieldDescriptor field, 
                                                 String parentClassName, String childClassName, 
                                                 String listClassName, gap.data.List.Type listType, 
                                                 PrintWriter out)
         throws gap.service.od.ODStateException, java.io.IOException, hapax.TemplateException
     {
-        if (null != xtm && null != pkg && null != imports && null != cd && null != field
+        if (null != xtm && null != pkg && null != imports && null != parent && null != field
             && null != parentClassName && null != childClassName && null != listClassName
             && null != listType && null != out)
         {
@@ -536,7 +577,13 @@ public class OD
 
             String packageName = PackageName(pkg);
 
-            String classVersion = ClassVersion(cd);
+            String parentClassVersion = ClassVersion(parent);
+
+            String parentClassKind = ClassKind(parent);
+
+            String parentClassPath = ClassPath(parent);
+
+            FieldDescriptor parentKeyField = KeyField(packageName,parent,imports);
 
             /*
              * Tool globals
@@ -565,8 +612,11 @@ public class OD
              * Class globals
              */
             top.setVariable("package_name",packageName);
-            top.putVariable("class_version",classVersion);
+            top.putVariable("parent_class_version",parentClassVersion);
             top.setVariable("parent_class_name",parentClassName);
+            top.setVariable("parent_class_kind",parentClassKind);
+            top.setVariable("parent_class_path",parentClassPath);
+            top.setVariable("parent_keyfield_name",parentKeyField.getName());
             top.setVariable("child_class_name",childClassName);
             top.setVariable("list_class_name",listClassName);
 
@@ -651,6 +701,12 @@ public class OD
             }
         }
         return cd.getName();
+    }
+    public final static String ClassPath(ClassDescriptor cd){
+        if (cd.hasPath())
+            return cd.getPath();
+        else
+            throw new ODStateException(cd,"OD Model requires 'path' field of class.");
     }
     public final static String ClassSortBy(ClassDescriptor cd){
         if (cd instanceof ClassDescriptor.SortBy){
@@ -1013,5 +1069,17 @@ public class OD
             return "ListLong"+parentClassName+childClassName;
         else
             return null;
+    }
+    public final static FieldDescriptor KeyField(String packageName, ClassDescriptor cd, List<ImportDescriptor> imports){
+        if (cd.hasFields()){
+            for (FieldDescriptor field : cd.getFields()){
+                String fieldType = ToString(field.getType());
+                Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
+                if (IsTypeClassKey(fieldTypeClass)){
+                    return field;
+                }
+            }
+        }
+        return null;
     }
 }
