@@ -1,6 +1,6 @@
 <project name="build-odl">
 
-  <macrodef name="odl-write-oso-data">
+  <macrodef name="odl-write">
     <attribute name="template" default="odl/bean.xtm"/>
     <attribute name="src" default="odl/oso/data"/>
     <attribute name="tgt" default="src/oso/data"/>
@@ -10,82 +10,6 @@
         <arg value="@{template}"/>
         <arg value="@{src}"/>
         <arg value="@{tgt}"/>
-        <arg value="java"/>
-      </java>
-    </sequential>
-  </macrodef>
-
-  <macrodef name="odl-write-oso-data-servlet">
-    <attribute name="template" default="odl/bean-servlet.xtm"/>
-    <attribute name="src" default="odl/oso/data"/>
-    <attribute name="tgt" default="src/oso/data/servlet"/>
-    <attribute name="classpath.id"/>
-    <sequential>
-      <java classname="gap.odl.Main" classpathref="@{classpath.id}" failonerror="true" fork="true">
-        <arg value="@{template}"/>
-        <arg value="@{src}"/>
-        <arg value="@{tgt}"/>
-        <arg value="java"/>
-      </java>
-    </sequential>
-  </macrodef>
-
-  <macrodef name="odl-write-oso-data-validate">
-    <attribute name="template" default="odl/bean-validate.xtm"/>
-    <attribute name="src" default="odl/oso/data"/>
-    <attribute name="tgt" default="src/oso/data/validate"/>
-    <attribute name="classpath.id"/>
-    <sequential>
-      <java classname="gap.odl.Main" classpathref="@{classpath.id}" failonerror="true" fork="true">
-        <arg value="@{template}"/>
-        <arg value="@{src}"/>
-        <arg value="@{tgt}"/>
-        <arg value="java"/>
-      </java>
-    </sequential>
-  </macrodef>
-
-  <macrodef name="odl-write-gap-data">
-    <attribute name="template" default="odl/bean.xtm"/>
-    <attribute name="src" default="odl/gap/data"/>
-    <attribute name="tgt" default="src/gap/data"/>
-    <attribute name="classpath.id"/>
-    <sequential>
-      <java classname="gap.odl.Main" classpathref="@{classpath.id}" failonerror="true" fork="true">
-        <arg value="@{template}"/>
-        <arg value="@{src}"/>
-        <arg value="@{tgt}"/>
-        <arg value="java"/>
-      </java>
-    </sequential>
-  </macrodef>
-
-  <macrodef name="odl-write-gap-data-servlet">
-    <attribute name="template" default="odl/bean-servlet.xtm"/>
-    <attribute name="src" default="odl/gap/data"/>
-    <attribute name="tgt" default="src/gap/data/servlet"/>
-    <attribute name="classpath.id"/>
-    <sequential>
-      <java classname="gap.odl.Main" classpathref="@{classpath.id}" failonerror="true" fork="true">
-        <arg value="@{template}"/>
-        <arg value="@{src}"/>
-        <arg value="@{tgt}"/>
-        <arg value="java"/>
-      </java>
-    </sequential>
-  </macrodef>
-
-  <macrodef name="odl-write-gap-data-validate">
-    <attribute name="template" default="odl/bean-validate.xtm"/>
-    <attribute name="src" default="odl/gap/data"/>
-    <attribute name="tgt" default="src/gap/data/validate"/>
-    <attribute name="classpath.id"/>
-    <sequential>
-      <java classname="gap.odl.Main" classpathref="@{classpath.id}" failonerror="true" fork="true">
-        <arg value="@{template}"/>
-        <arg value="@{src}"/>
-        <arg value="@{tgt}"/>
-        <arg value="java"/>
       </java>
     </sequential>
   </macrodef>

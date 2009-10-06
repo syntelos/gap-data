@@ -212,17 +212,9 @@
 
   <target name="odl" description="Generate 'src/pkg/*.java' files from 'odl/pkg/*.odl' files.  Requires prequisite plain 'ant' run.">
 
-    <odl-write-oso-data classpath.id="lib.path"/>
+    <odl-write src="odl/oso/data" tgt="src/oso/data" classpath.id="lib.path"/>
 
-    <odl-write-oso-data-servlet classpath.id="lib.path"/>
-
-    <odl-write-oso-data-validate classpath.id="lib.path"/>
-
-    <odl-write-gap-data classpath.id="lib.path"/>
-
-    <odl-write-gap-data-servlet classpath.id="lib.path"/>
-
-    <odl-write-gap-data-validate classpath.id="lib.path"/>
+    <odl-write src="odl/gap/data" tgt="src/gap/data" classpath.id="lib.path"/>
 
   </target>
 

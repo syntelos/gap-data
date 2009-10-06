@@ -26,6 +26,10 @@ import com.google.appengine.api.datastore.Query;
  * A list has features of a set, it should never contain an element
  * twice.
  * 
+ * Short and long lists are defined by parent (containing) class and
+ * key, list type, and child class (list class parameter type).  A
+ * parent or containing class cannot have two lists of the same class.
+ * 
  * @author jdp
  */
 public interface List<V>
@@ -69,6 +73,7 @@ public interface List<V>
             }
         }
         public final static List.Type For(String name){
+            name = gap.service.OD.CleanTypeName(name);
             List.Type type = DotNameMap.get(name);
             if (null != type)
                 return type;
@@ -86,6 +91,8 @@ public interface List<V>
     public interface Primitive<V>
         extends List<V>, Collection.PrimitiveC<V>
     {
+        public V get(int index);
+
         public List<V> add(V instance);
 
         public List<V> remove(V instance);
@@ -94,6 +101,8 @@ public interface List<V>
     public interface Short<V>
         extends List<V>, Collection.ShortC<V>
     {
+        public V get(int index);
+
         public List<V> add(V instance);
 
         public List<V> remove(V instance);
@@ -101,9 +110,5 @@ public interface List<V>
 
     public interface Long<V>
         extends List<V>, Collection.LongC<V>
-    {
-    }
-
-    public V get(int index);
-
+    {}
 }

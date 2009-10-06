@@ -58,6 +58,8 @@ public interface Collection<V>
     public interface PrimitiveC<V>
         extends Collection<V>
     {
+        public int size();
+
         public boolean contains(V instance);
 
         public boolean containsNot(V instance);
@@ -71,6 +73,8 @@ public interface Collection<V>
     public interface ShortC<V>
         extends Collection<V>
     {
+        public int size();
+
         public boolean contains(V instance);
 
         public boolean containsNot(V instance);
@@ -104,8 +108,6 @@ public interface Collection<V>
     public String getValueClassAncestorKeyFieldName();
 
     public boolean hasValueClassAncestorKeyFieldName();
-
-    public int size();
 
     public boolean isEmpty();
 

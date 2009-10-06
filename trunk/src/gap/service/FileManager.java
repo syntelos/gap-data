@@ -20,8 +20,8 @@
 package gap.service;
 
 import gap.data.Resource;
-import gap.service.jac.JavaClassOutput;
-import gap.service.jac.JavaSourceInput;
+import gap.service.jac.Output;
+import gap.service.jac.Input;
 
 import gap.jac.tools.FileObject;
 import gap.jac.tools.JavaCompiler;
@@ -152,9 +152,9 @@ public class FileManager
 
     public final Location location;
 
-    public final Map<URI,JavaClassOutput> output = new java.util.HashMap<URI,JavaClassOutput>();
+    public final Map<URI,Output> output = new java.util.HashMap<URI,Output>();
 
-    public final Map<URI,JavaSourceInput> input = new java.util.HashMap<URI,JavaSourceInput>();
+    public final Map<URI,Input> input = new java.util.HashMap<URI,Input>();
 
     public final Map<String,Template> templates = new java.util.HashMap<String,Template>();
 
@@ -363,10 +363,10 @@ public class FileManager
 
             List<JavaFileObject> units = new java.util.ArrayList<JavaFileObject>(1);
             {
-                units.add(new JavaSourceInput(uri,in));
+                units.add(new Input(uri,Kind.SOURCE,in));
             }
 
-            this.output.put(uri,new JavaClassOutput(uri,bin));
+            this.output.put(uri,new Output(uri,Kind.CLASS,bin));
 
             JavaCompiler tool  = new gap.jac.api.JavacTool();
             try {

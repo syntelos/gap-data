@@ -1,0 +1,31 @@
+
+package {{=package_name}};
+{{#import}}
+import {{=import_spec}};{{/import}}
+
+import gap.data.*;
+import gap.service.Templates;
+
+import hapax.TemplateDictionary;
+
+import com.google.appengine.api.datastore.*;
+
+import java.io.Serializable;
+import javax.annotation.Generated;
+
+/**
+ * Data bean generated from "{{=odl_gen_odl_src}}".
+ */
+@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
+public final class ListLong{{=parent_class_name}{{=child_class_name}}
+    extends gap.util.AbstractList.Long<{{=child_class_name}}>
+{
+
+    private final static long serialVersionUID = {{=class_version}};
+
+
+    public ListLong{{=parent_class_name}}{{=child_class_name}}() {
+        super();
+    }
+
+}
