@@ -33,17 +33,17 @@ public abstract class {{=class_name}}
     extends gap.Strings
 {
     public final static Object FromString({{=package_name}}.{{=class_name}}.Field field, String string){
-        switch(field){{{#pfield}}
+        switch(field){{{#pfield}}{{#field_is_not_collection}}
           case {{=field_nameCamel}}:
-            return {{=field_classClean}}FromString(string);{{/pfield}}
+            return {{=field_classCleanClean}}FromString(string);{{/field_is_not_collection}}{{/pfield}}
         default:
             throw new IllegalStateException(field.name());
         }
     }
     public final static String ToString({{=package_name}}.{{=class_name}}.Field field, Object value){
-        switch(field){{{#pfield}}
+        switch(field){{{#pfield}}{{#field_is_not_collection}}
           case {{=field_nameCamel}}:
-            return {{=field_classClean}}ToString( ({{=field_classClean}})value);{{/pfield}}
+            return {{=field_classCleanClean}}ToString( ({{=field_classClean}})value);{{/field_is_not_collection}}{{/pfield}}
         default:
             throw new IllegalStateException(field.name());
         }

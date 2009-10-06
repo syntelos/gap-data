@@ -189,6 +189,7 @@ public class OD
                     String fieldNameCamel = Camel(fieldName);
                     String fieldType = ToString(field.getType());
                     String fieldTypeClean = CleanTypeName(fieldType);
+                    String fieldTypeCleanClean = CleanCleanTypeName(fieldType);
                     Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
                     String[] fieldTypeParameters = FieldTypeParameters(fieldType);
 
@@ -200,6 +201,7 @@ public class OD
                         dataField.putVariable("field_nameCamel",fieldNameCamel);
                         dataField.putVariable("field_class",fieldType);
                         dataField.putVariable("field_classClean",fieldTypeClean);
+                        dataField.putVariable("field_classCleanClean",fieldTypeCleanClean);
 
                         if (IsFieldHashUnique(field)){
 
@@ -210,6 +212,9 @@ public class OD
                             if (IsTypeClassKey(fieldTypeClass)){
 
                                 dataField.addSection("field_is_key");
+                                dataField.addSection("field_is_not_map");
+                                dataField.addSection("field_is_not_list");
+                                dataField.addSection("field_is_not_collection");
 
                                 if (null == key){
                                     key = field;
@@ -223,6 +228,9 @@ public class OD
                             else if (IsTypeClassIndexed(fieldTypeClass)){
 
                                 dataField.addSection("field_is_not_key");
+                                dataField.addSection("field_is_not_map");
+                                dataField.addSection("field_is_not_list");
+                                dataField.addSection("field_is_not_collection");
 
                                 field_is.putVariable("data_model","*hash-unique");
 
@@ -244,6 +252,9 @@ public class OD
                             else if (IsTypeClassList(fieldTypeClass)){
 
                                 dataField.addSection("field_is_not_key");
+                                dataField.addSection("field_is_not_map");
+                                dataField.addSection("field_is_list");
+                                dataField.addSection("field_is_collection");
 
                                 if (1 == fieldTypeParameters.length){
                                     String typeComponent = fieldTypeParameters[0];
@@ -275,6 +286,7 @@ public class OD
                             dataField.putVariable("field_nameCamel",fieldNameCamel);
                             dataField.putVariable("field_class",fieldType);
                             dataField.putVariable("field_classClean",fieldTypeClean);
+                            dataField.putVariable("field_classCleanClean",fieldTypeCleanClean);
                         }
                         else if (IsFieldUnique(field)){
 
@@ -285,6 +297,9 @@ public class OD
                             if (IsTypeClassKey(fieldTypeClass)){
 
                                 dataField.addSection("field_is_key");
+                                dataField.addSection("field_is_not_map");
+                                dataField.addSection("field_is_not_list");
+                                dataField.addSection("field_is_not_collection");
 
                                 if (null == key){
                                     key = field;
@@ -298,6 +313,9 @@ public class OD
                             else if (IsTypeClassString(fieldTypeClass)){
 
                                 dataField.addSection("field_is_not_key");
+                                dataField.addSection("field_is_not_map");
+                                dataField.addSection("field_is_not_list");
+                                dataField.addSection("field_is_not_collection");
 
                                 if (null == unique){
 
@@ -314,6 +332,7 @@ public class OD
                                     topDataFieldU.putVariable("field_nameCamel",fieldNameCamel);
                                     topDataFieldU.putVariable("field_class",fieldType);
                                     topDataFieldU.putVariable("field_classClean",fieldTypeClean);
+                                    topDataFieldU.putVariable("field_classCleanClean",fieldTypeCleanClean);
 
                                     /*
                                      * Global field 'unique' references
@@ -333,6 +352,9 @@ public class OD
 
                             dataField.addSection("field_is_not_unique");
                             dataField.addSection("field_is_not_hash_unique");
+                            dataField.addSection("field_is_not_map");
+                            dataField.addSection("field_is_not_list");
+                            dataField.addSection("field_is_not_collection");
 
                             TemplateDictionary field_is = dataField.addSection("field_is_key");
 
@@ -350,6 +372,8 @@ public class OD
                             dataField.addSection("field_is_not_key");
                             dataField.addSection("field_is_not_unique");
                             dataField.addSection("field_is_not_hash_unique");
+                            dataField.addSection("field_is_not_map");
+                            dataField.addSection("field_is_collection");
 
                             if (1 == fieldTypeParameters.length){
 
@@ -366,6 +390,8 @@ public class OD
                             dataField.addSection("field_is_not_key");
                             dataField.addSection("field_is_not_unique");
                             dataField.addSection("field_is_not_hash_unique");
+                            dataField.addSection("field_is_not_list");
+                            dataField.addSection("field_is_collection");
 
                             if (2 == fieldTypeParameters.length){
 
@@ -397,6 +423,7 @@ public class OD
                             dataField.putVariable("field_nameCamel",fieldNameCamel);
                             dataField.putVariable("field_class",fieldType);
                             dataField.putVariable("field_classClean",fieldTypeClean);
+                            dataField.putVariable("field_classCleanClean",fieldTypeCleanClean);
                         }
                     }
                     else {
@@ -410,6 +437,7 @@ public class OD
                         dataField.putVariable("field_nameCamel",fieldNameCamel);
                         dataField.putVariable("field_class",fieldType);
                         dataField.putVariable("field_classClean",fieldTypeClean);
+                        dataField.putVariable("field_classCleanClean",fieldTypeCleanClean);
                     }
                 }
             }
@@ -820,6 +848,13 @@ public class OD
     }
     final static String CleanTypeName(String name){
         int idx = name.indexOf('<');
+        if (-1 != idx)
+            return name.substring(0,idx);
+        else
+            return name;
+    }
+    final static String CleanCleanTypeName(String name){
+        int idx = name.indexOf('.');
         if (-1 != idx)
             return name.substring(0,idx);
         else
