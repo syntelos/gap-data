@@ -1,10 +1,10 @@
 package gap.data;
+path /tools;
 
 class Tool version 1 {
     Key key;
     *unique String id;
     *hash-unique String name;
-    *hash-unique String nameCamel;
     String headXtm;
     String overlayXtm;
     String formXtm;

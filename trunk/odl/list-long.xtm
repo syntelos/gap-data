@@ -24,7 +24,11 @@ public final class ListLong{{=parent_class_name}}{{=child_class_name}}
 
     private final static long serialVersionUID = {{=parent_class_version}};
 
-    public final static AncestorKeyFieldName = "{{=parent_keyfield_name}}";
+    public final static String AncestorKeyFieldName = "{{=parent_keyfield_name}}";
+
+    public final static String ParentTypeName = "{{=parent_class_name}}";
+
+    public final static String ChildTypeName = "{{=child_class_name}}";
 
 
     protected transient {{=parent_class_name}} parent;
@@ -40,7 +44,7 @@ public final class ListLong{{=parent_class_name}}{{=child_class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public ListLong(){
+    public ListLong{{=parent_class_name}}{{=child_class_name}}(){
         super();
     }
 
@@ -67,5 +71,13 @@ public final class ListLong{{=parent_class_name}}{{=child_class_name}}
     }
     public void setValueClassAncestorKey(){
         this.ancestorKey = this.getParent().getClassFieldKeyValue();
+    }
+    public TemplateDictionary dictionaryInto(TemplateDictionary top){
+
+        for ({{=child_class_name}} value: this){
+
+            value.dictionaryInto(top);
+        }
+        return top;
     }
 }

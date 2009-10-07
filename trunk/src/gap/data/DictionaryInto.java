@@ -17,27 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.util;
+package gap.data;
 
-import com.google.appengine.api.datastore.Category;
+import hapax.TemplateDictionary;
 
 /**
-
- * 
- * @author jdp
+ * Implemented by table and collection classes.
  */
-public class ListPrimitiveCategory
-    extends AbstractListPrimitive<Category>
-{
+public interface DictionaryInto {
 
-    public ListPrimitiveCategory(){
-        super();
-    }
+    /**
+     * Install all
+     */
+    public TemplateDictionary dictionaryInto(TemplateDictionary dict);
 
-    public final gap.Primitive getType(){
-        return gap.Primitive.Category;
-    }
-    public ListPrimitiveCategory clone(){
-        return (ListPrimitiveCategory)super.clone();
-    }
 }

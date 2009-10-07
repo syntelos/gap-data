@@ -21,6 +21,8 @@ package gap.util;
 
 import gap.data.*;
 
+import hapax.TemplateDictionary;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
@@ -38,11 +40,16 @@ public abstract class AbstractListPrimitive<V>
     /**
      * List implementation used by {@link Store}
      */
-    public final static class Any<V>
+    public static class Any<V>
         extends AbstractListPrimitive<V>
     {
+
         public Any(){
             super();
+        }
+
+        public final gap.Primitive getType(){
+            throw new java.lang.UnsupportedOperationException();
         }
     }
 
@@ -87,6 +94,7 @@ public abstract class AbstractListPrimitive<V>
     protected Object[] list;
 
 
+
     protected AbstractListPrimitive(){
         super();
     }
@@ -95,6 +103,8 @@ public abstract class AbstractListPrimitive<V>
     public void destroy(){
         this.list = null;
     }
+    public abstract gap.Primitive getType();
+
     public final Key getValueClassAncestorKey(){
         return this.ancestorKey;
     }
@@ -236,6 +246,24 @@ public abstract class AbstractListPrimitive<V>
             else
                 return Compares.NoIntersection;
         }
+    }
+    public TemplateDictionary dictionaryInto(TemplateDictionary top){
+        gap.Primitive type = this.getType();
+        String typeName = type.name();
+
+        for (V value: this){
+            TemplateDictionary item = top.addSection(typeName);
+
+            if (value instanceof DictionaryInto){
+                DictionaryInto dvalue = (DictionaryInto)value;
+
+                dvalue.dictionaryInto(item);
+            }
+            else {
+                item.putVariable("value",gap.Strings.ToString(type,value));
+            }
+        }
+        return top;
     }
     protected final int indexOf(V instance){
         Object[] list = this.list;

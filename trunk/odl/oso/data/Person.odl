@@ -1,4 +1,5 @@
 package oso.data;
+path /people;
 
 class Person version 2 {
     Key key;

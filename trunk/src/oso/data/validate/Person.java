@@ -27,7 +27,7 @@ import javax.annotation.Generated;
 /**
  * Data validation functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-06T04:21:43.530Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-07T01:15:01.771Z",comments="oso.data")
 public abstract class Person
     extends gap.Strings
 {

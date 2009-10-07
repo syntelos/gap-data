@@ -35,4 +35,10 @@ public class ListPrimitiveLink
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.Link;
+    }
+    public ListPrimitiveLink clone(){
+        return (ListPrimitiveLink)super.clone();
+    }
 }

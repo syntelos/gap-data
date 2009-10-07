@@ -35,4 +35,10 @@ public class ListPrimitivePostalAddress
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.PostalAddress;
+    }
+    public ListPrimitivePostalAddress clone(){
+        return (ListPrimitivePostalAddress)super.clone();
+    }
 }

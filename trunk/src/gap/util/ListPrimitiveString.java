@@ -33,4 +33,10 @@ public class ListPrimitiveString
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.String;
+    }
+    public ListPrimitiveString clone(){
+        return (ListPrimitiveString)super.clone();
+    }
 }

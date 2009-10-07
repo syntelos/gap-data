@@ -35,4 +35,10 @@ public class ListPrimitiveGeoPt
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.GeoPt;
+    }
+    public ListPrimitiveGeoPt clone(){
+        return (ListPrimitiveGeoPt)super.clone();
+    }
 }

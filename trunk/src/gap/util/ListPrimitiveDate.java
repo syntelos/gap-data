@@ -35,4 +35,10 @@ public class ListPrimitiveDate
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.Date;
+    }
+    public ListPrimitiveDate clone(){
+        return (ListPrimitiveDate)super.clone();
+    }
 }

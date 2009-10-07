@@ -33,4 +33,10 @@ public class ListPrimitiveDouble
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.Double;
+    }
+    public ListPrimitiveDouble clone(){
+        return (ListPrimitiveDouble)super.clone();
+    }
 }

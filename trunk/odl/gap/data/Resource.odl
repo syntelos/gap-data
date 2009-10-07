@@ -1,4 +1,5 @@
 package gap.data;
+path /resources;
 
 parent Resource version 1 
     implements LastModified
@@ -18,4 +19,5 @@ parent Resource version 1
     List.Long<Account> accounts;
     List.Long<Image> images;
     List.Long<Template> templates;
+    List.Long<Tool> tools;
 }

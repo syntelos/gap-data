@@ -27,7 +27,7 @@ import javax.annotation.Generated;
 /**
  * Data validation functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-06T04:21:50.066Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-07T01:15:04.361Z",comments="gap.data")
 public abstract class Image
     extends gap.Strings
 {

@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-06T04:21:46.101Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T01:15:04.301Z",comments="gap.data")
 public final class Image
     extends gap.data.BigTable
     implements LastModified
@@ -580,32 +580,44 @@ public final class Image
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
     }
-    public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary dict){
+    public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary top){
         if (null != params && params.hasFields()){
-            TemplateDictionary data = dict.addSection(ClassName);
+            TemplateDictionary data = top.addSection(ClassName);
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
                     java.lang.Object value = Field.Get(field,this);
                     if (null != value){
-                        data.putVariable(field.toString(),value.toString());
+                        if (value instanceof DictionaryInto){
+                            DictionaryInto dvalue = (DictionaryInto)value;
+                            TemplateDictionary dsection = data.addSection(field.name());
+                            dvalue.dictionaryInto(dsection);
+                        }
+                        else
+                            data.putVariable(field.name(),gap.data.validate.Image.ToString(field,value));
                     }
                 }
             }
-            return dict;
+            return top;
         }
         else
-            return this.dictionaryInto(dict);
+            return this.dictionaryInto(top);
     }
-    public TemplateDictionary dictionaryInto(TemplateDictionary dict){
-        TemplateDictionary data = dict.addSection(ClassName);
+    public TemplateDictionary dictionaryInto(TemplateDictionary top){
+        TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
             java.lang.Object value = Field.Get(field,this);
             if (null != value){
-                data.putVariable(field.toString(),value.toString());
+                if (value instanceof DictionaryInto){
+                    DictionaryInto dvalue = (DictionaryInto)value;
+                    TemplateDictionary dsection = data.addSection(field.name());
+                    dvalue.dictionaryInto(dsection);
+                }
+                else
+                    data.putVariable(field.name(),gap.data.validate.Image.ToString(field,value));
             }
         }
-        return dict;
+        return top;
     }
     public void drop(){
         Delete(this);
