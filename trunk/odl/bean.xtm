@@ -36,13 +36,17 @@ public final class {{=class_name}}
     }
 
 {{#field_hash_unique}}
-    public final static Key Key{{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+    public final static Key KeyLong{{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         String id = {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
-        return KeyFor(id);
+        return KeyLongFor(id);
     }
-    public final static Key Key{{=field_unique_nameCamel}}For(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+    public final static Key KeyLong{{=field_unique_nameCamel}}For(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         String id = {{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
-        return KeyFor(ancestor,id);
+        return KeyLongFor(ancestor,id);
+    }
+    public final static Key KeyShort{{=field_unique_nameCamel}}For(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+        String id = {{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
+        return KeyShortFor(ancestor,id);
     }
     public final static String {{=field_unique_nameCamel}}For(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if (ancestor.isComplete() && {{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
@@ -60,9 +64,9 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public final static {{=class_name}} For{{#field}}{{=field_nameCamel}}{{/field}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+    public final static {{=class_name}} ForLong{{#field}}{{=field_nameCamel}}{{/field}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
-            Key key = Key{{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            Key key = KeyLong{{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -74,9 +78,9 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public final static {{=class_name}} For{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+    public final static {{=class_name}} ForShort{{#field}}{{=field_nameCamel}}{{/field}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
-            Key key = Key{{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            Key key = KeyShort{{=field_unique_nameCamel}}For(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -88,36 +92,58 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public final static {{=class_name}} GetCreate({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        {{=class_name}} {{=class_nameDecamel}} = For{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+    public final static {{=class_name}} ForLong{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+        if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
+            Key key = KeyLong{{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return ({{=class_name}})gap.data.Store.Query1(q);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static {{=class_name}} GetCreateLong({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+        {{=class_name}} {{=class_nameDecamel}} = ForLong{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
     }
-    public final static {{=class_name}} GetCreate(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        {{=class_name}} {{=class_nameDecamel}} = For{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+    public final static {{=class_name}} GetCreateLong(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+        {{=class_name}} {{=class_nameDecamel}} = ForLong{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
-            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,false,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
+        }
+        return {{=class_nameDecamel}};
+    }
+    public final static {{=class_name}} GetCreateShort(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
+        {{=class_name}} {{=class_nameDecamel}} = ForShort{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+        if (null == {{=class_nameDecamel}}){
+            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,true,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
     }
 {{/field_hash_unique}}
 {{#field_unique}}
-    public final static Key KeyFor(String {{=field_name}}){
+    public final static Key KeyLongFor(String {{=field_name}}){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static Key KeyGroupFor(Key ancestor, String {{=field_name}}){
+    public final static Key KeyShortFor(Key ancestor, String {{=field_name}}){
         return KeyFactory.createKey(ancestor,KIND,id);
     }
-    public final static Key KeyFor(Key ancestor, String {{=field_name}}){
+    public final static Key KeyLongFor(Key ancestor, String {{=field_name}}){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static {{=class_name}} For{{=field_nameCamel}}(Key ancestor, String {{=field_name}}){
+    public final static {{=class_name}} ForLong{{=field_nameCamel}}(Key ancestor, String {{=field_name}}){
         if (null != ancestor && ancestor.isComplete() && null != {{=field_name}}){
-            Key key = KeyFor(ancestor,{{=field_name}});
+            Key key = KeyLongFor(ancestor,{{=field_name}});
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -129,9 +155,23 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public final static {{=class_name}} For{{=field_nameCamel}}(String {{=field_name}}){
+    public final static {{=class_name}} ForShort{{=field_nameCamel}}(Key ancestor, String {{=field_name}}){
+        if (null != ancestor && ancestor.isComplete() && null != {{=field_name}}){
+            Key key = KeyShortFor(ancestor,{{=field_name}});
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return ({{=class_name}})gap.data.Store.Query1(q);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static {{=class_name}} ForLong{{=field_nameCamel}}(String {{=field_name}}){
         if (null != {{=field_name}}){
-            Key key = KeyFor({{=field_name}});
+            Key key = KeyLongFor({{=field_name}});
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -168,15 +208,44 @@ public final class {{=class_name}}
     /**
      * Test for uniqueness and iterate under collisions.
      */
-    public final static Key NewChildRandomKey(Key parent){
-        if (null != parent){
-            String source = gap.data.BigTable.ToString(parent);
-            long id = gap.data.Hash.Djb64(source);
+    public final static Key NewRandomKeyLong(Key ancestor){
+        if (null != ancestor){
+            /*
+             * Source matter for data local uniqueness
+             */
+            String source = gap.data.BigTable.ToString(ancestor);
+            long matter = gap.data.Hash.Djb64(source);
+            /*
+             * Random matter for network global uniqueness
+             */
             java.util.Random random = new java.util.Random();
             do {
-                id ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(id);
+                matter ^= random.nextLong();
+                String idString = gap.data.Hash.Hex(matter);
                 Key key = KeyFactory.createKey(KIND,idString);
+                if (null == GetKey(key))
+                    return key;
+            }
+            while (true);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static Key NewRandomKeyShort(Key ancestor){
+        if (null != ancestor){
+            /*
+             * Source matter for data local uniqueness
+             */
+            String source = gap.data.BigTable.ToString(ancestor);
+            long matter = gap.data.Hash.Djb64(source);
+            /*
+             * Random matter for network global uniqueness
+             */
+            java.util.Random random = new java.util.Random();
+            do {
+                matter ^= random.nextLong();
+                String idString = gap.data.Hash.Hex(matter);
+                Key key = KeyFactory.createKey(ancestor,KIND,idString);
                 if (null == GetKey(key))
                     return key;
             }
@@ -335,15 +404,19 @@ public final class {{=class_name}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
         String {{=field_unique_name}} = {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         this.set{{=field_unique_nameCamel}}({{=field_unique_name}});
-        Key key = KeyFor({{=field_unique_name}});
+        Key key = KeyLongFor({{=field_unique_name}});
         this.set{{=field_key_nameCamel}}(key);
     }
-    public {{=class_name}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
+    public {{=class_name}}(Key ancestor, boolean isShort, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
         String {{=field_unique_name}} = {{=field_unique_nameCamel}}For(ancestor, {{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         this.set{{=field_unique_nameCamel}}({{=field_unique_name}});
-        Key key = KeyFor(ancestor,{{=field_unique_name}});
+        Key key;
+        if (isShort)
+            key = KeyShortFor(ancestor,{{=field_unique_name}});
+        else
+            key = KeyLongFor(ancestor,{{=field_unique_name}});
         this.set{{=field_key_nameCamel}}(key);
     }
 {{/field_hash_unique}}

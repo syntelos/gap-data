@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-07T03:36:06.529Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-07T04:20:05.741Z",comments="gap.data")
 public class Template
     extends gap.servlet.Site
 {
@@ -59,7 +59,7 @@ public class Template
             String id = req.getPath(0);
             if (null != id){
 
-                gap.data.Template instance = gap.data.Template.ForId(id);
+                gap.data.Template instance = gap.data.Template.ForLongId(id);
 
                 if (null != instance){
 

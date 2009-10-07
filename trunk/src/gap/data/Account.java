@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T03:36:06.144Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T04:20:05.050Z",comments="gap.data")
 public final class Account
     extends gap.data.BigTable
 {
@@ -33,13 +33,17 @@ public final class Account
     }
 
 
-    public final static Key KeyIdFor(String base, String name){
+    public final static Key KeyLongIdFor(String base, String name){
         String id = IdFor( base,  name);
-        return KeyFor(id);
+        return KeyLongFor(id);
     }
-    public final static Key KeyIdFor(Key ancestor, String base, String name){
+    public final static Key KeyLongIdFor(Key ancestor, String base, String name){
         String id = IdFor(ancestor, base,  name);
-        return KeyFor(ancestor,id);
+        return KeyLongFor(ancestor,id);
+    }
+    public final static Key KeyShortIdFor(Key ancestor, String base, String name){
+        String id = IdFor(ancestor, base,  name);
+        return KeyShortFor(ancestor,id);
     }
     public final static String IdFor(Key ancestor, String base, String name){
         if (ancestor.isComplete() && null != base && null != name){
@@ -59,9 +63,9 @@ public final class Account
         else
             throw new IllegalArgumentException();
     }
-    public final static Account ForBaseName(Key ancestor, String base, String name){
+    public final static Account ForLongBaseName(Key ancestor, String base, String name){
         if (null != base && null != name){
-            Key key = KeyIdFor(ancestor, base, name);
+            Key key = KeyLongIdFor(ancestor, base, name);
             Account instance = (Account)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -73,9 +77,9 @@ public final class Account
         else
             throw new IllegalArgumentException();
     }
-    public final static Account ForBaseName(String base, String name){
+    public final static Account ForShortBaseName(Key ancestor, String base, String name){
         if (null != base && null != name){
-            Key key = KeyIdFor( base, name);
+            Key key = KeyShortIdFor(ancestor, base, name);
             Account instance = (Account)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -87,36 +91,58 @@ public final class Account
         else
             throw new IllegalArgumentException();
     }
-    public final static Account GetCreate(String base, String name){
-        Account account = ForBaseName( base, name);
+    public final static Account ForLongBaseName(String base, String name){
+        if (null != base && null != name){
+            Key key = KeyLongIdFor( base, name);
+            Account instance = (Account)gap.data.Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (Account)gap.data.Store.Query1(q);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static Account GetCreateLong(String base, String name){
+        Account account = ForLongBaseName( base, name);
         if (null == account){
             account = new Account( base, name);
             account = (Account)gap.data.Store.Put(account);
         }
         return account;
     }
-    public final static Account GetCreate(Key ancestor, String base, String name){
-        Account account = ForBaseName(ancestor, base, name);
+    public final static Account GetCreateLong(Key ancestor, String base, String name){
+        Account account = ForLongBaseName(ancestor, base, name);
         if (null == account){
-            account = new Account(ancestor, base, name);
+            account = new Account(ancestor,false, base, name);
+            account = (Account)gap.data.Store.Put(account);
+        }
+        return account;
+    }
+    public final static Account GetCreateShort(Key ancestor, String base, String name){
+        Account account = ForShortBaseName(ancestor, base, name);
+        if (null == account){
+            account = new Account(ancestor,true, base, name);
             account = (Account)gap.data.Store.Put(account);
         }
         return account;
     }
 
 
-    public final static Key KeyFor(String id){
+    public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static Key KeyGroupFor(Key ancestor, String id){
+    public final static Key KeyShortFor(Key ancestor, String id){
         return KeyFactory.createKey(ancestor,KIND,id);
     }
-    public final static Key KeyFor(Key ancestor, String id){
+    public final static Key KeyLongFor(Key ancestor, String id){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static Account ForId(Key ancestor, String id){
+    public final static Account ForLongId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyFor(ancestor,id);
+            Key key = KeyLongFor(ancestor,id);
             Account instance = (Account)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -128,9 +154,23 @@ public final class Account
         else
             throw new IllegalArgumentException();
     }
-    public final static Account ForId(String id){
+    public final static Account ForShortId(Key ancestor, String id){
+        if (null != ancestor && ancestor.isComplete() && null != id){
+            Key key = KeyShortFor(ancestor,id);
+            Account instance = (Account)gap.data.Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (Account)gap.data.Store.Query1(q);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static Account ForLongId(String id){
         if (null != id){
-            Key key = KeyFor(id);
+            Key key = KeyLongFor(id);
             Account instance = (Account)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -167,15 +207,44 @@ public final class Account
     /**
      * Test for uniqueness and iterate under collisions.
      */
-    public final static Key NewChildRandomKey(Key parent){
-        if (null != parent){
-            String source = gap.data.BigTable.ToString(parent);
-            long id = gap.data.Hash.Djb64(source);
+    public final static Key NewRandomKeyLong(Key ancestor){
+        if (null != ancestor){
+            /*
+             * Source matter for data local uniqueness
+             */
+            String source = gap.data.BigTable.ToString(ancestor);
+            long matter = gap.data.Hash.Djb64(source);
+            /*
+             * Random matter for network global uniqueness
+             */
             java.util.Random random = new java.util.Random();
             do {
-                id ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(id);
+                matter ^= random.nextLong();
+                String idString = gap.data.Hash.Hex(matter);
                 Key key = KeyFactory.createKey(KIND,idString);
+                if (null == GetKey(key))
+                    return key;
+            }
+            while (true);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static Key NewRandomKeyShort(Key ancestor){
+        if (null != ancestor){
+            /*
+             * Source matter for data local uniqueness
+             */
+            String source = gap.data.BigTable.ToString(ancestor);
+            long matter = gap.data.Hash.Djb64(source);
+            /*
+             * Random matter for network global uniqueness
+             */
+            java.util.Random random = new java.util.Random();
+            do {
+                matter ^= random.nextLong();
+                String idString = gap.data.Hash.Hex(matter);
+                Key key = KeyFactory.createKey(ancestor,KIND,idString);
                 if (null == GetKey(key))
                     return key;
             }
@@ -355,16 +424,20 @@ public final class Account
         this.setName(name);
         String id = IdFor( base, name);
         this.setId(id);
-        Key key = KeyFor(id);
+        Key key = KeyLongFor(id);
         this.setKey(key);
     }
-    public Account(Key ancestor, String base, String name) {
+    public Account(Key ancestor, boolean isShort, String base, String name) {
         super();
         this.setBase(base);
         this.setName(name);
         String id = IdFor(ancestor,  base, name);
         this.setId(id);
-        Key key = KeyFor(ancestor,id);
+        Key key;
+        if (isShort)
+            key = KeyShortFor(ancestor,id);
+        else
+            key = KeyLongFor(ancestor,id);
         this.setKey(key);
     }
 

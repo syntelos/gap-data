@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-07T03:36:06.380Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-07T04:20:05.347Z",comments="gap.data")
 public class Tool
     extends gap.servlet.Site
 {
@@ -59,7 +59,7 @@ public class Tool
             String id = req.getPath(0);
             if (null != id){
 
-                gap.data.Tool instance = gap.data.Tool.ForId(id);
+                gap.data.Tool instance = gap.data.Tool.ForLongId(id);
 
                 if (null != instance){
 

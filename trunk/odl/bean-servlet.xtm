@@ -60,7 +60,7 @@ public class {{=class_name}}
             String id = req.getPath(0);
             if (null != id){
 
-                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.For{{=field_unique_nameCamel}}(id);
+                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForLong{{=field_unique_nameCamel}}(id);
 
                 if (null != instance){
 
