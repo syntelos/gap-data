@@ -32,7 +32,7 @@ package gap.data;
 public interface Field {
 
     public final static class List
-        extends gap.util.AbstractListPrimitive<Field>
+        extends gap.util.AbstractListPrimitive.Any<Field>
     {
         public List(){
             super();

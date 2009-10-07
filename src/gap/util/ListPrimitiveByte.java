@@ -33,4 +33,10 @@ public class ListPrimitiveByte
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.Byte;
+    }
+    public ListPrimitiveByte clone(){
+        return (ListPrimitiveByte)super.clone();
+    }
 }

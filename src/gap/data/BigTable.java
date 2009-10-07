@@ -19,6 +19,10 @@
  */
 package gap.data;
 
+import gap.service.Parameters;
+
+import hapax.TemplateDictionary;
+
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DataTypeUtils;
 import com.google.appengine.api.datastore.Entity;
@@ -55,7 +59,8 @@ import com.google.appengine.api.datastore.ShortBlob;
  */
 public abstract class BigTable
     extends java.lang.Object
-    implements java.io.Serializable
+    implements java.io.Serializable,
+               DictionaryInto
 {
     protected final static java.util.Set<String> Imports = new java.util.HashSet<String>();
 
@@ -334,6 +339,11 @@ public abstract class BigTable
      * Write to store.
      */
     public abstract void store();
+
+    /**
+     * Install possibly filtered set.
+     */
+    public abstract TemplateDictionary dictionaryInto(Parameters params, TemplateDictionary dict);
 
     protected final Entity fillTo(Entity entity){
 

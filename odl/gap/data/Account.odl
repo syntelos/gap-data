@@ -1,4 +1,5 @@
 package gap.data;
+path /accounts;
 
 child Account version 1 
     parent Resource

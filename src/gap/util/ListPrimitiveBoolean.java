@@ -33,4 +33,11 @@ public class ListPrimitiveBoolean
         super();
     }
 
+
+    public final gap.Primitive getType(){
+        return gap.Primitive.Boolean;
+    }
+    public ListPrimitiveBoolean clone(){
+        return (ListPrimitiveBoolean)super.clone();
+    }
 }

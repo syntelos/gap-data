@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-06T04:21:45.336Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T01:15:03.335Z",comments="gap.data")
 public final class Resource
     extends gap.data.BigTable
     implements LastModified
@@ -273,7 +273,8 @@ public final class Resource
         Partners("partners"),
         Accounts("accounts"),
         Images("images"),
-        Templates("templates");
+        Templates("templates"),
+        Tools("tools");
 
 
         private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -326,6 +327,8 @@ public final class Resource
                 return instance.getImages();
             case Templates:
                 return instance.getTemplates();
+            case Tools:
+                return instance.getTools();
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
             }
@@ -378,6 +381,9 @@ public final class Resource
             case Templates:
                 instance.setTemplates( (List.Long<Template>)value);
                 return;
+            case Tools:
+                instance.setTools( (List.Long<Tool>)value);
+                return;
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
             }
@@ -416,6 +422,7 @@ public final class Resource
     private volatile List.Long<Account> accounts;    
     private volatile List.Long<Image> images;    
     private volatile List.Long<Template> templates;    
+    private volatile List.Long<Tool> tools;    
 
 
 
@@ -706,6 +713,34 @@ public final class Resource
     public void setPartners(List.Long<Partner> partners){
         this.partners = partners;
     }
+    public boolean isEmptyPartners(){
+        List.Long<Partner> list = this.partners;
+        if (null != list)
+            return list.isEmpty();
+        else
+            return true;
+    }
+    public boolean isNotEmptyPartners(){
+        List.Long<Partner> list = this.partners;
+        if (null != list)
+            return (!list.isEmpty());
+        else
+            return false;
+    }
+    public Partner getPartners(gap.data.ListFilter<Partner> filter){
+        if (null != filter){
+            List.Long<Partner> list = this.partners;
+            if (null != list){
+                for (Partner item : list){
+                    if (filter.accept(item))
+                        return item;
+                }
+            }
+            return null;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
 
     public boolean hasAccounts(){
         return (null != this.accounts);
@@ -726,6 +761,34 @@ public final class Resource
     }
     public void setAccounts(List.Long<Account> accounts){
         this.accounts = accounts;
+    }
+    public boolean isEmptyAccounts(){
+        List.Long<Account> list = this.accounts;
+        if (null != list)
+            return list.isEmpty();
+        else
+            return true;
+    }
+    public boolean isNotEmptyAccounts(){
+        List.Long<Account> list = this.accounts;
+        if (null != list)
+            return (!list.isEmpty());
+        else
+            return false;
+    }
+    public Account getAccounts(gap.data.ListFilter<Account> filter){
+        if (null != filter){
+            List.Long<Account> list = this.accounts;
+            if (null != list){
+                for (Account item : list){
+                    if (filter.accept(item))
+                        return item;
+                }
+            }
+            return null;
+        }
+        else
+            throw new IllegalArgumentException();
     }
 
     public boolean hasImages(){
@@ -748,6 +811,34 @@ public final class Resource
     public void setImages(List.Long<Image> images){
         this.images = images;
     }
+    public boolean isEmptyImages(){
+        List.Long<Image> list = this.images;
+        if (null != list)
+            return list.isEmpty();
+        else
+            return true;
+    }
+    public boolean isNotEmptyImages(){
+        List.Long<Image> list = this.images;
+        if (null != list)
+            return (!list.isEmpty());
+        else
+            return false;
+    }
+    public Image getImages(gap.data.ListFilter<Image> filter){
+        if (null != filter){
+            List.Long<Image> list = this.images;
+            if (null != list){
+                for (Image item : list){
+                    if (filter.accept(item))
+                        return item;
+                }
+            }
+            return null;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
 
     public boolean hasTemplates(){
         return (null != this.templates);
@@ -768,6 +859,83 @@ public final class Resource
     }
     public void setTemplates(List.Long<Template> templates){
         this.templates = templates;
+    }
+    public boolean isEmptyTemplates(){
+        List.Long<Template> list = this.templates;
+        if (null != list)
+            return list.isEmpty();
+        else
+            return true;
+    }
+    public boolean isNotEmptyTemplates(){
+        List.Long<Template> list = this.templates;
+        if (null != list)
+            return (!list.isEmpty());
+        else
+            return false;
+    }
+    public Template getTemplates(gap.data.ListFilter<Template> filter){
+        if (null != filter){
+            List.Long<Template> list = this.templates;
+            if (null != list){
+                for (Template item : list){
+                    if (filter.accept(item))
+                        return item;
+                }
+            }
+            return null;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+
+    public boolean hasTools(){
+        return (null != this.tools);
+    }
+    public boolean hasNotTools(){
+        return (null == this.tools);
+    }
+    public boolean dropTools(){
+        if (null != this.tools){
+            this.tools = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public List.Long<Tool> getTools(){
+        return this.tools;
+    }
+    public void setTools(List.Long<Tool> tools){
+        this.tools = tools;
+    }
+    public boolean isEmptyTools(){
+        List.Long<Tool> list = this.tools;
+        if (null != list)
+            return list.isEmpty();
+        else
+            return true;
+    }
+    public boolean isNotEmptyTools(){
+        List.Long<Tool> list = this.tools;
+        if (null != list)
+            return (!list.isEmpty());
+        else
+            return false;
+    }
+    public Tool getTools(gap.data.ListFilter<Tool> filter){
+        if (null != filter){
+            List.Long<Tool> list = this.tools;
+            if (null != list){
+                for (Tool item : list){
+                    if (filter.accept(item))
+                        return item;
+                }
+            }
+            return null;
+        }
+        else
+            throw new IllegalArgumentException();
     }
 
 
@@ -804,32 +972,44 @@ public final class Resource
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
     }
-    public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary dict){
+    public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary top){
         if (null != params && params.hasFields()){
-            TemplateDictionary data = dict.addSection(ClassName);
+            TemplateDictionary data = top.addSection(ClassName);
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
                     java.lang.Object value = Field.Get(field,this);
                     if (null != value){
-                        data.putVariable(field.toString(),value.toString());
+                        if (value instanceof DictionaryInto){
+                            DictionaryInto dvalue = (DictionaryInto)value;
+                            TemplateDictionary dsection = data.addSection(field.name());
+                            dvalue.dictionaryInto(dsection);
+                        }
+                        else
+                            data.putVariable(field.name(),gap.data.validate.Resource.ToString(field,value));
                     }
                 }
             }
-            return dict;
+            return top;
         }
         else
-            return this.dictionaryInto(dict);
+            return this.dictionaryInto(top);
     }
-    public TemplateDictionary dictionaryInto(TemplateDictionary dict){
-        TemplateDictionary data = dict.addSection(ClassName);
+    public TemplateDictionary dictionaryInto(TemplateDictionary top){
+        TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
             java.lang.Object value = Field.Get(field,this);
             if (null != value){
-                data.putVariable(field.toString(),value.toString());
+                if (value instanceof DictionaryInto){
+                    DictionaryInto dvalue = (DictionaryInto)value;
+                    TemplateDictionary dsection = data.addSection(field.name());
+                    dvalue.dictionaryInto(dsection);
+                }
+                else
+                    data.putVariable(field.name(),gap.data.validate.Resource.ToString(field,value));
             }
         }
-        return dict;
+        return top;
     }
     public void drop(){
         Delete(this);

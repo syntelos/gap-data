@@ -35,4 +35,10 @@ public class ListPrimitiveText
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.Text;
+    }
+    public ListPrimitiveText clone(){
+        return (ListPrimitiveText)super.clone();
+    }
 }

@@ -35,4 +35,10 @@ public class ListPrimitivePhoneNumber
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.PhoneNumber;
+    }
+    public ListPrimitivePhoneNumber clone(){
+        return (ListPrimitivePhoneNumber)super.clone();
+    }
 }

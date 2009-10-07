@@ -1,4 +1,5 @@
 package gap.data;
+path /templates;
 
 child Template version 1 
     parent Resource

@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-06T04:21:46.307Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T01:15:04.636Z",comments="gap.data")
 public final class Tool
     extends gap.data.BigTable
 {
@@ -26,42 +26,40 @@ public final class Tool
 
     public final static String ClassName = "Tool";
 
-    public final static String DefaultSortBy = "nameCamel";
+    public final static String DefaultSortBy = "name";
 
     static {
         Register(Tool.class);
     }
 
 
-    public final static Key KeyIdFor(String name, String nameCamel){
-        String id = IdFor( name,  nameCamel);
+    public final static Key KeyIdFor(String name){
+        String id = IdFor( name);
         return KeyFor(id);
     }
-    public final static Key KeyIdFor(Key ancestor, String name, String nameCamel){
-        String id = IdFor(ancestor, name,  nameCamel);
+    public final static Key KeyIdFor(Key ancestor, String name){
+        String id = IdFor(ancestor, name);
         return KeyFor(ancestor,id);
     }
-    public final static String IdFor(Key ancestor, String name, String nameCamel){
-        if (ancestor.isComplete() && null != name && null != nameCamel){
+    public final static String IdFor(Key ancestor, String name){
+        if (ancestor.isComplete() && null != name){
             String nameString = name;
-            String nameCamelString = nameCamel;
-            return gap.data.Hash.For(ToString(ancestor)+'/'+nameString+'/'+nameCamelString);
+            return gap.data.Hash.For(ToString(ancestor)+'/'+nameString);
         }
         else
             throw new IllegalArgumentException();
     }
-    public final static String IdFor(String name, String nameCamel){
-        if (null != name && null != nameCamel){
+    public final static String IdFor(String name){
+        if (null != name){
             String nameString = name;
-            String nameCamelString = nameCamel;
-            return gap.data.Hash.For(nameString+'/'+nameCamelString);
+            return gap.data.Hash.For(nameString);
         }
         else
             throw new IllegalArgumentException();
     }
-    public final static Tool ForNameNameCamel(Key ancestor, String name, String nameCamel){
-        if (null != name && null != nameCamel){
-            Key key = KeyIdFor(ancestor, name, nameCamel);
+    public final static Tool ForName(Key ancestor, String name){
+        if (null != name){
+            Key key = KeyIdFor(ancestor, name);
             Tool instance = (Tool)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -73,9 +71,9 @@ public final class Tool
         else
             throw new IllegalArgumentException();
     }
-    public final static Tool ForNameNameCamel(String name, String nameCamel){
-        if (null != name && null != nameCamel){
-            Key key = KeyIdFor( name, nameCamel);
+    public final static Tool ForName(String name){
+        if (null != name){
+            Key key = KeyIdFor( name);
             Tool instance = (Tool)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -87,18 +85,18 @@ public final class Tool
         else
             throw new IllegalArgumentException();
     }
-    public final static Tool GetCreate(String name, String nameCamel){
-        Tool tool = ForNameNameCamel( name, nameCamel);
+    public final static Tool GetCreate(String name){
+        Tool tool = ForName( name);
         if (null == tool){
-            tool = new Tool( name, nameCamel);
+            tool = new Tool( name);
             tool = (Tool)gap.data.Store.Put(tool);
         }
         return tool;
     }
-    public final static Tool GetCreate(Key ancestor, String name, String nameCamel){
-        Tool tool = ForNameNameCamel(ancestor, name, nameCamel);
+    public final static Tool GetCreate(Key ancestor, String name){
+        Tool tool = ForName(ancestor, name);
         if (null == tool){
-            tool = new Tool(ancestor, name, nameCamel);
+            tool = new Tool(ancestor, name);
             tool = (Tool)gap.data.Store.Put(tool);
         }
         return tool;
@@ -261,7 +259,6 @@ public final class Tool
         Key("key"),
         Id("id"),
         Name("name"),
-        NameCamel("nameCamel"),
         HeadXtm("headXtm"),
         OverlayXtm("overlayXtm"),
         FormXtm("formXtm"),
@@ -296,8 +293,6 @@ public final class Tool
                 return instance.getId();
             case Name:
                 return instance.getName();
-            case NameCamel:
-                return instance.getNameCamel();
             case HeadXtm:
                 return instance.getHeadXtm();
             case OverlayXtm:
@@ -325,9 +320,6 @@ public final class Tool
                 return;
             case Name:
                 instance.setName( (String)value);
-                return;
-            case NameCamel:
-                instance.setNameCamel( (String)value);
                 return;
             case HeadXtm:
                 instance.setHeadXtm( (String)value);
@@ -373,7 +365,6 @@ public final class Tool
     private volatile Key key;    
     private volatile String id;    // *unique
     private volatile String name;    // *hash-unique
-    private volatile String nameCamel;    // *hash-unique
     private volatile String headXtm;    
     private volatile String overlayXtm;    
     private volatile String formXtm;    
@@ -391,20 +382,18 @@ public final class Tool
         super();
         this.setKey(child);
     }
-    public Tool(String name, String nameCamel) {
+    public Tool(String name) {
         super();
         this.setName(name);
-        this.setNameCamel(nameCamel);
-        String id = IdFor( name, nameCamel);
+        String id = IdFor( name);
         this.setId(id);
         Key key = KeyFor(id);
         this.setKey(key);
     }
-    public Tool(Key ancestor, String name, String nameCamel) {
+    public Tool(Key ancestor, String name) {
         super();
         this.setName(name);
-        this.setNameCamel(nameCamel);
-        String id = IdFor(ancestor,  name, nameCamel);
+        String id = IdFor(ancestor,  name);
         this.setId(id);
         Key key = KeyFor(ancestor,id);
         this.setKey(key);
@@ -480,27 +469,6 @@ public final class Tool
     }
     public void setName(String name){
         this.name = name;
-    }
-
-    public boolean hasNameCamel(){
-        return (null != this.nameCamel);
-    }
-    public boolean hasNotNameCamel(){
-        return (null == this.nameCamel);
-    }
-    public boolean dropNameCamel(){
-        if (null != this.nameCamel){
-            this.nameCamel = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public String getNameCamel(){
-        return this.nameCamel;
-    }
-    public void setNameCamel(String nameCamel){
-        this.nameCamel = nameCamel;
     }
 
     public boolean hasHeadXtm(){
@@ -663,32 +631,44 @@ public final class Tool
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
     }
-    public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary dict){
+    public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary top){
         if (null != params && params.hasFields()){
-            TemplateDictionary data = dict.addSection(ClassName);
+            TemplateDictionary data = top.addSection(ClassName);
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
                     java.lang.Object value = Field.Get(field,this);
                     if (null != value){
-                        data.putVariable(field.toString(),value.toString());
+                        if (value instanceof DictionaryInto){
+                            DictionaryInto dvalue = (DictionaryInto)value;
+                            TemplateDictionary dsection = data.addSection(field.name());
+                            dvalue.dictionaryInto(dsection);
+                        }
+                        else
+                            data.putVariable(field.name(),gap.data.validate.Tool.ToString(field,value));
                     }
                 }
             }
-            return dict;
+            return top;
         }
         else
-            return this.dictionaryInto(dict);
+            return this.dictionaryInto(top);
     }
-    public TemplateDictionary dictionaryInto(TemplateDictionary dict){
-        TemplateDictionary data = dict.addSection(ClassName);
+    public TemplateDictionary dictionaryInto(TemplateDictionary top){
+        TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
             java.lang.Object value = Field.Get(field,this);
             if (null != value){
-                data.putVariable(field.toString(),value.toString());
+                if (value instanceof DictionaryInto){
+                    DictionaryInto dvalue = (DictionaryInto)value;
+                    TemplateDictionary dsection = data.addSection(field.name());
+                    dvalue.dictionaryInto(dsection);
+                }
+                else
+                    data.putVariable(field.name(),gap.data.validate.Tool.ToString(field,value));
             }
         }
-        return dict;
+        return top;
     }
     public void drop(){
         Delete(this);

@@ -35,4 +35,10 @@ public class ListPrimitiveRating
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.Rating;
+    }
+    public ListPrimitiveRating clone(){
+        return (ListPrimitiveRating)super.clone();
+    }
 }

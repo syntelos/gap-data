@@ -35,4 +35,10 @@ public class ListPrimitiveEmail
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.Email;
+    }
+    public ListPrimitiveEmail clone(){
+        return (ListPrimitiveEmail)super.clone();
+    }
 }

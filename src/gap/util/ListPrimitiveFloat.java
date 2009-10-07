@@ -33,4 +33,10 @@ public class ListPrimitiveFloat
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.Float;
+    }
+    public ListPrimitiveFloat clone(){
+        return (ListPrimitiveFloat)super.clone();
+    }
 }

@@ -34,4 +34,10 @@ public class ListPrimitiveKey
         super();
     }
 
+    public final gap.Primitive getType(){
+        return gap.Primitive.Key;
+    }
+    public ListPrimitiveKey clone(){
+        return (ListPrimitiveKey)super.clone();
+    }
 }

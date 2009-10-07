@@ -1,4 +1,5 @@
 package gap.data;
+path /partners;
 
 child Partner version 1 
     parent Resource

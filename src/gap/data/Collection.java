@@ -31,7 +31,8 @@ public interface Collection<V>
     extends java.lang.Iterable<V>,
             java.lang.Comparable<Collection<V>>,
             java.io.Serializable,
-            java.lang.Cloneable
+            java.lang.Cloneable,
+            DictionaryInto
 {
     /**
      * Set comparisons for comparable interface return value.
