@@ -20,7 +20,8 @@
 package gap;
 
 import oso.data.Person;
-
+import gap.data.Resource;
+import gap.data.Tool;
 import gap.service.Method;
 import gap.service.Protocol;
 import gap.service.Path;
@@ -48,6 +49,50 @@ public class Request
      */
     public final static Charset UTF8 = Charset.forName("UTF-8");
 
+    /**
+     * Request content type
+     */
+    public enum ContentType {
+        Nil,
+        Form,
+        Multipart,
+        Json,
+        Xml;
+
+        private final static java.util.Map<String,ContentType> Map = new java.util.HashMap<String,ContentType>();
+        static {
+            Map.put("application/x-www-form-urlencoded",Form);
+            Map.put("multipart/form-data",Multipart);
+            Map.put("application/json",Json);
+            Map.put("text/json",Json);
+            Map.put("application/xml",Xml);
+            Map.put("text/xml",Xml);
+        }
+        private final static java.util.regex.Pattern Tail = java.util.regex.Pattern.compile("[; ]");
+
+        public final static ContentType For(HttpServletRequest req){
+            return ContentType.For(req.getContentType());
+        }
+        public final static ContentType For(String mimetype){
+            if (null == mimetype)
+                return ContentType.Nil;
+            else {
+                ContentType value = Map.get(mimetype);
+                if (null != value)
+                    return value;
+                else {
+                    String[] re = Tail.split(mimetype,0);
+                    if (null != re && 0 != re.length){
+                        value = Map.get(re[0]);
+                        if (null != value)
+                            return value;
+                    }
+                    return ContentType.Nil;
+                }
+            }
+        }
+    }
+
 
     public final Method method;
     public final Protocol protocol;
@@ -58,6 +103,9 @@ public class Request
     public final String userReference;
     public final TemplateDictionary top;
     public final Logon logon;
+    public final ContentType contentType;
+    private Resource resource;
+    private Tool tool;
 
 
     public Request(HttpServletRequest req, Method method, Protocol protocol, Path path, 
@@ -74,6 +122,7 @@ public class Request
         this.userReference = uri;
         this.top = top;
         this.logon = logon;
+        this.contentType = ContentType.For(req);
     }
 
 
