@@ -62,6 +62,8 @@ public abstract class BigTable
     implements java.io.Serializable,
                DictionaryInto
 {
+    public final static gap.util.Services Services = (new gap.util.Services(BigTable.class)).init();
+
     protected final static java.util.Set<String> Imports = new java.util.HashSet<String>();
 
     protected final static void Register(Class dc){
