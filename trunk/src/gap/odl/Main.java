@@ -56,7 +56,7 @@ public final class Main
     /**
      * Generate bean, validate, servlet and list classes.
      */
-    public final static List<File> ProcessFiles(File beanXtm, File odl, File beanJava, File servlets)
+    public final static List<File> ProcessFiles(File beanXtm, File odl, File beanJava, File beans, File servlets)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         List<File> products = new java.util.ArrayList<File>();
@@ -69,6 +69,7 @@ public final class Main
         File javaDir = beanJava.getParentFile();
         File odlDir = beanXtm.getParentFile();
 
+        String parentClassName = OD.ClassName(odlClass);
         /*
          * Bean
          */
@@ -81,8 +82,16 @@ public final class Main
             finally {
                 out.close();
             }
+            if (null != beans){
+                out = new PrintWriter(new FileWriter(beans,true));
+                try {
+                    out.println(pack.getName()+'.'+parentClassName);
+                }
+                finally {
+                    out.close();
+                }
+            }
         }
-        String parentClassName = OD.ClassName(odlClass);
         /*
          * Validate
          */
@@ -187,7 +196,7 @@ public final class Main
      * Run on directories
      * @return List of target products
      */
-    public final static List<File> ProcessDirectories(File xtmFile, File odlDir, File srcDir, File servlets)
+    public final static List<File> ProcessDirectories(File xtmFile, File odlDir, File srcDir, File beans, File servlets)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         List<File> products = new java.util.ArrayList<File>();
@@ -196,7 +205,7 @@ public final class Main
         for (File odlFile: odlFiles){
             File srcFile = SrcFile(odlDir,srcDir,odlFile);
             try {
-                List<File> files = Main.ProcessFiles(xtmFile,odlFile,srcFile,servlets);
+                List<File> files = Main.ProcessFiles(xtmFile,odlFile,srcFile,beans,servlets);
 
                 products.addAll(files);
             }
@@ -229,6 +238,7 @@ public final class Main
 
                 File beanXtm = new File(odl,"bean.xtm");
                 File servlets = new File(src,"META-INF/services/gap.service.Servlet");
+                File beans = new File(src,"META-INF/services/gap.data.BigTable");
 
                 if (beanXtm.isFile()){
 
@@ -240,16 +250,24 @@ public final class Main
                         return;
                     }
 
+                    if (beans.isFile())
+                        beans.delete();
+                    else if (!beans.getParentFile().isDirectory()){
+                        System.err.println("Error, directory not found: '"+beans.getPath()+"'.");
+                        System.exit(1);
+                        return;
+                    }
+
                     try {
                         System.out.println("Template: "+beanXtm.getPath());
                         System.out.println("Source: "+odl.getPath());
                         System.out.println("Target: "+src.getPath());
-                        List<File> products = Main.ProcessDirectories(beanXtm,odl,src,servlets);
+                        List<File> products = Main.ProcessDirectories(beanXtm,odl,src,beans,servlets);
                         for (File product : products){
                             System.out.println("Product: "+product.getPath());
                         }
-                        if (null != servlets)
-                            System.out.println("Product: "+servlets.getPath());
+                        System.out.println("Product: "+servlets.getPath());
+                        System.out.println("Product: "+beans.getPath());
                         System.exit(0);
                         return;
                     }

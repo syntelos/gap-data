@@ -53,6 +53,11 @@ import java.util.logging.LogRecord;
 public class Servlet
     extends javax.servlet.http.HttpServlet
 {
+    public final static gap.util.Services Services = (new gap.util.Services(Servlet.class)).init();
+    static {
+        gap.data.BigTable.Services.init();
+    }
+
     /**
      * Universal charset
      */

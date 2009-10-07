@@ -31,8 +31,7 @@ public final class {{=class_name}}
     public final static String DefaultSortBy = "{{=class_defaultSortBy}}";
 
     static {
-        Register({{=class_name}}.class);{{#rfield}}
-        Register({{=field_class}}.class);{{/rfield}}
+        Register({{=class_name}}.class);
     }
 
 {{#field_hash_unique}}

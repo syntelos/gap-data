@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "oso.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T18:58:37.290Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T22:08:19.750Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
 {
