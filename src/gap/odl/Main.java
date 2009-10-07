@@ -56,7 +56,7 @@ public final class Main
     /**
      * Generate bean, validate, servlet and list classes.
      */
-    public final static List<File> ProcessFiles(File beanXtm, File odl, File beanFile, File servlets)
+    public final static List<File> ProcessFiles(File beanXtm, File odl, File beanJava, File servlets)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         List<File> products = new java.util.ArrayList<File>();
@@ -66,17 +66,17 @@ public final class Main
         Package pack = odlClass.pack;
         List<ImportDescriptor> imports = odlClass.imports;
 
-        File outDir = beanFile.getParentFile();
+        File javaDir = beanJava.getParentFile();
         File odlDir = beanXtm.getParentFile();
 
         /*
          * Bean
          */
         {
-            PrintWriter out = new PrintWriter(new FileWriter(beanFile));
+            PrintWriter out = new PrintWriter(new FileWriter(beanJava));
             try {
                 OD.GenerateBeanSource(beanXtm, pack, imports, odlClass, out);
-                products.add(beanFile);
+                products.add(beanJava);
             }
             finally {
                 out.close();
@@ -88,7 +88,7 @@ public final class Main
          */
         {
             File validateXtm = new File(odlDir,"bean-validate.xtm");
-            File validateFile = new File(outDir,"validate/"+parentClassName+".java");
+            File validateFile = new File(javaDir,"validate/"+parentClassName+".java");
             PrintWriter out = new PrintWriter(new FileWriter(validateFile));
             try {
                 OD.GenerateBeanSource(validateXtm, pack, imports, odlClass, out);
@@ -103,7 +103,7 @@ public final class Main
          */
         {
             File servletXtm = new File(odlDir,"bean-servlet.xtm");
-            File servletFile = new File(outDir,"servlet/"+parentClassName+".java");
+            File servletFile = new File(javaDir,"servlet/"+parentClassName+".java");
             PrintWriter out = new PrintWriter(new FileWriter(servletFile));
             try {
                 OD.GenerateBeanSource(servletXtm, pack, imports, odlClass, out);
@@ -142,7 +142,7 @@ public final class Main
                             String childClassName = OD.ChildClassName(field);
                             String listClassName = OD.ListShortClassName(parentClassName,childClassName);
                             if (null != listClassName){
-                                File listFile = new File(outDir,listClassName+".java");
+                                File listFile = new File(javaDir,listClassName+".java");
                                 PrintWriter out = new PrintWriter(new FileWriter(listFile));
                                 try {
                                     OD.GenerateListSource(listShortXtm, pack, imports, odlClass, field,
@@ -161,7 +161,7 @@ public final class Main
                             String childClassName = OD.ChildClassName(field);
                             String listClassName = OD.ListLongClassName(parentClassName,childClassName);
                             if (null != listClassName){
-                                File listFile = new File(outDir,listClassName+".java");
+                                File listFile = new File(javaDir,listClassName+".java");
                                 PrintWriter out = new PrintWriter(new FileWriter(listFile));
                                 try {
                                     OD.GenerateListSource(listLongXtm, pack, imports, odlClass, field,
@@ -187,16 +187,16 @@ public final class Main
      * Run on directories
      * @return List of target products
      */
-    public final static List<File> ProcessDirectories(File xtmFile, File odlDir, File outDir, File servlets)
+    public final static List<File> ProcessDirectories(File xtmFile, File odlDir, File srcDir, File servlets)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         List<File> products = new java.util.ArrayList<File>();
 
         Find odlFiles = new Find(ODLFiles,odlDir);
         for (File odlFile: odlFiles){
-            File outFile = SrcFile(odlDir,outDir,odlFile);
+            File srcFile = SrcFile(odlDir,srcDir,odlFile);
             try {
-                List<File> files = Main.ProcessFiles(xtmFile,odlFile,outFile,servlets);
+                List<File> files = Main.ProcessFiles(xtmFile,odlFile,srcFile,servlets);
 
                 products.addAll(files);
             }
@@ -307,7 +307,7 @@ public final class Main
     }
     public final static FileFilter ODLFiles = new FileFilter();
 
-    public final static File SrcFile(File odlDir, File odlFile, File srcDir){
+    public final static File SrcFile(File odlDir, File srcDir, File odlFile){
         String odlDirPath = odlDir.getPath();
         String odlFilePath = odlFile.getPath();
         String fileLocal = odlFilePath.substring(odlDirPath.length(),odlFilePath.length()-4);
