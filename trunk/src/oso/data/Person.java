@@ -3,7 +3,7 @@ package oso.data;
 
 
 import gap.data.*;
-import gap.service.Templates;
+import gap.util.*;
 
 import hapax.TemplateDictionary;
 
@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "oso.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T01:15:01.236Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T03:36:02.968Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
 {
@@ -364,7 +364,16 @@ public final class Person
     public void onwrite(){
 
     }
+    public void destroy(){
+        this.datastoreEntity = null;
 
+        this.key = null;
+
+        this.id = null;
+
+        this.logonId = null;
+
+    }
 
     public boolean hasKey(){
         return (null != this.key);
@@ -431,10 +440,6 @@ public final class Person
 
 
 
-
-    /*
-     * Data addressing supports
-     */
 
     /*
      * Data binding supports

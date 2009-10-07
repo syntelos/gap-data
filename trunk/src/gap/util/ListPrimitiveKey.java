@@ -33,6 +33,9 @@ public class ListPrimitiveKey
     public ListPrimitiveKey(){
         super();
     }
+    public ListPrimitiveKey(gap.data.BigTable table){
+        super();
+    }
 
     public final gap.Primitive getType(){
         return gap.Primitive.Key;

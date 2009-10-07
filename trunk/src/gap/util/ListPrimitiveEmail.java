@@ -34,6 +34,9 @@ public class ListPrimitiveEmail
     public ListPrimitiveEmail(){
         super();
     }
+    public ListPrimitiveEmail(gap.data.BigTable table){
+        super();
+    }
 
     public final gap.Primitive getType(){
         return gap.Primitive.Email;

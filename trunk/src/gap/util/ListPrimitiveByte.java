@@ -32,6 +32,9 @@ public class ListPrimitiveByte
     public ListPrimitiveByte(){
         super();
     }
+    public ListPrimitiveByte(gap.data.BigTable table){
+        super();
+    }
 
     public final gap.Primitive getType(){
         return gap.Primitive.Byte;

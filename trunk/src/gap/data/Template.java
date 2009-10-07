@@ -3,7 +3,7 @@ package gap.data;
 
 
 import gap.data.*;
-import gap.service.Templates;
+import gap.util.*;
 
 import hapax.TemplateDictionary;
 
@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T01:15:04.770Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T03:36:06.454Z",comments="gap.data")
 public final class Template
     extends gap.data.BigTable
     implements LastModified
@@ -397,7 +397,24 @@ public final class Template
     public void onwrite(){
 
     }
+    public void destroy(){
+        this.datastoreEntity = null;
 
+        this.key = null;
+
+        this.id = null;
+
+        this.base = null;
+
+        this.name = null;
+
+        this.lastModified = null;
+
+        this.templateSourceHapax = null;
+
+        this.templateContentType = null;
+
+    }
 
     public boolean hasKey(){
         return (null != this.key);
@@ -548,10 +565,6 @@ public final class Template
 
 
 
-
-    /*
-     * Data addressing supports
-     */
 
     /*
      * Data binding supports

@@ -32,6 +32,9 @@ public class ListPrimitiveDouble
     public ListPrimitiveDouble(){
         super();
     }
+    public ListPrimitiveDouble(gap.data.BigTable table){
+        super();
+    }
 
     public final gap.Primitive getType(){
         return gap.Primitive.Double;

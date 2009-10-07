@@ -32,6 +32,9 @@ public class ListPrimitiveString
     public ListPrimitiveString(){
         super();
     }
+    public ListPrimitiveString(gap.data.BigTable table){
+        super();
+    }
 
     public final gap.Primitive getType(){
         return gap.Primitive.String;

@@ -4,7 +4,7 @@ package {{=package_name}};
 import {{=import_spec}};{{/import}}
 
 import gap.data.*;
-import gap.service.Templates;
+import gap.util.*;
 
 import hapax.TemplateDictionary;
 
@@ -349,12 +349,22 @@ public final class {{=class_name}}
 {{/field_hash_unique}}
 
     public void onread(){
-{{#method_onread_body}}{{/method_onread_body}}
+{{#method_onread_with_body}}{{=body}}{{/method_onread_with_body}}
     }
     public void onwrite(){
-{{#method_onwrite_body}}{{/method_onwrite_body}}
+{{#method_onwrite_with_body}}{{=body}}{{/method_onwrite_with_body}}
     }
-
+    public void destroy(){
+        this.datastoreEntity = null;
+{{#pfield}}{{#field_is_collection}}
+        {{=field_class}} {{=field_name}} = this.{{=field_name}};
+        if (null != {{=field_name}}){
+            this.{{=field_name}} = null;
+            {{=field_name}}.destroy();
+        }{{/field_is_collection}}{{#field_is_not_collection}}
+        this.{{=field_name}} = null;
+{{/field_is_not_collection}}{{/pfield}}
+    }
 {{#pfield}}
     public boolean has{{=field_nameCamel}}(){
         return (null != this.{{=field_name}});
@@ -370,8 +380,15 @@ public final class {{=class_name}}
         else
             return false;
     }
-    public {{=field_class}} get{{=field_nameCamel}}(){
-        return this.{{=field_name}};
+    public {{=field_class}} get{{=field_nameCamel}}(){{{#field_is_not_collection}}
+        return this.{{=field_name}};{{/field_is_not_collection}}{{#field_is_collection}}
+        {{=field_class}} {{=field_name}} = this.{{=field_name}};
+        if (null == {{=field_name}}){
+            {{=field_name}} = new {{=field_impl_class_name}}(this);
+            this.{{=field_name}} = {{=field_name}};
+            {{=field_name}}.init();
+        }
+        return {{=field_name}};{{/field_is_collection}}
     }
     public void set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         this.{{=field_name}} = {{=field_name}};
@@ -392,12 +409,10 @@ public final class {{=class_name}}
     }
     public {{=field_list_component}} get{{=field_nameCamel}}(gap.data.ListFilter<{{=field_list_component}}> filter){
         if (null != filter){
-            {{=field_class}} list = this.{{=field_name}};
-            if (null != list){
-                for ({{=field_list_component}} item : list){
-                    if (filter.accept(item))
-                        return item;
-                }
+            {{=field_class}} list = this.get{{=field_nameCamel}}();
+            for ({{=field_list_component}} item : list){
+                if (filter.accept(item))
+                    return item;
             }
             return null;
         }
@@ -452,18 +467,6 @@ public final class {{=class_name}}
         this.{{=field_name}} = {{=field_name}};
     }
 {{/tfield}}
-
-    /*
-     * Data addressing supports
-     */{{#rfield}}
-    public Query createQueryFor{{=field_nameCamel}}(){
-        Key thisKey = this.getClassFieldKeyValue();
-        if (null != thisKey)
-            return new Query({{=field_class}}.KIND,thisKey);
-        else
-            throw new IllegalArgumentException();
-    }
-{{/rfield}}
 
     /*
      * Data binding supports

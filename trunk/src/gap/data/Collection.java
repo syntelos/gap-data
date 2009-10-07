@@ -114,6 +114,8 @@ public interface Collection<V>
 
     public boolean isNotEmpty();
 
+    public void init();
+
     public void destroy();
 
 }

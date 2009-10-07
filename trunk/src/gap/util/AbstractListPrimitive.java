@@ -100,6 +100,8 @@ public abstract class AbstractListPrimitive<V>
     }
 
 
+    public void init(){
+    }
     public void destroy(){
         this.list = null;
     }

@@ -85,22 +85,32 @@ public abstract class AbstractList<V extends BigTable>
 
     protected int limit = gap.service.Parameters.Special.Page.Default;
 
+    protected boolean fillable = true;
+
 
     protected AbstractList(){
         super();
     }
 
+
+    public final void init(){
+        this.fill();
+    }
     /**
-     * Attempt buffer fill when empty
+     * Attempt buffer fill once only.
      */
-    public final void fill(){
-        if (this.isEmpty())
-            this.refill();
+    public final List<V> fill(){
+        if (this.fillable){
+            this.fillable = false;
+            return this.refill();
+        }
+        else
+            return this;
     }
     /**
      * Attempt buffer fill every time
      */
-    public final void refill(){
+    public final List<V> refill(){
         Query query = this.getQuery();
         if (null != query){
             FetchOptions page = FetchOptions.Builder.withLimit(this.limit).offset(this.startIndex);
@@ -110,6 +120,7 @@ public abstract class AbstractList<V extends BigTable>
             for (BigTable table: iterable){
                 this.addToBuffer(table);
             }
+            return this;
         }
         else
             throw new IllegalStateException("Missing query.");

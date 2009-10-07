@@ -32,6 +32,9 @@ public class ListPrimitiveLong
     public ListPrimitiveLong(){
         super();
     }
+    public ListPrimitiveLong(gap.data.BigTable table){
+        super();
+    }
 
     public final gap.Primitive getType(){
         return gap.Primitive.Long;

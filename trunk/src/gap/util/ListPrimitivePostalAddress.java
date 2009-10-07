@@ -34,6 +34,9 @@ public class ListPrimitivePostalAddress
     public ListPrimitivePostalAddress(){
         super();
     }
+    public ListPrimitivePostalAddress(gap.data.BigTable table){
+        super();
+    }
 
     public final gap.Primitive getType(){
         return gap.Primitive.PostalAddress;
