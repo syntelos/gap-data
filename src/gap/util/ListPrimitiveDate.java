@@ -34,6 +34,9 @@ public class ListPrimitiveDate
     public ListPrimitiveDate(){
         super();
     }
+    public ListPrimitiveDate(gap.data.BigTable table){
+        super();
+    }
 
     public final gap.Primitive getType(){
         return gap.Primitive.Date;

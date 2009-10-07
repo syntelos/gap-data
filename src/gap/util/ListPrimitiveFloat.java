@@ -32,6 +32,9 @@ public class ListPrimitiveFloat
     public ListPrimitiveFloat(){
         super();
     }
+    public ListPrimitiveFloat(gap.data.BigTable table){
+        super();
+    }
 
     public final gap.Primitive getType(){
         return gap.Primitive.Float;

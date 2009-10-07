@@ -179,8 +179,6 @@ public abstract class BigTable
 
     protected transient volatile Entity datastoreEntity;
 
-    private transient volatile Enum[] classFieldsArray;
-
 
     protected BigTable(){
         super();
@@ -204,6 +202,8 @@ public abstract class BigTable
      * LastModified} and before storage.
      */
     public abstract void onwrite();
+
+    public abstract void destroy();
 
     /**
      * The transient field "from datastore" employed by the {@link

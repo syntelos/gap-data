@@ -27,7 +27,7 @@ import javax.annotation.Generated;
 /**
  * Data validation functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-07T01:15:04.361Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-07T03:36:06.055Z",comments="gap.data")
 public abstract class Image
     extends gap.Strings
 {
@@ -41,6 +41,12 @@ public abstract class Image
             return StringFromString(string);
           case Name:
             return StringFromString(string);
+          case LastModified:
+            return LongFromString(string);
+          case ContentType:
+            return StringFromString(string);
+          case Bytes:
+            return BlobFromString(string);
         default:
             throw new IllegalStateException(field.name());
         }
@@ -55,6 +61,12 @@ public abstract class Image
             return StringToString( (String)value);
           case Name:
             return StringToString( (String)value);
+          case LastModified:
+            return LongToString( (Long)value);
+          case ContentType:
+            return StringToString( (String)value);
+          case Bytes:
+            return BlobToString( (Blob)value);
         default:
             throw new IllegalStateException(field.name());
         }

@@ -3,7 +3,7 @@ package gap.data;
 
 
 import gap.data.*;
-import gap.service.Templates;
+import gap.util.*;
 
 import hapax.TemplateDictionary;
 
@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T01:15:03.335Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T03:36:05.087Z",comments="gap.data")
 public final class Resource
     extends gap.data.BigTable
     implements LastModified
@@ -460,7 +460,57 @@ public final class Resource
     public void onwrite(){
 
     }
+    public void destroy(){
+        this.datastoreEntity = null;
 
+        this.key = null;
+
+        this.id = null;
+
+        this.base = null;
+
+        this.name = null;
+
+        this.lastModified = null;
+
+        this.tag = null;
+
+        this.servletClassname = null;
+
+        this.servletSourceJava = null;
+
+        this.servletClassfileJvm = null;
+
+        this.templateSourceHapax = null;
+
+        this.templateContentType = null;
+
+        List.Long<Partner> partners = this.partners;
+        if (null != partners){
+            this.partners = null;
+            partners.destroy();
+        }
+        List.Long<Account> accounts = this.accounts;
+        if (null != accounts){
+            this.accounts = null;
+            accounts.destroy();
+        }
+        List.Long<Image> images = this.images;
+        if (null != images){
+            this.images = null;
+            images.destroy();
+        }
+        List.Long<Template> templates = this.templates;
+        if (null != templates){
+            this.templates = null;
+            templates.destroy();
+        }
+        List.Long<Tool> tools = this.tools;
+        if (null != tools){
+            this.tools = null;
+            tools.destroy();
+        }
+    }
 
     public boolean hasKey(){
         return (null != this.key);
@@ -708,7 +758,13 @@ public final class Resource
             return false;
     }
     public List.Long<Partner> getPartners(){
-        return this.partners;
+        List.Long<Partner> partners = this.partners;
+        if (null == partners){
+            partners = new ListLongResourcePartner(this);
+            this.partners = partners;
+            partners.init();
+        }
+        return partners;
     }
     public void setPartners(List.Long<Partner> partners){
         this.partners = partners;
@@ -729,12 +785,10 @@ public final class Resource
     }
     public Partner getPartners(gap.data.ListFilter<Partner> filter){
         if (null != filter){
-            List.Long<Partner> list = this.partners;
-            if (null != list){
-                for (Partner item : list){
-                    if (filter.accept(item))
-                        return item;
-                }
+            List.Long<Partner> list = this.getPartners();
+            for (Partner item : list){
+                if (filter.accept(item))
+                    return item;
             }
             return null;
         }
@@ -757,7 +811,13 @@ public final class Resource
             return false;
     }
     public List.Long<Account> getAccounts(){
-        return this.accounts;
+        List.Long<Account> accounts = this.accounts;
+        if (null == accounts){
+            accounts = new ListLongResourceAccount(this);
+            this.accounts = accounts;
+            accounts.init();
+        }
+        return accounts;
     }
     public void setAccounts(List.Long<Account> accounts){
         this.accounts = accounts;
@@ -778,12 +838,10 @@ public final class Resource
     }
     public Account getAccounts(gap.data.ListFilter<Account> filter){
         if (null != filter){
-            List.Long<Account> list = this.accounts;
-            if (null != list){
-                for (Account item : list){
-                    if (filter.accept(item))
-                        return item;
-                }
+            List.Long<Account> list = this.getAccounts();
+            for (Account item : list){
+                if (filter.accept(item))
+                    return item;
             }
             return null;
         }
@@ -806,7 +864,13 @@ public final class Resource
             return false;
     }
     public List.Long<Image> getImages(){
-        return this.images;
+        List.Long<Image> images = this.images;
+        if (null == images){
+            images = new ListLongResourceImage(this);
+            this.images = images;
+            images.init();
+        }
+        return images;
     }
     public void setImages(List.Long<Image> images){
         this.images = images;
@@ -827,12 +891,10 @@ public final class Resource
     }
     public Image getImages(gap.data.ListFilter<Image> filter){
         if (null != filter){
-            List.Long<Image> list = this.images;
-            if (null != list){
-                for (Image item : list){
-                    if (filter.accept(item))
-                        return item;
-                }
+            List.Long<Image> list = this.getImages();
+            for (Image item : list){
+                if (filter.accept(item))
+                    return item;
             }
             return null;
         }
@@ -855,7 +917,13 @@ public final class Resource
             return false;
     }
     public List.Long<Template> getTemplates(){
-        return this.templates;
+        List.Long<Template> templates = this.templates;
+        if (null == templates){
+            templates = new ListLongResourceTemplate(this);
+            this.templates = templates;
+            templates.init();
+        }
+        return templates;
     }
     public void setTemplates(List.Long<Template> templates){
         this.templates = templates;
@@ -876,12 +944,10 @@ public final class Resource
     }
     public Template getTemplates(gap.data.ListFilter<Template> filter){
         if (null != filter){
-            List.Long<Template> list = this.templates;
-            if (null != list){
-                for (Template item : list){
-                    if (filter.accept(item))
-                        return item;
-                }
+            List.Long<Template> list = this.getTemplates();
+            for (Template item : list){
+                if (filter.accept(item))
+                    return item;
             }
             return null;
         }
@@ -904,7 +970,13 @@ public final class Resource
             return false;
     }
     public List.Long<Tool> getTools(){
-        return this.tools;
+        List.Long<Tool> tools = this.tools;
+        if (null == tools){
+            tools = new ListLongResourceTool(this);
+            this.tools = tools;
+            tools.init();
+        }
+        return tools;
     }
     public void setTools(List.Long<Tool> tools){
         this.tools = tools;
@@ -925,12 +997,10 @@ public final class Resource
     }
     public Tool getTools(gap.data.ListFilter<Tool> filter){
         if (null != filter){
-            List.Long<Tool> list = this.tools;
-            if (null != list){
-                for (Tool item : list){
-                    if (filter.accept(item))
-                        return item;
-                }
+            List.Long<Tool> list = this.getTools();
+            for (Tool item : list){
+                if (filter.accept(item))
+                    return item;
             }
             return null;
         }
@@ -940,10 +1010,6 @@ public final class Resource
 
 
 
-
-    /*
-     * Data addressing supports
-     */
 
     /*
      * Data binding supports

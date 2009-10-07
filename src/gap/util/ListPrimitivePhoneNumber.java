@@ -34,6 +34,9 @@ public class ListPrimitivePhoneNumber
     public ListPrimitivePhoneNumber(){
         super();
     }
+    public ListPrimitivePhoneNumber(gap.data.BigTable table){
+        super();
+    }
 
     public final gap.Primitive getType(){
         return gap.Primitive.PhoneNumber;
