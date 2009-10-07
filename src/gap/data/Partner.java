@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T03:36:05.851Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T04:20:04.651Z",comments="gap.data")
 public final class Partner
     extends gap.data.BigTable
 {
@@ -33,13 +33,17 @@ public final class Partner
     }
 
 
-    public final static Key KeyIdFor(String logonId){
+    public final static Key KeyLongIdFor(String logonId){
         String id = IdFor( logonId);
-        return KeyFor(id);
+        return KeyLongFor(id);
     }
-    public final static Key KeyIdFor(Key ancestor, String logonId){
+    public final static Key KeyLongIdFor(Key ancestor, String logonId){
         String id = IdFor(ancestor, logonId);
-        return KeyFor(ancestor,id);
+        return KeyLongFor(ancestor,id);
+    }
+    public final static Key KeyShortIdFor(Key ancestor, String logonId){
+        String id = IdFor(ancestor, logonId);
+        return KeyShortFor(ancestor,id);
     }
     public final static String IdFor(Key ancestor, String logonId){
         if (ancestor.isComplete() && null != logonId){
@@ -57,9 +61,9 @@ public final class Partner
         else
             throw new IllegalArgumentException();
     }
-    public final static Partner ForLogonId(Key ancestor, String logonId){
+    public final static Partner ForLongLogonId(Key ancestor, String logonId){
         if (null != logonId){
-            Key key = KeyIdFor(ancestor, logonId);
+            Key key = KeyLongIdFor(ancestor, logonId);
             Partner instance = (Partner)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -71,9 +75,9 @@ public final class Partner
         else
             throw new IllegalArgumentException();
     }
-    public final static Partner ForLogonId(String logonId){
+    public final static Partner ForShortLogonId(Key ancestor, String logonId){
         if (null != logonId){
-            Key key = KeyIdFor( logonId);
+            Key key = KeyShortIdFor(ancestor, logonId);
             Partner instance = (Partner)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -85,36 +89,58 @@ public final class Partner
         else
             throw new IllegalArgumentException();
     }
-    public final static Partner GetCreate(String logonId){
-        Partner partner = ForLogonId( logonId);
+    public final static Partner ForLongLogonId(String logonId){
+        if (null != logonId){
+            Key key = KeyLongIdFor( logonId);
+            Partner instance = (Partner)gap.data.Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (Partner)gap.data.Store.Query1(q);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static Partner GetCreateLong(String logonId){
+        Partner partner = ForLongLogonId( logonId);
         if (null == partner){
             partner = new Partner( logonId);
             partner = (Partner)gap.data.Store.Put(partner);
         }
         return partner;
     }
-    public final static Partner GetCreate(Key ancestor, String logonId){
-        Partner partner = ForLogonId(ancestor, logonId);
+    public final static Partner GetCreateLong(Key ancestor, String logonId){
+        Partner partner = ForLongLogonId(ancestor, logonId);
         if (null == partner){
-            partner = new Partner(ancestor, logonId);
+            partner = new Partner(ancestor,false, logonId);
+            partner = (Partner)gap.data.Store.Put(partner);
+        }
+        return partner;
+    }
+    public final static Partner GetCreateShort(Key ancestor, String logonId){
+        Partner partner = ForShortLogonId(ancestor, logonId);
+        if (null == partner){
+            partner = new Partner(ancestor,true, logonId);
             partner = (Partner)gap.data.Store.Put(partner);
         }
         return partner;
     }
 
 
-    public final static Key KeyFor(String id){
+    public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static Key KeyGroupFor(Key ancestor, String id){
+    public final static Key KeyShortFor(Key ancestor, String id){
         return KeyFactory.createKey(ancestor,KIND,id);
     }
-    public final static Key KeyFor(Key ancestor, String id){
+    public final static Key KeyLongFor(Key ancestor, String id){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static Partner ForId(Key ancestor, String id){
+    public final static Partner ForLongId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyFor(ancestor,id);
+            Key key = KeyLongFor(ancestor,id);
             Partner instance = (Partner)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -126,9 +152,23 @@ public final class Partner
         else
             throw new IllegalArgumentException();
     }
-    public final static Partner ForId(String id){
+    public final static Partner ForShortId(Key ancestor, String id){
+        if (null != ancestor && ancestor.isComplete() && null != id){
+            Key key = KeyShortFor(ancestor,id);
+            Partner instance = (Partner)gap.data.Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (Partner)gap.data.Store.Query1(q);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static Partner ForLongId(String id){
         if (null != id){
-            Key key = KeyFor(id);
+            Key key = KeyLongFor(id);
             Partner instance = (Partner)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -165,15 +205,44 @@ public final class Partner
     /**
      * Test for uniqueness and iterate under collisions.
      */
-    public final static Key NewChildRandomKey(Key parent){
-        if (null != parent){
-            String source = gap.data.BigTable.ToString(parent);
-            long id = gap.data.Hash.Djb64(source);
+    public final static Key NewRandomKeyLong(Key ancestor){
+        if (null != ancestor){
+            /*
+             * Source matter for data local uniqueness
+             */
+            String source = gap.data.BigTable.ToString(ancestor);
+            long matter = gap.data.Hash.Djb64(source);
+            /*
+             * Random matter for network global uniqueness
+             */
             java.util.Random random = new java.util.Random();
             do {
-                id ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(id);
+                matter ^= random.nextLong();
+                String idString = gap.data.Hash.Hex(matter);
                 Key key = KeyFactory.createKey(KIND,idString);
+                if (null == GetKey(key))
+                    return key;
+            }
+            while (true);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static Key NewRandomKeyShort(Key ancestor){
+        if (null != ancestor){
+            /*
+             * Source matter for data local uniqueness
+             */
+            String source = gap.data.BigTable.ToString(ancestor);
+            long matter = gap.data.Hash.Djb64(source);
+            /*
+             * Random matter for network global uniqueness
+             */
+            java.util.Random random = new java.util.Random();
+            do {
+                matter ^= random.nextLong();
+                String idString = gap.data.Hash.Hex(matter);
+                Key key = KeyFactory.createKey(ancestor,KIND,idString);
                 if (null == GetKey(key))
                     return key;
             }
@@ -345,15 +414,19 @@ public final class Partner
         this.setLogonId(logonId);
         String id = IdFor( logonId);
         this.setId(id);
-        Key key = KeyFor(id);
+        Key key = KeyLongFor(id);
         this.setKey(key);
     }
-    public Partner(Key ancestor, String logonId) {
+    public Partner(Key ancestor, boolean isShort, String logonId) {
         super();
         this.setLogonId(logonId);
         String id = IdFor(ancestor,  logonId);
         this.setId(id);
-        Key key = KeyFor(ancestor,id);
+        Key key;
+        if (isShort)
+            key = KeyShortFor(ancestor,id);
+        else
+            key = KeyLongFor(ancestor,id);
         this.setKey(key);
     }
 

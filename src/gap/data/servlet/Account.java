@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-07T03:36:06.213Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-07T04:20:05.143Z",comments="gap.data")
 public class Account
     extends gap.servlet.Site
 {
@@ -59,7 +59,7 @@ public class Account
             String id = req.getPath(0);
             if (null != id){
 
-                gap.data.Account instance = gap.data.Account.ForId(id);
+                gap.data.Account instance = gap.data.Account.ForLongId(id);
 
                 if (null != instance){
 

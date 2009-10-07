@@ -309,7 +309,7 @@ public class FileManager
 
         Servlet servlet = null;
 
-        Resource desc = Resource.ForBaseName(base,name);
+        Resource desc = Resource.ForLongBaseName(base,name);
         if (null != desc)
             servlet = this.getServlet(desc);
 
@@ -529,7 +529,7 @@ public class FileManager
             name = "";
         }
 
-        return Resource.ForBaseName(base,name);
+        return Resource.ForLongBaseName(base,name);
     }
 
     private final static List<String> Options;
