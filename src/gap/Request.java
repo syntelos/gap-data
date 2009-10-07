@@ -126,6 +126,24 @@ public class Request
     }
 
 
+    public boolean hasResource(){
+        return (null != this.resource);
+    }
+    public Resource getResource(){
+        return this.resource;
+    }
+    public void setResource(Resource resource){
+        this.resource = resource;
+    }
+    public boolean hasTool(){
+        return (null != this.tool);
+    }
+    public Tool getTool(){
+        return this.tool;
+    }
+    public void setTool(Tool tool){
+        this.tool = tool;
+    }
     public final hapax.TemplateDictionary getTop(){
         return logon.dict;
     }

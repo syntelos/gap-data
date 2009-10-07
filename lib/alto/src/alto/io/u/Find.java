@@ -29,7 +29,8 @@ package alto.io.u ;
  */
 public final class Find 
     extends java.lang.Object
-    implements java.util.Iterator<java.io.File>
+    implements java.util.Iterator<java.io.File>,
+               java.lang.Iterable<java.io.File>
 {
     public final static java.io.FileFilter NulFilter = null;
 
@@ -258,6 +259,9 @@ public final class Find
         throws java.lang.UnsupportedOperationException
     {
         throw new java.lang.UnsupportedOperationException();
+    }
+    public final java.util.Iterator<java.io.File> iterator(){
+        return this;
     }
 
     public final static void usage(java.io.PrintStream out){

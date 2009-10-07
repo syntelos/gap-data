@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-07T04:20:04.535Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-07T18:58:40.335Z",comments="gap.data")
 public final class ListLongResourceTool
     extends gap.util.AbstractList<Tool>
     implements gap.data.List.Long<Tool>
