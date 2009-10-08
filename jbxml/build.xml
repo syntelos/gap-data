@@ -16,7 +16,7 @@
 
   <path id="lib.path.jela">
     <fileset dir="${lib.jela}">
-      <include name="**/jela-*.jar"/>
+      <include name="**/gap-jela-*.jar"/>
     </fileset>
   </path>
 

@@ -18,7 +18,7 @@ package jbxml;
 public final class Version
     extends Object
 {
-    public final static String Name = "jbxml";
+    public final static String Name = "gap-jbxml";
     public final static int Major   =  0;
     public final static int Minor   =  0;
     public final static int Build   =  5;
