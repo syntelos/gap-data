@@ -18,7 +18,7 @@ package jela;
 public final class Version
     extends Object
 {
-    public final static String Name = "jela";
+    public final static String Name = "gap-jela";
     public final static int Major   =  1;
     public final static int Minor   =  0;
     public final static int Build   =  1;
