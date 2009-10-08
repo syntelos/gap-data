@@ -596,7 +596,10 @@ public class Function
         this.script = string;
     }
     public final void setScript(String string){
-        this.script = new StringBuilder(string);
+        if (null == string)
+            this.script = null;
+        else
+            this.script = new StringBuilder(string);
     }
 
     /**
