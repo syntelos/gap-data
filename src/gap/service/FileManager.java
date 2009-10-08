@@ -68,12 +68,7 @@ public class FileManager
 {
     public final static Charset UTF8 = Charset.forName("UTF-8");
 
-    /**
-     * Subclass usage should be qualified as
-     * <code>"FileManager.Log"</code> or
-     * <code>"gap.service.FileManager.Log"</code>.
-     */
-    protected final static Logger Log = Logger.getLogger("FileManager");
+    protected final static Logger Log = Logger.getLogger(FileManager.class.getName());
 
 
     public final static FileManager Get(){

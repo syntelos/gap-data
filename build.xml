@@ -84,13 +84,13 @@
 
   <path id="jar.pack.path.jela">
     <fileset dir="${lib}">
-      <include name="**/jela-*.jar"/>
+      <include name="**/gap-jela-*.jar"/>
     </fileset>
   </path>
 
   <path id="jar.pack.path.jbxml">
     <fileset dir="${lib}">
-      <include name="**/jbxml-*.jar"/>
+      <include name="**/gap-jbxml-*.jar"/>
     </fileset>
   </path>
 

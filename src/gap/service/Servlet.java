@@ -63,12 +63,7 @@ public class Servlet
      */
     public final static Charset UTF8 = Charset.forName("UTF-8");
 
-    /**
-     * Subclass usage should be qualified as
-     * <code>"Servlet.Log"</code> or
-     * <code>"gap.service.Servlet.Log"</code>.
-     */
-    protected final static Logger Log = Logger.getLogger("Servlet");
+    protected final static Logger Log = Logger.getLogger(Servlet.class.getName());
     /**
      * One servlet config in the classloader scope.
      */

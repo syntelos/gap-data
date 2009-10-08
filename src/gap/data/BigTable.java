@@ -68,11 +68,8 @@ public abstract class BigTable
 
     protected final static void Register(Class dc){
         String pkg = dc.getPackage().getName();
-        if (null != pkg){
-            synchronized(Imports){
-                Imports.add(pkg);
-            }
-        }
+        if (null != pkg)
+            Imports.add(pkg);
         else
             throw new IllegalStateException(dc.getName());
     }
