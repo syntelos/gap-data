@@ -1,3 +1,8 @@
 
-For Gap.Engine documentation, please refer to http://code.google.com/appengine/docs/java/overview.html
+For Gap Data info, please see http://code.google.com/p/gap-data or peruse the codebase.
 
+For Gap Data discussion, please refer to http://groups.google.com/group/gap-data
+
+For Google Appengine documentation, please refer to http://code.google.com/appengine/docs/java/overview.html
+
+And of course, Gap Data is live at http://gap-data.appspot.com/
