@@ -38,12 +38,7 @@ public class Context
     implements javax.servlet.ServletContextListener
 {
 
-    /**
-     * Subclass usage should be qualified as
-     * <code>"Context.Log"</code> or
-     * <code>"gap.service.Context.Log"</code>.
-     */
-    protected final static Logger Log = Logger.getLogger("Context");
+    protected final static Logger Log = Logger.getLogger(Context.class.getName());
 
 
 

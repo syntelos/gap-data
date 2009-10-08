@@ -108,7 +108,7 @@ public final class Logon
      * <code>"Logon.Log"</code> or
      * <code>"gap.service.Logon.Log"</code>.
      */
-    protected final static Logger Log = Logger.getLogger("Logon");
+    protected final static Logger Log = Logger.getLogger(Logon.class.getName());
 
 
     public final Principal principal;
