@@ -25,7 +25,7 @@ import gap.service.Method;
 import gap.service.OD;
 import gap.service.Servlet;
 
-import jbxml.Registry;
+import gap.jbx.Registry;
 
 import javax.script.Bindings;
 
@@ -35,7 +35,7 @@ import javax.script.Bindings;
  * @author jdp
  */
 public final class Function
-    extends jbxml.Function
+    extends gap.jbx.Function
 {
 
     private final static java.util.List<String> JelaImports = new java.util.ArrayList<String>();
@@ -51,7 +51,7 @@ public final class Function
     }
 
     public final static class Type 
-        extends jbxml.Function.Type
+        extends gap.jbx.Function.Type
     {
         private final static Class Return = java.lang.Void.class;
         private final static Class[] Parameters = { gap.Request.class, gap.Response.class};
@@ -82,7 +82,7 @@ public final class Function
 
 
     public Function(Servlet instance, Request request, Response response, Resource resource, Tool tool)
-        throws jbxml.Function.MethodNotFound
+        throws gap.jbx.Function.MethodNotFound
     {
         super(new Type(tool), Target(tool));
         this.instance = instance;
@@ -100,7 +100,7 @@ public final class Function
             this.init(bindings);
         }
         else {
-            jbxml.Function.List methods = new jbxml.Function.List(instance.getClass());
+            gap.jbx.Function.List methods = new gap.jbx.Function.List(instance.getClass());
             this.init(instance,methods);
         }
     }
@@ -109,7 +109,7 @@ public final class Function
         this.instance = null;
     }
     public void init(Bindings local)
-        throws jbxml.Function.MethodNotFound
+        throws gap.jbx.Function.MethodNotFound
     {
         this.setBindings(local,ENGINE_SCOPE);
         super.init();

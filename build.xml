@@ -82,18 +82,6 @@
     </fileset>
   </path>
 
-  <path id="jar.pack.path.jela">
-    <fileset dir="${lib}">
-      <include name="**/gap-jela-*.jar"/>
-    </fileset>
-  </path>
-
-  <path id="jar.pack.path.jbxml">
-    <fileset dir="${lib}">
-      <include name="**/gap-jbxml-*.jar"/>
-    </fileset>
-  </path>
-
   <path id="jar.pack.path.gson">
     <fileset dir="${lib}">
       <include name="**/gson-*.jar"/>
@@ -199,8 +187,6 @@
         <zipfileset src="${toString:jar.pack.path.appengine}"/>
         <zipfileset src="${toString:jar.pack.path.joda-time}"/>
         <zipfileset src="${toString:jar.pack.path.cos}"/>
-        <zipfileset src="${toString:jar.pack.path.jela}"/>
-        <zipfileset src="${toString:jar.pack.path.jbxml}"/>
         <zipfileset src="${toString:jar.pack.path.gson}"/>
         <fileset dir="${odl}">
           <include name="**/*.xtm" />
