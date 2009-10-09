@@ -1,4 +1,14 @@
 #summary Guide to the codebase
 #labels Featured,Documentation
 
- The source repo checks- out into the gap-data appengine application. Edit "project.application" to point it to your own appengine instance.
+ The source repo checks- out into the gap-data appengine application.
+
+ Edit "project.application" to point it to your own appengine name.
+
+ Run "ant" to build, and then 
+{{{
+ ./appengine-java-sdk/1.2.5/bin/appcfg -e email@dom update war
+}}}
+ to install.
+
+ After appcfg has been successfully employed once, then "ant update" can repeat that process if necessary.
