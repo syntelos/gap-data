@@ -2,6 +2,7 @@
 package gap.data;
 
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
 
@@ -15,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T22:08:21.154Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:30.249Z",comments="gap.data")
 public final class Account
     extends gap.data.BigTable
 {
@@ -105,26 +106,10 @@ public final class Account
         else
             throw new IllegalArgumentException();
     }
-    public final static Account GetCreateLong(String base, String name){
-        Account account = ForLongBaseName( base, name);
-        if (null == account){
-            account = new Account( base, name);
-            account = (Account)gap.data.Store.Put(account);
-        }
-        return account;
-    }
     public final static Account GetCreateLong(Key ancestor, String base, String name){
         Account account = ForLongBaseName(ancestor, base, name);
         if (null == account){
-            account = new Account(ancestor,false, base, name);
-            account = (Account)gap.data.Store.Put(account);
-        }
-        return account;
-    }
-    public final static Account GetCreateShort(Key ancestor, String base, String name){
-        Account account = ForShortBaseName(ancestor, base, name);
-        if (null == account){
-            account = new Account(ancestor,true, base, name);
+            account = new Account(ancestor, base, name);
             account = (Account)gap.data.Store.Put(account);
         }
         return account;
@@ -418,26 +403,13 @@ public final class Account
         super();
         this.setKey(child);
     }
-    public Account(String base, String name) {
-        super();
-        this.setBase(base);
-        this.setName(name);
-        String id = IdFor( base, name);
-        this.setId(id);
-        Key key = KeyLongFor(id);
-        this.setKey(key);
-    }
-    public Account(Key ancestor, boolean isShort, String base, String name) {
+    public Account(Key ancestor, String base, String name) {
         super();
         this.setBase(base);
         this.setName(name);
         String id = IdFor(ancestor,  base, name);
         this.setId(id);
-        Key key;
-        if (isShort)
-            key = KeyShortFor(ancestor,id);
-        else
-            key = KeyLongFor(ancestor,id);
+        Key key = KeyLongFor(ancestor,id);
         this.setKey(key);
     }
 
@@ -613,6 +585,49 @@ public final class Account
             }
         }
         return top;
+    }
+    public boolean updateFrom(Request req){
+        boolean change = false;
+
+        Key key = Strings.KeyFromString(req.getParameter("key"));
+        if (IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        String id = Strings.StringFromString(req.getParameter("id"));
+        if (IsNotEqual(id,this.getId())){
+            this.setId(id);
+            change = true;
+        }
+
+        String base = Strings.StringFromString(req.getParameter("base"));
+        if (IsNotEqual(base,this.getBase())){
+            this.setBase(base);
+            change = true;
+        }
+
+        String name = Strings.StringFromString(req.getParameter("name"));
+        if (IsNotEqual(name,this.getName())){
+            this.setName(name);
+            change = true;
+        }
+
+        return change;
+    }
+    public boolean updateFrom(BigTable proto){
+        return this.updateFrom( (Account)proto);
+    }
+    public boolean updateFrom(Account proto){
+        boolean change = false;
+
+        Key key = proto.getKey();
+        if (null != key && IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        return change;
     }
     public void drop(){
         Delete(this);

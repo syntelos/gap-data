@@ -2,6 +2,7 @@
 package gap.data;
 
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
 
@@ -15,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T22:08:21.514Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:30.739Z",comments="gap.data")
 public final class Template
     extends gap.data.BigTable
     implements LastModified
@@ -34,39 +35,37 @@ public final class Template
     }
 
 
-    public final static Key KeyLongIdFor(String base, String name){
-        String id = IdFor( base,  name);
+    public final static Key KeyLongIdFor(String name){
+        String id = IdFor( name);
         return KeyLongFor(id);
     }
-    public final static Key KeyLongIdFor(Key ancestor, String base, String name){
-        String id = IdFor(ancestor, base,  name);
+    public final static Key KeyLongIdFor(Key ancestor, String name){
+        String id = IdFor(ancestor, name);
         return KeyLongFor(ancestor,id);
     }
-    public final static Key KeyShortIdFor(Key ancestor, String base, String name){
-        String id = IdFor(ancestor, base,  name);
+    public final static Key KeyShortIdFor(Key ancestor, String name){
+        String id = IdFor(ancestor, name);
         return KeyShortFor(ancestor,id);
     }
-    public final static String IdFor(Key ancestor, String base, String name){
-        if (ancestor.isComplete() && null != base && null != name){
-            String baseString = base;
+    public final static String IdFor(Key ancestor, String name){
+        if (ancestor.isComplete() && null != name){
             String nameString = name;
-            return gap.data.Hash.For(ToString(ancestor)+'/'+baseString+'/'+nameString);
+            return gap.data.Hash.For(ToString(ancestor)+'/'+nameString);
         }
         else
             throw new IllegalArgumentException();
     }
-    public final static String IdFor(String base, String name){
-        if (null != base && null != name){
-            String baseString = base;
+    public final static String IdFor(String name){
+        if (null != name){
             String nameString = name;
-            return gap.data.Hash.For(baseString+'/'+nameString);
+            return gap.data.Hash.For(nameString);
         }
         else
             throw new IllegalArgumentException();
     }
-    public final static Template ForLongBaseName(Key ancestor, String base, String name){
-        if (null != base && null != name){
-            Key key = KeyLongIdFor(ancestor, base, name);
+    public final static Template ForLongName(Key ancestor, String name){
+        if (null != name){
+            Key key = KeyLongIdFor(ancestor, name);
             Template instance = (Template)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -78,9 +77,9 @@ public final class Template
         else
             throw new IllegalArgumentException();
     }
-    public final static Template ForShortBaseName(Key ancestor, String base, String name){
-        if (null != base && null != name){
-            Key key = KeyShortIdFor(ancestor, base, name);
+    public final static Template ForShortName(Key ancestor, String name){
+        if (null != name){
+            Key key = KeyShortIdFor(ancestor, name);
             Template instance = (Template)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -92,9 +91,9 @@ public final class Template
         else
             throw new IllegalArgumentException();
     }
-    public final static Template ForLongBaseName(String base, String name){
-        if (null != base && null != name){
-            Key key = KeyLongIdFor( base, name);
+    public final static Template ForLongName(String name){
+        if (null != name){
+            Key key = KeyLongIdFor( name);
             Template instance = (Template)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -106,26 +105,10 @@ public final class Template
         else
             throw new IllegalArgumentException();
     }
-    public final static Template GetCreateLong(String base, String name){
-        Template template = ForLongBaseName( base, name);
+    public final static Template GetCreateLong(Key ancestor, String name){
+        Template template = ForLongName(ancestor, name);
         if (null == template){
-            template = new Template( base, name);
-            template = (Template)gap.data.Store.Put(template);
-        }
-        return template;
-    }
-    public final static Template GetCreateLong(Key ancestor, String base, String name){
-        Template template = ForLongBaseName(ancestor, base, name);
-        if (null == template){
-            template = new Template(ancestor,false, base, name);
-            template = (Template)gap.data.Store.Put(template);
-        }
-        return template;
-    }
-    public final static Template GetCreateShort(Key ancestor, String base, String name){
-        Template template = ForShortBaseName(ancestor, base, name);
-        if (null == template){
-            template = new Template(ancestor,true, base, name);
+            template = new Template(ancestor, name);
             template = (Template)gap.data.Store.Put(template);
         }
         return template;
@@ -330,7 +313,6 @@ public final class Template
 
         Key("key"),
         Id("id"),
-        Base("base"),
         Name("name"),
         LastModified("lastModified"),
         TemplateSourceHapax("templateSourceHapax"),
@@ -361,8 +343,6 @@ public final class Template
                 return instance.getKey();
             case Id:
                 return instance.getId();
-            case Base:
-                return instance.getBase();
             case Name:
                 return instance.getName();
             case LastModified:
@@ -383,9 +363,6 @@ public final class Template
                 return;
             case Id:
                 instance.setId( (String)value);
-                return;
-            case Base:
-                instance.setBase( (String)value);
                 return;
             case Name:
                 instance.setName( (String)value);
@@ -424,7 +401,6 @@ public final class Template
 
     private volatile Key key;    
     private volatile String id;    // *unique
-    private volatile String base;    // *hash-unique
     private volatile String name;    // *hash-unique
     private volatile Long lastModified;    
     private volatile Text templateSourceHapax;    
@@ -440,26 +416,12 @@ public final class Template
         super();
         this.setKey(child);
     }
-    public Template(String base, String name) {
+    public Template(Key ancestor, String name) {
         super();
-        this.setBase(base);
         this.setName(name);
-        String id = IdFor( base, name);
+        String id = IdFor(ancestor,  name);
         this.setId(id);
-        Key key = KeyLongFor(id);
-        this.setKey(key);
-    }
-    public Template(Key ancestor, boolean isShort, String base, String name) {
-        super();
-        this.setBase(base);
-        this.setName(name);
-        String id = IdFor(ancestor,  base, name);
-        this.setId(id);
-        Key key;
-        if (isShort)
-            key = KeyShortFor(ancestor,id);
-        else
-            key = KeyLongFor(ancestor,id);
+        Key key = KeyLongFor(ancestor,id);
         this.setKey(key);
     }
 
@@ -476,8 +438,6 @@ public final class Template
         this.key = null;
 
         this.id = null;
-
-        this.base = null;
 
         this.name = null;
 
@@ -529,27 +489,6 @@ public final class Template
     }
     public void setId(String id){
         this.id = id;
-    }
-
-    public boolean hasBase(){
-        return (null != this.base);
-    }
-    public boolean hasNotBase(){
-        return (null == this.base);
-    }
-    public boolean dropBase(){
-        if (null != this.base){
-            this.base = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public String getBase(){
-        return this.base;
-    }
-    public void setBase(String base){
-        this.base = base;
     }
 
     public boolean hasName(){
@@ -704,6 +643,79 @@ public final class Template
             }
         }
         return top;
+    }
+    public boolean updateFrom(Request req){
+        boolean change = false;
+
+        Key key = Strings.KeyFromString(req.getParameter("key"));
+        if (IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        String id = Strings.StringFromString(req.getParameter("id"));
+        if (IsNotEqual(id,this.getId())){
+            this.setId(id);
+            change = true;
+        }
+
+        String name = Strings.StringFromString(req.getParameter("name"));
+        if (IsNotEqual(name,this.getName())){
+            this.setName(name);
+            change = true;
+        }
+
+        Long lastModified = Strings.LongFromString(req.getParameter("lastModified"));
+        if (IsNotEqual(lastModified,this.getLastModified())){
+            this.setLastModified(lastModified);
+            change = true;
+        }
+
+        Text templateSourceHapax = Strings.TextFromString(req.getParameter("templateSourceHapax"));
+        if (IsNotEqual(templateSourceHapax,this.getTemplateSourceHapax())){
+            this.setTemplateSourceHapax(templateSourceHapax);
+            change = true;
+        }
+
+        String templateContentType = Strings.StringFromString(req.getParameter("templateContentType"));
+        if (IsNotEqual(templateContentType,this.getTemplateContentType())){
+            this.setTemplateContentType(templateContentType);
+            change = true;
+        }
+
+        return change;
+    }
+    public boolean updateFrom(BigTable proto){
+        return this.updateFrom( (Template)proto);
+    }
+    public boolean updateFrom(Template proto){
+        boolean change = false;
+
+        Key key = proto.getKey();
+        if (null != key && IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        Long lastModified = proto.getLastModified();
+        if (null != lastModified && IsNotEqual(lastModified,this.getLastModified())){
+            this.setLastModified(lastModified);
+            change = true;
+        }
+
+        Text templateSourceHapax = proto.getTemplateSourceHapax();
+        if (null != templateSourceHapax && IsNotEqual(templateSourceHapax,this.getTemplateSourceHapax())){
+            this.setTemplateSourceHapax(templateSourceHapax);
+            change = true;
+        }
+
+        String templateContentType = proto.getTemplateContentType();
+        if (null != templateContentType && IsNotEqual(templateContentType,this.getTemplateContentType())){
+            this.setTemplateContentType(templateContentType);
+            change = true;
+        }
+
+        return change;
     }
     public void drop(){
         Delete(this);

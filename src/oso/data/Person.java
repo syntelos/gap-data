@@ -2,6 +2,7 @@
 package oso.data;
 
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
 
@@ -15,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "oso.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T22:08:19.750Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:28.838Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
 {
@@ -107,22 +108,6 @@ public final class Person
         Person person = ForLongLogonId( logonId);
         if (null == person){
             person = new Person( logonId);
-            person = (Person)gap.data.Store.Put(person);
-        }
-        return person;
-    }
-    public final static Person GetCreateLong(Key ancestor, String logonId){
-        Person person = ForLongLogonId(ancestor, logonId);
-        if (null == person){
-            person = new Person(ancestor,false, logonId);
-            person = (Person)gap.data.Store.Put(person);
-        }
-        return person;
-    }
-    public final static Person GetCreateShort(Key ancestor, String logonId){
-        Person person = ForShortLogonId(ancestor, logonId);
-        if (null == person){
-            person = new Person(ancestor,true, logonId);
             person = (Person)gap.data.Store.Put(person);
         }
         return person;
@@ -417,18 +402,6 @@ public final class Person
         Key key = KeyLongFor(id);
         this.setKey(key);
     }
-    public Person(Key ancestor, boolean isShort, String logonId) {
-        super();
-        this.setLogonId(logonId);
-        String id = IdFor(ancestor,  logonId);
-        this.setId(id);
-        Key key;
-        if (isShort)
-            key = KeyShortFor(ancestor,id);
-        else
-            key = KeyLongFor(ancestor,id);
-        this.setKey(key);
-    }
 
 
     public void onread(){
@@ -579,6 +552,43 @@ public final class Person
             }
         }
         return top;
+    }
+    public boolean updateFrom(Request req){
+        boolean change = false;
+
+        Key key = Strings.KeyFromString(req.getParameter("key"));
+        if (IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        String id = Strings.StringFromString(req.getParameter("id"));
+        if (IsNotEqual(id,this.getId())){
+            this.setId(id);
+            change = true;
+        }
+
+        String logonId = Strings.StringFromString(req.getParameter("logonId"));
+        if (IsNotEqual(logonId,this.getLogonId())){
+            this.setLogonId(logonId);
+            change = true;
+        }
+
+        return change;
+    }
+    public boolean updateFrom(BigTable proto){
+        return this.updateFrom( (Person)proto);
+    }
+    public boolean updateFrom(Person proto){
+        boolean change = false;
+
+        Key key = proto.getKey();
+        if (null != key && IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        return change;
     }
     public void drop(){
         Delete(this);

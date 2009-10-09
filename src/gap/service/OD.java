@@ -122,18 +122,37 @@ public class OD
             }
             if (null == classRelation || ClassDescriptor.Relation.Type.None.equals(classRelation)){
                 top.addSection("class_re_none");
+                top.addSection("class_re_not_parent");
+                top.addSection("class_re_not_child");
+                top.addSection("class_re_not_childgroup");
+                top.addSection("class_re_not_child_or_group");
             }
             else if (ClassDescriptor.Relation.Type.Parent.equals(classRelation)){
+                top.addSection("class_re_not_none");
                 top.addSection("class_re_parent");
+                top.addSection("class_re_not_child");
+                top.addSection("class_re_not_childgroup");
+                top.addSection("class_re_not_child_or_group");
             }
             else if (ClassDescriptor.Relation.Type.Child.equals(classRelation)){
+                top.addSection("class_re_not_none");
+                top.addSection("class_re_not_parent");
+                top.addSection("class_re_not_childgroup");
+                top.addSection("class_re_child_or_group");
+
                 TemplateDictionary child = top.addSection("class_re_child");
+
                 if (null == classRelationParent)
                     throw new ODStateException(cd,"The object data model requires a parent class name.");
                 else
                     child.setVariable("class_parentClass",classRelationParent);
             }
             else if (ClassDescriptor.Relation.Type.ChildGroup.equals(classRelation)){
+                top.addSection("class_re_not_none");
+                top.addSection("class_re_not_parent");
+                top.addSection("class_re_not_child");
+                top.addSection("class_re_child_or_group");
+
                 TemplateDictionary child = top.addSection("class_re_childgroup");
                 if (null == classRelationParent)
                     throw new ODStateException(cd,"The object data model requires a parent class name.");
@@ -288,6 +307,8 @@ public class OD
                             else
                                 throw new ODStateException(field,"Model has more than one '*unique' field, '"+unique.getName()+"' and '"+fieldName+"'.");
                         }
+                        else if (IsNotTypeClassCollection(fieldTypeClass) && (!fieldName.endsWith("Jvm")))
+                            dataField.addSection("field_is_updatable");
                     }
                     else if (IsFieldRelation(field)){
 
@@ -892,6 +913,12 @@ public class OD
             return (java.util.Date.class.isAssignableFrom(fieldType));
         else
             return false;
+    }
+    public final static boolean IsNotTypeClassCollection(java.lang.Class fieldType){
+        if (null != fieldType)
+            return (!(gap.data.Collection.class.isAssignableFrom(fieldType)));
+        else
+            return true;
     }
     public final static String CleanTypeName(String name){
         int idx = name.indexOf('<');

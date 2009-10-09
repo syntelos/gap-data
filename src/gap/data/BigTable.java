@@ -60,7 +60,8 @@ import com.google.appengine.api.datastore.ShortBlob;
 public abstract class BigTable
     extends java.lang.Object
     implements java.io.Serializable,
-               DictionaryInto
+               DictionaryInto,
+               RequestCreateUpdate
 {
     public final static gap.util.Services Services = (new gap.util.Services(BigTable.class)).init();
 
@@ -407,5 +408,20 @@ public abstract class BigTable
         else 
             return IsIndexed(value.getClass());
     }
-
+    public final static boolean IsEqual(Object a, Object b){
+        if (null == a)
+            return (null == b);
+        else if (null == b)
+            return false;
+        else
+            return (a.equals(b));
+    }
+    public final static boolean IsNotEqual(Object a, Object b){
+        if (null == a)
+            return (null != b);
+        else if (null == b)
+            return true;
+        else
+            return (!a.equals(b));
+    }
 }

@@ -2,6 +2,7 @@
 package gap.data;
 
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
 
@@ -15,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T22:08:20.977Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:30.072Z",comments="gap.data")
 public final class Image
     extends gap.data.BigTable
     implements LastModified
@@ -106,26 +107,10 @@ public final class Image
         else
             throw new IllegalArgumentException();
     }
-    public final static Image GetCreateLong(String base, String name){
-        Image image = ForLongBaseName( base, name);
-        if (null == image){
-            image = new Image( base, name);
-            image = (Image)gap.data.Store.Put(image);
-        }
-        return image;
-    }
     public final static Image GetCreateLong(Key ancestor, String base, String name){
         Image image = ForLongBaseName(ancestor, base, name);
         if (null == image){
-            image = new Image(ancestor,false, base, name);
-            image = (Image)gap.data.Store.Put(image);
-        }
-        return image;
-    }
-    public final static Image GetCreateShort(Key ancestor, String base, String name){
-        Image image = ForShortBaseName(ancestor, base, name);
-        if (null == image){
-            image = new Image(ancestor,true, base, name);
+            image = new Image(ancestor, base, name);
             image = (Image)gap.data.Store.Put(image);
         }
         return image;
@@ -440,26 +425,13 @@ public final class Image
         super();
         this.setKey(child);
     }
-    public Image(String base, String name) {
-        super();
-        this.setBase(base);
-        this.setName(name);
-        String id = IdFor( base, name);
-        this.setId(id);
-        Key key = KeyLongFor(id);
-        this.setKey(key);
-    }
-    public Image(Key ancestor, boolean isShort, String base, String name) {
+    public Image(Key ancestor, String base, String name) {
         super();
         this.setBase(base);
         this.setName(name);
         String id = IdFor(ancestor,  base, name);
         this.setId(id);
-        Key key;
-        if (isShort)
-            key = KeyShortFor(ancestor,id);
-        else
-            key = KeyLongFor(ancestor,id);
+        Key key = KeyLongFor(ancestor,id);
         this.setKey(key);
     }
 
@@ -704,6 +676,85 @@ public final class Image
             }
         }
         return top;
+    }
+    public boolean updateFrom(Request req){
+        boolean change = false;
+
+        Key key = Strings.KeyFromString(req.getParameter("key"));
+        if (IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        String id = Strings.StringFromString(req.getParameter("id"));
+        if (IsNotEqual(id,this.getId())){
+            this.setId(id);
+            change = true;
+        }
+
+        String base = Strings.StringFromString(req.getParameter("base"));
+        if (IsNotEqual(base,this.getBase())){
+            this.setBase(base);
+            change = true;
+        }
+
+        String name = Strings.StringFromString(req.getParameter("name"));
+        if (IsNotEqual(name,this.getName())){
+            this.setName(name);
+            change = true;
+        }
+
+        Long lastModified = Strings.LongFromString(req.getParameter("lastModified"));
+        if (IsNotEqual(lastModified,this.getLastModified())){
+            this.setLastModified(lastModified);
+            change = true;
+        }
+
+        String contentType = Strings.StringFromString(req.getParameter("contentType"));
+        if (IsNotEqual(contentType,this.getContentType())){
+            this.setContentType(contentType);
+            change = true;
+        }
+
+        Blob bytes = Strings.BlobFromString(req.getParameter("bytes"));
+        if (IsNotEqual(bytes,this.getBytes())){
+            this.setBytes(bytes);
+            change = true;
+        }
+
+        return change;
+    }
+    public boolean updateFrom(BigTable proto){
+        return this.updateFrom( (Image)proto);
+    }
+    public boolean updateFrom(Image proto){
+        boolean change = false;
+
+        Key key = proto.getKey();
+        if (null != key && IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        Long lastModified = proto.getLastModified();
+        if (null != lastModified && IsNotEqual(lastModified,this.getLastModified())){
+            this.setLastModified(lastModified);
+            change = true;
+        }
+
+        String contentType = proto.getContentType();
+        if (null != contentType && IsNotEqual(contentType,this.getContentType())){
+            this.setContentType(contentType);
+            change = true;
+        }
+
+        Blob bytes = proto.getBytes();
+        if (null != bytes && IsNotEqual(bytes,this.getBytes())){
+            this.setBytes(bytes);
+            change = true;
+        }
+
+        return change;
     }
     public void drop(){
         Delete(this);

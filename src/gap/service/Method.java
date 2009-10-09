@@ -31,6 +31,7 @@ import java.util.StringTokenizer;
  */
 public final class Method
     extends java.lang.Object
+    implements gap.data.HasName
 {
     private final static java.lang.ThreadLocal<Method> MTL = new java.lang.ThreadLocal<Method>();
 
@@ -52,6 +53,20 @@ public final class Method
         public final static String TRACE = "TRACE";
     }
     /**
+     * Standard method bindings
+     */
+    public final static class Bindings {
+
+        public final static String GET = "doGet";
+        public final static String HEAD = "doHead";
+        public final static String POST = "doPost";
+        public final static String PUT = "doPut";
+        public final static String DELETE = "doDelete";
+        public final static String OPTIONS = "doOptions";
+        public final static String TRACE = "doTrace";
+        public final static String UNKNOWN = "doMethod";
+    }
+    /**
      * Conventional method type constants
      */
     public final static int UNKNOWN = 0;
@@ -68,28 +83,32 @@ public final class Method
      */
     public final static class Values {
 
-        public final static Method GET = new Method(Method.Names.GET,Method.GET);
-        public final static Method HEAD = new Method(Method.Names.HEAD,Method.HEAD);
-        public final static Method POST = new Method(Method.Names.POST,Method.POST);
-        public final static Method PUT = new Method(Method.Names.PUT,Method.PUT);
-        public final static Method DELETE = new Method(Method.Names.DELETE,Method.DELETE);
-        public final static Method OPTIONS = new Method(Method.Names.OPTIONS,Method.OPTIONS);
-        public final static Method TRACE = new Method(Method.Names.TRACE,Method.TRACE);
+        public final static Method GET = new Method(Method.Names.GET,Method.GET,Method.Bindings.GET);
+        public final static Method HEAD = new Method(Method.Names.HEAD,Method.HEAD,Method.Bindings.HEAD);
+        public final static Method POST = new Method(Method.Names.POST,Method.POST,Method.Bindings.POST);
+        public final static Method PUT = new Method(Method.Names.PUT,Method.PUT,Method.Bindings.PUT);
+        public final static Method DELETE = new Method(Method.Names.DELETE,Method.DELETE,Method.Bindings.DELETE);
+        public final static Method OPTIONS = new Method(Method.Names.OPTIONS,Method.OPTIONS,Method.Bindings.OPTIONS);
+        public final static Method TRACE = new Method(Method.Names.TRACE,Method.TRACE,Method.Bindings.TRACE);
     }
 
 
-    public final String name;
+    public final String name, binding;
 
     public final int type;
 
 
-    private Method(String name, int type){
+    private Method(String name, int type, String binding){
         super();
         this.name = name;
         this.type = type;
+        this.binding = binding;
     }
 
 
+    public String getName(){
+        return this.name;
+    }
     public int hashCode(){
         return this.name.hashCode();
     }
@@ -141,7 +160,7 @@ public final class Method
         if (null != value)
             return value;
         else
-            return new Method(name,Method.UNKNOWN);
+            return new Method(name,Method.UNKNOWN,Method.Bindings.UNKNOWN);
     }
     final static Method Enter(HttpServletRequest req){
 

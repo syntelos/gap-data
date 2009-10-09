@@ -15,10 +15,10 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-07T22:08:20.674Z",comments="gap.data")
-public final class ListLongResourceImage
-    extends gap.util.AbstractList<Image>
-    implements gap.data.List.Long<Image>
+@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-09T09:20:29.766Z",comments="gap.data")
+public final class ListShortResourceTemplate
+    extends gap.util.AbstractList<Template>
+    implements gap.data.List.Short<Template>
 {
 
     private final static long serialVersionUID = 1;
@@ -27,23 +27,23 @@ public final class ListLongResourceImage
 
     public final static String ParentTypeName = "Resource";
 
-    public final static String ChildTypeName = "Image";
+    public final static String ChildTypeName = "Template";
 
 
     protected transient Resource parent;
 
 
-    public ListLongResourceImage(Resource parent) {
+    public ListShortResourceTemplate(Resource parent) {
         super();
         if (null != parent){
             this.parent = parent;
-            this.ancestorKeyFieldName = ListLongResourceImage.AncestorKeyFieldName;
-            this.query = Resource.CreateQueryFor();
+            this.ancestorKeyFieldName = ListShortResourceTemplate.AncestorKeyFieldName;
+            this.setValueClassAncestorKey();
         }
         else
             throw new IllegalArgumentException();
     }
-    public ListLongResourceImage(){
+    public ListShortResourceTemplate(){
         super();
     }
 
@@ -69,11 +69,15 @@ public final class ListLongResourceImage
         return parent;
     }
     public void setValueClassAncestorKey(){
-        this.ancestorKey = this.getParent().getClassFieldKeyValue();
+        Key key = this.getParent().getClassFieldKeyValue();
+        if (key != this.ancestorKey){
+            this.ancestorKey = key;
+            this.query = Resource.CreateQueryFor(this.ancestorKey);
+        }
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
 
-        for (Image value: this){
+        for (Template value: this){
 
             value.dictionaryInto(top);
         }

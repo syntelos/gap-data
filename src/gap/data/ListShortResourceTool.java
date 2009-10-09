@@ -15,10 +15,10 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-07T22:08:20.692Z",comments="gap.data")
-public final class ListLongResourceTool
+@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-09T09:20:29.772Z",comments="gap.data")
+public final class ListShortResourceTool
     extends gap.util.AbstractList<Tool>
-    implements gap.data.List.Long<Tool>
+    implements gap.data.List.Short<Tool>
 {
 
     private final static long serialVersionUID = 1;
@@ -33,17 +33,17 @@ public final class ListLongResourceTool
     protected transient Resource parent;
 
 
-    public ListLongResourceTool(Resource parent) {
+    public ListShortResourceTool(Resource parent) {
         super();
         if (null != parent){
             this.parent = parent;
-            this.ancestorKeyFieldName = ListLongResourceTool.AncestorKeyFieldName;
-            this.query = Resource.CreateQueryFor();
+            this.ancestorKeyFieldName = ListShortResourceTool.AncestorKeyFieldName;
+            this.setValueClassAncestorKey();
         }
         else
             throw new IllegalArgumentException();
     }
-    public ListLongResourceTool(){
+    public ListShortResourceTool(){
         super();
     }
 
@@ -69,7 +69,11 @@ public final class ListLongResourceTool
         return parent;
     }
     public void setValueClassAncestorKey(){
-        this.ancestorKey = this.getParent().getClassFieldKeyValue();
+        Key key = this.getParent().getClassFieldKeyValue();
+        if (key != this.ancestorKey){
+            this.ancestorKey = key;
+            this.query = Resource.CreateQueryFor(this.ancestorKey);
+        }
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
 

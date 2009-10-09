@@ -27,7 +27,7 @@ import javax.annotation.Generated;
 /**
  * Data validation functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-07T22:08:21.574Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-09T09:20:30.770Z",comments="gap.data")
 public abstract class Template
     extends gap.Strings
 {
@@ -36,8 +36,6 @@ public abstract class Template
           case Key:
             return KeyFromString(string);
           case Id:
-            return StringFromString(string);
-          case Base:
             return StringFromString(string);
           case Name:
             return StringFromString(string);
@@ -56,8 +54,6 @@ public abstract class Template
           case Key:
             return KeyToString( (Key)value);
           case Id:
-            return StringToString( (String)value);
-          case Base:
             return StringToString( (String)value);
           case Name:
             return StringToString( (String)value);

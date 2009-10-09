@@ -22,12 +22,13 @@ package gap.service;
 import gap.Request;
 import gap.Response;
 
-import gap.data.Store;
+import gap.data.*;
 
 import hapax.Template;
 import hapax.TemplateException;
 import hapax.TemplateDictionary;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import javax.servlet.ServletConfig;
@@ -320,7 +321,56 @@ public class Servlet
     protected void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
-        this.undefined(req,rep);
+        if (req.hasBase() && req.hasName()){
+            String base = req.getBase();
+            String name = req.getName();
+            Resource resource = Resource.ForLongBaseName(base,name);
+            if (null != resource){
+                String op = req.getParameter("op");
+                if (null == op)
+                    this.error(req,rep,400,"Missing request parameter 'op'.");
+                
+                else if ("create".equals(op)){
+
+                    this.error(req,rep,400,"Not available to create.");
+                }
+                else {
+                    ListFilter filter = new ListFilter.ListFilterTool(op);
+                    Tool tool = resource.getTools(filter);
+                    if (null != tool){
+                        Function function = new Function(this,req,rep,resource,tool);
+                        function.invoke(req,rep);
+                    }
+                    else
+                        this.error(req,rep,400,"Unrecognized request parameter 'op'.");
+                }
+            }
+            else {
+                String op = req.getParameter("op");
+                if (null == op)
+                    this.error(req,rep,400,"Missing request parameter 'op'.");
+
+                else if ("create".equals(op)){
+                    if (this.canCreate(req)){
+
+                        resource = Resource.GetCreateLong(base,name);
+
+                        if (resource.updateFrom(req))
+                            resource.save();
+
+                        this.createTools(resource);
+
+                        this.redirectToItem(req,rep,resource.getId());
+                    }
+                    else
+                        this.error(req,rep,403,"Access not granted.");
+                }
+                else
+                    this.error(req,rep,400,"Unrecognized request parameter 'op' not 'create'.");
+            }
+        }
+        else
+            this.undefined(req,rep);
     }
     protected void doPut(Request req, Response rep)
         throws ServletException, IOException
@@ -516,6 +566,26 @@ public class Servlet
     protected Response createResponse(Request req, HttpServletResponse rep){
         return new Response(rep);
     }
+    protected void createTools(Resource resource){
+        Key resourceKey = resource.getKey();
+        Resource index_html = Resource.ForLongBaseName("","index.html");
+        if (null != index_html){
+            for (Tool indexTool: index_html.getTools()){
+                String name = indexTool.getName();
+                Tool resourceTool = new Tool(resourceKey,name);
+                resourceTool.updateFrom(indexTool);
+                resourceTool.save();
+            }
+        }
+        else {
+            for (Tool indexTool: Tools.Default.getTools()){
+                String name = indexTool.getName();
+                Tool resourceTool = new Tool(resourceKey,name);
+                resourceTool.updateFrom(indexTool);
+                resourceTool.save();
+            }
+        }
+    }
     /*
      */
     protected final static String HEADER_IFMODSINCE = "If-Modified-Since";
@@ -592,4 +662,5 @@ public class Servlet
     private static final char[] HEX = {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     };
+
 }

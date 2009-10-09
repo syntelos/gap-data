@@ -2,6 +2,7 @@
 package gap.data;
 
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
 
@@ -15,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T22:08:20.519Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:29.611Z",comments="gap.data")
 public final class Resource
     extends gap.data.BigTable
     implements LastModified
@@ -110,22 +111,6 @@ public final class Resource
         Resource resource = ForLongBaseName( base, name);
         if (null == resource){
             resource = new Resource( base, name);
-            resource = (Resource)gap.data.Store.Put(resource);
-        }
-        return resource;
-    }
-    public final static Resource GetCreateLong(Key ancestor, String base, String name){
-        Resource resource = ForLongBaseName(ancestor, base, name);
-        if (null == resource){
-            resource = new Resource(ancestor,false, base, name);
-            resource = (Resource)gap.data.Store.Put(resource);
-        }
-        return resource;
-    }
-    public final static Resource GetCreateShort(Key ancestor, String base, String name){
-        Resource resource = ForShortBaseName(ancestor, base, name);
-        if (null == resource){
-            resource = new Resource(ancestor,true, base, name);
             resource = (Resource)gap.data.Store.Put(resource);
         }
         return resource;
@@ -445,13 +430,13 @@ public final class Resource
                 instance.setAccounts( (List.Long<Account>)value);
                 return;
             case Images:
-                instance.setImages( (List.Long<Image>)value);
+                instance.setImages( (List.Short<Image>)value);
                 return;
             case Templates:
-                instance.setTemplates( (List.Long<Template>)value);
+                instance.setTemplates( (List.Short<Template>)value);
                 return;
             case Tools:
-                instance.setTools( (List.Long<Tool>)value);
+                instance.setTools( (List.Short<Tool>)value);
                 return;
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
@@ -489,9 +474,9 @@ public final class Resource
     private volatile String templateContentType;    
     private volatile List.Long<Partner> partners;    
     private volatile List.Long<Account> accounts;    
-    private volatile List.Long<Image> images;    
-    private volatile List.Long<Template> templates;    
-    private volatile List.Long<Tool> tools;    
+    private volatile List.Short<Image> images;    
+    private volatile List.Short<Template> templates;    
+    private volatile List.Short<Tool> tools;    
 
 
 
@@ -510,19 +495,6 @@ public final class Resource
         String id = IdFor( base, name);
         this.setId(id);
         Key key = KeyLongFor(id);
-        this.setKey(key);
-    }
-    public Resource(Key ancestor, boolean isShort, String base, String name) {
-        super();
-        this.setBase(base);
-        this.setName(name);
-        String id = IdFor(ancestor,  base, name);
-        this.setId(id);
-        Key key;
-        if (isShort)
-            key = KeyShortFor(ancestor,id);
-        else
-            key = KeyLongFor(ancestor,id);
         this.setKey(key);
     }
 
@@ -568,17 +540,17 @@ public final class Resource
             this.accounts = null;
             accounts.destroy();
         }
-        List.Long<Image> images = this.images;
+        List.Short<Image> images = this.images;
         if (null != images){
             this.images = null;
             images.destroy();
         }
-        List.Long<Template> templates = this.templates;
+        List.Short<Template> templates = this.templates;
         if (null != templates){
             this.templates = null;
             templates.destroy();
         }
-        List.Long<Tool> tools = this.tools;
+        List.Short<Tool> tools = this.tools;
         if (null != tools){
             this.tools = null;
             tools.destroy();
@@ -936,27 +908,27 @@ public final class Resource
         else
             return false;
     }
-    public List.Long<Image> getImages(){
-        List.Long<Image> images = this.images;
+    public List.Short<Image> getImages(){
+        List.Short<Image> images = this.images;
         if (null == images){
-            images = new ListLongResourceImage(this);
+            images = new ListShortResourceImage(this);
             this.images = images;
             images.init();
         }
         return images;
     }
-    public void setImages(List.Long<Image> images){
+    public void setImages(List.Short<Image> images){
         this.images = images;
     }
     public boolean isEmptyImages(){
-        List.Long<Image> list = this.images;
+        List.Short<Image> list = this.images;
         if (null != list)
             return list.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyImages(){
-        List.Long<Image> list = this.images;
+        List.Short<Image> list = this.images;
         if (null != list)
             return (!list.isEmpty());
         else
@@ -964,7 +936,7 @@ public final class Resource
     }
     public Image getImages(gap.data.ListFilter<Image> filter){
         if (null != filter){
-            List.Long<Image> list = this.getImages();
+            List.Short<Image> list = this.getImages();
             for (Image item : list){
                 if (filter.accept(item))
                     return item;
@@ -989,27 +961,27 @@ public final class Resource
         else
             return false;
     }
-    public List.Long<Template> getTemplates(){
-        List.Long<Template> templates = this.templates;
+    public List.Short<Template> getTemplates(){
+        List.Short<Template> templates = this.templates;
         if (null == templates){
-            templates = new ListLongResourceTemplate(this);
+            templates = new ListShortResourceTemplate(this);
             this.templates = templates;
             templates.init();
         }
         return templates;
     }
-    public void setTemplates(List.Long<Template> templates){
+    public void setTemplates(List.Short<Template> templates){
         this.templates = templates;
     }
     public boolean isEmptyTemplates(){
-        List.Long<Template> list = this.templates;
+        List.Short<Template> list = this.templates;
         if (null != list)
             return list.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyTemplates(){
-        List.Long<Template> list = this.templates;
+        List.Short<Template> list = this.templates;
         if (null != list)
             return (!list.isEmpty());
         else
@@ -1017,7 +989,7 @@ public final class Resource
     }
     public Template getTemplates(gap.data.ListFilter<Template> filter){
         if (null != filter){
-            List.Long<Template> list = this.getTemplates();
+            List.Short<Template> list = this.getTemplates();
             for (Template item : list){
                 if (filter.accept(item))
                     return item;
@@ -1042,27 +1014,27 @@ public final class Resource
         else
             return false;
     }
-    public List.Long<Tool> getTools(){
-        List.Long<Tool> tools = this.tools;
+    public List.Short<Tool> getTools(){
+        List.Short<Tool> tools = this.tools;
         if (null == tools){
-            tools = new ListLongResourceTool(this);
+            tools = new ListShortResourceTool(this);
             this.tools = tools;
             tools.init();
         }
         return tools;
     }
-    public void setTools(List.Long<Tool> tools){
+    public void setTools(List.Short<Tool> tools){
         this.tools = tools;
     }
     public boolean isEmptyTools(){
-        List.Long<Tool> list = this.tools;
+        List.Short<Tool> list = this.tools;
         if (null != list)
             return list.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyTools(){
-        List.Long<Tool> list = this.tools;
+        List.Short<Tool> list = this.tools;
         if (null != list)
             return (!list.isEmpty());
         else
@@ -1070,7 +1042,7 @@ public final class Resource
     }
     public Tool getTools(gap.data.ListFilter<Tool> filter){
         if (null != filter){
-            List.Long<Tool> list = this.getTools();
+            List.Short<Tool> list = this.getTools();
             for (Tool item : list){
                 if (filter.accept(item))
                     return item;
@@ -1149,6 +1121,127 @@ public final class Resource
             }
         }
         return top;
+    }
+    public boolean updateFrom(Request req){
+        boolean change = false;
+
+        Key key = Strings.KeyFromString(req.getParameter("key"));
+        if (IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        String id = Strings.StringFromString(req.getParameter("id"));
+        if (IsNotEqual(id,this.getId())){
+            this.setId(id);
+            change = true;
+        }
+
+        String base = Strings.StringFromString(req.getParameter("base"));
+        if (IsNotEqual(base,this.getBase())){
+            this.setBase(base);
+            change = true;
+        }
+
+        String name = Strings.StringFromString(req.getParameter("name"));
+        if (IsNotEqual(name,this.getName())){
+            this.setName(name);
+            change = true;
+        }
+
+        Long lastModified = Strings.LongFromString(req.getParameter("lastModified"));
+        if (IsNotEqual(lastModified,this.getLastModified())){
+            this.setLastModified(lastModified);
+            change = true;
+        }
+
+        Category tag = Strings.CategoryFromString(req.getParameter("tag"));
+        if (IsNotEqual(tag,this.getTag())){
+            this.setTag(tag);
+            change = true;
+        }
+
+        String servletClassname = Strings.StringFromString(req.getParameter("servletClassname"));
+        if (IsNotEqual(servletClassname,this.getServletClassname())){
+            this.setServletClassname(servletClassname);
+            change = true;
+        }
+
+        Text servletSourceJava = Strings.TextFromString(req.getParameter("servletSourceJava"));
+        if (IsNotEqual(servletSourceJava,this.getServletSourceJava())){
+            this.setServletSourceJava(servletSourceJava);
+            change = true;
+        }
+
+        Blob servletClassfileJvm = Strings.BlobFromString(req.getParameter("servletClassfileJvm"));
+        if (IsNotEqual(servletClassfileJvm,this.getServletClassfileJvm())){
+            this.setServletClassfileJvm(servletClassfileJvm);
+            change = true;
+        }
+
+        Text templateSourceHapax = Strings.TextFromString(req.getParameter("templateSourceHapax"));
+        if (IsNotEqual(templateSourceHapax,this.getTemplateSourceHapax())){
+            this.setTemplateSourceHapax(templateSourceHapax);
+            change = true;
+        }
+
+        String templateContentType = Strings.StringFromString(req.getParameter("templateContentType"));
+        if (IsNotEqual(templateContentType,this.getTemplateContentType())){
+            this.setTemplateContentType(templateContentType);
+            change = true;
+        }
+
+        return change;
+    }
+    public boolean updateFrom(BigTable proto){
+        return this.updateFrom( (Resource)proto);
+    }
+    public boolean updateFrom(Resource proto){
+        boolean change = false;
+
+        Key key = proto.getKey();
+        if (null != key && IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        Long lastModified = proto.getLastModified();
+        if (null != lastModified && IsNotEqual(lastModified,this.getLastModified())){
+            this.setLastModified(lastModified);
+            change = true;
+        }
+
+        Category tag = proto.getTag();
+        if (null != tag && IsNotEqual(tag,this.getTag())){
+            this.setTag(tag);
+            change = true;
+        }
+
+        String servletClassname = proto.getServletClassname();
+        if (null != servletClassname && IsNotEqual(servletClassname,this.getServletClassname())){
+            this.setServletClassname(servletClassname);
+            change = true;
+        }
+
+        Text servletSourceJava = proto.getServletSourceJava();
+        if (null != servletSourceJava && IsNotEqual(servletSourceJava,this.getServletSourceJava())){
+            this.setServletSourceJava(servletSourceJava);
+            change = true;
+        }
+
+        Text templateSourceHapax = proto.getTemplateSourceHapax();
+        if (null != templateSourceHapax && IsNotEqual(templateSourceHapax,this.getTemplateSourceHapax())){
+            this.setTemplateSourceHapax(templateSourceHapax);
+            change = true;
+        }
+
+        String templateContentType = proto.getTemplateContentType();
+        if (null != templateContentType && IsNotEqual(templateContentType,this.getTemplateContentType())){
+            this.setTemplateContentType(templateContentType);
+            change = true;
+        }
+
+        return change;
     }
     public void drop(){
         Delete(this);
