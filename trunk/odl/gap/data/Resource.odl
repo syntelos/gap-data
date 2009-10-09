@@ -17,7 +17,7 @@ parent Resource version 1
     String templateContentType;
     List.Long<Partner> partners;
     List.Long<Account> accounts;
-    List.Long<Image> images;
-    List.Long<Template> templates;
-    List.Long<Tool> tools;
+    List.Short<Image> images;
+    List.Short<Template> templates;
+    List.Short<Tool> tools;
 }

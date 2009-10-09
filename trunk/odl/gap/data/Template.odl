@@ -7,7 +7,6 @@ child Template version 1
 {
     Key key;
     *unique String id;
-    *hash-unique String base;
     *hash-unique String name;
     Long lastModified;
     Text templateSourceHapax;

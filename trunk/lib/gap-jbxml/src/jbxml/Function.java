@@ -592,6 +592,15 @@ public class Function
         else
             return null;
     }
+    public final void setScript(StringBuilder string){
+        this.script = string;
+    }
+    public final void setScript(String string){
+        if (null == string)
+            this.script = null;
+        else
+            this.script = new StringBuilder(string);
+    }
 
     /**
      * Script only init

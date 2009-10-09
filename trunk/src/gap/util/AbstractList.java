@@ -251,10 +251,10 @@ public abstract class AbstractList<V extends BigTable>
     public final java.util.Iterator<V> iterator(){
         return new BufferIterator<V>(this.buffer);
     }
-    protected final void clearBuffer(){
+    public final void clearBuffer(){
         this.buffer = null;
     }
-    protected final List<V> addToBuffer(BigTable instance){
+    public final List<V> addToBuffer(BigTable instance){
         if (null != instance){
             BigTable[] buffer = this.buffer;
             if (null == buffer)
@@ -271,7 +271,7 @@ public abstract class AbstractList<V extends BigTable>
         else
             throw new IllegalArgumentException();
     }
-    protected final int indexInBuffer(BigTable instance){
+    public final int indexInBuffer(BigTable instance){
         BigTable[] buffer = this.buffer;
         if (null != buffer){
             for (int cc = 0, count = buffer.length; cc < count; cc++){

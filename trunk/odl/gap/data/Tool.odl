@@ -1,14 +1,23 @@
 package gap.data;
 path /tools;
 
-class Tool version 1 {
+child Tool version 1 
+    parent Resource
+    implements LastModified
+{
     Key key;
     *unique String id;
     *hash-unique String name;
+    Long lastModified;
     String headXtm;
     String overlayXtm;
     String formXtm;
-    String titleGraphicUri;
-    String buttonGraphicUri;
+    String titleHiGraphicUri;
+    String titleLoGraphicUri;
+    String buttonHiGraphicUri;
+    String buttonLoGraphicUri;
     String buttonOffGraphicUri;
+    String methodName;
+    Text methodBody;
+    Blob methodClassfileJvm;
 }

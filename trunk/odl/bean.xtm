@@ -3,6 +3,7 @@ package {{=package_name}};
 {{#import}}
 import {{=import_spec}};{{/import}}
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
 
@@ -104,7 +105,7 @@ public final class {{=class_name}}
         }
         else
             throw new IllegalArgumentException();
-    }
+    }{{#class_re_not_child_or_group}}
     public final static {{=class_name}} GetCreateLong({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         {{=class_name}} {{=class_nameDecamel}} = ForLong{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
@@ -112,23 +113,23 @@ public final class {{=class_name}}
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
-    }
+    }{{/class_re_not_child_or_group}}{{#class_re_child}}
     public final static {{=class_name}} GetCreateLong(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         {{=class_name}} {{=class_nameDecamel}} = ForLong{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
-            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,false,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
-    }
+    }{{/class_re_child}}{{#class_re_childgroup}}
     public final static {{=class_name}} GetCreateShort(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         {{=class_name}} {{=class_nameDecamel}} = ForShort{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
-            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,true,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
-    }
+    }{{/class_re_childgroup}}
 {{/field_hash_unique}}
 {{#field_unique}}
     public final static Key KeyLongFor(String {{=field_name}}){
@@ -397,7 +398,7 @@ public final class {{=class_name}}
     public {{=class_name}}(Key child) {
         super();
         this.set{{=field_key_nameCamel}}(child);
-    }{{#field_hash_unique}}
+    }{{#field_hash_unique}}{{#class_re_not_child_or_group}}
     public {{=class_name}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
@@ -405,19 +406,16 @@ public final class {{=class_name}}
         this.set{{=field_unique_nameCamel}}({{=field_unique_name}});
         Key key = KeyLongFor({{=field_unique_name}});
         this.set{{=field_key_nameCamel}}(key);
-    }
-    public {{=class_name}}(Key ancestor, boolean isShort, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
+    }{{/class_re_not_child_or_group}}{{#class_re_child_or_group}}
+    public {{=class_name}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
         String {{=field_unique_name}} = {{=field_unique_nameCamel}}For(ancestor, {{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-        this.set{{=field_unique_nameCamel}}({{=field_unique_name}});
-        Key key;
-        if (isShort)
-            key = KeyShortFor(ancestor,{{=field_unique_name}});
-        else
-            key = KeyLongFor(ancestor,{{=field_unique_name}});
+        this.set{{=field_unique_nameCamel}}({{=field_unique_name}});{{#class_re_childgroup}}
+        Key key = KeyShortFor(ancestor,{{=field_unique_name}});{{/class_re_childgroup}}{{#class_re_child}}
+        Key key = KeyLongFor(ancestor,{{=field_unique_name}});{{/class_re_child}}
         this.set{{=field_key_nameCamel}}(key);
-    }
+    }{{/class_re_child_or_group}}
 {{/field_hash_unique}}
 
     public void onread(){
@@ -605,6 +603,31 @@ public final class {{=class_name}}
             }
         }
         return top;
+    }
+    public boolean updateFrom(Request req){
+        boolean change = false;
+{{#pfield}}{{#field_is_not_collection}}
+        {{=field_class}} {{=field_name}} = Strings.{{=field_class}}FromString(req.getParameter("{{=field_name}}"));
+        if (IsNotEqual({{=field_name}},this.get{{=field_nameCamel}}())){
+            this.set{{=field_nameCamel}}({{=field_name}});
+            change = true;
+        }
+{{/field_is_not_collection}}{{/pfield}}
+        return change;
+    }
+    public boolean updateFrom(BigTable proto){
+        return this.updateFrom( ({{=class_name}})proto);
+    }
+    public boolean updateFrom({{=class_name}} proto){
+        boolean change = false;
+{{#pfield}}{{#field_is_updatable}}
+        {{=field_class}} {{=field_name}} = proto.get{{=field_nameCamel}}();
+        if (null != {{=field_name}} && IsNotEqual({{=field_name}},this.get{{=field_nameCamel}}())){
+            this.set{{=field_nameCamel}}({{=field_name}});
+            change = true;
+        }
+{{/field_is_updatable}}{{/pfield}}
+        return change;
     }
     public void drop(){
         Delete(this);

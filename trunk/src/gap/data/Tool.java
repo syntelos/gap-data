@@ -2,6 +2,7 @@
 package gap.data;
 
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
 
@@ -15,9 +16,10 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T22:08:21.346Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:30.440Z",comments="gap.data")
 public final class Tool
     extends gap.data.BigTable
+    implements LastModified
 {
 
     private final static long serialVersionUID = 1;
@@ -103,26 +105,10 @@ public final class Tool
         else
             throw new IllegalArgumentException();
     }
-    public final static Tool GetCreateLong(String name){
-        Tool tool = ForLongName( name);
-        if (null == tool){
-            tool = new Tool( name);
-            tool = (Tool)gap.data.Store.Put(tool);
-        }
-        return tool;
-    }
     public final static Tool GetCreateLong(Key ancestor, String name){
         Tool tool = ForLongName(ancestor, name);
         if (null == tool){
-            tool = new Tool(ancestor,false, name);
-            tool = (Tool)gap.data.Store.Put(tool);
-        }
-        return tool;
-    }
-    public final static Tool GetCreateShort(Key ancestor, String name){
-        Tool tool = ForShortName(ancestor, name);
-        if (null == tool){
-            tool = new Tool(ancestor,true, name);
+            tool = new Tool(ancestor, name);
             tool = (Tool)gap.data.Store.Put(tool);
         }
         return tool;
@@ -328,12 +314,18 @@ public final class Tool
         Key("key"),
         Id("id"),
         Name("name"),
+        LastModified("lastModified"),
         HeadXtm("headXtm"),
         OverlayXtm("overlayXtm"),
         FormXtm("formXtm"),
-        TitleGraphicUri("titleGraphicUri"),
-        ButtonGraphicUri("buttonGraphicUri"),
-        ButtonOffGraphicUri("buttonOffGraphicUri");
+        TitleHiGraphicUri("titleHiGraphicUri"),
+        TitleLoGraphicUri("titleLoGraphicUri"),
+        ButtonHiGraphicUri("buttonHiGraphicUri"),
+        ButtonLoGraphicUri("buttonLoGraphicUri"),
+        ButtonOffGraphicUri("buttonOffGraphicUri"),
+        MethodName("methodName"),
+        MethodBody("methodBody"),
+        MethodClassfileJvm("methodClassfileJvm");
 
 
         private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -362,18 +354,30 @@ public final class Tool
                 return instance.getId();
             case Name:
                 return instance.getName();
+            case LastModified:
+                return instance.getLastModified();
             case HeadXtm:
                 return instance.getHeadXtm();
             case OverlayXtm:
                 return instance.getOverlayXtm();
             case FormXtm:
                 return instance.getFormXtm();
-            case TitleGraphicUri:
-                return instance.getTitleGraphicUri();
-            case ButtonGraphicUri:
-                return instance.getButtonGraphicUri();
+            case TitleHiGraphicUri:
+                return instance.getTitleHiGraphicUri();
+            case TitleLoGraphicUri:
+                return instance.getTitleLoGraphicUri();
+            case ButtonHiGraphicUri:
+                return instance.getButtonHiGraphicUri();
+            case ButtonLoGraphicUri:
+                return instance.getButtonLoGraphicUri();
             case ButtonOffGraphicUri:
                 return instance.getButtonOffGraphicUri();
+            case MethodName:
+                return instance.getMethodName();
+            case MethodBody:
+                return instance.getMethodBody();
+            case MethodClassfileJvm:
+                return instance.getMethodClassfileJvm();
             default:
                 throw new IllegalArgumentException(field.toString()+" in Tool");
             }
@@ -390,6 +394,9 @@ public final class Tool
             case Name:
                 instance.setName( (String)value);
                 return;
+            case LastModified:
+                instance.setLastModified( (Long)value);
+                return;
             case HeadXtm:
                 instance.setHeadXtm( (String)value);
                 return;
@@ -399,14 +406,29 @@ public final class Tool
             case FormXtm:
                 instance.setFormXtm( (String)value);
                 return;
-            case TitleGraphicUri:
-                instance.setTitleGraphicUri( (String)value);
+            case TitleHiGraphicUri:
+                instance.setTitleHiGraphicUri( (String)value);
                 return;
-            case ButtonGraphicUri:
-                instance.setButtonGraphicUri( (String)value);
+            case TitleLoGraphicUri:
+                instance.setTitleLoGraphicUri( (String)value);
+                return;
+            case ButtonHiGraphicUri:
+                instance.setButtonHiGraphicUri( (String)value);
+                return;
+            case ButtonLoGraphicUri:
+                instance.setButtonLoGraphicUri( (String)value);
                 return;
             case ButtonOffGraphicUri:
                 instance.setButtonOffGraphicUri( (String)value);
+                return;
+            case MethodName:
+                instance.setMethodName( (String)value);
+                return;
+            case MethodBody:
+                instance.setMethodBody( (Text)value);
+                return;
+            case MethodClassfileJvm:
+                instance.setMethodClassfileJvm( (Blob)value);
                 return;
             default:
                 throw new IllegalArgumentException(field.toString()+" in Tool");
@@ -434,12 +456,18 @@ public final class Tool
     private volatile Key key;    
     private volatile String id;    // *unique
     private volatile String name;    // *hash-unique
+    private volatile Long lastModified;    
     private volatile String headXtm;    
     private volatile String overlayXtm;    
     private volatile String formXtm;    
-    private volatile String titleGraphicUri;    
-    private volatile String buttonGraphicUri;    
+    private volatile String titleHiGraphicUri;    
+    private volatile String titleLoGraphicUri;    
+    private volatile String buttonHiGraphicUri;    
+    private volatile String buttonLoGraphicUri;    
     private volatile String buttonOffGraphicUri;    
+    private volatile String methodName;    
+    private volatile Text methodBody;    
+    private volatile Blob methodClassfileJvm;    
 
 
 
@@ -451,24 +479,12 @@ public final class Tool
         super();
         this.setKey(child);
     }
-    public Tool(String name) {
-        super();
-        this.setName(name);
-        String id = IdFor( name);
-        this.setId(id);
-        Key key = KeyLongFor(id);
-        this.setKey(key);
-    }
-    public Tool(Key ancestor, boolean isShort, String name) {
+    public Tool(Key ancestor, String name) {
         super();
         this.setName(name);
         String id = IdFor(ancestor,  name);
         this.setId(id);
-        Key key;
-        if (isShort)
-            key = KeyShortFor(ancestor,id);
-        else
-            key = KeyLongFor(ancestor,id);
+        Key key = KeyLongFor(ancestor,id);
         this.setKey(key);
     }
 
@@ -488,17 +504,29 @@ public final class Tool
 
         this.name = null;
 
+        this.lastModified = null;
+
         this.headXtm = null;
 
         this.overlayXtm = null;
 
         this.formXtm = null;
 
-        this.titleGraphicUri = null;
+        this.titleHiGraphicUri = null;
 
-        this.buttonGraphicUri = null;
+        this.titleLoGraphicUri = null;
+
+        this.buttonHiGraphicUri = null;
+
+        this.buttonLoGraphicUri = null;
 
         this.buttonOffGraphicUri = null;
+
+        this.methodName = null;
+
+        this.methodBody = null;
+
+        this.methodClassfileJvm = null;
 
     }
 
@@ -565,6 +593,27 @@ public final class Tool
         this.name = name;
     }
 
+    public boolean hasLastModified(){
+        return (null != this.lastModified);
+    }
+    public boolean hasNotLastModified(){
+        return (null == this.lastModified);
+    }
+    public boolean dropLastModified(){
+        if (null != this.lastModified){
+            this.lastModified = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public Long getLastModified(){
+        return this.lastModified;
+    }
+    public void setLastModified(Long lastModified){
+        this.lastModified = lastModified;
+    }
+
     public boolean hasHeadXtm(){
         return (null != this.headXtm);
     }
@@ -628,46 +677,88 @@ public final class Tool
         this.formXtm = formXtm;
     }
 
-    public boolean hasTitleGraphicUri(){
-        return (null != this.titleGraphicUri);
+    public boolean hasTitleHiGraphicUri(){
+        return (null != this.titleHiGraphicUri);
     }
-    public boolean hasNotTitleGraphicUri(){
-        return (null == this.titleGraphicUri);
+    public boolean hasNotTitleHiGraphicUri(){
+        return (null == this.titleHiGraphicUri);
     }
-    public boolean dropTitleGraphicUri(){
-        if (null != this.titleGraphicUri){
-            this.titleGraphicUri = null;
+    public boolean dropTitleHiGraphicUri(){
+        if (null != this.titleHiGraphicUri){
+            this.titleHiGraphicUri = null;
             return true;
         }
         else
             return false;
     }
-    public String getTitleGraphicUri(){
-        return this.titleGraphicUri;
+    public String getTitleHiGraphicUri(){
+        return this.titleHiGraphicUri;
     }
-    public void setTitleGraphicUri(String titleGraphicUri){
-        this.titleGraphicUri = titleGraphicUri;
+    public void setTitleHiGraphicUri(String titleHiGraphicUri){
+        this.titleHiGraphicUri = titleHiGraphicUri;
     }
 
-    public boolean hasButtonGraphicUri(){
-        return (null != this.buttonGraphicUri);
+    public boolean hasTitleLoGraphicUri(){
+        return (null != this.titleLoGraphicUri);
     }
-    public boolean hasNotButtonGraphicUri(){
-        return (null == this.buttonGraphicUri);
+    public boolean hasNotTitleLoGraphicUri(){
+        return (null == this.titleLoGraphicUri);
     }
-    public boolean dropButtonGraphicUri(){
-        if (null != this.buttonGraphicUri){
-            this.buttonGraphicUri = null;
+    public boolean dropTitleLoGraphicUri(){
+        if (null != this.titleLoGraphicUri){
+            this.titleLoGraphicUri = null;
             return true;
         }
         else
             return false;
     }
-    public String getButtonGraphicUri(){
-        return this.buttonGraphicUri;
+    public String getTitleLoGraphicUri(){
+        return this.titleLoGraphicUri;
     }
-    public void setButtonGraphicUri(String buttonGraphicUri){
-        this.buttonGraphicUri = buttonGraphicUri;
+    public void setTitleLoGraphicUri(String titleLoGraphicUri){
+        this.titleLoGraphicUri = titleLoGraphicUri;
+    }
+
+    public boolean hasButtonHiGraphicUri(){
+        return (null != this.buttonHiGraphicUri);
+    }
+    public boolean hasNotButtonHiGraphicUri(){
+        return (null == this.buttonHiGraphicUri);
+    }
+    public boolean dropButtonHiGraphicUri(){
+        if (null != this.buttonHiGraphicUri){
+            this.buttonHiGraphicUri = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public String getButtonHiGraphicUri(){
+        return this.buttonHiGraphicUri;
+    }
+    public void setButtonHiGraphicUri(String buttonHiGraphicUri){
+        this.buttonHiGraphicUri = buttonHiGraphicUri;
+    }
+
+    public boolean hasButtonLoGraphicUri(){
+        return (null != this.buttonLoGraphicUri);
+    }
+    public boolean hasNotButtonLoGraphicUri(){
+        return (null == this.buttonLoGraphicUri);
+    }
+    public boolean dropButtonLoGraphicUri(){
+        if (null != this.buttonLoGraphicUri){
+            this.buttonLoGraphicUri = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public String getButtonLoGraphicUri(){
+        return this.buttonLoGraphicUri;
+    }
+    public void setButtonLoGraphicUri(String buttonLoGraphicUri){
+        this.buttonLoGraphicUri = buttonLoGraphicUri;
     }
 
     public boolean hasButtonOffGraphicUri(){
@@ -689,6 +780,69 @@ public final class Tool
     }
     public void setButtonOffGraphicUri(String buttonOffGraphicUri){
         this.buttonOffGraphicUri = buttonOffGraphicUri;
+    }
+
+    public boolean hasMethodName(){
+        return (null != this.methodName);
+    }
+    public boolean hasNotMethodName(){
+        return (null == this.methodName);
+    }
+    public boolean dropMethodName(){
+        if (null != this.methodName){
+            this.methodName = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public String getMethodName(){
+        return this.methodName;
+    }
+    public void setMethodName(String methodName){
+        this.methodName = methodName;
+    }
+
+    public boolean hasMethodBody(){
+        return (null != this.methodBody);
+    }
+    public boolean hasNotMethodBody(){
+        return (null == this.methodBody);
+    }
+    public boolean dropMethodBody(){
+        if (null != this.methodBody){
+            this.methodBody = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public Text getMethodBody(){
+        return this.methodBody;
+    }
+    public void setMethodBody(Text methodBody){
+        this.methodBody = methodBody;
+    }
+
+    public boolean hasMethodClassfileJvm(){
+        return (null != this.methodClassfileJvm);
+    }
+    public boolean hasNotMethodClassfileJvm(){
+        return (null == this.methodClassfileJvm);
+    }
+    public boolean dropMethodClassfileJvm(){
+        if (null != this.methodClassfileJvm){
+            this.methodClassfileJvm = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public Blob getMethodClassfileJvm(){
+        return this.methodClassfileJvm;
+    }
+    public void setMethodClassfileJvm(Blob methodClassfileJvm){
+        this.methodClassfileJvm = methodClassfileJvm;
     }
 
 
@@ -759,6 +913,181 @@ public final class Tool
             }
         }
         return top;
+    }
+    public boolean updateFrom(Request req){
+        boolean change = false;
+
+        Key key = Strings.KeyFromString(req.getParameter("key"));
+        if (IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        String id = Strings.StringFromString(req.getParameter("id"));
+        if (IsNotEqual(id,this.getId())){
+            this.setId(id);
+            change = true;
+        }
+
+        String name = Strings.StringFromString(req.getParameter("name"));
+        if (IsNotEqual(name,this.getName())){
+            this.setName(name);
+            change = true;
+        }
+
+        Long lastModified = Strings.LongFromString(req.getParameter("lastModified"));
+        if (IsNotEqual(lastModified,this.getLastModified())){
+            this.setLastModified(lastModified);
+            change = true;
+        }
+
+        String headXtm = Strings.StringFromString(req.getParameter("headXtm"));
+        if (IsNotEqual(headXtm,this.getHeadXtm())){
+            this.setHeadXtm(headXtm);
+            change = true;
+        }
+
+        String overlayXtm = Strings.StringFromString(req.getParameter("overlayXtm"));
+        if (IsNotEqual(overlayXtm,this.getOverlayXtm())){
+            this.setOverlayXtm(overlayXtm);
+            change = true;
+        }
+
+        String formXtm = Strings.StringFromString(req.getParameter("formXtm"));
+        if (IsNotEqual(formXtm,this.getFormXtm())){
+            this.setFormXtm(formXtm);
+            change = true;
+        }
+
+        String titleHiGraphicUri = Strings.StringFromString(req.getParameter("titleHiGraphicUri"));
+        if (IsNotEqual(titleHiGraphicUri,this.getTitleHiGraphicUri())){
+            this.setTitleHiGraphicUri(titleHiGraphicUri);
+            change = true;
+        }
+
+        String titleLoGraphicUri = Strings.StringFromString(req.getParameter("titleLoGraphicUri"));
+        if (IsNotEqual(titleLoGraphicUri,this.getTitleLoGraphicUri())){
+            this.setTitleLoGraphicUri(titleLoGraphicUri);
+            change = true;
+        }
+
+        String buttonHiGraphicUri = Strings.StringFromString(req.getParameter("buttonHiGraphicUri"));
+        if (IsNotEqual(buttonHiGraphicUri,this.getButtonHiGraphicUri())){
+            this.setButtonHiGraphicUri(buttonHiGraphicUri);
+            change = true;
+        }
+
+        String buttonLoGraphicUri = Strings.StringFromString(req.getParameter("buttonLoGraphicUri"));
+        if (IsNotEqual(buttonLoGraphicUri,this.getButtonLoGraphicUri())){
+            this.setButtonLoGraphicUri(buttonLoGraphicUri);
+            change = true;
+        }
+
+        String buttonOffGraphicUri = Strings.StringFromString(req.getParameter("buttonOffGraphicUri"));
+        if (IsNotEqual(buttonOffGraphicUri,this.getButtonOffGraphicUri())){
+            this.setButtonOffGraphicUri(buttonOffGraphicUri);
+            change = true;
+        }
+
+        String methodName = Strings.StringFromString(req.getParameter("methodName"));
+        if (IsNotEqual(methodName,this.getMethodName())){
+            this.setMethodName(methodName);
+            change = true;
+        }
+
+        Text methodBody = Strings.TextFromString(req.getParameter("methodBody"));
+        if (IsNotEqual(methodBody,this.getMethodBody())){
+            this.setMethodBody(methodBody);
+            change = true;
+        }
+
+        Blob methodClassfileJvm = Strings.BlobFromString(req.getParameter("methodClassfileJvm"));
+        if (IsNotEqual(methodClassfileJvm,this.getMethodClassfileJvm())){
+            this.setMethodClassfileJvm(methodClassfileJvm);
+            change = true;
+        }
+
+        return change;
+    }
+    public boolean updateFrom(BigTable proto){
+        return this.updateFrom( (Tool)proto);
+    }
+    public boolean updateFrom(Tool proto){
+        boolean change = false;
+
+        Key key = proto.getKey();
+        if (null != key && IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        Long lastModified = proto.getLastModified();
+        if (null != lastModified && IsNotEqual(lastModified,this.getLastModified())){
+            this.setLastModified(lastModified);
+            change = true;
+        }
+
+        String headXtm = proto.getHeadXtm();
+        if (null != headXtm && IsNotEqual(headXtm,this.getHeadXtm())){
+            this.setHeadXtm(headXtm);
+            change = true;
+        }
+
+        String overlayXtm = proto.getOverlayXtm();
+        if (null != overlayXtm && IsNotEqual(overlayXtm,this.getOverlayXtm())){
+            this.setOverlayXtm(overlayXtm);
+            change = true;
+        }
+
+        String formXtm = proto.getFormXtm();
+        if (null != formXtm && IsNotEqual(formXtm,this.getFormXtm())){
+            this.setFormXtm(formXtm);
+            change = true;
+        }
+
+        String titleHiGraphicUri = proto.getTitleHiGraphicUri();
+        if (null != titleHiGraphicUri && IsNotEqual(titleHiGraphicUri,this.getTitleHiGraphicUri())){
+            this.setTitleHiGraphicUri(titleHiGraphicUri);
+            change = true;
+        }
+
+        String titleLoGraphicUri = proto.getTitleLoGraphicUri();
+        if (null != titleLoGraphicUri && IsNotEqual(titleLoGraphicUri,this.getTitleLoGraphicUri())){
+            this.setTitleLoGraphicUri(titleLoGraphicUri);
+            change = true;
+        }
+
+        String buttonHiGraphicUri = proto.getButtonHiGraphicUri();
+        if (null != buttonHiGraphicUri && IsNotEqual(buttonHiGraphicUri,this.getButtonHiGraphicUri())){
+            this.setButtonHiGraphicUri(buttonHiGraphicUri);
+            change = true;
+        }
+
+        String buttonLoGraphicUri = proto.getButtonLoGraphicUri();
+        if (null != buttonLoGraphicUri && IsNotEqual(buttonLoGraphicUri,this.getButtonLoGraphicUri())){
+            this.setButtonLoGraphicUri(buttonLoGraphicUri);
+            change = true;
+        }
+
+        String buttonOffGraphicUri = proto.getButtonOffGraphicUri();
+        if (null != buttonOffGraphicUri && IsNotEqual(buttonOffGraphicUri,this.getButtonOffGraphicUri())){
+            this.setButtonOffGraphicUri(buttonOffGraphicUri);
+            change = true;
+        }
+
+        String methodName = proto.getMethodName();
+        if (null != methodName && IsNotEqual(methodName,this.getMethodName())){
+            this.setMethodName(methodName);
+            change = true;
+        }
+
+        Text methodBody = proto.getMethodBody();
+        if (null != methodBody && IsNotEqual(methodBody,this.getMethodBody())){
+            this.setMethodBody(methodBody);
+            change = true;
+        }
+
+        return change;
     }
     public void drop(){
         Delete(this);

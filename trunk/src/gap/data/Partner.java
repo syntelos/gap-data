@@ -2,6 +2,7 @@
 package gap.data;
 
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
 
@@ -15,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-07T22:08:20.789Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:29.884Z",comments="gap.data")
 public final class Partner
     extends gap.data.BigTable
 {
@@ -103,26 +104,10 @@ public final class Partner
         else
             throw new IllegalArgumentException();
     }
-    public final static Partner GetCreateLong(String logonId){
-        Partner partner = ForLongLogonId( logonId);
-        if (null == partner){
-            partner = new Partner( logonId);
-            partner = (Partner)gap.data.Store.Put(partner);
-        }
-        return partner;
-    }
     public final static Partner GetCreateLong(Key ancestor, String logonId){
         Partner partner = ForLongLogonId(ancestor, logonId);
         if (null == partner){
-            partner = new Partner(ancestor,false, logonId);
-            partner = (Partner)gap.data.Store.Put(partner);
-        }
-        return partner;
-    }
-    public final static Partner GetCreateShort(Key ancestor, String logonId){
-        Partner partner = ForShortLogonId(ancestor, logonId);
-        if (null == partner){
-            partner = new Partner(ancestor,true, logonId);
+            partner = new Partner(ancestor, logonId);
             partner = (Partner)gap.data.Store.Put(partner);
         }
         return partner;
@@ -409,24 +394,12 @@ public final class Partner
         super();
         this.setKey(child);
     }
-    public Partner(String logonId) {
-        super();
-        this.setLogonId(logonId);
-        String id = IdFor( logonId);
-        this.setId(id);
-        Key key = KeyLongFor(id);
-        this.setKey(key);
-    }
-    public Partner(Key ancestor, boolean isShort, String logonId) {
+    public Partner(Key ancestor, String logonId) {
         super();
         this.setLogonId(logonId);
         String id = IdFor(ancestor,  logonId);
         this.setId(id);
-        Key key;
-        if (isShort)
-            key = KeyShortFor(ancestor,id);
-        else
-            key = KeyLongFor(ancestor,id);
+        Key key = KeyLongFor(ancestor,id);
         this.setKey(key);
     }
 
@@ -579,6 +552,43 @@ public final class Partner
             }
         }
         return top;
+    }
+    public boolean updateFrom(Request req){
+        boolean change = false;
+
+        Key key = Strings.KeyFromString(req.getParameter("key"));
+        if (IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        String id = Strings.StringFromString(req.getParameter("id"));
+        if (IsNotEqual(id,this.getId())){
+            this.setId(id);
+            change = true;
+        }
+
+        String logonId = Strings.StringFromString(req.getParameter("logonId"));
+        if (IsNotEqual(logonId,this.getLogonId())){
+            this.setLogonId(logonId);
+            change = true;
+        }
+
+        return change;
+    }
+    public boolean updateFrom(BigTable proto){
+        return this.updateFrom( (Partner)proto);
+    }
+    public boolean updateFrom(Partner proto){
+        boolean change = false;
+
+        Key key = proto.getKey();
+        if (null != key && IsNotEqual(key,this.getKey())){
+            this.setKey(key);
+            change = true;
+        }
+
+        return change;
     }
     public void drop(){
         Delete(this);
