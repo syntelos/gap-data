@@ -342,7 +342,7 @@ public final class {{=class_name}}
     /**
      * Persistent fields' binding for {@link {{=class_name}}}
      */
-    public final static enum Field
+    public static enum Field
         implements gap.data.Field
     {
         InheritFromKey("inheritFromKey"),{{#pfield}}
@@ -498,7 +498,10 @@ public final class {{=class_name}}
         }
         else
             return false;
-    }
+    }{{#field_is_key}}
+    public {{=field_class}} get{{=field_nameCamel}}(){
+        return this.{{=field_name}};
+    }{{/field_is_key}}{{#field_is_not_key}}
     public {{=field_class}} get{{=field_nameCamel}}(boolean mayInherit){
         if (mayInherit){
             {{=field_class}} {{=field_name}} = this.{{=field_name}};
@@ -512,7 +515,7 @@ public final class {{=class_name}}
         }
         else
             return this.{{=field_name}};
-    }
+    }{{/field_is_not_key}}
     public void set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         this.{{=field_name}} = {{=field_name}};
     }
