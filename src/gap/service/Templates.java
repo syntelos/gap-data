@@ -150,7 +150,7 @@ public final class Templates
         throws TemplateException
     {
         if (null != resource){
-            String source = gap.Strings.TextToString(resource.getTemplateSourceHapax());
+            String source = gap.Strings.TextToString(resource.getTemplateSourceHapax(true));
             if (null != source)
                 return new Template(source,context);
         }

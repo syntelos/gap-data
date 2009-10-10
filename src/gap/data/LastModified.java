@@ -25,9 +25,9 @@ package gap.data;
  */
 public interface LastModified {
 
-    public boolean hasLastModified();
+    public boolean hasLastModified(boolean mayInherit);
 
-    public Long getLastModified();
+    public Long getLastModified(boolean mayInherit);
 
     public void setLastModified(Long Long);
 

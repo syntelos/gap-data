@@ -16,9 +16,10 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "oso.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:28.838Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T16:46:27.448Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
+    implements DataInheritance<Person>
 {
 
     private final static long serialVersionUID = 2;
@@ -34,26 +35,13 @@ public final class Person
     }
 
 
+
     public final static Key KeyLongIdFor(String logonId){
         String id = IdFor( logonId);
         return KeyLongFor(id);
     }
-    public final static Key KeyLongIdFor(Key ancestor, String logonId){
-        String id = IdFor(ancestor, logonId);
-        return KeyLongFor(ancestor,id);
-    }
-    public final static Key KeyShortIdFor(Key ancestor, String logonId){
-        String id = IdFor(ancestor, logonId);
-        return KeyShortFor(ancestor,id);
-    }
-    public final static String IdFor(Key ancestor, String logonId){
-        if (ancestor.isComplete() && null != logonId){
-            String logonIdString = logonId;
-            return gap.data.Hash.For(ToString(ancestor)+'/'+logonIdString);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
     public final static String IdFor(String logonId){
         if (null != logonId){
             String logonIdString = logonId;
@@ -62,34 +50,8 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public final static Person ForLongLogonId(Key ancestor, String logonId){
-        if (null != logonId){
-            Key key = KeyLongIdFor(ancestor, logonId);
-            Person instance = (Person)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static Person ForShortLogonId(Key ancestor, String logonId){
-        if (null != logonId){
-            Key key = KeyShortIdFor(ancestor, logonId);
-            Person instance = (Person)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
     public final static Person ForLongLogonId(String logonId){
         if (null != logonId){
             Key key = KeyLongIdFor( logonId);
@@ -104,6 +66,8 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
+
+
     public final static Person GetCreateLong(String logonId){
         Person person = ForLongLogonId( logonId);
         if (null == person){
@@ -114,43 +78,12 @@ public final class Person
     }
 
 
+
     public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static Key KeyShortFor(Key ancestor, String id){
-        return KeyFactory.createKey(ancestor,KIND,id);
-    }
-    public final static Key KeyLongFor(Key ancestor, String id){
-        return KeyFactory.createKey(KIND,id);
-    }
-    public final static Person ForLongId(Key ancestor, String id){
-        if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyLongFor(ancestor,id);
-            Person instance = (Person)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static Person ForShortId(Key ancestor, String id){
-        if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyShortFor(ancestor,id);
-            Person instance = (Person)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
     public final static Person ForLongId(String id){
         if (null != id){
             Key key = KeyLongFor(id);
@@ -165,6 +98,7 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
+
 
     public final static Person Get(Key key){
         if (null != key){
@@ -187,55 +121,9 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    /**
-     * Test for uniqueness and iterate under collisions.
-     */
-    public final static Key NewRandomKeyLong(Key ancestor){
-        if (null != ancestor){
-            /*
-             * Source matter for data local uniqueness
-             */
-            String source = gap.data.BigTable.ToString(ancestor);
-            long matter = gap.data.Hash.Djb64(source);
-            /*
-             * Random matter for network global uniqueness
-             */
-            java.util.Random random = new java.util.Random();
-            do {
-                matter ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(KIND,idString);
-                if (null == GetKey(key))
-                    return key;
-            }
-            while (true);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static Key NewRandomKeyShort(Key ancestor){
-        if (null != ancestor){
-            /*
-             * Source matter for data local uniqueness
-             */
-            String source = gap.data.BigTable.ToString(ancestor);
-            long matter = gap.data.Hash.Djb64(source);
-            /*
-             * Random matter for network global uniqueness
-             */
-            java.util.Random random = new java.util.Random();
-            do {
-                matter ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(ancestor,KIND,idString);
-                if (null == GetKey(key))
-                    return key;
-            }
-            while (true);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
+
     /**
      * Drop the instance and any children of its key from the world,
      * memcache and store.
@@ -275,8 +163,8 @@ public final class Person
     public final static Query CreateQueryFor(){
         return new Query(KIND);
     }
-    public final static Query CreateQueryFor(Key ancestor){
-        return new Query(KIND,ancestor);
+    public final static Query CreateQueryFor(Key key){
+        return new Query(KIND,key);
     }
     public final static Person Query1(Query query){
         if (null != query)
@@ -304,12 +192,12 @@ public final class Person
     }
 
     /**
-     * 
+     * Persistent fields' binding for {@link Person}
      */
     public static enum Field
         implements gap.data.Field
     {
-
+        InheritFromKey("inheritFromKey"),
         Key("key"),
         Id("id"),
         LogonId("logonId");
@@ -332,22 +220,24 @@ public final class Person
         public static Field getField(String name) {
             return FieldName.get(name);
         }
-        public static Object Get(Field field, Person instance){
+        public static Object Get(Field field, Person instance, boolean mayInherit){
             switch(field){
-
+            case InheritFromKey:
+                return instance.getInheritFromKey();
             case Key:
-                return instance.getKey();
+                return instance.getKey(mayInherit);
             case Id:
-                return instance.getId();
+                return instance.getId(mayInherit);
             case LogonId:
-                return instance.getLogonId();
+                return instance.getLogonId(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Person");
             }
         }
         public static void Set(Field field, Person instance, Object value){
             switch(field){
-
+            case InheritFromKey:
+                instance.setInheritFromKey( (Key)value);
             case Key:
                 instance.setKey( (Key)value);
                 return;
@@ -379,10 +269,16 @@ public final class Person
         }
     }
 
+    private volatile transient Person inheritFrom;
+
 
     private volatile Key key;    
     private volatile String id;    // *unique
     private volatile String logonId;    // *hash-unique
+
+
+
+
 
 
 
@@ -404,6 +300,7 @@ public final class Person
     }
 
 
+
     public void onread(){
 
     }
@@ -412,20 +309,38 @@ public final class Person
     }
     public void destroy(){
         this.datastoreEntity = null;
-
         this.key = null;
-
         this.id = null;
-
         this.logonId = null;
-
+    }
+    public boolean hasInheritFrom(){
+        return (null != this.inheritFrom || null != this.inheritFromKey);
+    }
+    public boolean hasNotInheritFrom(){
+        return (null == this.inheritFrom && null == this.inheritFromKey);
+    }
+    public Person getInheritFrom(){
+        Person inheritFrom = this.inheritFrom;
+        if (null == inheritFrom){
+            Key inheritFromKey = this.inheritFromKey;
+            if (null != inheritFromKey){
+                inheritFrom = Person.Get(inheritFromKey);
+                this.inheritFrom = inheritFrom;
+            }
+        }
+        return inheritFrom;
+    }
+    public void setInheritFrom(Person ancestor){
+        this.inheritFrom = ancestor;
+        if (null != ancestor)
+            this.inheritFromKey = ancestor.getKey();
     }
 
-    public boolean hasKey(){
-        return (null != this.key);
+    public boolean hasKey(boolean mayInherit){
+        return (null != this.getKey(mayInherit));
     }
-    public boolean hasNotKey(){
-        return (null == this.key);
+    public boolean hasNotKey(boolean mayInherit){
+        return (null == this.getKey(mayInherit));
     }
     public boolean dropKey(){
         if (null != this.key){
@@ -438,15 +353,18 @@ public final class Person
     public Key getKey(){
         return this.key;
     }
+    public Key getKey(boolean ignore){
+        return this.key;
+    }
     public void setKey(Key key){
         this.key = key;
     }
 
-    public boolean hasId(){
-        return (null != this.id);
+    public boolean hasId(boolean mayInherit){
+        return (null != this.getId(mayInherit));
     }
-    public boolean hasNotId(){
-        return (null == this.id);
+    public boolean hasNotId(boolean mayInherit){
+        return (null == this.getId(mayInherit));
     }
     public boolean dropId(){
         if (null != this.id){
@@ -459,15 +377,18 @@ public final class Person
     public String getId(){
         return this.id;
     }
+    public String getId(boolean ignore){
+        return this.id;
+    }
     public void setId(String id){
         this.id = id;
     }
 
-    public boolean hasLogonId(){
-        return (null != this.logonId);
+    public boolean hasLogonId(boolean mayInherit){
+        return (null != this.getLogonId(mayInherit));
     }
-    public boolean hasNotLogonId(){
-        return (null == this.logonId);
+    public boolean hasNotLogonId(boolean mayInherit){
+        return (null == this.getLogonId(mayInherit));
     }
     public boolean dropLogonId(){
         if (null != this.logonId){
@@ -480,10 +401,12 @@ public final class Person
     public String getLogonId(){
         return this.logonId;
     }
+    public String getLogonId(boolean ignore){
+        return this.logonId;
+    }
     public void setLogonId(String logonId){
         this.logonId = logonId;
     }
-
 
 
 
@@ -508,8 +431,8 @@ public final class Person
     public gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
-    public java.io.Serializable valueOf(gap.data.Field field){
-        return (java.io.Serializable)Field.Get((Field)field,this);
+    public java.io.Serializable valueOf(gap.data.Field field, boolean mayInherit){
+        return (java.io.Serializable)Field.Get((Field)field,this,mayInherit);
     }
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
@@ -520,7 +443,7 @@ public final class Person
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
-                    java.lang.Object value = Field.Get(field,this);
+                    java.lang.Object value = Field.Get(field,this,true);
                     if (null != value){
                         if (value instanceof DictionaryInto){
                             DictionaryInto dvalue = (DictionaryInto)value;
@@ -540,7 +463,7 @@ public final class Person
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this);
+            java.lang.Object value = Field.Get(field,this,true);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;
@@ -555,25 +478,6 @@ public final class Person
     }
     public boolean updateFrom(Request req){
         boolean change = false;
-
-        Key key = Strings.KeyFromString(req.getParameter("key"));
-        if (IsNotEqual(key,this.getKey())){
-            this.setKey(key);
-            change = true;
-        }
-
-        String id = Strings.StringFromString(req.getParameter("id"));
-        if (IsNotEqual(id,this.getId())){
-            this.setId(id);
-            change = true;
-        }
-
-        String logonId = Strings.StringFromString(req.getParameter("logonId"));
-        if (IsNotEqual(logonId,this.getLogonId())){
-            this.setLogonId(logonId);
-            change = true;
-        }
-
         return change;
     }
     public boolean updateFrom(BigTable proto){
@@ -581,13 +485,6 @@ public final class Person
     }
     public boolean updateFrom(Person proto){
         boolean change = false;
-
-        Key key = proto.getKey();
-        if (null != key && IsNotEqual(key,this.getKey())){
-            this.setKey(key);
-            change = true;
-        }
-
         return change;
     }
     public void drop(){

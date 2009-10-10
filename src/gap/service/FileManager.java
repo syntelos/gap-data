@@ -312,7 +312,7 @@ public class FileManager
     }
     public Servlet getServlet(Resource desc){
 
-        String servletClassName = desc.getServletClassname();
+        String servletClassName = desc.getServletClassname(true);
         if (null != servletClassName){
             try {
                 Class jclass;
@@ -345,8 +345,8 @@ public class FileManager
         throws java.io.IOException,
                FileManager.CompileError
     {
-        String className = desc.getServletClassname();
-        String sourceText = gap.Strings.TextToString(desc.getServletSourceJava());
+        String className = desc.getServletClassname(true);
+        String sourceText = gap.Strings.TextToString(desc.getServletSourceJava(true));
 
         if (null != className && null != sourceText){
 
@@ -385,9 +385,9 @@ public class FileManager
     }
 
     public Class define(Resource desc){
-        String classname = desc.getServletClassname();
+        String classname = desc.getServletClassname(true);
         if (null != classname){
-            Blob classfile = desc.getServletClassfileJvm();
+            Blob classfile = desc.getServletClassfileJvm(true);
             if (null != classfile)
                 return this.define(classname,classfile.getBytes());
         }

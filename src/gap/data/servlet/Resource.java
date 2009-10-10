@@ -4,16 +4,10 @@ package gap.data.servlet;
 
 import gap.data.*;
 
-import gap.Request;
-import gap.Response;
+import gap.*;
 import gap.data.* ;
-
-import gap.service.Accept;
-import gap.service.Error;
-import gap.service.Logon;
-import gap.service.Path;
-import gap.service.Parameters;
-import gap.service.Templates;
+import gap.service.* ;
+import gap.util.* ;
 
 import hapax.TemplateDictionary;
 import hapax.TemplateException;
@@ -35,11 +29,11 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-09T09:20:29.724Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-10T16:46:28.313Z",comments="gap.data")
 public class Resource
     extends gap.servlet.Site
 {
-    public final static Class<? extends BigTable> BigTableClass = gap.data.Resource.class;
+    public final static Class<gap.data.Resource> BigTableClass = gap.data.Resource.class;
 
 
     public Resource(){
@@ -56,10 +50,9 @@ public class Resource
 
         if (this.canRead(req)){
 
-            String id = req.getPath(0);
-            if (null != id){
+            if (req.hasPath(1)){
 
-                gap.data.Resource instance = gap.data.Resource.ForLongId(id);
+                gap.data.Resource instance = gap.data.Resource.ForLongId(req.getPath(1));
 
                 if (null != instance){
 
@@ -67,16 +60,12 @@ public class Resource
 
                     return top;
                 }
-                else {
-                    return null;
-                }
             }
             else {
                 req.parameters.dictionaryInto(top);
+                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 com.google.appengine.api.datastore.Query query = gap.data.Resource.CreateQueryFor();
-
-                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 List<gap.data.Resource> list = (List<gap.data.Resource>)gap.data.Resource.QueryN(query,page);
 
@@ -84,9 +73,10 @@ public class Resource
 
                     instance.dictionaryInto(top);
                 }
+                return top;
             }
         }
-        return top;
+        return null;
     }
 
 }

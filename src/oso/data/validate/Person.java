@@ -27,30 +27,18 @@ import javax.annotation.Generated;
 /**
  * Data validation functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-09T09:20:29.421Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-10T16:46:27.992Z",comments="oso.data")
 public abstract class Person
     extends gap.Strings
 {
     public final static Object FromString(oso.data.Person.Field field, String string){
         switch(field){
-          case Key:
-            return KeyFromString(string);
-          case Id:
-            return StringFromString(string);
-          case LogonId:
-            return StringFromString(string);
         default:
             throw new IllegalStateException(field.name());
         }
     }
     public final static String ToString(oso.data.Person.Field field, Object value){
         switch(field){
-          case Key:
-            return KeyToString( (Key)value);
-          case Id:
-            return StringToString( (String)value);
-          case LogonId:
-            return StringToString( (String)value);
         default:
             throw new IllegalStateException(field.name());
         }

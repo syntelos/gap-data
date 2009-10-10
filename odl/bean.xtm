@@ -366,12 +366,12 @@ public final class {{=class_name}}
         public static Field getField(String name) {
             return FieldName.get(name);
         }
-        public static Object Get(Field field, {{=class_name}} instance){
+        public static Object Get(Field field, {{=class_name}} instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
                 return instance.getInheritFromKey();{{#pfield}}
             case {{=field_nameCamel}}:
-                return instance.get{{=field_nameCamel}}(false);{{/pfield}}
+                return instance.get{{=field_nameCamel}}(mayInherit);{{/pfield}}
             default:
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
@@ -485,11 +485,11 @@ public final class {{=class_name}}
             this.inheritFromKey = ancestor.get{{=field_key_nameCamel}}();
     }
 {{#pfield}}
-    public boolean has{{=field_nameCamel}}(){
-        return (null != this.{{=field_name}});
+    public boolean has{{=field_nameCamel}}(boolean mayInherit){
+        return (null != this.get{{=field_nameCamel}}(mayInherit));
     }
-    public boolean hasNot{{=field_nameCamel}}(){
-        return (null == this.{{=field_name}});
+    public boolean hasNot{{=field_nameCamel}}(boolean mayInherit){
+        return (null == this.get{{=field_nameCamel}}(mayInherit));
     }
     public boolean drop{{=field_nameCamel}}(){
         if (null != this.{{=field_name}}){
@@ -498,10 +498,13 @@ public final class {{=class_name}}
         }
         else
             return false;
-    }{{#field_is_key}}
+    }{{#field_is_not_inheritable}}
     public {{=field_class}} get{{=field_nameCamel}}(){
         return this.{{=field_name}};
-    }{{/field_is_key}}{{#field_is_not_key}}
+    }
+    public {{=field_class}} get{{=field_nameCamel}}(boolean ignore){
+        return this.{{=field_name}};
+    }{{/field_is_not_inheritable}}{{#field_is_inheritable}}
     public {{=field_class}} get{{=field_nameCamel}}(boolean mayInherit){
         if (mayInherit){
             {{=field_class}} {{=field_name}} = this.{{=field_name}};
@@ -510,21 +513,20 @@ public final class {{=class_name}}
                 if (null != inheritFrom)
                     return inheritFrom.get{{=field_nameCamel}}(true);
             }
-            else
-                return {{=field_name}};
+            return {{=field_name}};
         }
         else
             return this.{{=field_name}};
-    }{{/field_is_not_key}}
+    }{{/field_is_inheritable}}
     public void set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         this.{{=field_name}} = {{=field_name}};
     }
 {{/pfield}}{{#cfield}}
-    public boolean has{{=field_nameCamel}}(){
-        return (null != this.{{=field_name}});
+    public boolean has{{=field_nameCamel}}(boolean mayInherit){
+        return (null != this.get{{=field_nameCamel}}(mayInherit));
     }
-    public boolean hasNot{{=field_nameCamel}}(){
-        return (null == this.{{=field_name}});
+    public boolean hasNot{{=field_nameCamel}}(boolean mayInherit){
+        return (null == this.get{{=field_nameCamel}}(mayInherit));
     }
     public boolean drop{{=field_nameCamel}}(){
         if (null != this.{{=field_name}}){
@@ -537,7 +539,7 @@ public final class {{=class_name}}
     public {{=field_class}} get{{=field_nameCamel}}(boolean mayInherit){
         {{=field_class}} {{=field_name}} = this.{{=field_name}};
         if (null == {{=field_name}}){
-            if (this.hasInheritFrom()){
+            if (mayInherit && this.hasInheritFrom()){
                 {{=class_name}} inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom){
                     {{=field_name}} = inheritFrom.get{{=field_nameCamel}}(true);
@@ -628,8 +630,8 @@ public final class {{=class_name}}
     public gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
-    public java.io.Serializable valueOf(gap.data.Field field){
-        return (java.io.Serializable)Field.Get((Field)field,this);
+    public java.io.Serializable valueOf(gap.data.Field field, boolean mayInherit){
+        return (java.io.Serializable)Field.Get((Field)field,this,mayInherit);
     }
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
@@ -640,7 +642,7 @@ public final class {{=class_name}}
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
-                    java.lang.Object value = Field.Get(field,this);
+                    java.lang.Object value = Field.Get(field,this,true);
                     if (null != value){
                         if (value instanceof DictionaryInto){
                             DictionaryInto dvalue = (DictionaryInto)value;
@@ -660,7 +662,7 @@ public final class {{=class_name}}
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this);
+            java.lang.Object value = Field.Get(field,this,true);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;
@@ -674,12 +676,12 @@ public final class {{=class_name}}
         return top;
     }
     public boolean updateFrom(Request req){
-        boolean change = false;{{#pfield}}
+        boolean change = false;{{#pfield}}{{#field_is_updatable}}
         {{=field_class}} {{=field_name}} = Strings.{{=field_class}}FromString(req.getParameter("{{=field_name}}"));
-        if (IsNotEqual({{=field_name}},this.get{{=field_nameCamel}}())){
+        if (IsNotEqual({{=field_name}},this.get{{=field_nameCamel}}(true))){
             this.set{{=field_nameCamel}}({{=field_name}});
             change = true;
-        }{{/pfield}}
+        }{{/field_is_updatable}}{{/pfield}}
         return change;
     }
     public boolean updateFrom(BigTable proto){
@@ -688,7 +690,7 @@ public final class {{=class_name}}
     public boolean updateFrom({{=class_name}} proto){
         boolean change = false;{{#pfield}}{{#field_is_updatable}}
         {{=field_class}} {{=field_name}} = proto.get{{=field_nameCamel}}();
-        if (null != {{=field_name}} && IsNotEqual({{=field_name}},this.get{{=field_nameCamel}}())){
+        if (null != {{=field_name}} && IsNotEqual({{=field_name}},this.get{{=field_nameCamel}}(true))){
             this.set{{=field_nameCamel}}({{=field_name}});
             change = true;
         }{{/field_is_updatable}}{{/pfield}}
