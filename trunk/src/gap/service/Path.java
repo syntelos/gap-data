@@ -115,6 +115,13 @@ public final class Path
     /**
      * @return Subcomponent for index or null for not found.
      */
+    public boolean has(int idx){
+        String[] components = this.components;
+        return (null != components && idx < components.length);
+    }
+    /**
+     * @return Subcomponent for index or null for not found.
+     */
     public String get(int idx){
         String[] components = this.components;
         if (null != components && idx < components.length)

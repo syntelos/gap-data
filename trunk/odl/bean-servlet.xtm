@@ -5,16 +5,10 @@ package {{=package_name}}.servlet;
 {{/import}}
 import {{=package_name}}.*;
 
-import gap.Request;
-import gap.Response;
+import gap.*;
 import gap.data.* ;
-
-import gap.service.Accept;
-import gap.service.Error;
-import gap.service.Logon;
-import gap.service.Path;
-import gap.service.Parameters;
-import gap.service.Templates;
+import gap.service.* ;
+import gap.util.* ;
 
 import hapax.TemplateDictionary;
 import hapax.TemplateException;
@@ -40,7 +34,7 @@ import javax.annotation.Generated;
 public class {{=class_name}}
     extends gap.servlet.Site
 {
-    public final static Class<? extends BigTable> BigTableClass = {{=package_name}}.{{=class_name}}.class;
+    public final static Class<{{=package_name}}.{{=class_name}}> BigTableClass = {{=package_name}}.{{=class_name}}.class;
 
 
     public {{=class_name}}(){
@@ -56,11 +50,10 @@ public class {{=class_name}}
         TemplateDictionary top = req.getTop();
 
         if (this.canRead(req)){
+{{#class_re_not_child_or_group}}
+            if (req.hasPath(1)){
 
-            String id = req.getPath(0);
-            if (null != id){
-
-                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForLong{{=field_unique_nameCamel}}(id);
+                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForLong{{=field_unique_nameCamel}}(req.getPath(1));
 
                 if (null != instance){
 
@@ -68,16 +61,39 @@ public class {{=class_name}}
 
                     return top;
                 }
-                else {
-                    return null;
+            }{{/class_re_not_child_or_group}}{{#class_re_child}}
+            if (req.hasPath(1) && req.hasPath(3)){
+
+                Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
+
+                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForLong{{=field_unique_nameCamel}}(parentKey,req.getPath(1));
+
+                if (null != instance){
+
+                    instance.dictionaryInto(top);
+
+                    return top;
                 }
-            }
+            }{{/class_re_child}}{{#class_re_childgroup}}
+            if (req.hasPath(1) && req.hasPath(3)){
+
+                Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
+
+                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForShort{{=field_unique_nameCamel}}(parentKey,req.getPath(1));
+
+                if (null != instance){
+
+                    instance.dictionaryInto(top);
+
+                    return top;
+                }
+            }{{/class_re_childgroup}}{{!
+}}{{#class_re_not_childgroup}}
             else {
                 req.parameters.dictionaryInto(top);
+                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 com.google.appengine.api.datastore.Query query = {{=package_name}}.{{=class_name}}.CreateQueryFor();
-
-                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 List<{{=package_name}}.{{=class_name}}> list = (List<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,page);
 
@@ -85,9 +101,22 @@ public class {{=class_name}}
 
                     instance.dictionaryInto(top);
                 }
+                return top;{{/class_re_not_childgroup}}{{#class_re_childgroup}}
+            else if (req.hasPath(1)){
+                req.parameters.dictionaryInto(top);
+                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
+
+                Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
+
+                com.google.appengine.api.datastore.Query query = {{=package_name}}.{{=class_name}}.CreateQueryFor(parentKey);
+                for ({{=package_name}}.{{=class_name}} instance : list){
+
+                    instance.dictionaryInto(top);
+                }
+                return top;{{/class_re_childgroup}}
             }
         }
-        return top;
+        return null;
     }
 
 }

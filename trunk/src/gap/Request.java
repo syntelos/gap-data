@@ -194,6 +194,9 @@ public class Request
     public final String getPathFull(){
         return this.path.getFull();
     }
+    public final boolean hasPath(int idx){
+        return this.path.has(idx);
+    }
     public final String getPath(int idx){
         return this.path.get(idx);
     }

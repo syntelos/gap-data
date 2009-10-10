@@ -145,7 +145,7 @@ public class OD
                 if (null == classRelationParent)
                     throw new ODStateException(cd,"The object data model requires a parent class name.");
                 else
-                    child.setVariable("class_parentClass",classRelationParent);
+                    top.setVariable("parent_class_name",classRelationParent);
             }
             else if (ClassDescriptor.Relation.Type.ChildGroup.equals(classRelation)){
                 top.addSection("class_re_not_none");
@@ -153,11 +153,11 @@ public class OD
                 top.addSection("class_re_not_child");
                 top.addSection("class_re_child_or_group");
 
-                TemplateDictionary child = top.addSection("class_re_childgroup");
+                top.addSection("class_re_childgroup");
                 if (null == classRelationParent)
                     throw new ODStateException(cd,"The object data model requires a parent class name.");
                 else
-                    child.setVariable("class_parentClass",classRelationParent);
+                    top.setVariable("parent_class_name",classRelationParent);
             }
             else
                 throw new IllegalStateException("Unrecognized class relation "+classRelation.name());
