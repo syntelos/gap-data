@@ -32,7 +32,7 @@ public interface DataInheritance<SubClass> {
 
     public Key getInheritFromKey();
 
-    public void setInheritFromKey(Key key);
+    public boolean setInheritFromKey(Key key);
 
     public boolean hasInheritFrom();
 
@@ -40,5 +40,5 @@ public interface DataInheritance<SubClass> {
 
     public SubClass getInheritFrom();
 
-    public void setInheritFrom(SubClass ancestor);
+    public boolean setInheritFrom(SubClass ancestor);
 }

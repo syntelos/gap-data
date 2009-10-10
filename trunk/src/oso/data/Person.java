@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "oso.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T16:46:27.448Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T17:23:47.907Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -234,19 +234,16 @@ public final class Person
                 throw new IllegalArgumentException(field.toString()+" in Person");
             }
         }
-        public static void Set(Field field, Person instance, Object value){
+        public static boolean Set(Field field, Person instance, Object value){
             switch(field){
             case InheritFromKey:
-                instance.setInheritFromKey( (Key)value);
+                return instance.setInheritFromKey( (Key)value);
             case Key:
-                instance.setKey( (Key)value);
-                return;
+                return instance.setKey( (Key)value);
             case Id:
-                instance.setId( (String)value);
-                return;
+                return instance.setId( (String)value);
             case LogonId:
-                instance.setLogonId( (String)value);
-                return;
+                return instance.setLogonId( (String)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Person");
             }
@@ -330,10 +327,15 @@ public final class Person
         }
         return inheritFrom;
     }
-    public void setInheritFrom(Person ancestor){
-        this.inheritFrom = ancestor;
-        if (null != ancestor)
-            this.inheritFromKey = ancestor.getKey();
+    public boolean setInheritFrom(Person ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasKey(boolean mayInherit){
@@ -356,8 +358,13 @@ public final class Person
     public Key getKey(boolean ignore){
         return this.key;
     }
-    public void setKey(Key key){
-        this.key = key;
+    public boolean setKey(Key key){
+        if (IsNotEqual(this.key,key)){
+            this.key = key;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasId(boolean mayInherit){
@@ -380,8 +387,13 @@ public final class Person
     public String getId(boolean ignore){
         return this.id;
     }
-    public void setId(String id){
-        this.id = id;
+    public boolean setId(String id){
+        if (IsNotEqual(this.id,id)){
+            this.id = id;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasLogonId(boolean mayInherit){
@@ -404,8 +416,13 @@ public final class Person
     public String getLogonId(boolean ignore){
         return this.logonId;
     }
-    public void setLogonId(String logonId){
-        this.logonId = logonId;
+    public boolean setLogonId(String logonId){
+        if (IsNotEqual(this.logonId,logonId)){
+            this.logonId = logonId;
+            return true;
+        }
+        else
+            return false;
     }
 
 

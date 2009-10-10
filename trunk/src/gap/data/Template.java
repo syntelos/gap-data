@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T16:46:29.316Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T17:23:49.859Z",comments="gap.data")
 public final class Template
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -270,28 +270,22 @@ public final class Template
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }
         }
-        public static void Set(Field field, Template instance, Object value){
+        public static boolean Set(Field field, Template instance, Object value){
             switch(field){
             case InheritFromKey:
-                instance.setInheritFromKey( (Key)value);
+                return instance.setInheritFromKey( (Key)value);
             case Key:
-                instance.setKey( (Key)value);
-                return;
+                return instance.setKey( (Key)value);
             case Id:
-                instance.setId( (String)value);
-                return;
+                return instance.setId( (String)value);
             case Name:
-                instance.setName( (String)value);
-                return;
+                return instance.setName( (String)value);
             case LastModified:
-                instance.setLastModified( (Long)value);
-                return;
+                return instance.setLastModified( (Long)value);
             case TemplateSourceHapax:
-                instance.setTemplateSourceHapax( (Text)value);
-                return;
+                return instance.setTemplateSourceHapax( (Text)value);
             case TemplateContentType:
-                instance.setTemplateContentType( (String)value);
-                return;
+                return instance.setTemplateContentType( (String)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }
@@ -382,10 +376,15 @@ public final class Template
         }
         return inheritFrom;
     }
-    public void setInheritFrom(Template ancestor){
-        this.inheritFrom = ancestor;
-        if (null != ancestor)
-            this.inheritFromKey = ancestor.getKey();
+    public boolean setInheritFrom(Template ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasKey(boolean mayInherit){
@@ -408,8 +407,13 @@ public final class Template
     public Key getKey(boolean ignore){
         return this.key;
     }
-    public void setKey(Key key){
-        this.key = key;
+    public boolean setKey(Key key){
+        if (IsNotEqual(this.key,key)){
+            this.key = key;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasId(boolean mayInherit){
@@ -432,8 +436,13 @@ public final class Template
     public String getId(boolean ignore){
         return this.id;
     }
-    public void setId(String id){
-        this.id = id;
+    public boolean setId(String id){
+        if (IsNotEqual(this.id,id)){
+            this.id = id;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasName(boolean mayInherit){
@@ -456,8 +465,13 @@ public final class Template
     public String getName(boolean ignore){
         return this.name;
     }
-    public void setName(String name){
-        this.name = name;
+    public boolean setName(String name){
+        if (IsNotEqual(this.name,name)){
+            this.name = name;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasLastModified(boolean mayInherit){
@@ -487,8 +501,21 @@ public final class Template
         else
             return this.lastModified;
     }
-    public void setLastModified(Long lastModified){
-        this.lastModified = lastModified;
+    public boolean setLastModified(Long lastModified, boolean withInheritance){
+        if (IsNotEqual(this.lastModified,this.getLastModified(withInheritance))){
+            this.lastModified = lastModified;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setLastModified(Long lastModified){
+        if (IsNotEqual(this.lastModified,lastModified)){
+            this.lastModified = lastModified;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasTemplateSourceHapax(boolean mayInherit){
@@ -518,8 +545,21 @@ public final class Template
         else
             return this.templateSourceHapax;
     }
-    public void setTemplateSourceHapax(Text templateSourceHapax){
-        this.templateSourceHapax = templateSourceHapax;
+    public boolean setTemplateSourceHapax(Text templateSourceHapax, boolean withInheritance){
+        if (IsNotEqual(this.templateSourceHapax,this.getTemplateSourceHapax(withInheritance))){
+            this.templateSourceHapax = templateSourceHapax;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setTemplateSourceHapax(Text templateSourceHapax){
+        if (IsNotEqual(this.templateSourceHapax,templateSourceHapax)){
+            this.templateSourceHapax = templateSourceHapax;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasTemplateContentType(boolean mayInherit){
@@ -549,8 +589,21 @@ public final class Template
         else
             return this.templateContentType;
     }
-    public void setTemplateContentType(String templateContentType){
-        this.templateContentType = templateContentType;
+    public boolean setTemplateContentType(String templateContentType, boolean withInheritance){
+        if (IsNotEqual(this.templateContentType,this.getTemplateContentType(withInheritance))){
+            this.templateContentType = templateContentType;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setTemplateContentType(String templateContentType){
+        if (IsNotEqual(this.templateContentType,templateContentType)){
+            this.templateContentType = templateContentType;
+            return true;
+        }
+        else
+            return false;
     }
 
 

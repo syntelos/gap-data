@@ -376,13 +376,12 @@ public final class {{=class_name}}
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
         }
-        public static void Set(Field field, {{=class_name}} instance, Object value){
+        public static boolean Set(Field field, {{=class_name}} instance, Object value){
             switch(field){
             case InheritFromKey:
-                instance.setInheritFromKey( (Key)value);{{#pfield}}
+                return instance.setInheritFromKey( (Key)value);{{#pfield}}
             case {{=field_nameCamel}}:
-                instance.set{{=field_nameCamel}}( ({{=field_class}})value);
-                return;{{/pfield}}
+                return instance.set{{=field_nameCamel}}( ({{=field_class}})value);{{/pfield}}
             default:
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
@@ -479,10 +478,15 @@ public final class {{=class_name}}
         }
         return inheritFrom;
     }
-    public void setInheritFrom({{=class_name}} ancestor){
-        this.inheritFrom = ancestor;
-        if (null != ancestor)
-            this.inheritFromKey = ancestor.get{{=field_key_nameCamel}}();
+    public boolean setInheritFrom({{=class_name}} ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.get{{=field_key_nameCamel}}();
+            return true;
+        }
+        else
+            return false;
     }
 {{#pfield}}
     public boolean has{{=field_nameCamel}}(boolean mayInherit){
@@ -517,9 +521,22 @@ public final class {{=class_name}}
         }
         else
             return this.{{=field_name}};
+    }
+    public boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}, boolean withInheritance){
+        if (IsNotEqual(this.{{=field_name}},this.get{{=field_nameCamel}}(withInheritance))){
+            this.{{=field_name}} = {{=field_name}};
+            return true;
+        }
+        else
+            return false;
     }{{/field_is_inheritable}}
-    public void set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
-        this.{{=field_name}} = {{=field_name}};
+    public boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
+        if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
+            this.{{=field_name}} = {{=field_name}};
+            return true;
+        }
+        else
+            return false;
     }
 {{/pfield}}{{#cfield}}
     public boolean has{{=field_nameCamel}}(boolean mayInherit){
@@ -678,8 +695,7 @@ public final class {{=class_name}}
     public boolean updateFrom(Request req){
         boolean change = false;{{#pfield}}{{#field_is_updatable}}
         {{=field_class}} {{=field_name}} = Strings.{{=field_class}}FromString(req.getParameter("{{=field_name}}"));
-        if (IsNotEqual({{=field_name}},this.get{{=field_nameCamel}}(true))){
-            this.set{{=field_nameCamel}}({{=field_name}});
+        if (this.set{{=field_nameCamel}}({{=field_name}},true)){
             change = true;
         }{{/field_is_updatable}}{{/pfield}}
         return change;
@@ -690,8 +706,7 @@ public final class {{=class_name}}
     public boolean updateFrom({{=class_name}} proto){
         boolean change = false;{{#pfield}}{{#field_is_updatable}}
         {{=field_class}} {{=field_name}} = proto.get{{=field_nameCamel}}();
-        if (null != {{=field_name}} && IsNotEqual({{=field_name}},this.get{{=field_nameCamel}}(true))){
-            this.set{{=field_nameCamel}}({{=field_name}});
+        if (null != {{=field_name}} && this.set{{=field_nameCamel}}({{=field_name}},true)){
             change = true;
         }{{/field_is_updatable}}{{/pfield}}
         return change;
