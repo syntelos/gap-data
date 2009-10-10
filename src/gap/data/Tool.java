@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T16:46:29.102Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T17:23:49.587Z",comments="gap.data")
 public final class Tool
     extends gap.data.BigTable
     implements DataInheritance<Tool>,
@@ -297,55 +297,40 @@ public final class Tool
                 throw new IllegalArgumentException(field.toString()+" in Tool");
             }
         }
-        public static void Set(Field field, Tool instance, Object value){
+        public static boolean Set(Field field, Tool instance, Object value){
             switch(field){
             case InheritFromKey:
-                instance.setInheritFromKey( (Key)value);
+                return instance.setInheritFromKey( (Key)value);
             case Key:
-                instance.setKey( (Key)value);
-                return;
+                return instance.setKey( (Key)value);
             case Id:
-                instance.setId( (String)value);
-                return;
+                return instance.setId( (String)value);
             case Name:
-                instance.setName( (String)value);
-                return;
+                return instance.setName( (String)value);
             case LastModified:
-                instance.setLastModified( (Long)value);
-                return;
+                return instance.setLastModified( (Long)value);
             case HeadXtm:
-                instance.setHeadXtm( (String)value);
-                return;
+                return instance.setHeadXtm( (String)value);
             case OverlayXtm:
-                instance.setOverlayXtm( (String)value);
-                return;
+                return instance.setOverlayXtm( (String)value);
             case FormXtm:
-                instance.setFormXtm( (String)value);
-                return;
+                return instance.setFormXtm( (String)value);
             case TitleHiGraphicUri:
-                instance.setTitleHiGraphicUri( (String)value);
-                return;
+                return instance.setTitleHiGraphicUri( (String)value);
             case TitleLoGraphicUri:
-                instance.setTitleLoGraphicUri( (String)value);
-                return;
+                return instance.setTitleLoGraphicUri( (String)value);
             case ButtonHiGraphicUri:
-                instance.setButtonHiGraphicUri( (String)value);
-                return;
+                return instance.setButtonHiGraphicUri( (String)value);
             case ButtonLoGraphicUri:
-                instance.setButtonLoGraphicUri( (String)value);
-                return;
+                return instance.setButtonLoGraphicUri( (String)value);
             case ButtonOffGraphicUri:
-                instance.setButtonOffGraphicUri( (String)value);
-                return;
+                return instance.setButtonOffGraphicUri( (String)value);
             case MethodName:
-                instance.setMethodName( (String)value);
-                return;
+                return instance.setMethodName( (String)value);
             case MethodBody:
-                instance.setMethodBody( (Text)value);
-                return;
+                return instance.setMethodBody( (Text)value);
             case MethodClassfileJvm:
-                instance.setMethodClassfileJvm( (Blob)value);
-                return;
+                return instance.setMethodClassfileJvm( (Blob)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Tool");
             }
@@ -454,10 +439,15 @@ public final class Tool
         }
         return inheritFrom;
     }
-    public void setInheritFrom(Tool ancestor){
-        this.inheritFrom = ancestor;
-        if (null != ancestor)
-            this.inheritFromKey = ancestor.getKey();
+    public boolean setInheritFrom(Tool ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasKey(boolean mayInherit){
@@ -480,8 +470,13 @@ public final class Tool
     public Key getKey(boolean ignore){
         return this.key;
     }
-    public void setKey(Key key){
-        this.key = key;
+    public boolean setKey(Key key){
+        if (IsNotEqual(this.key,key)){
+            this.key = key;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasId(boolean mayInherit){
@@ -504,8 +499,13 @@ public final class Tool
     public String getId(boolean ignore){
         return this.id;
     }
-    public void setId(String id){
-        this.id = id;
+    public boolean setId(String id){
+        if (IsNotEqual(this.id,id)){
+            this.id = id;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasName(boolean mayInherit){
@@ -528,8 +528,13 @@ public final class Tool
     public String getName(boolean ignore){
         return this.name;
     }
-    public void setName(String name){
-        this.name = name;
+    public boolean setName(String name){
+        if (IsNotEqual(this.name,name)){
+            this.name = name;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasLastModified(boolean mayInherit){
@@ -559,8 +564,21 @@ public final class Tool
         else
             return this.lastModified;
     }
-    public void setLastModified(Long lastModified){
-        this.lastModified = lastModified;
+    public boolean setLastModified(Long lastModified, boolean withInheritance){
+        if (IsNotEqual(this.lastModified,this.getLastModified(withInheritance))){
+            this.lastModified = lastModified;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setLastModified(Long lastModified){
+        if (IsNotEqual(this.lastModified,lastModified)){
+            this.lastModified = lastModified;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasHeadXtm(boolean mayInherit){
@@ -590,8 +608,21 @@ public final class Tool
         else
             return this.headXtm;
     }
-    public void setHeadXtm(String headXtm){
-        this.headXtm = headXtm;
+    public boolean setHeadXtm(String headXtm, boolean withInheritance){
+        if (IsNotEqual(this.headXtm,this.getHeadXtm(withInheritance))){
+            this.headXtm = headXtm;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setHeadXtm(String headXtm){
+        if (IsNotEqual(this.headXtm,headXtm)){
+            this.headXtm = headXtm;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasOverlayXtm(boolean mayInherit){
@@ -621,8 +652,21 @@ public final class Tool
         else
             return this.overlayXtm;
     }
-    public void setOverlayXtm(String overlayXtm){
-        this.overlayXtm = overlayXtm;
+    public boolean setOverlayXtm(String overlayXtm, boolean withInheritance){
+        if (IsNotEqual(this.overlayXtm,this.getOverlayXtm(withInheritance))){
+            this.overlayXtm = overlayXtm;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setOverlayXtm(String overlayXtm){
+        if (IsNotEqual(this.overlayXtm,overlayXtm)){
+            this.overlayXtm = overlayXtm;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasFormXtm(boolean mayInherit){
@@ -652,8 +696,21 @@ public final class Tool
         else
             return this.formXtm;
     }
-    public void setFormXtm(String formXtm){
-        this.formXtm = formXtm;
+    public boolean setFormXtm(String formXtm, boolean withInheritance){
+        if (IsNotEqual(this.formXtm,this.getFormXtm(withInheritance))){
+            this.formXtm = formXtm;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setFormXtm(String formXtm){
+        if (IsNotEqual(this.formXtm,formXtm)){
+            this.formXtm = formXtm;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasTitleHiGraphicUri(boolean mayInherit){
@@ -683,8 +740,21 @@ public final class Tool
         else
             return this.titleHiGraphicUri;
     }
-    public void setTitleHiGraphicUri(String titleHiGraphicUri){
-        this.titleHiGraphicUri = titleHiGraphicUri;
+    public boolean setTitleHiGraphicUri(String titleHiGraphicUri, boolean withInheritance){
+        if (IsNotEqual(this.titleHiGraphicUri,this.getTitleHiGraphicUri(withInheritance))){
+            this.titleHiGraphicUri = titleHiGraphicUri;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setTitleHiGraphicUri(String titleHiGraphicUri){
+        if (IsNotEqual(this.titleHiGraphicUri,titleHiGraphicUri)){
+            this.titleHiGraphicUri = titleHiGraphicUri;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasTitleLoGraphicUri(boolean mayInherit){
@@ -714,8 +784,21 @@ public final class Tool
         else
             return this.titleLoGraphicUri;
     }
-    public void setTitleLoGraphicUri(String titleLoGraphicUri){
-        this.titleLoGraphicUri = titleLoGraphicUri;
+    public boolean setTitleLoGraphicUri(String titleLoGraphicUri, boolean withInheritance){
+        if (IsNotEqual(this.titleLoGraphicUri,this.getTitleLoGraphicUri(withInheritance))){
+            this.titleLoGraphicUri = titleLoGraphicUri;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setTitleLoGraphicUri(String titleLoGraphicUri){
+        if (IsNotEqual(this.titleLoGraphicUri,titleLoGraphicUri)){
+            this.titleLoGraphicUri = titleLoGraphicUri;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasButtonHiGraphicUri(boolean mayInherit){
@@ -745,8 +828,21 @@ public final class Tool
         else
             return this.buttonHiGraphicUri;
     }
-    public void setButtonHiGraphicUri(String buttonHiGraphicUri){
-        this.buttonHiGraphicUri = buttonHiGraphicUri;
+    public boolean setButtonHiGraphicUri(String buttonHiGraphicUri, boolean withInheritance){
+        if (IsNotEqual(this.buttonHiGraphicUri,this.getButtonHiGraphicUri(withInheritance))){
+            this.buttonHiGraphicUri = buttonHiGraphicUri;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setButtonHiGraphicUri(String buttonHiGraphicUri){
+        if (IsNotEqual(this.buttonHiGraphicUri,buttonHiGraphicUri)){
+            this.buttonHiGraphicUri = buttonHiGraphicUri;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasButtonLoGraphicUri(boolean mayInherit){
@@ -776,8 +872,21 @@ public final class Tool
         else
             return this.buttonLoGraphicUri;
     }
-    public void setButtonLoGraphicUri(String buttonLoGraphicUri){
-        this.buttonLoGraphicUri = buttonLoGraphicUri;
+    public boolean setButtonLoGraphicUri(String buttonLoGraphicUri, boolean withInheritance){
+        if (IsNotEqual(this.buttonLoGraphicUri,this.getButtonLoGraphicUri(withInheritance))){
+            this.buttonLoGraphicUri = buttonLoGraphicUri;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setButtonLoGraphicUri(String buttonLoGraphicUri){
+        if (IsNotEqual(this.buttonLoGraphicUri,buttonLoGraphicUri)){
+            this.buttonLoGraphicUri = buttonLoGraphicUri;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasButtonOffGraphicUri(boolean mayInherit){
@@ -807,8 +916,21 @@ public final class Tool
         else
             return this.buttonOffGraphicUri;
     }
-    public void setButtonOffGraphicUri(String buttonOffGraphicUri){
-        this.buttonOffGraphicUri = buttonOffGraphicUri;
+    public boolean setButtonOffGraphicUri(String buttonOffGraphicUri, boolean withInheritance){
+        if (IsNotEqual(this.buttonOffGraphicUri,this.getButtonOffGraphicUri(withInheritance))){
+            this.buttonOffGraphicUri = buttonOffGraphicUri;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setButtonOffGraphicUri(String buttonOffGraphicUri){
+        if (IsNotEqual(this.buttonOffGraphicUri,buttonOffGraphicUri)){
+            this.buttonOffGraphicUri = buttonOffGraphicUri;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasMethodName(boolean mayInherit){
@@ -838,8 +960,21 @@ public final class Tool
         else
             return this.methodName;
     }
-    public void setMethodName(String methodName){
-        this.methodName = methodName;
+    public boolean setMethodName(String methodName, boolean withInheritance){
+        if (IsNotEqual(this.methodName,this.getMethodName(withInheritance))){
+            this.methodName = methodName;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setMethodName(String methodName){
+        if (IsNotEqual(this.methodName,methodName)){
+            this.methodName = methodName;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasMethodBody(boolean mayInherit){
@@ -869,8 +1004,21 @@ public final class Tool
         else
             return this.methodBody;
     }
-    public void setMethodBody(Text methodBody){
-        this.methodBody = methodBody;
+    public boolean setMethodBody(Text methodBody, boolean withInheritance){
+        if (IsNotEqual(this.methodBody,this.getMethodBody(withInheritance))){
+            this.methodBody = methodBody;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setMethodBody(Text methodBody){
+        if (IsNotEqual(this.methodBody,methodBody)){
+            this.methodBody = methodBody;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasMethodClassfileJvm(boolean mayInherit){
@@ -900,8 +1048,21 @@ public final class Tool
         else
             return this.methodClassfileJvm;
     }
-    public void setMethodClassfileJvm(Blob methodClassfileJvm){
-        this.methodClassfileJvm = methodClassfileJvm;
+    public boolean setMethodClassfileJvm(Blob methodClassfileJvm, boolean withInheritance){
+        if (IsNotEqual(this.methodClassfileJvm,this.getMethodClassfileJvm(withInheritance))){
+            this.methodClassfileJvm = methodClassfileJvm;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setMethodClassfileJvm(Blob methodClassfileJvm){
+        if (IsNotEqual(this.methodClassfileJvm,methodClassfileJvm)){
+            this.methodClassfileJvm = methodClassfileJvm;
+            return true;
+        }
+        else
+            return false;
     }
 
 

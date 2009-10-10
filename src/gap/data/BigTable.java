@@ -356,8 +356,13 @@ public abstract class BigTable
     public Key getInheritFromKey(){
         return this.inheritFromKey;
     }
-    public void setInheritFromKey(Key key){
-        this.inheritFromKey = key;
+    public boolean setInheritFromKey(Key key){
+        if (IsNotEqual(this.inheritFromKey,key)){
+            this.inheritFromKey = key;
+            return true;
+        }
+        else
+            return false;
     }
     protected final Entity fillTo(Entity entity){
 

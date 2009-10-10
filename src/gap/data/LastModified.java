@@ -29,6 +29,6 @@ public interface LastModified {
 
     public Long getLastModified(boolean mayInherit);
 
-    public void setLastModified(Long Long);
+    public boolean setLastModified(Long Long);
 
 }

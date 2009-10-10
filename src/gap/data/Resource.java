@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T16:46:28.201Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T17:23:48.654Z",comments="gap.data")
 public final class Resource
     extends gap.data.BigTable
     implements DataInheritance<Resource>,
@@ -260,43 +260,32 @@ public final class Resource
                 throw new IllegalArgumentException(field.toString()+" in Resource");
             }
         }
-        public static void Set(Field field, Resource instance, Object value){
+        public static boolean Set(Field field, Resource instance, Object value){
             switch(field){
             case InheritFromKey:
-                instance.setInheritFromKey( (Key)value);
+                return instance.setInheritFromKey( (Key)value);
             case Key:
-                instance.setKey( (Key)value);
-                return;
+                return instance.setKey( (Key)value);
             case Id:
-                instance.setId( (String)value);
-                return;
+                return instance.setId( (String)value);
             case Base:
-                instance.setBase( (String)value);
-                return;
+                return instance.setBase( (String)value);
             case Name:
-                instance.setName( (String)value);
-                return;
+                return instance.setName( (String)value);
             case LastModified:
-                instance.setLastModified( (Long)value);
-                return;
+                return instance.setLastModified( (Long)value);
             case Tag:
-                instance.setTag( (Category)value);
-                return;
+                return instance.setTag( (Category)value);
             case ServletClassname:
-                instance.setServletClassname( (String)value);
-                return;
+                return instance.setServletClassname( (String)value);
             case ServletSourceJava:
-                instance.setServletSourceJava( (Text)value);
-                return;
+                return instance.setServletSourceJava( (Text)value);
             case ServletClassfileJvm:
-                instance.setServletClassfileJvm( (Blob)value);
-                return;
+                return instance.setServletClassfileJvm( (Blob)value);
             case TemplateSourceHapax:
-                instance.setTemplateSourceHapax( (Text)value);
-                return;
+                return instance.setTemplateSourceHapax( (Text)value);
             case TemplateContentType:
-                instance.setTemplateContentType( (String)value);
-                return;
+                return instance.setTemplateContentType( (String)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
             }
@@ -427,10 +416,15 @@ public final class Resource
         }
         return inheritFrom;
     }
-    public void setInheritFrom(Resource ancestor){
-        this.inheritFrom = ancestor;
-        if (null != ancestor)
-            this.inheritFromKey = ancestor.getKey();
+    public boolean setInheritFrom(Resource ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasKey(boolean mayInherit){
@@ -453,8 +447,13 @@ public final class Resource
     public Key getKey(boolean ignore){
         return this.key;
     }
-    public void setKey(Key key){
-        this.key = key;
+    public boolean setKey(Key key){
+        if (IsNotEqual(this.key,key)){
+            this.key = key;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasId(boolean mayInherit){
@@ -477,8 +476,13 @@ public final class Resource
     public String getId(boolean ignore){
         return this.id;
     }
-    public void setId(String id){
-        this.id = id;
+    public boolean setId(String id){
+        if (IsNotEqual(this.id,id)){
+            this.id = id;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasBase(boolean mayInherit){
@@ -501,8 +505,13 @@ public final class Resource
     public String getBase(boolean ignore){
         return this.base;
     }
-    public void setBase(String base){
-        this.base = base;
+    public boolean setBase(String base){
+        if (IsNotEqual(this.base,base)){
+            this.base = base;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasName(boolean mayInherit){
@@ -525,8 +534,13 @@ public final class Resource
     public String getName(boolean ignore){
         return this.name;
     }
-    public void setName(String name){
-        this.name = name;
+    public boolean setName(String name){
+        if (IsNotEqual(this.name,name)){
+            this.name = name;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasLastModified(boolean mayInherit){
@@ -556,8 +570,21 @@ public final class Resource
         else
             return this.lastModified;
     }
-    public void setLastModified(Long lastModified){
-        this.lastModified = lastModified;
+    public boolean setLastModified(Long lastModified, boolean withInheritance){
+        if (IsNotEqual(this.lastModified,this.getLastModified(withInheritance))){
+            this.lastModified = lastModified;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setLastModified(Long lastModified){
+        if (IsNotEqual(this.lastModified,lastModified)){
+            this.lastModified = lastModified;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasTag(boolean mayInherit){
@@ -587,8 +614,21 @@ public final class Resource
         else
             return this.tag;
     }
-    public void setTag(Category tag){
-        this.tag = tag;
+    public boolean setTag(Category tag, boolean withInheritance){
+        if (IsNotEqual(this.tag,this.getTag(withInheritance))){
+            this.tag = tag;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setTag(Category tag){
+        if (IsNotEqual(this.tag,tag)){
+            this.tag = tag;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasServletClassname(boolean mayInherit){
@@ -618,8 +658,21 @@ public final class Resource
         else
             return this.servletClassname;
     }
-    public void setServletClassname(String servletClassname){
-        this.servletClassname = servletClassname;
+    public boolean setServletClassname(String servletClassname, boolean withInheritance){
+        if (IsNotEqual(this.servletClassname,this.getServletClassname(withInheritance))){
+            this.servletClassname = servletClassname;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setServletClassname(String servletClassname){
+        if (IsNotEqual(this.servletClassname,servletClassname)){
+            this.servletClassname = servletClassname;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasServletSourceJava(boolean mayInherit){
@@ -649,8 +702,21 @@ public final class Resource
         else
             return this.servletSourceJava;
     }
-    public void setServletSourceJava(Text servletSourceJava){
-        this.servletSourceJava = servletSourceJava;
+    public boolean setServletSourceJava(Text servletSourceJava, boolean withInheritance){
+        if (IsNotEqual(this.servletSourceJava,this.getServletSourceJava(withInheritance))){
+            this.servletSourceJava = servletSourceJava;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setServletSourceJava(Text servletSourceJava){
+        if (IsNotEqual(this.servletSourceJava,servletSourceJava)){
+            this.servletSourceJava = servletSourceJava;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasServletClassfileJvm(boolean mayInherit){
@@ -680,8 +746,21 @@ public final class Resource
         else
             return this.servletClassfileJvm;
     }
-    public void setServletClassfileJvm(Blob servletClassfileJvm){
-        this.servletClassfileJvm = servletClassfileJvm;
+    public boolean setServletClassfileJvm(Blob servletClassfileJvm, boolean withInheritance){
+        if (IsNotEqual(this.servletClassfileJvm,this.getServletClassfileJvm(withInheritance))){
+            this.servletClassfileJvm = servletClassfileJvm;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setServletClassfileJvm(Blob servletClassfileJvm){
+        if (IsNotEqual(this.servletClassfileJvm,servletClassfileJvm)){
+            this.servletClassfileJvm = servletClassfileJvm;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasTemplateSourceHapax(boolean mayInherit){
@@ -711,8 +790,21 @@ public final class Resource
         else
             return this.templateSourceHapax;
     }
-    public void setTemplateSourceHapax(Text templateSourceHapax){
-        this.templateSourceHapax = templateSourceHapax;
+    public boolean setTemplateSourceHapax(Text templateSourceHapax, boolean withInheritance){
+        if (IsNotEqual(this.templateSourceHapax,this.getTemplateSourceHapax(withInheritance))){
+            this.templateSourceHapax = templateSourceHapax;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setTemplateSourceHapax(Text templateSourceHapax){
+        if (IsNotEqual(this.templateSourceHapax,templateSourceHapax)){
+            this.templateSourceHapax = templateSourceHapax;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasTemplateContentType(boolean mayInherit){
@@ -742,8 +834,21 @@ public final class Resource
         else
             return this.templateContentType;
     }
-    public void setTemplateContentType(String templateContentType){
-        this.templateContentType = templateContentType;
+    public boolean setTemplateContentType(String templateContentType, boolean withInheritance){
+        if (IsNotEqual(this.templateContentType,this.getTemplateContentType(withInheritance))){
+            this.templateContentType = templateContentType;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setTemplateContentType(String templateContentType){
+        if (IsNotEqual(this.templateContentType,templateContentType)){
+            this.templateContentType = templateContentType;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasPartners(boolean mayInherit){

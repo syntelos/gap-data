@@ -296,7 +296,7 @@ public class Servlet
     {
         return null;
     }
-    protected void doGet(Request req, Response rep)
+    protected final void doGet(Request req, Response rep)
         throws ServletException, IOException
     {
         TemplateDictionary top = this.doGetDefine(req,rep);
@@ -318,7 +318,7 @@ public class Servlet
         else
             this.error(req,rep,404,"Not found.");
     }
-    protected void doPost(Request req, Response rep)
+    protected final void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
         if (req.hasBase() && req.hasName()){

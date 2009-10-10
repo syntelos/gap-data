@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T16:46:28.495Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T17:23:48.951Z",comments="gap.data")
 public final class Partner
     extends gap.data.BigTable
     implements DataInheritance<Partner>
@@ -260,19 +260,16 @@ public final class Partner
                 throw new IllegalArgumentException(field.toString()+" in Partner");
             }
         }
-        public static void Set(Field field, Partner instance, Object value){
+        public static boolean Set(Field field, Partner instance, Object value){
             switch(field){
             case InheritFromKey:
-                instance.setInheritFromKey( (Key)value);
+                return instance.setInheritFromKey( (Key)value);
             case Key:
-                instance.setKey( (Key)value);
-                return;
+                return instance.setKey( (Key)value);
             case Id:
-                instance.setId( (String)value);
-                return;
+                return instance.setId( (String)value);
             case LogonId:
-                instance.setLogonId( (String)value);
-                return;
+                return instance.setLogonId( (String)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Partner");
             }
@@ -357,10 +354,15 @@ public final class Partner
         }
         return inheritFrom;
     }
-    public void setInheritFrom(Partner ancestor){
-        this.inheritFrom = ancestor;
-        if (null != ancestor)
-            this.inheritFromKey = ancestor.getKey();
+    public boolean setInheritFrom(Partner ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasKey(boolean mayInherit){
@@ -383,8 +385,13 @@ public final class Partner
     public Key getKey(boolean ignore){
         return this.key;
     }
-    public void setKey(Key key){
-        this.key = key;
+    public boolean setKey(Key key){
+        if (IsNotEqual(this.key,key)){
+            this.key = key;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasId(boolean mayInherit){
@@ -407,8 +414,13 @@ public final class Partner
     public String getId(boolean ignore){
         return this.id;
     }
-    public void setId(String id){
-        this.id = id;
+    public boolean setId(String id){
+        if (IsNotEqual(this.id,id)){
+            this.id = id;
+            return true;
+        }
+        else
+            return false;
     }
 
     public boolean hasLogonId(boolean mayInherit){
@@ -431,8 +443,13 @@ public final class Partner
     public String getLogonId(boolean ignore){
         return this.logonId;
     }
-    public void setLogonId(String logonId){
-        this.logonId = logonId;
+    public boolean setLogonId(String logonId){
+        if (IsNotEqual(this.logonId,logonId)){
+            this.logonId = logonId;
+            return true;
+        }
+        else
+            return false;
     }
 
 
