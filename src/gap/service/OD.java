@@ -373,6 +373,8 @@ public class OD
                         else
                             throw new ODStateException(field,"Field '"+fieldName+"' type map missing type parameter.");
                     }
+                    else
+                        dataField.addSection("field_is_not_key");
                 }
             }
 
