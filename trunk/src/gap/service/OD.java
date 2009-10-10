@@ -198,11 +198,17 @@ public class OD
                     Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
                     String[] fieldTypeParameters = FieldTypeParameters(fieldType);
                     TemplateDictionary dataField = null;
+                    boolean isPersistent = false;
+                    boolean isInheritable = true;
+                    boolean isRelation = false;
+                    boolean isCollection = false;
+                    boolean isTransient = false;
 
                     /*
                      * Create 'dataField' section
                      */
                     if (IsFieldPersistent(field,fieldTypeClass)){
+                        isPersistent = true;
 
                         dataField = top.addSection("pfield");
 
@@ -210,8 +216,10 @@ public class OD
                          * Populate 'pfield' section
                          */
                         if (IsFieldHashUnique(field)){
+                            isInheritable = false;
 
                             dataField.addSection("field_is_not_unique");
+                            dataField.addSection("field_is_not_inheritable");
 
                             TemplateDictionary field_is = dataField.addSection("field_is_hash_unique");
 
@@ -246,8 +254,10 @@ public class OD
                             topDataFieldHF.putVariable("field_classCleanClean",fieldTypeCleanClean);
                         }
                         else if (IsFieldUnique(field)){
+                            isInheritable = false;
 
                             dataField.addSection("field_is_not_hash_unique");
+                            dataField.addSection("field_is_not_inheritable");
 
                             TemplateDictionary field_is = dataField.addSection("field_is_unique");
 
@@ -285,6 +295,7 @@ public class OD
                         }
                     }
                     else if (IsTypeClassCollection(fieldTypeClass)){
+                        isCollection = true;
 
                         dataField = top.addSection("cfield");
                         /*
@@ -294,6 +305,7 @@ public class OD
                         dataField.addSection("field_is_not_hash_unique");
                     }
                     else if (IsFieldRelation(field)){
+                        isRelation = true;
 
                         dataField = top.addSection("rfield");
                         /*
@@ -307,6 +319,8 @@ public class OD
 
                     }
                     else {
+                        isTransient = true;
+
                         dataField = top.addSection("tfield");
                         /*
                          * Populate 'tfield' section
@@ -329,6 +343,9 @@ public class OD
                     dataField.putVariable("field_classCleanClean",fieldTypeCleanClean);
 
                     if (IsTypeClassKey(fieldTypeClass)){
+                        isInheritable = false;
+
+                        dataField.addSection("field_is_not_inheritable");
 
                         TemplateDictionary field_is = dataField.addSection("field_is_key");
 
@@ -373,8 +390,11 @@ public class OD
                         else
                             throw new ODStateException(field,"Field '"+fieldName+"' type map missing type parameter.");
                     }
-                    else
+                    else {
                         dataField.addSection("field_is_not_key");
+                        if (isPersistent && isInheritable)
+                            dataField.addSection("field_is_inheritable");
+                    }
                 }
             }
 
