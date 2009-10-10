@@ -27,7 +27,7 @@ import hapax.TemplateDictionary;
 public interface DictionaryInto {
 
     /**
-     * Install all
+     * Install all with inheritance.
      */
     public TemplateDictionary dictionaryInto(TemplateDictionary dict);
 

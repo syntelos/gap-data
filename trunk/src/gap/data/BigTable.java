@@ -260,7 +260,7 @@ public abstract class BigTable
     public abstract String getClassFieldKeyName();
 
     public final Key getClassFieldKeyValue(){
-        return (Key)this.valueOf(this.getClassKeyField());
+        return (Key)this.valueOf(this.getClassKeyField(),false);
     }
     public final Field getClassKeyField(){
         return (this.getClassFieldByName(this.getClassFieldKeyName()));
@@ -273,7 +273,7 @@ public abstract class BigTable
 
     public abstract Field getClassFieldByName(String name);
 
-    public abstract java.io.Serializable valueOf(Field field);
+    public abstract java.io.Serializable valueOf(Field field, boolean mayInherit);
 
     public abstract void define(Field field, java.io.Serializable value);
 
@@ -363,7 +363,7 @@ public abstract class BigTable
 
         for (Field field: this.getClassFields()){
             String fieldName = field.getFieldName();
-            java.io.Serializable value = this.valueOf(field);
+            java.io.Serializable value = this.valueOf(field,false);
             if (null != value){
 
                 if (IsIndexed(value))

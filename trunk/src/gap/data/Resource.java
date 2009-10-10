@@ -16,10 +16,11 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:29.611Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T16:46:28.201Z",comments="gap.data")
 public final class Resource
     extends gap.data.BigTable
-    implements LastModified
+    implements DataInheritance<Resource>,
+               LastModified
 {
 
     private final static long serialVersionUID = 1;
@@ -35,27 +36,13 @@ public final class Resource
     }
 
 
+
     public final static Key KeyLongIdFor(String base, String name){
         String id = IdFor( base,  name);
         return KeyLongFor(id);
     }
-    public final static Key KeyLongIdFor(Key ancestor, String base, String name){
-        String id = IdFor(ancestor, base,  name);
-        return KeyLongFor(ancestor,id);
-    }
-    public final static Key KeyShortIdFor(Key ancestor, String base, String name){
-        String id = IdFor(ancestor, base,  name);
-        return KeyShortFor(ancestor,id);
-    }
-    public final static String IdFor(Key ancestor, String base, String name){
-        if (ancestor.isComplete() && null != base && null != name){
-            String baseString = base;
-            String nameString = name;
-            return gap.data.Hash.For(ToString(ancestor)+'/'+baseString+'/'+nameString);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
     public final static String IdFor(String base, String name){
         if (null != base && null != name){
             String baseString = base;
@@ -65,34 +52,8 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
-    public final static Resource ForLongBaseName(Key ancestor, String base, String name){
-        if (null != base && null != name){
-            Key key = KeyLongIdFor(ancestor, base, name);
-            Resource instance = (Resource)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Resource)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static Resource ForShortBaseName(Key ancestor, String base, String name){
-        if (null != base && null != name){
-            Key key = KeyShortIdFor(ancestor, base, name);
-            Resource instance = (Resource)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Resource)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
     public final static Resource ForLongBaseName(String base, String name){
         if (null != base && null != name){
             Key key = KeyLongIdFor( base, name);
@@ -107,6 +68,8 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
+
+
     public final static Resource GetCreateLong(String base, String name){
         Resource resource = ForLongBaseName( base, name);
         if (null == resource){
@@ -117,43 +80,12 @@ public final class Resource
     }
 
 
+
     public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND,id);
     }
-    public final static Key KeyShortFor(Key ancestor, String id){
-        return KeyFactory.createKey(ancestor,KIND,id);
-    }
-    public final static Key KeyLongFor(Key ancestor, String id){
-        return KeyFactory.createKey(KIND,id);
-    }
-    public final static Resource ForLongId(Key ancestor, String id){
-        if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyLongFor(ancestor,id);
-            Resource instance = (Resource)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Resource)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static Resource ForShortId(Key ancestor, String id){
-        if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyShortFor(ancestor,id);
-            Resource instance = (Resource)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Resource)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
     public final static Resource ForLongId(String id){
         if (null != id){
             Key key = KeyLongFor(id);
@@ -168,6 +100,7 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
+
 
     public final static Resource Get(Key key){
         if (null != key){
@@ -190,55 +123,9 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
-    /**
-     * Test for uniqueness and iterate under collisions.
-     */
-    public final static Key NewRandomKeyLong(Key ancestor){
-        if (null != ancestor){
-            /*
-             * Source matter for data local uniqueness
-             */
-            String source = gap.data.BigTable.ToString(ancestor);
-            long matter = gap.data.Hash.Djb64(source);
-            /*
-             * Random matter for network global uniqueness
-             */
-            java.util.Random random = new java.util.Random();
-            do {
-                matter ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(KIND,idString);
-                if (null == GetKey(key))
-                    return key;
-            }
-            while (true);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static Key NewRandomKeyShort(Key ancestor){
-        if (null != ancestor){
-            /*
-             * Source matter for data local uniqueness
-             */
-            String source = gap.data.BigTable.ToString(ancestor);
-            long matter = gap.data.Hash.Djb64(source);
-            /*
-             * Random matter for network global uniqueness
-             */
-            java.util.Random random = new java.util.Random();
-            do {
-                matter ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(ancestor,KIND,idString);
-                if (null == GetKey(key))
-                    return key;
-            }
-            while (true);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
+
     /**
      * Drop the instance and any children of its key from the world,
      * memcache and store.
@@ -278,8 +165,8 @@ public final class Resource
     public final static Query CreateQueryFor(){
         return new Query(KIND);
     }
-    public final static Query CreateQueryFor(Key ancestor){
-        return new Query(KIND,ancestor);
+    public final static Query CreateQueryFor(Key key){
+        return new Query(KIND,key);
     }
     public final static Resource Query1(Query query){
         if (null != query)
@@ -307,12 +194,12 @@ public final class Resource
     }
 
     /**
-     * 
+     * Persistent fields' binding for {@link Resource}
      */
     public static enum Field
         implements gap.data.Field
     {
-
+        InheritFromKey("inheritFromKey"),
         Key("key"),
         Id("id"),
         Base("base"),
@@ -323,12 +210,7 @@ public final class Resource
         ServletSourceJava("servletSourceJava"),
         ServletClassfileJvm("servletClassfileJvm"),
         TemplateSourceHapax("templateSourceHapax"),
-        TemplateContentType("templateContentType"),
-        Partners("partners"),
-        Accounts("accounts"),
-        Images("images"),
-        Templates("templates"),
-        Tools("tools");
+        TemplateContentType("templateContentType");
 
 
         private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -348,48 +230,40 @@ public final class Resource
         public static Field getField(String name) {
             return FieldName.get(name);
         }
-        public static Object Get(Field field, Resource instance){
+        public static Object Get(Field field, Resource instance, boolean mayInherit){
             switch(field){
-
+            case InheritFromKey:
+                return instance.getInheritFromKey();
             case Key:
-                return instance.getKey();
+                return instance.getKey(mayInherit);
             case Id:
-                return instance.getId();
+                return instance.getId(mayInherit);
             case Base:
-                return instance.getBase();
+                return instance.getBase(mayInherit);
             case Name:
-                return instance.getName();
+                return instance.getName(mayInherit);
             case LastModified:
-                return instance.getLastModified();
+                return instance.getLastModified(mayInherit);
             case Tag:
-                return instance.getTag();
+                return instance.getTag(mayInherit);
             case ServletClassname:
-                return instance.getServletClassname();
+                return instance.getServletClassname(mayInherit);
             case ServletSourceJava:
-                return instance.getServletSourceJava();
+                return instance.getServletSourceJava(mayInherit);
             case ServletClassfileJvm:
-                return instance.getServletClassfileJvm();
+                return instance.getServletClassfileJvm(mayInherit);
             case TemplateSourceHapax:
-                return instance.getTemplateSourceHapax();
+                return instance.getTemplateSourceHapax(mayInherit);
             case TemplateContentType:
-                return instance.getTemplateContentType();
-            case Partners:
-                return instance.getPartners();
-            case Accounts:
-                return instance.getAccounts();
-            case Images:
-                return instance.getImages();
-            case Templates:
-                return instance.getTemplates();
-            case Tools:
-                return instance.getTools();
+                return instance.getTemplateContentType(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
             }
         }
         public static void Set(Field field, Resource instance, Object value){
             switch(field){
-
+            case InheritFromKey:
+                instance.setInheritFromKey( (Key)value);
             case Key:
                 instance.setKey( (Key)value);
                 return;
@@ -423,21 +297,6 @@ public final class Resource
             case TemplateContentType:
                 instance.setTemplateContentType( (String)value);
                 return;
-            case Partners:
-                instance.setPartners( (List.Long<Partner>)value);
-                return;
-            case Accounts:
-                instance.setAccounts( (List.Long<Account>)value);
-                return;
-            case Images:
-                instance.setImages( (List.Short<Image>)value);
-                return;
-            case Templates:
-                instance.setTemplates( (List.Short<Template>)value);
-                return;
-            case Tools:
-                instance.setTools( (List.Short<Tool>)value);
-                return;
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
             }
@@ -460,6 +319,8 @@ public final class Resource
         }
     }
 
+    private volatile transient Resource inheritFrom;
+
 
     private volatile Key key;    
     private volatile String id;    // *unique
@@ -472,11 +333,15 @@ public final class Resource
     private volatile Blob servletClassfileJvm;    
     private volatile Text templateSourceHapax;    
     private volatile String templateContentType;    
-    private volatile List.Long<Partner> partners;    
-    private volatile List.Long<Account> accounts;    
-    private volatile List.Short<Image> images;    
-    private volatile List.Short<Template> templates;    
-    private volatile List.Short<Tool> tools;    
+
+
+    private volatile List.Long<Partner> partners;
+    private volatile List.Long<Account> accounts;
+    private volatile List.Short<Image> images;
+    private volatile List.Short<Template> templates;
+    private volatile List.Short<Tool> tools;
+
+
 
 
 
@@ -499,6 +364,7 @@ public final class Resource
     }
 
 
+
     public void onread(){
 
     }
@@ -507,29 +373,17 @@ public final class Resource
     }
     public void destroy(){
         this.datastoreEntity = null;
-
         this.key = null;
-
         this.id = null;
-
         this.base = null;
-
         this.name = null;
-
         this.lastModified = null;
-
         this.tag = null;
-
         this.servletClassname = null;
-
         this.servletSourceJava = null;
-
         this.servletClassfileJvm = null;
-
         this.templateSourceHapax = null;
-
         this.templateContentType = null;
-
         List.Long<Partner> partners = this.partners;
         if (null != partners){
             this.partners = null;
@@ -556,12 +410,34 @@ public final class Resource
             tools.destroy();
         }
     }
-
-    public boolean hasKey(){
-        return (null != this.key);
+    public boolean hasInheritFrom(){
+        return (null != this.inheritFrom || null != this.inheritFromKey);
     }
-    public boolean hasNotKey(){
-        return (null == this.key);
+    public boolean hasNotInheritFrom(){
+        return (null == this.inheritFrom && null == this.inheritFromKey);
+    }
+    public Resource getInheritFrom(){
+        Resource inheritFrom = this.inheritFrom;
+        if (null == inheritFrom){
+            Key inheritFromKey = this.inheritFromKey;
+            if (null != inheritFromKey){
+                inheritFrom = Resource.Get(inheritFromKey);
+                this.inheritFrom = inheritFrom;
+            }
+        }
+        return inheritFrom;
+    }
+    public void setInheritFrom(Resource ancestor){
+        this.inheritFrom = ancestor;
+        if (null != ancestor)
+            this.inheritFromKey = ancestor.getKey();
+    }
+
+    public boolean hasKey(boolean mayInherit){
+        return (null != this.getKey(mayInherit));
+    }
+    public boolean hasNotKey(boolean mayInherit){
+        return (null == this.getKey(mayInherit));
     }
     public boolean dropKey(){
         if (null != this.key){
@@ -574,15 +450,18 @@ public final class Resource
     public Key getKey(){
         return this.key;
     }
+    public Key getKey(boolean ignore){
+        return this.key;
+    }
     public void setKey(Key key){
         this.key = key;
     }
 
-    public boolean hasId(){
-        return (null != this.id);
+    public boolean hasId(boolean mayInherit){
+        return (null != this.getId(mayInherit));
     }
-    public boolean hasNotId(){
-        return (null == this.id);
+    public boolean hasNotId(boolean mayInherit){
+        return (null == this.getId(mayInherit));
     }
     public boolean dropId(){
         if (null != this.id){
@@ -595,15 +474,18 @@ public final class Resource
     public String getId(){
         return this.id;
     }
+    public String getId(boolean ignore){
+        return this.id;
+    }
     public void setId(String id){
         this.id = id;
     }
 
-    public boolean hasBase(){
-        return (null != this.base);
+    public boolean hasBase(boolean mayInherit){
+        return (null != this.getBase(mayInherit));
     }
-    public boolean hasNotBase(){
-        return (null == this.base);
+    public boolean hasNotBase(boolean mayInherit){
+        return (null == this.getBase(mayInherit));
     }
     public boolean dropBase(){
         if (null != this.base){
@@ -616,15 +498,18 @@ public final class Resource
     public String getBase(){
         return this.base;
     }
+    public String getBase(boolean ignore){
+        return this.base;
+    }
     public void setBase(String base){
         this.base = base;
     }
 
-    public boolean hasName(){
-        return (null != this.name);
+    public boolean hasName(boolean mayInherit){
+        return (null != this.getName(mayInherit));
     }
-    public boolean hasNotName(){
-        return (null == this.name);
+    public boolean hasNotName(boolean mayInherit){
+        return (null == this.getName(mayInherit));
     }
     public boolean dropName(){
         if (null != this.name){
@@ -637,15 +522,18 @@ public final class Resource
     public String getName(){
         return this.name;
     }
+    public String getName(boolean ignore){
+        return this.name;
+    }
     public void setName(String name){
         this.name = name;
     }
 
-    public boolean hasLastModified(){
-        return (null != this.lastModified);
+    public boolean hasLastModified(boolean mayInherit){
+        return (null != this.getLastModified(mayInherit));
     }
-    public boolean hasNotLastModified(){
-        return (null == this.lastModified);
+    public boolean hasNotLastModified(boolean mayInherit){
+        return (null == this.getLastModified(mayInherit));
     }
     public boolean dropLastModified(){
         if (null != this.lastModified){
@@ -655,18 +543,28 @@ public final class Resource
         else
             return false;
     }
-    public Long getLastModified(){
-        return this.lastModified;
+    public Long getLastModified(boolean mayInherit){
+        if (mayInherit){
+            Long lastModified = this.lastModified;
+            if (null == lastModified && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getLastModified(true);
+            }
+            return lastModified;
+        }
+        else
+            return this.lastModified;
     }
     public void setLastModified(Long lastModified){
         this.lastModified = lastModified;
     }
 
-    public boolean hasTag(){
-        return (null != this.tag);
+    public boolean hasTag(boolean mayInherit){
+        return (null != this.getTag(mayInherit));
     }
-    public boolean hasNotTag(){
-        return (null == this.tag);
+    public boolean hasNotTag(boolean mayInherit){
+        return (null == this.getTag(mayInherit));
     }
     public boolean dropTag(){
         if (null != this.tag){
@@ -676,18 +574,28 @@ public final class Resource
         else
             return false;
     }
-    public Category getTag(){
-        return this.tag;
+    public Category getTag(boolean mayInherit){
+        if (mayInherit){
+            Category tag = this.tag;
+            if (null == tag && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getTag(true);
+            }
+            return tag;
+        }
+        else
+            return this.tag;
     }
     public void setTag(Category tag){
         this.tag = tag;
     }
 
-    public boolean hasServletClassname(){
-        return (null != this.servletClassname);
+    public boolean hasServletClassname(boolean mayInherit){
+        return (null != this.getServletClassname(mayInherit));
     }
-    public boolean hasNotServletClassname(){
-        return (null == this.servletClassname);
+    public boolean hasNotServletClassname(boolean mayInherit){
+        return (null == this.getServletClassname(mayInherit));
     }
     public boolean dropServletClassname(){
         if (null != this.servletClassname){
@@ -697,18 +605,28 @@ public final class Resource
         else
             return false;
     }
-    public String getServletClassname(){
-        return this.servletClassname;
+    public String getServletClassname(boolean mayInherit){
+        if (mayInherit){
+            String servletClassname = this.servletClassname;
+            if (null == servletClassname && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getServletClassname(true);
+            }
+            return servletClassname;
+        }
+        else
+            return this.servletClassname;
     }
     public void setServletClassname(String servletClassname){
         this.servletClassname = servletClassname;
     }
 
-    public boolean hasServletSourceJava(){
-        return (null != this.servletSourceJava);
+    public boolean hasServletSourceJava(boolean mayInherit){
+        return (null != this.getServletSourceJava(mayInherit));
     }
-    public boolean hasNotServletSourceJava(){
-        return (null == this.servletSourceJava);
+    public boolean hasNotServletSourceJava(boolean mayInherit){
+        return (null == this.getServletSourceJava(mayInherit));
     }
     public boolean dropServletSourceJava(){
         if (null != this.servletSourceJava){
@@ -718,18 +636,28 @@ public final class Resource
         else
             return false;
     }
-    public Text getServletSourceJava(){
-        return this.servletSourceJava;
+    public Text getServletSourceJava(boolean mayInherit){
+        if (mayInherit){
+            Text servletSourceJava = this.servletSourceJava;
+            if (null == servletSourceJava && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getServletSourceJava(true);
+            }
+            return servletSourceJava;
+        }
+        else
+            return this.servletSourceJava;
     }
     public void setServletSourceJava(Text servletSourceJava){
         this.servletSourceJava = servletSourceJava;
     }
 
-    public boolean hasServletClassfileJvm(){
-        return (null != this.servletClassfileJvm);
+    public boolean hasServletClassfileJvm(boolean mayInherit){
+        return (null != this.getServletClassfileJvm(mayInherit));
     }
-    public boolean hasNotServletClassfileJvm(){
-        return (null == this.servletClassfileJvm);
+    public boolean hasNotServletClassfileJvm(boolean mayInherit){
+        return (null == this.getServletClassfileJvm(mayInherit));
     }
     public boolean dropServletClassfileJvm(){
         if (null != this.servletClassfileJvm){
@@ -739,18 +667,28 @@ public final class Resource
         else
             return false;
     }
-    public Blob getServletClassfileJvm(){
-        return this.servletClassfileJvm;
+    public Blob getServletClassfileJvm(boolean mayInherit){
+        if (mayInherit){
+            Blob servletClassfileJvm = this.servletClassfileJvm;
+            if (null == servletClassfileJvm && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getServletClassfileJvm(true);
+            }
+            return servletClassfileJvm;
+        }
+        else
+            return this.servletClassfileJvm;
     }
     public void setServletClassfileJvm(Blob servletClassfileJvm){
         this.servletClassfileJvm = servletClassfileJvm;
     }
 
-    public boolean hasTemplateSourceHapax(){
-        return (null != this.templateSourceHapax);
+    public boolean hasTemplateSourceHapax(boolean mayInherit){
+        return (null != this.getTemplateSourceHapax(mayInherit));
     }
-    public boolean hasNotTemplateSourceHapax(){
-        return (null == this.templateSourceHapax);
+    public boolean hasNotTemplateSourceHapax(boolean mayInherit){
+        return (null == this.getTemplateSourceHapax(mayInherit));
     }
     public boolean dropTemplateSourceHapax(){
         if (null != this.templateSourceHapax){
@@ -760,18 +698,28 @@ public final class Resource
         else
             return false;
     }
-    public Text getTemplateSourceHapax(){
-        return this.templateSourceHapax;
+    public Text getTemplateSourceHapax(boolean mayInherit){
+        if (mayInherit){
+            Text templateSourceHapax = this.templateSourceHapax;
+            if (null == templateSourceHapax && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getTemplateSourceHapax(true);
+            }
+            return templateSourceHapax;
+        }
+        else
+            return this.templateSourceHapax;
     }
     public void setTemplateSourceHapax(Text templateSourceHapax){
         this.templateSourceHapax = templateSourceHapax;
     }
 
-    public boolean hasTemplateContentType(){
-        return (null != this.templateContentType);
+    public boolean hasTemplateContentType(boolean mayInherit){
+        return (null != this.getTemplateContentType(mayInherit));
     }
-    public boolean hasNotTemplateContentType(){
-        return (null == this.templateContentType);
+    public boolean hasNotTemplateContentType(boolean mayInherit){
+        return (null == this.getTemplateContentType(mayInherit));
     }
     public boolean dropTemplateContentType(){
         if (null != this.templateContentType){
@@ -781,18 +729,28 @@ public final class Resource
         else
             return false;
     }
-    public String getTemplateContentType(){
-        return this.templateContentType;
+    public String getTemplateContentType(boolean mayInherit){
+        if (mayInherit){
+            String templateContentType = this.templateContentType;
+            if (null == templateContentType && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getTemplateContentType(true);
+            }
+            return templateContentType;
+        }
+        else
+            return this.templateContentType;
     }
     public void setTemplateContentType(String templateContentType){
         this.templateContentType = templateContentType;
     }
 
-    public boolean hasPartners(){
-        return (null != this.partners);
+    public boolean hasPartners(boolean mayInherit){
+        return (null != this.getPartners(mayInherit));
     }
-    public boolean hasNotPartners(){
-        return (null == this.partners);
+    public boolean hasNotPartners(boolean mayInherit){
+        return (null == this.getPartners(mayInherit));
     }
     public boolean dropPartners(){
         if (null != this.partners){
@@ -802,9 +760,17 @@ public final class Resource
         else
             return false;
     }
-    public List.Long<Partner> getPartners(){
+    public List.Long<Partner> getPartners(boolean mayInherit){
         List.Long<Partner> partners = this.partners;
         if (null == partners){
+            if (mayInherit && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom){
+                    partners = inheritFrom.getPartners(true);
+                    if (null != partners)
+                        return partners;
+                }
+            }
             partners = new ListLongResourcePartner(this);
             this.partners = partners;
             partners.init();
@@ -815,22 +781,22 @@ public final class Resource
         this.partners = partners;
     }
     public boolean isEmptyPartners(){
-        List.Long<Partner> list = this.partners;
-        if (null != list)
-            return list.isEmpty();
+        List.Long<Partner> collection = this.partners;
+        if (null != collection)
+            return collection.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyPartners(){
-        List.Long<Partner> list = this.partners;
-        if (null != list)
-            return (!list.isEmpty());
+        List.Long<Partner> collection = this.partners;
+        if (null != collection)
+            return (!collection.isEmpty());
         else
             return false;
     }
     public Partner getPartners(gap.data.ListFilter<Partner> filter){
         if (null != filter){
-            List.Long<Partner> list = this.getPartners();
+            List.Long<Partner> list = this.getPartners(true);
             for (Partner item : list){
                 if (filter.accept(item))
                     return item;
@@ -841,11 +807,11 @@ public final class Resource
             throw new IllegalArgumentException();
     }
 
-    public boolean hasAccounts(){
-        return (null != this.accounts);
+    public boolean hasAccounts(boolean mayInherit){
+        return (null != this.getAccounts(mayInherit));
     }
-    public boolean hasNotAccounts(){
-        return (null == this.accounts);
+    public boolean hasNotAccounts(boolean mayInherit){
+        return (null == this.getAccounts(mayInherit));
     }
     public boolean dropAccounts(){
         if (null != this.accounts){
@@ -855,9 +821,17 @@ public final class Resource
         else
             return false;
     }
-    public List.Long<Account> getAccounts(){
+    public List.Long<Account> getAccounts(boolean mayInherit){
         List.Long<Account> accounts = this.accounts;
         if (null == accounts){
+            if (mayInherit && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom){
+                    accounts = inheritFrom.getAccounts(true);
+                    if (null != accounts)
+                        return accounts;
+                }
+            }
             accounts = new ListLongResourceAccount(this);
             this.accounts = accounts;
             accounts.init();
@@ -868,22 +842,22 @@ public final class Resource
         this.accounts = accounts;
     }
     public boolean isEmptyAccounts(){
-        List.Long<Account> list = this.accounts;
-        if (null != list)
-            return list.isEmpty();
+        List.Long<Account> collection = this.accounts;
+        if (null != collection)
+            return collection.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyAccounts(){
-        List.Long<Account> list = this.accounts;
-        if (null != list)
-            return (!list.isEmpty());
+        List.Long<Account> collection = this.accounts;
+        if (null != collection)
+            return (!collection.isEmpty());
         else
             return false;
     }
     public Account getAccounts(gap.data.ListFilter<Account> filter){
         if (null != filter){
-            List.Long<Account> list = this.getAccounts();
+            List.Long<Account> list = this.getAccounts(true);
             for (Account item : list){
                 if (filter.accept(item))
                     return item;
@@ -894,11 +868,11 @@ public final class Resource
             throw new IllegalArgumentException();
     }
 
-    public boolean hasImages(){
-        return (null != this.images);
+    public boolean hasImages(boolean mayInherit){
+        return (null != this.getImages(mayInherit));
     }
-    public boolean hasNotImages(){
-        return (null == this.images);
+    public boolean hasNotImages(boolean mayInherit){
+        return (null == this.getImages(mayInherit));
     }
     public boolean dropImages(){
         if (null != this.images){
@@ -908,9 +882,17 @@ public final class Resource
         else
             return false;
     }
-    public List.Short<Image> getImages(){
+    public List.Short<Image> getImages(boolean mayInherit){
         List.Short<Image> images = this.images;
         if (null == images){
+            if (mayInherit && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom){
+                    images = inheritFrom.getImages(true);
+                    if (null != images)
+                        return images;
+                }
+            }
             images = new ListShortResourceImage(this);
             this.images = images;
             images.init();
@@ -921,22 +903,22 @@ public final class Resource
         this.images = images;
     }
     public boolean isEmptyImages(){
-        List.Short<Image> list = this.images;
-        if (null != list)
-            return list.isEmpty();
+        List.Short<Image> collection = this.images;
+        if (null != collection)
+            return collection.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyImages(){
-        List.Short<Image> list = this.images;
-        if (null != list)
-            return (!list.isEmpty());
+        List.Short<Image> collection = this.images;
+        if (null != collection)
+            return (!collection.isEmpty());
         else
             return false;
     }
     public Image getImages(gap.data.ListFilter<Image> filter){
         if (null != filter){
-            List.Short<Image> list = this.getImages();
+            List.Short<Image> list = this.getImages(true);
             for (Image item : list){
                 if (filter.accept(item))
                     return item;
@@ -947,11 +929,11 @@ public final class Resource
             throw new IllegalArgumentException();
     }
 
-    public boolean hasTemplates(){
-        return (null != this.templates);
+    public boolean hasTemplates(boolean mayInherit){
+        return (null != this.getTemplates(mayInherit));
     }
-    public boolean hasNotTemplates(){
-        return (null == this.templates);
+    public boolean hasNotTemplates(boolean mayInherit){
+        return (null == this.getTemplates(mayInherit));
     }
     public boolean dropTemplates(){
         if (null != this.templates){
@@ -961,9 +943,17 @@ public final class Resource
         else
             return false;
     }
-    public List.Short<Template> getTemplates(){
+    public List.Short<Template> getTemplates(boolean mayInherit){
         List.Short<Template> templates = this.templates;
         if (null == templates){
+            if (mayInherit && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom){
+                    templates = inheritFrom.getTemplates(true);
+                    if (null != templates)
+                        return templates;
+                }
+            }
             templates = new ListShortResourceTemplate(this);
             this.templates = templates;
             templates.init();
@@ -974,22 +964,22 @@ public final class Resource
         this.templates = templates;
     }
     public boolean isEmptyTemplates(){
-        List.Short<Template> list = this.templates;
-        if (null != list)
-            return list.isEmpty();
+        List.Short<Template> collection = this.templates;
+        if (null != collection)
+            return collection.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyTemplates(){
-        List.Short<Template> list = this.templates;
-        if (null != list)
-            return (!list.isEmpty());
+        List.Short<Template> collection = this.templates;
+        if (null != collection)
+            return (!collection.isEmpty());
         else
             return false;
     }
     public Template getTemplates(gap.data.ListFilter<Template> filter){
         if (null != filter){
-            List.Short<Template> list = this.getTemplates();
+            List.Short<Template> list = this.getTemplates(true);
             for (Template item : list){
                 if (filter.accept(item))
                     return item;
@@ -1000,11 +990,11 @@ public final class Resource
             throw new IllegalArgumentException();
     }
 
-    public boolean hasTools(){
-        return (null != this.tools);
+    public boolean hasTools(boolean mayInherit){
+        return (null != this.getTools(mayInherit));
     }
-    public boolean hasNotTools(){
-        return (null == this.tools);
+    public boolean hasNotTools(boolean mayInherit){
+        return (null == this.getTools(mayInherit));
     }
     public boolean dropTools(){
         if (null != this.tools){
@@ -1014,9 +1004,17 @@ public final class Resource
         else
             return false;
     }
-    public List.Short<Tool> getTools(){
+    public List.Short<Tool> getTools(boolean mayInherit){
         List.Short<Tool> tools = this.tools;
         if (null == tools){
+            if (mayInherit && this.hasInheritFrom()){
+                Resource inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom){
+                    tools = inheritFrom.getTools(true);
+                    if (null != tools)
+                        return tools;
+                }
+            }
             tools = new ListShortResourceTool(this);
             this.tools = tools;
             tools.init();
@@ -1027,22 +1025,22 @@ public final class Resource
         this.tools = tools;
     }
     public boolean isEmptyTools(){
-        List.Short<Tool> list = this.tools;
-        if (null != list)
-            return list.isEmpty();
+        List.Short<Tool> collection = this.tools;
+        if (null != collection)
+            return collection.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyTools(){
-        List.Short<Tool> list = this.tools;
-        if (null != list)
-            return (!list.isEmpty());
+        List.Short<Tool> collection = this.tools;
+        if (null != collection)
+            return (!collection.isEmpty());
         else
             return false;
     }
     public Tool getTools(gap.data.ListFilter<Tool> filter){
         if (null != filter){
-            List.Short<Tool> list = this.getTools();
+            List.Short<Tool> list = this.getTools(true);
             for (Tool item : list){
                 if (filter.accept(item))
                     return item;
@@ -1052,7 +1050,6 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
-
 
 
 
@@ -1077,8 +1074,8 @@ public final class Resource
     public gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
-    public java.io.Serializable valueOf(gap.data.Field field){
-        return (java.io.Serializable)Field.Get((Field)field,this);
+    public java.io.Serializable valueOf(gap.data.Field field, boolean mayInherit){
+        return (java.io.Serializable)Field.Get((Field)field,this,mayInherit);
     }
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
@@ -1089,7 +1086,7 @@ public final class Resource
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
-                    java.lang.Object value = Field.Get(field,this);
+                    java.lang.Object value = Field.Get(field,this,true);
                     if (null != value){
                         if (value instanceof DictionaryInto){
                             DictionaryInto dvalue = (DictionaryInto)value;
@@ -1109,7 +1106,7 @@ public final class Resource
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this);
+            java.lang.Object value = Field.Get(field,this,true);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;
@@ -1124,73 +1121,6 @@ public final class Resource
     }
     public boolean updateFrom(Request req){
         boolean change = false;
-
-        Key key = Strings.KeyFromString(req.getParameter("key"));
-        if (IsNotEqual(key,this.getKey())){
-            this.setKey(key);
-            change = true;
-        }
-
-        String id = Strings.StringFromString(req.getParameter("id"));
-        if (IsNotEqual(id,this.getId())){
-            this.setId(id);
-            change = true;
-        }
-
-        String base = Strings.StringFromString(req.getParameter("base"));
-        if (IsNotEqual(base,this.getBase())){
-            this.setBase(base);
-            change = true;
-        }
-
-        String name = Strings.StringFromString(req.getParameter("name"));
-        if (IsNotEqual(name,this.getName())){
-            this.setName(name);
-            change = true;
-        }
-
-        Long lastModified = Strings.LongFromString(req.getParameter("lastModified"));
-        if (IsNotEqual(lastModified,this.getLastModified())){
-            this.setLastModified(lastModified);
-            change = true;
-        }
-
-        Category tag = Strings.CategoryFromString(req.getParameter("tag"));
-        if (IsNotEqual(tag,this.getTag())){
-            this.setTag(tag);
-            change = true;
-        }
-
-        String servletClassname = Strings.StringFromString(req.getParameter("servletClassname"));
-        if (IsNotEqual(servletClassname,this.getServletClassname())){
-            this.setServletClassname(servletClassname);
-            change = true;
-        }
-
-        Text servletSourceJava = Strings.TextFromString(req.getParameter("servletSourceJava"));
-        if (IsNotEqual(servletSourceJava,this.getServletSourceJava())){
-            this.setServletSourceJava(servletSourceJava);
-            change = true;
-        }
-
-        Blob servletClassfileJvm = Strings.BlobFromString(req.getParameter("servletClassfileJvm"));
-        if (IsNotEqual(servletClassfileJvm,this.getServletClassfileJvm())){
-            this.setServletClassfileJvm(servletClassfileJvm);
-            change = true;
-        }
-
-        Text templateSourceHapax = Strings.TextFromString(req.getParameter("templateSourceHapax"));
-        if (IsNotEqual(templateSourceHapax,this.getTemplateSourceHapax())){
-            this.setTemplateSourceHapax(templateSourceHapax);
-            change = true;
-        }
-
-        String templateContentType = Strings.StringFromString(req.getParameter("templateContentType"));
-        if (IsNotEqual(templateContentType,this.getTemplateContentType())){
-            this.setTemplateContentType(templateContentType);
-            change = true;
-        }
-
         return change;
     }
     public boolean updateFrom(BigTable proto){
@@ -1198,49 +1128,6 @@ public final class Resource
     }
     public boolean updateFrom(Resource proto){
         boolean change = false;
-
-        Key key = proto.getKey();
-        if (null != key && IsNotEqual(key,this.getKey())){
-            this.setKey(key);
-            change = true;
-        }
-
-        Long lastModified = proto.getLastModified();
-        if (null != lastModified && IsNotEqual(lastModified,this.getLastModified())){
-            this.setLastModified(lastModified);
-            change = true;
-        }
-
-        Category tag = proto.getTag();
-        if (null != tag && IsNotEqual(tag,this.getTag())){
-            this.setTag(tag);
-            change = true;
-        }
-
-        String servletClassname = proto.getServletClassname();
-        if (null != servletClassname && IsNotEqual(servletClassname,this.getServletClassname())){
-            this.setServletClassname(servletClassname);
-            change = true;
-        }
-
-        Text servletSourceJava = proto.getServletSourceJava();
-        if (null != servletSourceJava && IsNotEqual(servletSourceJava,this.getServletSourceJava())){
-            this.setServletSourceJava(servletSourceJava);
-            change = true;
-        }
-
-        Text templateSourceHapax = proto.getTemplateSourceHapax();
-        if (null != templateSourceHapax && IsNotEqual(templateSourceHapax,this.getTemplateSourceHapax())){
-            this.setTemplateSourceHapax(templateSourceHapax);
-            change = true;
-        }
-
-        String templateContentType = proto.getTemplateContentType();
-        if (null != templateContentType && IsNotEqual(templateContentType,this.getTemplateContentType())){
-            this.setTemplateContentType(templateContentType);
-            change = true;
-        }
-
         return change;
     }
     public void drop(){

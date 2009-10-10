@@ -570,7 +570,7 @@ public class Servlet
         Key resourceKey = resource.getKey();
         Resource index_html = Resource.ForLongBaseName("","index.html");
         if (null != index_html){
-            for (Tool indexTool: index_html.getTools()){
+            for (Tool indexTool: index_html.getTools(true)){
                 String name = indexTool.getName();
                 Tool resourceTool = new Tool(resourceKey,name);
                 resourceTool.updateFrom(indexTool);

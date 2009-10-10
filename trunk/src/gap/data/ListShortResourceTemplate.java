@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-09T09:20:29.766Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-10T16:46:28.353Z",comments="gap.data")
 public final class ListShortResourceTemplate
     extends gap.util.AbstractList<Template>
     implements gap.data.List.Short<Template>

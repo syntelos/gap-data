@@ -4,16 +4,10 @@ package gap.data.servlet;
 
 import gap.data.*;
 
-import gap.Request;
-import gap.Response;
+import gap.*;
 import gap.data.* ;
-
-import gap.service.Accept;
-import gap.service.Error;
-import gap.service.Logon;
-import gap.service.Path;
-import gap.service.Parameters;
-import gap.service.Templates;
+import gap.service.* ;
+import gap.util.* ;
 
 import hapax.TemplateDictionary;
 import hapax.TemplateException;
@@ -35,11 +29,11 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-09T09:20:30.801Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-10T16:46:29.395Z",comments="gap.data")
 public class Template
     extends gap.servlet.Site
 {
-    public final static Class<? extends BigTable> BigTableClass = gap.data.Template.class;
+    public final static Class<gap.data.Template> BigTableClass = gap.data.Template.class;
 
 
     public Template(){
@@ -56,10 +50,11 @@ public class Template
 
         if (this.canRead(req)){
 
-            String id = req.getPath(0);
-            if (null != id){
+            if (req.hasPath(1) && req.hasPath(3)){
 
-                gap.data.Template instance = gap.data.Template.ForLongId(id);
+                Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
+
+                gap.data.Template instance = gap.data.Template.ForLongId(parentKey,req.getPath(1));
 
                 if (null != instance){
 
@@ -67,16 +62,12 @@ public class Template
 
                     return top;
                 }
-                else {
-                    return null;
-                }
             }
             else {
                 req.parameters.dictionaryInto(top);
+                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 com.google.appengine.api.datastore.Query query = gap.data.Template.CreateQueryFor();
-
-                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 List<gap.data.Template> list = (List<gap.data.Template>)gap.data.Template.QueryN(query,page);
 
@@ -84,9 +75,10 @@ public class Template
 
                     instance.dictionaryInto(top);
                 }
+                return top;
             }
         }
-        return top;
+        return null;
     }
 
 }

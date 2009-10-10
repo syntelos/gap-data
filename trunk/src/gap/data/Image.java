@@ -16,10 +16,11 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:30.072Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T16:46:28.695Z",comments="gap.data")
 public final class Image
     extends gap.data.BigTable
-    implements LastModified
+    implements DataInheritance<Image>,
+               LastModified
 {
 
     private final static long serialVersionUID = 1;
@@ -35,18 +36,13 @@ public final class Image
     }
 
 
-    public final static Key KeyLongIdFor(String base, String name){
-        String id = IdFor( base,  name);
-        return KeyLongFor(id);
-    }
+
     public final static Key KeyLongIdFor(Key ancestor, String base, String name){
         String id = IdFor(ancestor, base,  name);
         return KeyLongFor(ancestor,id);
     }
-    public final static Key KeyShortIdFor(Key ancestor, String base, String name){
-        String id = IdFor(ancestor, base,  name);
-        return KeyShortFor(ancestor,id);
-    }
+
+
     public final static String IdFor(Key ancestor, String base, String name){
         if (ancestor.isComplete() && null != base && null != name){
             String baseString = base;
@@ -56,15 +52,8 @@ public final class Image
         else
             throw new IllegalArgumentException();
     }
-    public final static String IdFor(String base, String name){
-        if (null != base && null != name){
-            String baseString = base;
-            String nameString = name;
-            return gap.data.Hash.For(baseString+'/'+nameString);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
     public final static Image ForLongBaseName(Key ancestor, String base, String name){
         if (null != base && null != name){
             Key key = KeyLongIdFor(ancestor, base, name);
@@ -79,34 +68,8 @@ public final class Image
         else
             throw new IllegalArgumentException();
     }
-    public final static Image ForShortBaseName(Key ancestor, String base, String name){
-        if (null != base && null != name){
-            Key key = KeyShortIdFor(ancestor, base, name);
-            Image instance = (Image)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Image)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static Image ForLongBaseName(String base, String name){
-        if (null != base && null != name){
-            Key key = KeyLongIdFor( base, name);
-            Image instance = (Image)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Image)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
     public final static Image GetCreateLong(Key ancestor, String base, String name){
         Image image = ForLongBaseName(ancestor, base, name);
         if (null == image){
@@ -117,15 +80,12 @@ public final class Image
     }
 
 
-    public final static Key KeyLongFor(String id){
-        return KeyFactory.createKey(KIND,id);
-    }
-    public final static Key KeyShortFor(Key ancestor, String id){
-        return KeyFactory.createKey(ancestor,KIND,id);
-    }
+
     public final static Key KeyLongFor(Key ancestor, String id){
         return KeyFactory.createKey(KIND,id);
     }
+
+
     public final static Image ForLongId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
             Key key = KeyLongFor(ancestor,id);
@@ -140,34 +100,7 @@ public final class Image
         else
             throw new IllegalArgumentException();
     }
-    public final static Image ForShortId(Key ancestor, String id){
-        if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyShortFor(ancestor,id);
-            Image instance = (Image)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Image)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static Image ForLongId(String id){
-        if (null != id){
-            Key key = KeyLongFor(id);
-            Image instance = (Image)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Image)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
 
     public final static Image Get(Key key){
         if (null != key){
@@ -190,6 +123,8 @@ public final class Image
         else
             throw new IllegalArgumentException();
     }
+
+
     /**
      * Test for uniqueness and iterate under collisions.
      */
@@ -216,29 +151,7 @@ public final class Image
         else
             throw new IllegalArgumentException();
     }
-    public final static Key NewRandomKeyShort(Key ancestor){
-        if (null != ancestor){
-            /*
-             * Source matter for data local uniqueness
-             */
-            String source = gap.data.BigTable.ToString(ancestor);
-            long matter = gap.data.Hash.Djb64(source);
-            /*
-             * Random matter for network global uniqueness
-             */
-            java.util.Random random = new java.util.Random();
-            do {
-                matter ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(ancestor,KIND,idString);
-                if (null == GetKey(key))
-                    return key;
-            }
-            while (true);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
     /**
      * Drop the instance and any children of its key from the world,
      * memcache and store.
@@ -278,8 +191,8 @@ public final class Image
     public final static Query CreateQueryFor(){
         return new Query(KIND);
     }
-    public final static Query CreateQueryFor(Key ancestor){
-        return new Query(KIND,ancestor);
+    public final static Query CreateQueryFor(Key key){
+        return new Query(KIND,key);
     }
     public final static Image Query1(Query query){
         if (null != query)
@@ -307,12 +220,12 @@ public final class Image
     }
 
     /**
-     * 
+     * Persistent fields' binding for {@link Image}
      */
     public static enum Field
         implements gap.data.Field
     {
-
+        InheritFromKey("inheritFromKey"),
         Key("key"),
         Id("id"),
         Base("base"),
@@ -339,30 +252,32 @@ public final class Image
         public static Field getField(String name) {
             return FieldName.get(name);
         }
-        public static Object Get(Field field, Image instance){
+        public static Object Get(Field field, Image instance, boolean mayInherit){
             switch(field){
-
+            case InheritFromKey:
+                return instance.getInheritFromKey();
             case Key:
-                return instance.getKey();
+                return instance.getKey(mayInherit);
             case Id:
-                return instance.getId();
+                return instance.getId(mayInherit);
             case Base:
-                return instance.getBase();
+                return instance.getBase(mayInherit);
             case Name:
-                return instance.getName();
+                return instance.getName(mayInherit);
             case LastModified:
-                return instance.getLastModified();
+                return instance.getLastModified(mayInherit);
             case ContentType:
-                return instance.getContentType();
+                return instance.getContentType(mayInherit);
             case Bytes:
-                return instance.getBytes();
+                return instance.getBytes(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Image");
             }
         }
         public static void Set(Field field, Image instance, Object value){
             switch(field){
-
+            case InheritFromKey:
+                instance.setInheritFromKey( (Key)value);
             case Key:
                 instance.setKey( (Key)value);
                 return;
@@ -406,6 +321,8 @@ public final class Image
         }
     }
 
+    private volatile transient Image inheritFrom;
+
 
     private volatile Key key;    
     private volatile String id;    // *unique
@@ -416,6 +333,11 @@ public final class Image
     private volatile Blob bytes;    
 
 
+
+
+
+
+    private volatile transient Key parentKey; 
 
 
     public Image() {
@@ -436,6 +358,7 @@ public final class Image
     }
 
 
+
     public void onread(){
 
     }
@@ -444,28 +367,42 @@ public final class Image
     }
     public void destroy(){
         this.datastoreEntity = null;
-
         this.key = null;
-
         this.id = null;
-
         this.base = null;
-
         this.name = null;
-
         this.lastModified = null;
-
         this.contentType = null;
-
         this.bytes = null;
-
+    }
+    public boolean hasInheritFrom(){
+        return (null != this.inheritFrom || null != this.inheritFromKey);
+    }
+    public boolean hasNotInheritFrom(){
+        return (null == this.inheritFrom && null == this.inheritFromKey);
+    }
+    public Image getInheritFrom(){
+        Image inheritFrom = this.inheritFrom;
+        if (null == inheritFrom){
+            Key inheritFromKey = this.inheritFromKey;
+            if (null != inheritFromKey){
+                inheritFrom = Image.Get(inheritFromKey);
+                this.inheritFrom = inheritFrom;
+            }
+        }
+        return inheritFrom;
+    }
+    public void setInheritFrom(Image ancestor){
+        this.inheritFrom = ancestor;
+        if (null != ancestor)
+            this.inheritFromKey = ancestor.getKey();
     }
 
-    public boolean hasKey(){
-        return (null != this.key);
+    public boolean hasKey(boolean mayInherit){
+        return (null != this.getKey(mayInherit));
     }
-    public boolean hasNotKey(){
-        return (null == this.key);
+    public boolean hasNotKey(boolean mayInherit){
+        return (null == this.getKey(mayInherit));
     }
     public boolean dropKey(){
         if (null != this.key){
@@ -478,15 +415,18 @@ public final class Image
     public Key getKey(){
         return this.key;
     }
+    public Key getKey(boolean ignore){
+        return this.key;
+    }
     public void setKey(Key key){
         this.key = key;
     }
 
-    public boolean hasId(){
-        return (null != this.id);
+    public boolean hasId(boolean mayInherit){
+        return (null != this.getId(mayInherit));
     }
-    public boolean hasNotId(){
-        return (null == this.id);
+    public boolean hasNotId(boolean mayInherit){
+        return (null == this.getId(mayInherit));
     }
     public boolean dropId(){
         if (null != this.id){
@@ -499,15 +439,18 @@ public final class Image
     public String getId(){
         return this.id;
     }
+    public String getId(boolean ignore){
+        return this.id;
+    }
     public void setId(String id){
         this.id = id;
     }
 
-    public boolean hasBase(){
-        return (null != this.base);
+    public boolean hasBase(boolean mayInherit){
+        return (null != this.getBase(mayInherit));
     }
-    public boolean hasNotBase(){
-        return (null == this.base);
+    public boolean hasNotBase(boolean mayInherit){
+        return (null == this.getBase(mayInherit));
     }
     public boolean dropBase(){
         if (null != this.base){
@@ -520,15 +463,18 @@ public final class Image
     public String getBase(){
         return this.base;
     }
+    public String getBase(boolean ignore){
+        return this.base;
+    }
     public void setBase(String base){
         this.base = base;
     }
 
-    public boolean hasName(){
-        return (null != this.name);
+    public boolean hasName(boolean mayInherit){
+        return (null != this.getName(mayInherit));
     }
-    public boolean hasNotName(){
-        return (null == this.name);
+    public boolean hasNotName(boolean mayInherit){
+        return (null == this.getName(mayInherit));
     }
     public boolean dropName(){
         if (null != this.name){
@@ -541,15 +487,18 @@ public final class Image
     public String getName(){
         return this.name;
     }
+    public String getName(boolean ignore){
+        return this.name;
+    }
     public void setName(String name){
         this.name = name;
     }
 
-    public boolean hasLastModified(){
-        return (null != this.lastModified);
+    public boolean hasLastModified(boolean mayInherit){
+        return (null != this.getLastModified(mayInherit));
     }
-    public boolean hasNotLastModified(){
-        return (null == this.lastModified);
+    public boolean hasNotLastModified(boolean mayInherit){
+        return (null == this.getLastModified(mayInherit));
     }
     public boolean dropLastModified(){
         if (null != this.lastModified){
@@ -559,18 +508,28 @@ public final class Image
         else
             return false;
     }
-    public Long getLastModified(){
-        return this.lastModified;
+    public Long getLastModified(boolean mayInherit){
+        if (mayInherit){
+            Long lastModified = this.lastModified;
+            if (null == lastModified && this.hasInheritFrom()){
+                Image inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getLastModified(true);
+            }
+            return lastModified;
+        }
+        else
+            return this.lastModified;
     }
     public void setLastModified(Long lastModified){
         this.lastModified = lastModified;
     }
 
-    public boolean hasContentType(){
-        return (null != this.contentType);
+    public boolean hasContentType(boolean mayInherit){
+        return (null != this.getContentType(mayInherit));
     }
-    public boolean hasNotContentType(){
-        return (null == this.contentType);
+    public boolean hasNotContentType(boolean mayInherit){
+        return (null == this.getContentType(mayInherit));
     }
     public boolean dropContentType(){
         if (null != this.contentType){
@@ -580,18 +539,28 @@ public final class Image
         else
             return false;
     }
-    public String getContentType(){
-        return this.contentType;
+    public String getContentType(boolean mayInherit){
+        if (mayInherit){
+            String contentType = this.contentType;
+            if (null == contentType && this.hasInheritFrom()){
+                Image inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getContentType(true);
+            }
+            return contentType;
+        }
+        else
+            return this.contentType;
     }
     public void setContentType(String contentType){
         this.contentType = contentType;
     }
 
-    public boolean hasBytes(){
-        return (null != this.bytes);
+    public boolean hasBytes(boolean mayInherit){
+        return (null != this.getBytes(mayInherit));
     }
-    public boolean hasNotBytes(){
-        return (null == this.bytes);
+    public boolean hasNotBytes(boolean mayInherit){
+        return (null == this.getBytes(mayInherit));
     }
     public boolean dropBytes(){
         if (null != this.bytes){
@@ -601,13 +570,22 @@ public final class Image
         else
             return false;
     }
-    public Blob getBytes(){
-        return this.bytes;
+    public Blob getBytes(boolean mayInherit){
+        if (mayInherit){
+            Blob bytes = this.bytes;
+            if (null == bytes && this.hasInheritFrom()){
+                Image inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getBytes(true);
+            }
+            return bytes;
+        }
+        else
+            return this.bytes;
     }
     public void setBytes(Blob bytes){
         this.bytes = bytes;
     }
-
 
 
 
@@ -632,8 +610,8 @@ public final class Image
     public gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
-    public java.io.Serializable valueOf(gap.data.Field field){
-        return (java.io.Serializable)Field.Get((Field)field,this);
+    public java.io.Serializable valueOf(gap.data.Field field, boolean mayInherit){
+        return (java.io.Serializable)Field.Get((Field)field,this,mayInherit);
     }
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
@@ -644,7 +622,7 @@ public final class Image
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
-                    java.lang.Object value = Field.Get(field,this);
+                    java.lang.Object value = Field.Get(field,this,true);
                     if (null != value){
                         if (value instanceof DictionaryInto){
                             DictionaryInto dvalue = (DictionaryInto)value;
@@ -664,7 +642,7 @@ public final class Image
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this);
+            java.lang.Object value = Field.Get(field,this,true);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;
@@ -679,49 +657,6 @@ public final class Image
     }
     public boolean updateFrom(Request req){
         boolean change = false;
-
-        Key key = Strings.KeyFromString(req.getParameter("key"));
-        if (IsNotEqual(key,this.getKey())){
-            this.setKey(key);
-            change = true;
-        }
-
-        String id = Strings.StringFromString(req.getParameter("id"));
-        if (IsNotEqual(id,this.getId())){
-            this.setId(id);
-            change = true;
-        }
-
-        String base = Strings.StringFromString(req.getParameter("base"));
-        if (IsNotEqual(base,this.getBase())){
-            this.setBase(base);
-            change = true;
-        }
-
-        String name = Strings.StringFromString(req.getParameter("name"));
-        if (IsNotEqual(name,this.getName())){
-            this.setName(name);
-            change = true;
-        }
-
-        Long lastModified = Strings.LongFromString(req.getParameter("lastModified"));
-        if (IsNotEqual(lastModified,this.getLastModified())){
-            this.setLastModified(lastModified);
-            change = true;
-        }
-
-        String contentType = Strings.StringFromString(req.getParameter("contentType"));
-        if (IsNotEqual(contentType,this.getContentType())){
-            this.setContentType(contentType);
-            change = true;
-        }
-
-        Blob bytes = Strings.BlobFromString(req.getParameter("bytes"));
-        if (IsNotEqual(bytes,this.getBytes())){
-            this.setBytes(bytes);
-            change = true;
-        }
-
         return change;
     }
     public boolean updateFrom(BigTable proto){
@@ -729,31 +664,6 @@ public final class Image
     }
     public boolean updateFrom(Image proto){
         boolean change = false;
-
-        Key key = proto.getKey();
-        if (null != key && IsNotEqual(key,this.getKey())){
-            this.setKey(key);
-            change = true;
-        }
-
-        Long lastModified = proto.getLastModified();
-        if (null != lastModified && IsNotEqual(lastModified,this.getLastModified())){
-            this.setLastModified(lastModified);
-            change = true;
-        }
-
-        String contentType = proto.getContentType();
-        if (null != contentType && IsNotEqual(contentType,this.getContentType())){
-            this.setContentType(contentType);
-            change = true;
-        }
-
-        Blob bytes = proto.getBytes();
-        if (null != bytes && IsNotEqual(bytes,this.getBytes())){
-            this.setBytes(bytes);
-            change = true;
-        }
-
         return change;
     }
     public void drop(){

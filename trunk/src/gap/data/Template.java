@@ -16,10 +16,11 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-09T09:20:30.739Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T16:46:29.316Z",comments="gap.data")
 public final class Template
     extends gap.data.BigTable
-    implements LastModified
+    implements DataInheritance<Template>,
+               LastModified
 {
 
     private final static long serialVersionUID = 1;
@@ -35,18 +36,13 @@ public final class Template
     }
 
 
-    public final static Key KeyLongIdFor(String name){
-        String id = IdFor( name);
-        return KeyLongFor(id);
-    }
+
     public final static Key KeyLongIdFor(Key ancestor, String name){
         String id = IdFor(ancestor, name);
         return KeyLongFor(ancestor,id);
     }
-    public final static Key KeyShortIdFor(Key ancestor, String name){
-        String id = IdFor(ancestor, name);
-        return KeyShortFor(ancestor,id);
-    }
+
+
     public final static String IdFor(Key ancestor, String name){
         if (ancestor.isComplete() && null != name){
             String nameString = name;
@@ -55,14 +51,8 @@ public final class Template
         else
             throw new IllegalArgumentException();
     }
-    public final static String IdFor(String name){
-        if (null != name){
-            String nameString = name;
-            return gap.data.Hash.For(nameString);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
     public final static Template ForLongName(Key ancestor, String name){
         if (null != name){
             Key key = KeyLongIdFor(ancestor, name);
@@ -77,34 +67,8 @@ public final class Template
         else
             throw new IllegalArgumentException();
     }
-    public final static Template ForShortName(Key ancestor, String name){
-        if (null != name){
-            Key key = KeyShortIdFor(ancestor, name);
-            Template instance = (Template)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Template)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static Template ForLongName(String name){
-        if (null != name){
-            Key key = KeyLongIdFor( name);
-            Template instance = (Template)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Template)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
+
     public final static Template GetCreateLong(Key ancestor, String name){
         Template template = ForLongName(ancestor, name);
         if (null == template){
@@ -115,15 +79,12 @@ public final class Template
     }
 
 
-    public final static Key KeyLongFor(String id){
-        return KeyFactory.createKey(KIND,id);
-    }
-    public final static Key KeyShortFor(Key ancestor, String id){
-        return KeyFactory.createKey(ancestor,KIND,id);
-    }
+
     public final static Key KeyLongFor(Key ancestor, String id){
         return KeyFactory.createKey(KIND,id);
     }
+
+
     public final static Template ForLongId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
             Key key = KeyLongFor(ancestor,id);
@@ -138,34 +99,7 @@ public final class Template
         else
             throw new IllegalArgumentException();
     }
-    public final static Template ForShortId(Key ancestor, String id){
-        if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyShortFor(ancestor,id);
-            Template instance = (Template)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Template)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static Template ForLongId(String id){
-        if (null != id){
-            Key key = KeyLongFor(id);
-            Template instance = (Template)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Template)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
 
     public final static Template Get(Key key){
         if (null != key){
@@ -188,6 +122,8 @@ public final class Template
         else
             throw new IllegalArgumentException();
     }
+
+
     /**
      * Test for uniqueness and iterate under collisions.
      */
@@ -214,29 +150,7 @@ public final class Template
         else
             throw new IllegalArgumentException();
     }
-    public final static Key NewRandomKeyShort(Key ancestor){
-        if (null != ancestor){
-            /*
-             * Source matter for data local uniqueness
-             */
-            String source = gap.data.BigTable.ToString(ancestor);
-            long matter = gap.data.Hash.Djb64(source);
-            /*
-             * Random matter for network global uniqueness
-             */
-            java.util.Random random = new java.util.Random();
-            do {
-                matter ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(ancestor,KIND,idString);
-                if (null == GetKey(key))
-                    return key;
-            }
-            while (true);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
+
     /**
      * Drop the instance and any children of its key from the world,
      * memcache and store.
@@ -276,8 +190,8 @@ public final class Template
     public final static Query CreateQueryFor(){
         return new Query(KIND);
     }
-    public final static Query CreateQueryFor(Key ancestor){
-        return new Query(KIND,ancestor);
+    public final static Query CreateQueryFor(Key key){
+        return new Query(KIND,key);
     }
     public final static Template Query1(Query query){
         if (null != query)
@@ -305,12 +219,12 @@ public final class Template
     }
 
     /**
-     * 
+     * Persistent fields' binding for {@link Template}
      */
     public static enum Field
         implements gap.data.Field
     {
-
+        InheritFromKey("inheritFromKey"),
         Key("key"),
         Id("id"),
         Name("name"),
@@ -336,28 +250,30 @@ public final class Template
         public static Field getField(String name) {
             return FieldName.get(name);
         }
-        public static Object Get(Field field, Template instance){
+        public static Object Get(Field field, Template instance, boolean mayInherit){
             switch(field){
-
+            case InheritFromKey:
+                return instance.getInheritFromKey();
             case Key:
-                return instance.getKey();
+                return instance.getKey(mayInherit);
             case Id:
-                return instance.getId();
+                return instance.getId(mayInherit);
             case Name:
-                return instance.getName();
+                return instance.getName(mayInherit);
             case LastModified:
-                return instance.getLastModified();
+                return instance.getLastModified(mayInherit);
             case TemplateSourceHapax:
-                return instance.getTemplateSourceHapax();
+                return instance.getTemplateSourceHapax(mayInherit);
             case TemplateContentType:
-                return instance.getTemplateContentType();
+                return instance.getTemplateContentType(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }
         }
         public static void Set(Field field, Template instance, Object value){
             switch(field){
-
+            case InheritFromKey:
+                instance.setInheritFromKey( (Key)value);
             case Key:
                 instance.setKey( (Key)value);
                 return;
@@ -398,6 +314,8 @@ public final class Template
         }
     }
 
+    private volatile transient Template inheritFrom;
+
 
     private volatile Key key;    
     private volatile String id;    // *unique
@@ -407,6 +325,11 @@ public final class Template
     private volatile String templateContentType;    
 
 
+
+
+
+
+    private volatile transient Key parentKey; 
 
 
     public Template() {
@@ -426,6 +349,7 @@ public final class Template
     }
 
 
+
     public void onread(){
 
     }
@@ -434,26 +358,41 @@ public final class Template
     }
     public void destroy(){
         this.datastoreEntity = null;
-
         this.key = null;
-
         this.id = null;
-
         this.name = null;
-
         this.lastModified = null;
-
         this.templateSourceHapax = null;
-
         this.templateContentType = null;
-
+    }
+    public boolean hasInheritFrom(){
+        return (null != this.inheritFrom || null != this.inheritFromKey);
+    }
+    public boolean hasNotInheritFrom(){
+        return (null == this.inheritFrom && null == this.inheritFromKey);
+    }
+    public Template getInheritFrom(){
+        Template inheritFrom = this.inheritFrom;
+        if (null == inheritFrom){
+            Key inheritFromKey = this.inheritFromKey;
+            if (null != inheritFromKey){
+                inheritFrom = Template.Get(inheritFromKey);
+                this.inheritFrom = inheritFrom;
+            }
+        }
+        return inheritFrom;
+    }
+    public void setInheritFrom(Template ancestor){
+        this.inheritFrom = ancestor;
+        if (null != ancestor)
+            this.inheritFromKey = ancestor.getKey();
     }
 
-    public boolean hasKey(){
-        return (null != this.key);
+    public boolean hasKey(boolean mayInherit){
+        return (null != this.getKey(mayInherit));
     }
-    public boolean hasNotKey(){
-        return (null == this.key);
+    public boolean hasNotKey(boolean mayInherit){
+        return (null == this.getKey(mayInherit));
     }
     public boolean dropKey(){
         if (null != this.key){
@@ -466,15 +405,18 @@ public final class Template
     public Key getKey(){
         return this.key;
     }
+    public Key getKey(boolean ignore){
+        return this.key;
+    }
     public void setKey(Key key){
         this.key = key;
     }
 
-    public boolean hasId(){
-        return (null != this.id);
+    public boolean hasId(boolean mayInherit){
+        return (null != this.getId(mayInherit));
     }
-    public boolean hasNotId(){
-        return (null == this.id);
+    public boolean hasNotId(boolean mayInherit){
+        return (null == this.getId(mayInherit));
     }
     public boolean dropId(){
         if (null != this.id){
@@ -487,15 +429,18 @@ public final class Template
     public String getId(){
         return this.id;
     }
+    public String getId(boolean ignore){
+        return this.id;
+    }
     public void setId(String id){
         this.id = id;
     }
 
-    public boolean hasName(){
-        return (null != this.name);
+    public boolean hasName(boolean mayInherit){
+        return (null != this.getName(mayInherit));
     }
-    public boolean hasNotName(){
-        return (null == this.name);
+    public boolean hasNotName(boolean mayInherit){
+        return (null == this.getName(mayInherit));
     }
     public boolean dropName(){
         if (null != this.name){
@@ -508,15 +453,18 @@ public final class Template
     public String getName(){
         return this.name;
     }
+    public String getName(boolean ignore){
+        return this.name;
+    }
     public void setName(String name){
         this.name = name;
     }
 
-    public boolean hasLastModified(){
-        return (null != this.lastModified);
+    public boolean hasLastModified(boolean mayInherit){
+        return (null != this.getLastModified(mayInherit));
     }
-    public boolean hasNotLastModified(){
-        return (null == this.lastModified);
+    public boolean hasNotLastModified(boolean mayInherit){
+        return (null == this.getLastModified(mayInherit));
     }
     public boolean dropLastModified(){
         if (null != this.lastModified){
@@ -526,18 +474,28 @@ public final class Template
         else
             return false;
     }
-    public Long getLastModified(){
-        return this.lastModified;
+    public Long getLastModified(boolean mayInherit){
+        if (mayInherit){
+            Long lastModified = this.lastModified;
+            if (null == lastModified && this.hasInheritFrom()){
+                Template inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getLastModified(true);
+            }
+            return lastModified;
+        }
+        else
+            return this.lastModified;
     }
     public void setLastModified(Long lastModified){
         this.lastModified = lastModified;
     }
 
-    public boolean hasTemplateSourceHapax(){
-        return (null != this.templateSourceHapax);
+    public boolean hasTemplateSourceHapax(boolean mayInherit){
+        return (null != this.getTemplateSourceHapax(mayInherit));
     }
-    public boolean hasNotTemplateSourceHapax(){
-        return (null == this.templateSourceHapax);
+    public boolean hasNotTemplateSourceHapax(boolean mayInherit){
+        return (null == this.getTemplateSourceHapax(mayInherit));
     }
     public boolean dropTemplateSourceHapax(){
         if (null != this.templateSourceHapax){
@@ -547,18 +505,28 @@ public final class Template
         else
             return false;
     }
-    public Text getTemplateSourceHapax(){
-        return this.templateSourceHapax;
+    public Text getTemplateSourceHapax(boolean mayInherit){
+        if (mayInherit){
+            Text templateSourceHapax = this.templateSourceHapax;
+            if (null == templateSourceHapax && this.hasInheritFrom()){
+                Template inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getTemplateSourceHapax(true);
+            }
+            return templateSourceHapax;
+        }
+        else
+            return this.templateSourceHapax;
     }
     public void setTemplateSourceHapax(Text templateSourceHapax){
         this.templateSourceHapax = templateSourceHapax;
     }
 
-    public boolean hasTemplateContentType(){
-        return (null != this.templateContentType);
+    public boolean hasTemplateContentType(boolean mayInherit){
+        return (null != this.getTemplateContentType(mayInherit));
     }
-    public boolean hasNotTemplateContentType(){
-        return (null == this.templateContentType);
+    public boolean hasNotTemplateContentType(boolean mayInherit){
+        return (null == this.getTemplateContentType(mayInherit));
     }
     public boolean dropTemplateContentType(){
         if (null != this.templateContentType){
@@ -568,13 +536,22 @@ public final class Template
         else
             return false;
     }
-    public String getTemplateContentType(){
-        return this.templateContentType;
+    public String getTemplateContentType(boolean mayInherit){
+        if (mayInherit){
+            String templateContentType = this.templateContentType;
+            if (null == templateContentType && this.hasInheritFrom()){
+                Template inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getTemplateContentType(true);
+            }
+            return templateContentType;
+        }
+        else
+            return this.templateContentType;
     }
     public void setTemplateContentType(String templateContentType){
         this.templateContentType = templateContentType;
     }
-
 
 
 
@@ -599,8 +576,8 @@ public final class Template
     public gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
-    public java.io.Serializable valueOf(gap.data.Field field){
-        return (java.io.Serializable)Field.Get((Field)field,this);
+    public java.io.Serializable valueOf(gap.data.Field field, boolean mayInherit){
+        return (java.io.Serializable)Field.Get((Field)field,this,mayInherit);
     }
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
@@ -611,7 +588,7 @@ public final class Template
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
-                    java.lang.Object value = Field.Get(field,this);
+                    java.lang.Object value = Field.Get(field,this,true);
                     if (null != value){
                         if (value instanceof DictionaryInto){
                             DictionaryInto dvalue = (DictionaryInto)value;
@@ -631,7 +608,7 @@ public final class Template
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this);
+            java.lang.Object value = Field.Get(field,this,true);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;
@@ -646,43 +623,6 @@ public final class Template
     }
     public boolean updateFrom(Request req){
         boolean change = false;
-
-        Key key = Strings.KeyFromString(req.getParameter("key"));
-        if (IsNotEqual(key,this.getKey())){
-            this.setKey(key);
-            change = true;
-        }
-
-        String id = Strings.StringFromString(req.getParameter("id"));
-        if (IsNotEqual(id,this.getId())){
-            this.setId(id);
-            change = true;
-        }
-
-        String name = Strings.StringFromString(req.getParameter("name"));
-        if (IsNotEqual(name,this.getName())){
-            this.setName(name);
-            change = true;
-        }
-
-        Long lastModified = Strings.LongFromString(req.getParameter("lastModified"));
-        if (IsNotEqual(lastModified,this.getLastModified())){
-            this.setLastModified(lastModified);
-            change = true;
-        }
-
-        Text templateSourceHapax = Strings.TextFromString(req.getParameter("templateSourceHapax"));
-        if (IsNotEqual(templateSourceHapax,this.getTemplateSourceHapax())){
-            this.setTemplateSourceHapax(templateSourceHapax);
-            change = true;
-        }
-
-        String templateContentType = Strings.StringFromString(req.getParameter("templateContentType"));
-        if (IsNotEqual(templateContentType,this.getTemplateContentType())){
-            this.setTemplateContentType(templateContentType);
-            change = true;
-        }
-
         return change;
     }
     public boolean updateFrom(BigTable proto){
@@ -690,31 +630,6 @@ public final class Template
     }
     public boolean updateFrom(Template proto){
         boolean change = false;
-
-        Key key = proto.getKey();
-        if (null != key && IsNotEqual(key,this.getKey())){
-            this.setKey(key);
-            change = true;
-        }
-
-        Long lastModified = proto.getLastModified();
-        if (null != lastModified && IsNotEqual(lastModified,this.getLastModified())){
-            this.setLastModified(lastModified);
-            change = true;
-        }
-
-        Text templateSourceHapax = proto.getTemplateSourceHapax();
-        if (null != templateSourceHapax && IsNotEqual(templateSourceHapax,this.getTemplateSourceHapax())){
-            this.setTemplateSourceHapax(templateSourceHapax);
-            change = true;
-        }
-
-        String templateContentType = proto.getTemplateContentType();
-        if (null != templateContentType && IsNotEqual(templateContentType,this.getTemplateContentType())){
-            this.setTemplateContentType(templateContentType);
-            change = true;
-        }
-
         return change;
     }
     public void drop(){

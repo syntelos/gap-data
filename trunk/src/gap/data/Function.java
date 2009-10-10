@@ -73,8 +73,8 @@ public final class Function
         if (null == tool)
             throw new IllegalArgumentException();
 
-        else if (tool.hasMethodName())
-            return tool.getMethodName();
+        else if (tool.hasMethodName(true))
+            return tool.getMethodName(true);
         else
             return gap.data.Function.Type.Name(tool);
     }
@@ -92,7 +92,7 @@ public final class Function
         java.util.List<String> declarations = new java.util.ArrayList<String>(JelaDeclarations);
         this.setDeclarationStatements(declarations);
         this.setLanguage("jela");
-        this.setScript(gap.Strings.TextToString(tool.getMethodBody()));
+        this.setScript(gap.Strings.TextToString(tool.getMethodBody(true)));
         if (this.isScript()){
             Registry bindings = new Registry();
             bindings.put("req",request);

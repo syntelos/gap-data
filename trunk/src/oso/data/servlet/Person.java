@@ -4,16 +4,10 @@ package oso.data.servlet;
 
 import oso.data.*;
 
-import gap.Request;
-import gap.Response;
+import gap.*;
 import gap.data.* ;
-
-import gap.service.Accept;
-import gap.service.Error;
-import gap.service.Logon;
-import gap.service.Path;
-import gap.service.Parameters;
-import gap.service.Templates;
+import gap.service.* ;
+import gap.util.* ;
 
 import hapax.TemplateDictionary;
 import hapax.TemplateException;
@@ -35,11 +29,11 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-09T09:20:29.450Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-10T16:46:28.031Z",comments="oso.data")
 public class Person
     extends gap.servlet.Site
 {
-    public final static Class<? extends BigTable> BigTableClass = oso.data.Person.class;
+    public final static Class<oso.data.Person> BigTableClass = oso.data.Person.class;
 
 
     public Person(){
@@ -56,10 +50,9 @@ public class Person
 
         if (this.canRead(req)){
 
-            String id = req.getPath(0);
-            if (null != id){
+            if (req.hasPath(1)){
 
-                oso.data.Person instance = oso.data.Person.ForLongId(id);
+                oso.data.Person instance = oso.data.Person.ForLongId(req.getPath(1));
 
                 if (null != instance){
 
@@ -67,16 +60,12 @@ public class Person
 
                     return top;
                 }
-                else {
-                    return null;
-                }
             }
             else {
                 req.parameters.dictionaryInto(top);
+                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 com.google.appengine.api.datastore.Query query = oso.data.Person.CreateQueryFor();
-
-                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 List<oso.data.Person> list = (List<oso.data.Person>)oso.data.Person.QueryN(query,page);
 
@@ -84,9 +73,10 @@ public class Person
 
                     instance.dictionaryInto(top);
                 }
+                return top;
             }
         }
-        return top;
+        return null;
     }
 
 }
