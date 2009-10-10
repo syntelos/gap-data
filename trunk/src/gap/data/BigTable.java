@@ -179,6 +179,8 @@ public abstract class BigTable
 
     protected transient volatile Entity datastoreEntity;
 
+    protected volatile Key inheritFromKey;
+
 
     protected BigTable(){
         super();
@@ -345,6 +347,18 @@ public abstract class BigTable
      */
     public abstract TemplateDictionary dictionaryInto(Parameters params, TemplateDictionary dict);
 
+    public boolean hasInheritFromKey(){
+        return (null != this.inheritFromKey);
+    }
+    public boolean hasNotInheritFromKey(){
+        return (null == this.inheritFromKey);
+    }
+    public Key getInheritFromKey(){
+        return this.inheritFromKey;
+    }
+    public void setInheritFromKey(Key key){
+        this.inheritFromKey = key;
+    }
     protected final Entity fillTo(Entity entity){
 
         for (Field field: this.getClassFields()){

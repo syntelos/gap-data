@@ -199,66 +199,38 @@ public class OD
                     String[] fieldTypeParameters = FieldTypeParameters(fieldType);
                     TemplateDictionary dataField = null;
 
-                    if (IsFieldPersistent(field)){
+                    /*
+                     * Create 'dataField' section
+                     */
+                    if (IsFieldPersistent(field,fieldTypeClass)){
 
                         dataField = top.addSection("pfield");
 
+                        /*
+                         * Populate 'pfield' section
+                         */
                         if (IsFieldHashUnique(field)){
 
                             dataField.addSection("field_is_not_unique");
 
                             TemplateDictionary field_is = dataField.addSection("field_is_hash_unique");
 
-                            if (IsTypeClassKey(fieldTypeClass)){
+                            field_is.putVariable("data_model","*hash-unique");
 
-                                if (null == key){
-                                    key = field;
-
-                                    top.putVariable("field_key_name",fieldName);
-                                    top.putVariable("field_key_nameCamel",fieldNameCamel);
-                                    top.putVariable("field_key_class",fieldType);
-                                    top.putVariable("field_key_classClean",fieldTypeClean);
-                                }
+                            if (IsTypeClassString(fieldTypeClass)){
+                                dataField.putVariable("field_to_string_prefix","");
+                                dataField.putVariable("field_to_string_suffix","");
                             }
-                            else if (IsTypeClassIndexed(fieldTypeClass)){
-
-                                field_is.putVariable("data_model","*hash-unique");
-
-                                if (IsTypeClassString(fieldTypeClass)){
-                                    dataField.putVariable("field_to_string_prefix","");
-                                    dataField.putVariable("field_to_string_suffix","");
-                                }
-                                else if (IsTypeClassDate(fieldTypeClass)){
-                                    dataField.putVariable("field_to_string_prefix","gap.Date.FormatISO8601(");
-                                    dataField.putVariable("field_to_string_suffix",")");
-                                }
-                                else {
-                                    dataField.putVariable("field_to_string_prefix","");
-                                    dataField.putVariable("field_to_string_suffix",".toString()");
-                                }
-
-                                defaultSortBy = fieldName;
+                            else if (IsTypeClassDate(fieldTypeClass)){
+                                dataField.putVariable("field_to_string_prefix","gap.Date.FormatISO8601(");
+                                dataField.putVariable("field_to_string_suffix",")");
                             }
-                            else if (IsTypeClassList(fieldTypeClass)){
-
-                                if (1 == fieldTypeParameters.length){
-                                    String typeComponent = fieldTypeParameters[0];
-
-                                    field_is.putVariable("data_model","*hash-unique");
-
-                                    dataField.putVariable("field_to_string_prefix","gap.data.Hash.For"+typeComponent+"(");
-                                    dataField.putVariable("field_to_string_suffix",")");
-
-                                    TemplateDictionary field_is_list = dataField.addSection("field_is_list");
-                                    field_is_list.putVariable("field_list_component",typeComponent);
-
-                                    dataField.putVariable("field_impl_class_name",ListClassName(fieldTypeClean,className,typeComponent));
-                                }
-                                else
-                                    throw new ODStateException(field,"Field '"+fieldName+"' type list missing type parameter.");
+                            else {
+                                dataField.putVariable("field_to_string_prefix","");
+                                dataField.putVariable("field_to_string_suffix",".toString()");
                             }
-                            else
-                                throw new ODStateException(field,"Model '*hash-unique' field type is not indexable or list of indexable '"+fieldTypeClass+"'.");
+
+                            defaultSortBy = fieldName;
 
                             /*
                              * Global section 'field_hash_unique'
@@ -307,12 +279,28 @@ public class OD
                             else
                                 throw new ODStateException(field,"Model has more than one '*unique' field, '"+unique.getName()+"' and '"+fieldName+"'.");
                         }
-                        else if (IsNotTypeClassCollection(fieldTypeClass) && (!fieldName.endsWith("Jvm")))
-                            dataField.addSection("field_is_updatable");
+                        else {
+                            dataField.addSection("field_is_not_unique");
+                            dataField.addSection("field_is_not_hash_unique");
+                        }
+                    }
+                    else if (IsTypeClassCollection(fieldTypeClass)){
+
+                        dataField = top.addSection("cfield");
+                        /*
+                         * Populate 'cfield' section
+                         */
+                        dataField.addSection("field_is_not_unique");
+                        dataField.addSection("field_is_not_hash_unique");
                     }
                     else if (IsFieldRelation(field)){
 
                         dataField = top.addSection("rfield");
+                        /*
+                         * Populate 'rfield' section
+                         */
+                        dataField.addSection("field_is_not_unique");
+                        dataField.addSection("field_is_not_hash_unique");
 
                         if ((!IsTypeClassKey(fieldTypeClass)) && null != fieldTypeClass && IsNotTypeClassBigTable(fieldTypeClass))
                             throw new ODStateException(field,"Relation field '"+fieldName+"' is not a subclass of 'gap.data.BigTable'.");
@@ -320,12 +308,20 @@ public class OD
                     }
                     else {
                         dataField = top.addSection("tfield");
+                        /*
+                         * Populate 'tfield' section
+                         */
+                        dataField.addSection("field_is_not_unique");
+                        dataField.addSection("field_is_not_hash_unique");
                         {
                             TemplateDictionary field_is = dataField.addSection("field_is_transient");
                             field_is.putVariable("data_model","*transient");
                         }
                     }
 
+                    /*
+                     * Populate 'dataField' name and type information
+                     */
                     dataField.putVariable("field_name",fieldName);
                     dataField.putVariable("field_nameCamel",fieldNameCamel);
                     dataField.putVariable("field_class",fieldType);
@@ -333,12 +329,6 @@ public class OD
                     dataField.putVariable("field_classCleanClean",fieldTypeCleanClean);
 
                     if (IsTypeClassKey(fieldTypeClass)){
-
-                        dataField.addSection("field_is_not_unique");
-                        dataField.addSection("field_is_not_hash_unique");
-                        dataField.addSection("field_is_not_map");
-                        dataField.addSection("field_is_not_list");
-                        dataField.addSection("field_is_not_collection");
 
                         TemplateDictionary field_is = dataField.addSection("field_is_key");
 
@@ -353,11 +343,7 @@ public class OD
                     }
                     else if (IsTypeClassList(fieldTypeClass)){
 
-                        dataField.addSection("field_is_not_key");
-                        dataField.addSection("field_is_not_unique");
-                        dataField.addSection("field_is_not_hash_unique");
                         dataField.addSection("field_is_not_map");
-                        dataField.addSection("field_is_collection");
 
                         if (1 == fieldTypeParameters.length){
 
@@ -373,11 +359,7 @@ public class OD
                     }
                     else if (IsTypeClassMap(fieldTypeClass)){
 
-                        dataField.addSection("field_is_not_key");
-                        dataField.addSection("field_is_not_unique");
-                        dataField.addSection("field_is_not_hash_unique");
                         dataField.addSection("field_is_not_list");
-                        dataField.addSection("field_is_collection");
 
                         if (2 == fieldTypeParameters.length){
 
@@ -390,15 +372,6 @@ public class OD
                         }
                         else
                             throw new ODStateException(field,"Field '"+fieldName+"' type map missing type parameter.");
-                    }
-                    else {
-
-                        dataField.addSection("field_is_not_key");
-                        dataField.addSection("field_is_not_unique");
-                        dataField.addSection("field_is_not_hash_unique");
-                        dataField.addSection("field_is_not_map");
-                        dataField.addSection("field_is_not_list");
-                        dataField.addSection("field_is_not_collection");
                     }
                 }
             }
@@ -769,13 +742,17 @@ public class OD
         }
         return new String[0];
     }
-    public final static boolean IsFieldPersistent(FieldDescriptor field){
+    public final static boolean IsFieldPersistent(FieldDescriptor field, Class fieldTypeClass){
 
-        if (IsFieldRelation(field)) /*(very template specific -- will change)
+        if (IsTypeClassCollection(fieldTypeClass))
+
+            return false;
+
+        else if (IsFieldRelation(field)) /*(very template specific -- will change)
                                      */
             return false;
 
-        else if (field instanceof FieldDescriptor.Persistence){
+        else if (IsTypeClassIndexed(fieldTypeClass) && field instanceof FieldDescriptor.Persistence){
             FieldDescriptor.Persistence pfield = (FieldDescriptor.Persistence)field;
             if (pfield.hasPersistence()){
                 if (FieldDescriptor.Persistence.Type.Transient.equals(pfield.getPersistence()))
@@ -913,6 +890,12 @@ public class OD
             return (java.util.Date.class.isAssignableFrom(fieldType));
         else
             return false;
+    }
+    public final static boolean IsTypeClassCollection(java.lang.Class fieldType){
+        if (null != fieldType)
+            return (gap.data.Collection.class.isAssignableFrom(fieldType));
+        else
+            return true;
     }
     public final static boolean IsNotTypeClassCollection(java.lang.Class fieldType){
         if (null != fieldType)
