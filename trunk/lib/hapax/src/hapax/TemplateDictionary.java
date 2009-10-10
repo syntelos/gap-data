@@ -151,6 +151,10 @@ public final class TemplateDictionary
 
         return (this.sections.containsKey(sectionName));
     }
+    public boolean hasNotSection(String sectionName){
+
+        return (!this.sections.containsKey(sectionName));
+    }
     public boolean hasSection(String sectionName){
 
         return (this.sections.containsKey(sectionName));
@@ -184,6 +188,18 @@ public final class TemplateDictionary
      */
     public List<TemplateDictionary> getSection(String from, String to) {
         return this.getSection(from);
+    }
+    public TemplateDictionary addSectionExclusive(String of, String sectionName){
+        if (this.hasNotSection(of))
+            return this.addSection(sectionName);
+        else
+            return null;
+    }
+    public TemplateDictionary addSectionExclusive(String of, String from, String to){
+        if (this.hasNotSection(of))
+            return this.addSection(from,to);
+        else
+            return null;
     }
     public TemplateDictionary addSection(String sectionName) {
 
