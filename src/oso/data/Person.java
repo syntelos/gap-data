@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "oso.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T13:24:00.785Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T14:20:34.266Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -29,6 +29,10 @@ public final class Person
     public final static String ClassName = "Person";
 
     public final static String DefaultSortBy = "logonId";
+
+    public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
+        return ClassDescriptorFor(Person.class);
+    }
 
     static {
         Register(Person.class);
@@ -515,5 +519,8 @@ public final class Person
     }
     public void store(){
         Store(this);
+    }
+    public gap.service.od.ClassDescriptor getClassDescriptorFor(){
+        return ClassDescriptorFor(this.getClass());
     }
 }

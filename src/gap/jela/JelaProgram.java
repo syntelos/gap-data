@@ -19,164 +19,86 @@
  */
 package gap.jela;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.CharArrayWriter;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import gap.data.*;
+import gap.service.FileManager;
+import gap.service.Function;
+import gap.service.OD;
+import gap.service.od.*;
 
-import javax.script.CompiledScript;
-import javax.script.ScriptContext;
-import javax.script.ScriptException;
+import java.util.StringTokenizer;
 
 /**
  * A JPL source program from the "jela" engine. 
  * 
- * <h3>Debugging</h3>
- * 
- * Create a directory named "debug/jela0/gen" under the process working
- * directory to have generated sources deposited there for debugging.
- * Copies will be written as created, when possible.
- * 
  * @author J. Pritchard
  */
 public final class JelaProgram
-    extends CharArrayWriter
+    extends java.io.CharArrayWriter
 {
-    public final static String PackageName = "jela0.gen";
-    public final static String ClassName = "JelaProgram";
-
-    private static volatile long NameDefaultCounter = 0L;
-    private static final Long NameInitCounter = 0L;
-    private final static java.util.Hashtable<String,Long> Namespace = new java.util.Hashtable<String,Long>();
-    private final static String NextClassname(String id){
-        if (null == id)
-            return (ClassName+String.valueOf(NameDefaultCounter++));
-        else {
-            synchronized(Namespace){
-                Long nameCounter = Namespace.get(id);
-                if (null == nameCounter){
-                    Namespace.put(id,NameInitCounter);
-                    return (ClassName+id);
-                }
-                else {
-                    nameCounter += 1L;
-                    Namespace.put(id,nameCounter);
-                    return (ClassName+id+String.valueOf(nameCounter));
+    private final static String[] Imports = {
+        "import gap.*;",
+        "import gap.data.*;",
+        "import gap.service.*;",
+        "import gap.util.*;"
+    };
+    protected final static String[] Lines(Tool tool){
+        if (null != tool){
+            String text = gap.Strings.TextToString(tool.getFunctionBody(true));
+            if (null != text){
+                StringTokenizer strtok = new StringTokenizer(text,"\r\n");
+                int count = strtok.countTokens();
+                if (0 != count){
+                    int cc = 0;
+                    String[] re = new String[count];
+                    while (strtok.hasMoreTokens()){
+                        re[cc++] = strtok.nextToken();
+                    }
+                    return re;
                 }
             }
         }
-    }
-    /**
-     * 
-     */
-    public final static class Structure {
-
-        public final List<String> imports = new ArrayList<String>();
-        public final List<String> declarations = new ArrayList<String>();
-        public final List<String> lines = new ArrayList<String>();
-
-        Structure(ScriptContext scx, String text){
-            super();
-            if (scx instanceof JelaContextImports){
-                List<String> scxImports = ((JelaContextImports)scx).getImportStatements();
-                if (null != scxImports){
-                    for (String imp : scxImports){
-                        this.imports.add(imp);
-                    }
-                }
-            }
-            if (scx instanceof JelaContextDeclarations){
-                List<String> scxDeclarations = ((JelaContextDeclarations)scx).getDeclarationStatements();
-                if (null != scxDeclarations){
-                    for (String imp : scxDeclarations){
-                        this.declarations.add(imp);
-                    }
-                }
-            }
-            StringTokenizer strtok = new StringTokenizer(text,"\r\n");
-            while (strtok.hasMoreTokens()){
-                String line = strtok.nextToken().trim();
-                if (line.startsWith("import "))
-                    this.imports.add(line);
-                else
-                    this.lines.add(line);
-            }
-        }
+        return null;
     }
 
+    public final String packageName, className, fullClassName;
 
-    public final String classname, fqcn, fqfn;
-
-    public final URI filesource, fileclass;
-
-    private Structure structured;
-
-    private JavaSourceInputBuffer source;
-
-    private JelaScriptEngine je;
-
-    private JelaProgramCompiler compiler;
+    private LineNumbered lined;
 
     private int indent;
 
 
-    public JelaProgram(JelaScriptEngine je, String jela)
-        throws ScriptException
-    {
+    public JelaProgram(Resource resource, Tool tool){
         super();
-        this.je = je;
-        ScriptContext scx = je.getContext();
-        this.classname = NextClassname(je.getIdentifier());
-        this.fqcn = (JelaProgram.PackageName+'.'+this.classname);
-        this.fqfn = this.fqcn.replace('.','/');
-        try {
-            this.filesource = new URI("mfm:///"+this.fqfn+".java");
-            this.fileclass = new URI("mfm:///"+this.fqfn+".class");
-        }
-        catch (java.net.URISyntaxException exc){
-            throw new ScriptException(exc);
-        }
-        this.compiler = new JelaProgramCompiler(this,scx);
-        if (this.compiler.isAlive()){
-            this.iprintln("package "+JelaProgram.PackageName+";");
+        String[] lines = Lines(tool);
+        if (null != resource && null != lines){
+            this.packageName = FileManager.DerivePackage(resource);
+            this.className = Function.DeriveName(tool);
+            this.fullClassName = (this.packageName+'.'+this.className);
+
+            this.iprintln("package "+this.packageName+";");
             this.iprintln();
-            this.structured = new Structure(scx,jela);
-            for (String imp : this.structured.imports){
+            for (String imp : Imports){
                 this.iprintln(imp);
             }
             this.iprintln();
-            this.iprintln("public final class "+this.classname);
-            this.iprintln("    extends jela.JavaCompiledScript");
+            this.iprintln("public final class "+this.className);
+            this.iprintln("    extends Function");
             this.iprintln("{");
             this.iprintln();
             this.iopen();
-            this.iprintln("public "+this.classname+"(jela.JelaScriptEngine je){");
-            this.iprintln("    super(je);");
+            this.iprintln("public "+this.className+"(Servlet instance, Request request, Response response, Resource resource, Tool tool)");
+            this.iprintln("        throws java.io.IOException, gap.jbx.Function.MethodNotFound");
+            this.iprintln("{");
+            this.iprintln("    super(instance,request,response,resource,tool);");
             this.iprintln("}");
             this.iprintln();
-            this.iprintln("public java.lang.Object eval(javax.script.ScriptContext context, javax.script.Bindings global, javax.script.Bindings local)");
-            this.iprintln("    throws javax.script.ScriptException");
+            this.iprintln("public java.lang.Object invoke()");
+            this.iprintln("        throws gap.jbx.Function.InvokeErrorTarget, gap.jbx.Function.InvokeErrorNotInitialized");
             this.iprintln("{");
             this.iopen();
-            for (String stmt : this.structured.declarations){
-
-                if (stmt.endsWith("{")){
-                    this.iprintln(stmt);
-                    this.iopen();
-                }
-                else if (stmt.endsWith("}")){
-                    this.iclose();
-                    this.iprintln(stmt);
-                }
-                else
-                    this.iprintln(stmt);
-            }
             this.iprintln();
             boolean re = true;
-            for (String stmt : this.structured.lines){
+            for (String stmt : lines){
                 if (stmt.startsWith("return"))
                     re = false;
                 if (stmt.endsWith("{")){
@@ -199,50 +121,22 @@ public final class JelaProgram
             this.iprintln();
             this.iclose();
             this.iprintln("}");
-            this.source = new JavaSourceInputBuffer(this);
-            try {
-                File file = new File("debug/"+this.fqfn+".java");
-                FileWriter debug = new FileWriter(file);
-                try {
-                    debug.append(this.toString());
-                    debug.flush();
-                }
-                finally {
-                    debug.close();
-                }
-            }
-            catch (Throwable t){
-                return;
-            }
-        }
-        else {
-            this.append(jela);
-            this.source = new JavaSourceInputBuffer(this);
-        }
-    }
-
-
-    public CompiledScript compile()
-        throws ScriptException
-    {
-        JelaProgramCompiler pc = new JelaProgramCompiler(this);
-        if (pc.isAlive()){
-            if (pc.compile())
-                return pc.getCompiledScript(this.je);
-            else 
-                throw new JelaProgramException(pc);
         }
         else 
-            return pc.getCompiledScript(this.je);
+            throw new IllegalArgumentException();
     }
-    public gap.jac.tools.JavaFileObject getInputSource(){
-        return this.source;
+
+
+    public String getSource(){
+        return this.toString();
     }
-    public JelaScriptEngine getEngine(){
-        return this.je;
-    }
-    public ScriptContext getContext(){
-        return this.je.getContext();
+    public String getSourceLineNumbered(){
+        LineNumbered lined = this.lined;
+        if (null == lined){
+            lined = new LineNumbered(this.getSource());
+            this.lined = lined;
+        }
+        return lined.toString();
     }
 
     private void iopen(){

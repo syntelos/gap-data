@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T13:24:01.840Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T14:20:35.344Z",comments="gap.data")
 public final class Partner
     extends gap.data.BigTable
     implements DataInheritance<Partner>
@@ -29,6 +29,13 @@ public final class Partner
     public final static String ClassName = "Partner";
 
     public final static String DefaultSortBy = "logonId";
+
+    public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
+        return ClassDescriptorFor(Partner.class);
+    }
+    public final static gap.service.od.ClassDescriptor ClassDescriptorForParent(){
+        return ClassDescriptorFor(Resource.class);
+    }
 
     static {
         Register(Partner.class);
@@ -542,5 +549,11 @@ public final class Partner
     }
     public void store(){
         Store(this);
+    }
+    public gap.service.od.ClassDescriptor getClassDescriptorFor(){
+        return ClassDescriptorFor(this.getClass());
+    }
+    public gap.service.od.ClassDescriptor getClassDescriptorForParent(){
+        return ClassDescriptorForParent();
     }
 }

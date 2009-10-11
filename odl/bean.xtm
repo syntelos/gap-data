@@ -32,6 +32,13 @@ public final class {{=class_name}}
 
     public final static String DefaultSortBy = "{{=class_defaultSortBy}}";
 
+    public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
+        return ClassDescriptorFor({{=class_name}}.class);
+    }{{#class_re_child_or_group}}
+    public final static gap.service.od.ClassDescriptor ClassDescriptorForParent(){
+        return ClassDescriptorFor({{=parent_class_name}}.class);
+    }{{/class_re_child_or_group}}
+
     static {
         Register({{=class_name}}.class);
     }
@@ -723,4 +730,10 @@ public final class {{=class_name}}
     public void store(){
         Store(this);
     }
+    public gap.service.od.ClassDescriptor getClassDescriptorFor(){
+        return ClassDescriptorFor(this.getClass());
+    }{{#class_re_child_or_group}}
+    public gap.service.od.ClassDescriptor getClassDescriptorForParent(){
+        return ClassDescriptorForParent();
+    }{{/class_re_child_or_group}}
 }

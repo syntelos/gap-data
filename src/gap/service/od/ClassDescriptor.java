@@ -113,6 +113,28 @@ public interface ClassDescriptor
     }
 
     /**
+     * 
+     */
+    public interface WithPackage
+        extends ClassDescriptor
+    {
+        public boolean hasPackage();
+
+        public PackageDescriptor getPackage();
+    }
+
+    /**
+     * 
+     */
+    public interface WithImports
+        extends ClassDescriptor
+    {
+        public boolean hasImports();
+
+        public List<ImportDescriptor> getImports();
+    }
+
+    /**
      * Class name (not qualified with {@link Package} name).
      */
     public String getName();

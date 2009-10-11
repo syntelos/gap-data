@@ -31,6 +31,8 @@ import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.datastore.ShortBlob;
 
+import java.io.File;
+
 /**
  * The gap data object handled by the {@link Store} API for memcache
  * and datastore.  All datastore objects are cached via the normal
@@ -67,25 +69,51 @@ public abstract class BigTable
 
     protected final static java.util.Set<String> Imports = new java.util.HashSet<String>();
 
-    protected final static void Register(Class dc){
+    protected final static void Register(Class<? extends BigTable> dc){
         String pkg = dc.getPackage().getName();
         if (null != pkg)
             Imports.add(pkg);
         else
             throw new IllegalStateException(dc.getName());
     }
-    public static Class Find(String kind)
+    public static Class<? extends BigTable> Find(String kind)
         throws ClassNotFoundException
     {
         for (String pkg : Imports){
             String classname = (pkg+'.'+kind);
             try {
-                return Class.forName(classname);
+                return (Class<? extends BigTable>)Class.forName(classname);
             }
             catch (ClassNotFoundException exc){
             }
         }
         throw new ClassNotFoundException(kind);
+    }
+    public final static gap.service.od.ClassDescriptor ClassDescriptorFor(String kind){
+        try {
+            return ClassDescriptorFor(Find(kind));
+        }
+        catch (ClassNotFoundException exc){
+            return null;
+        }
+    }
+    public final static gap.service.od.ClassDescriptor ClassDescriptorFor(Class<? extends BigTable> clas){
+        if (null != clas){
+            String path = "odl/"+clas.getName().replace('.','/')+".odl";
+            File file = new File(path);
+            if (file.isFile()){
+                try {
+                    return gap.odl.Main.ClassDescriptorFor(file);
+                }
+                catch (java.io.IOException exc){
+                    throw new IllegalArgumentException(clas.getName(),exc);
+                }
+            }
+            else
+                throw new IllegalArgumentException(clas.getName());
+        }
+        else
+            throw new IllegalArgumentException();
     }
     public final static boolean IsAdmin(String kind){
         if (null != kind){
@@ -364,6 +392,8 @@ public abstract class BigTable
         else
             return false;
     }
+    public abstract gap.service.od.ClassDescriptor getClassDescriptorFor();
+
     protected final Entity fillTo(Entity entity){
 
         for (Field field: this.getClassFields()){

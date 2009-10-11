@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T13:24:02.462Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T14:20:35.971Z",comments="gap.data")
 public final class Tool
     extends gap.data.BigTable
     implements DataInheritance<Tool>,
@@ -30,6 +30,13 @@ public final class Tool
     public final static String ClassName = "Tool";
 
     public final static String DefaultSortBy = "name";
+
+    public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
+        return ClassDescriptorFor(Tool.class);
+    }
+    public final static gap.service.od.ClassDescriptor ClassDescriptorForParent(){
+        return ClassDescriptorFor(Resource.class);
+    }
 
     static {
         Register(Tool.class);
@@ -1257,5 +1264,11 @@ public final class Tool
     }
     public void store(){
         Store(this);
+    }
+    public gap.service.od.ClassDescriptor getClassDescriptorFor(){
+        return ClassDescriptorFor(this.getClass());
+    }
+    public gap.service.od.ClassDescriptor getClassDescriptorForParent(){
+        return ClassDescriptorForParent();
     }
 }

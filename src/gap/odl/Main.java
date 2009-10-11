@@ -53,6 +53,38 @@ import java.util.List;
 public final class Main
     extends java.lang.Object
 {
+    private final static java.util.Map<String,Class> Classes = new java.util.HashMap<String,Class>();
+
+    public final static String ClassName(File odl){
+        String name = odl.getName();
+        int idx = name.lastIndexOf('.');
+        if (-1 != idx)
+            return name.substring(0,idx);
+        else
+            return name;
+    }
+    public final static Class ClassDescriptorFor(File odl)
+        throws IOException, Syntax
+    {
+        String name = ClassName(odl);
+        Class desc;
+        synchronized(Classes){
+            desc = Classes.get(name);
+        }
+        if (null == desc){
+            Reader odlReader = new Reader(odl);
+            try {
+                desc = (new Class(odlReader));
+            }
+            finally {
+                odlReader.close();
+            }
+            synchronized(Classes){
+                Classes.put(name,desc);
+            }
+        }
+        return desc;
+    }
     /**
      * Generate bean, validate, servlet and list classes.
      */
@@ -61,8 +93,7 @@ public final class Main
     {
         try {
             List<File> products = new java.util.ArrayList<File>();
-            Reader odlReader = new Reader(odl);
-            Class odlClass = new Class(odlReader);
+            Class odlClass = ClassDescriptorFor(odl);
             Package pack = odlClass.pack;
             List<ImportDescriptor> imports = odlClass.imports;
 

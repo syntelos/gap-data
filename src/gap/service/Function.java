@@ -80,6 +80,10 @@ public final class Function
         else
             return gap.service.Function.Type.Name(tool);
     }
+    public final static String DeriveName(Tool tool){
+
+        return OD.Camel(Target(tool));
+    }
 
     /**
      * Constructor for compiled function.
