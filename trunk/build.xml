@@ -15,6 +15,8 @@
   <property name="out.webinf" value="${out}/WEB-INF"/>
   <property name="out.bin" value="${out.webinf}/classes"/>
   <property name="out.lib" value="${out.webinf}/lib"/>
+  <property name="out.src" value="${out}/src"/>
+  <property name="out.odl" value="${out}/odl"/>
   <property name="lib" value="lib"/>
   <property name="doc" value="doc"/>
   <property name="odl" value="odl"/>
@@ -171,7 +173,16 @@
         <include name="**/*.properties" />
       </fileset>
     </copy>
-
+    <copy todir="${out.src}">
+      <fileset dir="${src}">
+        <include name="**/*.java" />
+      </fileset>
+    </copy>
+    <copy todir="${out.odl}">
+      <fileset dir="${odl}">
+        <include name="**/*.odl" />
+      </fileset>
+    </copy>
   </target>
 
   <target name="jar" depends="write" description="Archive 'jar' content into 'gap-data-V*.jar'.  See 'version'.">

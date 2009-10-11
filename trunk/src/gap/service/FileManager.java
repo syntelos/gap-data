@@ -436,6 +436,9 @@ public class FileManager
     {
         String className = desc.getFunctionClassname(true);
         String sourceText = gap.Strings.TextToString(desc.getFunctionSourceJava(true));
+        if (null == sourceText){
+
+        }
 
         if (null != className && null != sourceText){
 
@@ -473,12 +476,12 @@ public class FileManager
             return false;
     }
 
-    public Class<gap.data.Function> define(Tool desc){
+    public Class<gap.service.Function> define(Tool desc){
         String classname = desc.getFunctionClassname(true);
         if (null != classname){
             Blob classfile = desc.getFunctionClassfileJvm(true);
             if (null != classfile)
-                return (Class<gap.data.Function>)this.define(classname,classfile.getBytes());
+                return (Class<gap.service.Function>)this.define(classname,classfile.getBytes());
         }
         return null;
     }
@@ -614,6 +617,20 @@ public class FileManager
         }
 
         return Resource.ForLongBaseName(base,name);
+    }
+    public final static String DerivePackage(Resource resource){
+        String base = resource.getBase();
+        String name = resource.getName();
+        if (null != base && 0 != base.length()){
+            if (0 != name.length())
+                return (OD.Decamel(base)+'/'+OD.Decamel(name));
+            else
+                throw new IllegalStateException();
+        }
+        else if (0 != name.length())
+            return OD.Decamel(name);
+        else
+            throw new IllegalStateException();
     }
 
     private final static List<String> Options;

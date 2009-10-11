@@ -151,8 +151,7 @@ public class Function
     extends Object
     implements Component.Child,
                Component.AddText,
-               javax.script.ScriptContext,
-               gap.jela.JelaScriptContext
+               javax.script.ScriptContext
 {
     private final static ThreadLocal<Function> TL = new ThreadLocal<Function>();
     /**

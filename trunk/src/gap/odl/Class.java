@@ -23,6 +23,7 @@ import gap.service.od.ClassDescriptor;
 import gap.service.od.FieldDescriptor;
 import gap.service.od.ImportDescriptor;
 import gap.service.od.MethodDescriptor;
+import gap.service.od.PackageDescriptor;
 
 import java.io.IOException;
 import java.util.List;
@@ -134,7 +135,9 @@ public final class Class
     extends Object
     implements ClassDescriptor.Version,
                ClassDescriptor.Implements,
-               ClassDescriptor.Relation
+               ClassDescriptor.Relation,
+               ClassDescriptor.WithPackage,
+               ClassDescriptor.WithImports
 {
     public final static Pattern Open = Pattern.compile("^(class|parent|child).*");
     public final static Pattern Open2 = Pattern.compile("\\s*\\{",Pattern.MULTILINE);
@@ -299,9 +302,6 @@ public final class Class
     public Long getVersion(){
         return new Long(this.version);
     }
-    public boolean hasImports(){
-        return (!this.imports.isEmpty());
-    }
     public boolean hasComment(){
         return (null != this.comment);
     }
@@ -345,6 +345,18 @@ public final class Class
             return this.parent.getName();
         else
             return null;
+    }
+    public boolean hasPackage(){
+        return true;
+    }
+    public PackageDescriptor getPackage(){
+        return this.pack;
+    }
+    public boolean hasImports(){
+        return (!this.imports.isEmpty());
+    }
+    public List<ImportDescriptor> getImports(){
+        return this.imports;
     }
 
     public final static String Decamel(String string){
