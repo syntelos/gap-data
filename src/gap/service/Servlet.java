@@ -348,8 +348,11 @@ public class Servlet
                     ListFilter filter = new ListFilter.ListFilterTool(op);
                     Tool tool = resource.getTools(filter);
                     if (null != tool){
-                        Function function = new Function(this,req,rep,resource,tool);
-                        function.invoke(req,rep);
+                        Function function = req.getFunction(this,req,rep,resource,tool);
+                        if (null != function)
+                            function.invoke();
+                        else
+                            this.error(req,rep,400,"Operator function not found.");
                     }
                     else
                         this.error(req,rep,400,"Unrecognized request parameter 'op'.");

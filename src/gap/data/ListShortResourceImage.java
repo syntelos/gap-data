@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-10T17:23:48.790Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-11T13:24:01.682Z",comments="gap.data")
 public final class ListShortResourceImage
     extends gap.util.AbstractList<Image>
     implements gap.data.List.Short<Image>

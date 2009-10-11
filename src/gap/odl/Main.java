@@ -59,138 +59,143 @@ public final class Main
     public final static List<File> ProcessFiles(File beanXtm, File odl, File beanJava, File beans, File servlets)
         throws IOException, TemplateException, Syntax, ODStateException
     {
-        List<File> products = new java.util.ArrayList<File>();
+        try {
+            List<File> products = new java.util.ArrayList<File>();
+            Reader odlReader = new Reader(odl);
+            Class odlClass = new Class(odlReader);
+            Package pack = odlClass.pack;
+            List<ImportDescriptor> imports = odlClass.imports;
 
-        Reader odlReader = new Reader(odl);
-        Class odlClass = new Class(odlReader);
-        Package pack = odlClass.pack;
-        List<ImportDescriptor> imports = odlClass.imports;
+            File javaDir = beanJava.getParentFile();
+            File odlDir = beanXtm.getParentFile();
 
-        File javaDir = beanJava.getParentFile();
-        File odlDir = beanXtm.getParentFile();
-
-        String parentClassName = OD.ClassName(odlClass);
-        /*
-         * Bean
-         */
-        {
-            PrintWriter out = new PrintWriter(new FileWriter(beanJava));
-            try {
-                OD.GenerateBeanSource(beanXtm, pack, imports, odlClass, out);
-                products.add(beanJava);
-            }
-            finally {
-                out.close();
-            }
-            if (null != beans){
-                out = new PrintWriter(new FileWriter(beans,true));
+            String parentClassName = OD.ClassName(odlClass);
+            /*
+             * Bean
+             */
+            {
+                PrintWriter out = new PrintWriter(new FileWriter(beanJava));
                 try {
-                    out.println(pack.getName()+'.'+parentClassName);
+                    OD.GenerateBeanSource(beanXtm, pack, imports, odlClass, out);
+                    products.add(beanJava);
                 }
                 finally {
                     out.close();
                 }
-            }
-        }
-        /*
-         * Validate
-         */
-        {
-            File validateXtm = new File(odlDir,"bean-validate.xtm");
-            File validateFile = new File(javaDir,"validate/"+parentClassName+".java");
-            PrintWriter out = new PrintWriter(new FileWriter(validateFile));
-            try {
-                OD.GenerateBeanSource(validateXtm, pack, imports, odlClass, out);
-                products.add(validateFile);
-            }
-            finally {
-                out.close();
-            }
-        }
-        /*
-         * Servlet
-         */
-        {
-            File servletXtm = new File(odlDir,"bean-servlet.xtm");
-            File servletFile = new File(javaDir,"servlet/"+parentClassName+".java");
-            PrintWriter out = new PrintWriter(new FileWriter(servletFile));
-            try {
-                OD.GenerateBeanSource(servletXtm, pack, imports, odlClass, out);
-                products.add(servletFile);
-            }
-            finally {
-                out.close();
-            }
-            if (null != servlets){
-                out = new PrintWriter(new FileWriter(servlets,true));
-                try {
-                    out.println(pack.getName()+".servlet."+parentClassName);
-                }
-                finally {
-                    out.close();
-                }
-            }
-        }
-        /*
-         * Lists
-         */
-        List<FieldDescriptor> fieldsOfList = OD.FieldsOfTypeList(pack, odlClass, imports);
-        if (!fieldsOfList.isEmpty()){
-            File listShortXtm = new File(odlDir,"list-short.xtm");
-            File listLongXtm = new File(odlDir,"list-long.xtm");
-
-            for (FieldDescriptor field: fieldsOfList){
-                String typeName = OD.ToString(field.getType());
-                gap.data.List.Type listType = gap.data.List.Type.For(typeName);
-                if (null != listType){
-                    switch(listType){
-                    case ListPrimitive:
-                        break;
-                    case ListShort:
-                        if (listShortXtm.isFile()){
-                            String childClassName = OD.ChildClassName(field);
-                            String listClassName = OD.ListShortClassName(parentClassName,childClassName);
-                            if (null != listClassName){
-                                File listFile = new File(javaDir,listClassName+".java");
-                                PrintWriter out = new PrintWriter(new FileWriter(listFile));
-                                try {
-                                    OD.GenerateListSource(listShortXtm, pack, imports, odlClass, field,
-                                                          parentClassName, childClassName, listClassName, listType,
-                                                          out);
-                                    products.add(listFile);
-                                }
-                                finally {
-                                    out.close();
-                                }
-                            }
-                        }
-                        break;
-                    case ListLong:
-                        if (listLongXtm.isFile()){
-                            String childClassName = OD.ChildClassName(field);
-                            String listClassName = OD.ListLongClassName(parentClassName,childClassName);
-                            if (null != listClassName){
-                                File listFile = new File(javaDir,listClassName+".java");
-                                PrintWriter out = new PrintWriter(new FileWriter(listFile));
-                                try {
-                                    OD.GenerateListSource(listLongXtm, pack, imports, odlClass, field,
-                                                          parentClassName, childClassName, listClassName, listType, 
-                                                          out);
-                                    products.add(listFile);
-                                }
-                                finally {
-                                    out.close();
-                                }
-                            }
-                        }
-                        break;
-                    default:
-                        break;
+                if (null != beans){
+                    out = new PrintWriter(new FileWriter(beans,true));
+                    try {
+                        out.println(pack.getName()+'.'+parentClassName);
+                    }
+                    finally {
+                        out.close();
                     }
                 }
             }
+            /*
+             * Validate
+             */
+            {
+                File validateXtm = new File(odlDir,"bean-validate.xtm");
+                File validateFile = new File(javaDir,"validate/"+parentClassName+".java");
+                PrintWriter out = new PrintWriter(new FileWriter(validateFile));
+                try {
+                    OD.GenerateBeanSource(validateXtm, pack, imports, odlClass, out);
+                    products.add(validateFile);
+                }
+                finally {
+                    out.close();
+                }
+            }
+            /*
+             * Servlet
+             */
+            {
+                File servletXtm = new File(odlDir,"bean-servlet.xtm");
+                File servletFile = new File(javaDir,"servlet/"+parentClassName+".java");
+                PrintWriter out = new PrintWriter(new FileWriter(servletFile));
+                try {
+                    OD.GenerateBeanSource(servletXtm, pack, imports, odlClass, out);
+                    products.add(servletFile);
+                }
+                finally {
+                    out.close();
+                }
+                if (null != servlets){
+                    out = new PrintWriter(new FileWriter(servlets,true));
+                    try {
+                        out.println(pack.getName()+".servlet."+parentClassName);
+                    }
+                    finally {
+                        out.close();
+                    }
+                }
+            }
+            /*
+             * Lists
+             */
+            List<FieldDescriptor> fieldsOfList = OD.FieldsOfTypeList(pack, odlClass, imports);
+            if (!fieldsOfList.isEmpty()){
+                File listShortXtm = new File(odlDir,"list-short.xtm");
+                File listLongXtm = new File(odlDir,"list-long.xtm");
+
+                for (FieldDescriptor field: fieldsOfList){
+                    String typeName = OD.ToString(field.getType());
+                    gap.data.List.Type listType = gap.data.List.Type.For(typeName);
+                    if (null != listType){
+                        switch(listType){
+                        case ListPrimitive:
+                            break;
+                        case ListShort:
+                            if (listShortXtm.isFile()){
+                                String childClassName = OD.ChildClassName(field);
+                                String listClassName = OD.ListShortClassName(parentClassName,childClassName);
+                                if (null != listClassName){
+                                    File listFile = new File(javaDir,listClassName+".java");
+                                    PrintWriter out = new PrintWriter(new FileWriter(listFile));
+                                    try {
+                                        OD.GenerateListSource(listShortXtm, pack, imports, odlClass, field,
+                                                              parentClassName, childClassName, listClassName, listType,
+                                                              out);
+                                        products.add(listFile);
+                                    }
+                                    finally {
+                                        out.close();
+                                    }
+                                }
+                            }
+                            break;
+                        case ListLong:
+                            if (listLongXtm.isFile()){
+                                String childClassName = OD.ChildClassName(field);
+                                String listClassName = OD.ListLongClassName(parentClassName,childClassName);
+                                if (null != listClassName){
+                                    File listFile = new File(javaDir,listClassName+".java");
+                                    PrintWriter out = new PrintWriter(new FileWriter(listFile));
+                                    try {
+                                        OD.GenerateListSource(listLongXtm, pack, imports, odlClass, field,
+                                                              parentClassName, childClassName, listClassName, listType, 
+                                                              out);
+                                        products.add(listFile);
+                                    }
+                                    finally {
+                                        out.close();
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }
+            }
+            return products;
         }
-        return products;
+        catch (Syntax syntax){
+
+            throw new Syntax("In '"+odl+"'",syntax);
+        }
     }
     /**
      * Run on directories

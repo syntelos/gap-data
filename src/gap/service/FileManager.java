@@ -19,9 +19,10 @@
  */
 package gap.service;
 
-import gap.data.Resource;
-import gap.service.jac.Output;
-import gap.service.jac.Input;
+import gap.*;
+import gap.data.*;
+import gap.util.*;
+import gap.service.jac.*;
 
 import gap.jac.tools.FileObject;
 import gap.jac.tools.JavaCompiler;
@@ -132,11 +133,14 @@ public class FileManager
         extends java.lang.IllegalStateException
     {
         public final String classname;
-        public final Resource descriptor;
+        /**
+         * {@link gap.data.Resource} or {@link gap.data.Tool}
+         */
+        public final BigTable descriptor;
         public final String errors;
 
 
-        CompileError(String classname, Resource desc, StringWriter err){
+        CompileError(String classname, BigTable desc, StringWriter err){
             super(classname);
             this.classname = classname;
             this.descriptor = desc;
@@ -315,16 +319,16 @@ public class FileManager
         String servletClassName = desc.getServletClassname(true);
         if (null != servletClassName){
             try {
-                Class jclass;
+                Class<gap.service.Servlet> jclass;
                 try {
-                    jclass = Class.forName(servletClassName);
+                    jclass = (Class<gap.service.Servlet>)Class.forName(servletClassName);
                 }
                 catch (ClassNotFoundException not){
 
                     jclass = this.define(desc);
                 }
                 if (null != jclass){
-                    Servlet servlet = (Servlet)jclass.newInstance();
+                    Servlet servlet = jclass.newInstance();
                     servlet.init(Servlet.Config);
                     return servlet;
                 }
@@ -384,12 +388,97 @@ public class FileManager
             return false;
     }
 
-    public Class define(Resource desc){
+    public Class<gap.service.Servlet> define(Resource desc){
         String classname = desc.getServletClassname(true);
         if (null != classname){
             Blob classfile = desc.getServletClassfileJvm(true);
             if (null != classfile)
-                return this.define(classname,classfile.getBytes());
+                return (Class<gap.service.Servlet>)this.define(classname,classfile.getBytes());
+        }
+        return null;
+    }
+
+    public Function getFunction(Servlet instance, Request request, Response response, Resource resource, Tool desc){
+
+        String functionClassName = desc.getFunctionClassname(true);
+        if (null != functionClassName){
+            try {
+                Class jclass;
+                try {
+                    jclass = Class.forName(functionClassName);
+                }
+                catch (ClassNotFoundException not){
+
+                    jclass = this.define(desc);
+                }
+                if (null != jclass){
+                    Function.Constructor ctor = new Function.Constructor(jclass);
+
+                    return ctor.create(instance, request, response, resource, desc);
+                }
+                else
+                    return null;
+            }
+            catch (Exception any){
+                LogRecord rec = new LogRecord(Level.SEVERE,"error");
+                rec.setThrown(any);
+                FileManager.Log.log(rec);
+                return null;
+            }
+        }
+        else
+            return null;
+    }
+
+    public boolean compile(Tool desc)
+        throws java.io.IOException,
+               FileManager.CompileError
+    {
+        String className = desc.getFunctionClassname(true);
+        String sourceText = gap.Strings.TextToString(desc.getFunctionSourceJava(true));
+
+        if (null != className && null != sourceText){
+
+            Reader in = new java.io.StringReader(sourceText); 
+            StringWriter err = new StringWriter();
+            ByteArrayOutputStream bin = new ByteArrayOutputStream();
+
+            URI uri = FileManager.ToUri(className);
+
+            List<JavaFileObject> units = new java.util.ArrayList<JavaFileObject>(1);
+            {
+                units.add(new Input(uri,Kind.SOURCE,in));
+            }
+
+            this.output.put(uri,new Output(uri,Kind.CLASS,bin));
+
+            JavaCompiler tool  = new gap.jac.api.JavacTool();
+            try {
+                gap.jac.tools.JavaCompiler.CompilationTask task =
+                    tool.getTask(err, this, null, Options, null, units);
+
+                if (task.call()){
+                    desc.setFunctionClassfileJvm(new Blob(bin.toByteArray()));
+                    desc.save();
+                    return true;
+                }
+                else
+                    throw new CompileError(className,desc,err);
+            }
+            finally {
+                tool.destroy();
+            }
+        }
+        else 
+            return false;
+    }
+
+    public Class<gap.data.Function> define(Tool desc){
+        String classname = desc.getFunctionClassname(true);
+        if (null != classname){
+            Blob classfile = desc.getFunctionClassfileJvm(true);
+            if (null != classfile)
+                return (Class<gap.data.Function>)this.define(classname,classfile.getBytes());
         }
         return null;
     }

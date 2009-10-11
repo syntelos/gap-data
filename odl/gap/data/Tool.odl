@@ -17,7 +17,9 @@ child Tool version 1
     String buttonHiGraphicUri;
     String buttonLoGraphicUri;
     String buttonOffGraphicUri;
-    String methodName;
-    Text methodBody;
-    Blob methodClassfileJvm;
+    String functionMethodname;
+    String functionClassname;
+    Text functionBody;
+    Text functionSourceJava;
+    Blob functionClassfileJvm;
 }

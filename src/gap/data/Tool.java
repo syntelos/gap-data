@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-10T17:23:49.587Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T13:24:02.462Z",comments="gap.data")
 public final class Tool
     extends gap.data.BigTable
     implements DataInheritance<Tool>,
@@ -237,9 +237,11 @@ public final class Tool
         ButtonHiGraphicUri("buttonHiGraphicUri"),
         ButtonLoGraphicUri("buttonLoGraphicUri"),
         ButtonOffGraphicUri("buttonOffGraphicUri"),
-        MethodName("methodName"),
-        MethodBody("methodBody"),
-        MethodClassfileJvm("methodClassfileJvm");
+        FunctionMethodname("functionMethodname"),
+        FunctionClassname("functionClassname"),
+        FunctionBody("functionBody"),
+        FunctionSourceJava("functionSourceJava"),
+        FunctionClassfileJvm("functionClassfileJvm");
 
 
         private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -287,12 +289,16 @@ public final class Tool
                 return instance.getButtonLoGraphicUri(mayInherit);
             case ButtonOffGraphicUri:
                 return instance.getButtonOffGraphicUri(mayInherit);
-            case MethodName:
-                return instance.getMethodName(mayInherit);
-            case MethodBody:
-                return instance.getMethodBody(mayInherit);
-            case MethodClassfileJvm:
-                return instance.getMethodClassfileJvm(mayInherit);
+            case FunctionMethodname:
+                return instance.getFunctionMethodname(mayInherit);
+            case FunctionClassname:
+                return instance.getFunctionClassname(mayInherit);
+            case FunctionBody:
+                return instance.getFunctionBody(mayInherit);
+            case FunctionSourceJava:
+                return instance.getFunctionSourceJava(mayInherit);
+            case FunctionClassfileJvm:
+                return instance.getFunctionClassfileJvm(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Tool");
             }
@@ -325,12 +331,16 @@ public final class Tool
                 return instance.setButtonLoGraphicUri( (String)value);
             case ButtonOffGraphicUri:
                 return instance.setButtonOffGraphicUri( (String)value);
-            case MethodName:
-                return instance.setMethodName( (String)value);
-            case MethodBody:
-                return instance.setMethodBody( (Text)value);
-            case MethodClassfileJvm:
-                return instance.setMethodClassfileJvm( (Blob)value);
+            case FunctionMethodname:
+                return instance.setFunctionMethodname( (String)value);
+            case FunctionClassname:
+                return instance.setFunctionClassname( (String)value);
+            case FunctionBody:
+                return instance.setFunctionBody( (Text)value);
+            case FunctionSourceJava:
+                return instance.setFunctionSourceJava( (Text)value);
+            case FunctionClassfileJvm:
+                return instance.setFunctionClassfileJvm( (Blob)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Tool");
             }
@@ -368,9 +378,11 @@ public final class Tool
     private volatile String buttonHiGraphicUri;    
     private volatile String buttonLoGraphicUri;    
     private volatile String buttonOffGraphicUri;    
-    private volatile String methodName;    
-    private volatile Text methodBody;    
-    private volatile Blob methodClassfileJvm;    
+    private volatile String functionMethodname;    
+    private volatile String functionClassname;    
+    private volatile Text functionBody;    
+    private volatile Text functionSourceJava;    
+    private volatile Blob functionClassfileJvm;    
 
 
 
@@ -418,9 +430,11 @@ public final class Tool
         this.buttonHiGraphicUri = null;
         this.buttonLoGraphicUri = null;
         this.buttonOffGraphicUri = null;
-        this.methodName = null;
-        this.methodBody = null;
-        this.methodClassfileJvm = null;
+        this.functionMethodname = null;
+        this.functionClassname = null;
+        this.functionBody = null;
+        this.functionSourceJava = null;
+        this.functionClassfileJvm = null;
     }
     public boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -933,132 +947,220 @@ public final class Tool
             return false;
     }
 
-    public boolean hasMethodName(boolean mayInherit){
-        return (null != this.getMethodName(mayInherit));
+    public boolean hasFunctionMethodname(boolean mayInherit){
+        return (null != this.getFunctionMethodname(mayInherit));
     }
-    public boolean hasNotMethodName(boolean mayInherit){
-        return (null == this.getMethodName(mayInherit));
+    public boolean hasNotFunctionMethodname(boolean mayInherit){
+        return (null == this.getFunctionMethodname(mayInherit));
     }
-    public boolean dropMethodName(){
-        if (null != this.methodName){
-            this.methodName = null;
+    public boolean dropFunctionMethodname(){
+        if (null != this.functionMethodname){
+            this.functionMethodname = null;
             return true;
         }
         else
             return false;
     }
-    public String getMethodName(boolean mayInherit){
+    public String getFunctionMethodname(boolean mayInherit){
         if (mayInherit){
-            String methodName = this.methodName;
-            if (null == methodName && this.hasInheritFrom()){
+            String functionMethodname = this.functionMethodname;
+            if (null == functionMethodname && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getMethodName(true);
+                    return inheritFrom.getFunctionMethodname(true);
             }
-            return methodName;
+            return functionMethodname;
         }
         else
-            return this.methodName;
+            return this.functionMethodname;
     }
-    public boolean setMethodName(String methodName, boolean withInheritance){
-        if (IsNotEqual(this.methodName,this.getMethodName(withInheritance))){
-            this.methodName = methodName;
+    public boolean setFunctionMethodname(String functionMethodname, boolean withInheritance){
+        if (IsNotEqual(this.functionMethodname,this.getFunctionMethodname(withInheritance))){
+            this.functionMethodname = functionMethodname;
             return true;
         }
         else
             return false;
     }
-    public boolean setMethodName(String methodName){
-        if (IsNotEqual(this.methodName,methodName)){
-            this.methodName = methodName;
+    public boolean setFunctionMethodname(String functionMethodname){
+        if (IsNotEqual(this.functionMethodname,functionMethodname)){
+            this.functionMethodname = functionMethodname;
             return true;
         }
         else
             return false;
     }
 
-    public boolean hasMethodBody(boolean mayInherit){
-        return (null != this.getMethodBody(mayInherit));
+    public boolean hasFunctionClassname(boolean mayInherit){
+        return (null != this.getFunctionClassname(mayInherit));
     }
-    public boolean hasNotMethodBody(boolean mayInherit){
-        return (null == this.getMethodBody(mayInherit));
+    public boolean hasNotFunctionClassname(boolean mayInherit){
+        return (null == this.getFunctionClassname(mayInherit));
     }
-    public boolean dropMethodBody(){
-        if (null != this.methodBody){
-            this.methodBody = null;
+    public boolean dropFunctionClassname(){
+        if (null != this.functionClassname){
+            this.functionClassname = null;
             return true;
         }
         else
             return false;
     }
-    public Text getMethodBody(boolean mayInherit){
+    public String getFunctionClassname(boolean mayInherit){
         if (mayInherit){
-            Text methodBody = this.methodBody;
-            if (null == methodBody && this.hasInheritFrom()){
+            String functionClassname = this.functionClassname;
+            if (null == functionClassname && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getMethodBody(true);
+                    return inheritFrom.getFunctionClassname(true);
             }
-            return methodBody;
+            return functionClassname;
         }
         else
-            return this.methodBody;
+            return this.functionClassname;
     }
-    public boolean setMethodBody(Text methodBody, boolean withInheritance){
-        if (IsNotEqual(this.methodBody,this.getMethodBody(withInheritance))){
-            this.methodBody = methodBody;
+    public boolean setFunctionClassname(String functionClassname, boolean withInheritance){
+        if (IsNotEqual(this.functionClassname,this.getFunctionClassname(withInheritance))){
+            this.functionClassname = functionClassname;
             return true;
         }
         else
             return false;
     }
-    public boolean setMethodBody(Text methodBody){
-        if (IsNotEqual(this.methodBody,methodBody)){
-            this.methodBody = methodBody;
+    public boolean setFunctionClassname(String functionClassname){
+        if (IsNotEqual(this.functionClassname,functionClassname)){
+            this.functionClassname = functionClassname;
             return true;
         }
         else
             return false;
     }
 
-    public boolean hasMethodClassfileJvm(boolean mayInherit){
-        return (null != this.getMethodClassfileJvm(mayInherit));
+    public boolean hasFunctionBody(boolean mayInherit){
+        return (null != this.getFunctionBody(mayInherit));
     }
-    public boolean hasNotMethodClassfileJvm(boolean mayInherit){
-        return (null == this.getMethodClassfileJvm(mayInherit));
+    public boolean hasNotFunctionBody(boolean mayInherit){
+        return (null == this.getFunctionBody(mayInherit));
     }
-    public boolean dropMethodClassfileJvm(){
-        if (null != this.methodClassfileJvm){
-            this.methodClassfileJvm = null;
+    public boolean dropFunctionBody(){
+        if (null != this.functionBody){
+            this.functionBody = null;
             return true;
         }
         else
             return false;
     }
-    public Blob getMethodClassfileJvm(boolean mayInherit){
+    public Text getFunctionBody(boolean mayInherit){
         if (mayInherit){
-            Blob methodClassfileJvm = this.methodClassfileJvm;
-            if (null == methodClassfileJvm && this.hasInheritFrom()){
+            Text functionBody = this.functionBody;
+            if (null == functionBody && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getMethodClassfileJvm(true);
+                    return inheritFrom.getFunctionBody(true);
             }
-            return methodClassfileJvm;
+            return functionBody;
         }
         else
-            return this.methodClassfileJvm;
+            return this.functionBody;
     }
-    public boolean setMethodClassfileJvm(Blob methodClassfileJvm, boolean withInheritance){
-        if (IsNotEqual(this.methodClassfileJvm,this.getMethodClassfileJvm(withInheritance))){
-            this.methodClassfileJvm = methodClassfileJvm;
+    public boolean setFunctionBody(Text functionBody, boolean withInheritance){
+        if (IsNotEqual(this.functionBody,this.getFunctionBody(withInheritance))){
+            this.functionBody = functionBody;
             return true;
         }
         else
             return false;
     }
-    public boolean setMethodClassfileJvm(Blob methodClassfileJvm){
-        if (IsNotEqual(this.methodClassfileJvm,methodClassfileJvm)){
-            this.methodClassfileJvm = methodClassfileJvm;
+    public boolean setFunctionBody(Text functionBody){
+        if (IsNotEqual(this.functionBody,functionBody)){
+            this.functionBody = functionBody;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public boolean hasFunctionSourceJava(boolean mayInherit){
+        return (null != this.getFunctionSourceJava(mayInherit));
+    }
+    public boolean hasNotFunctionSourceJava(boolean mayInherit){
+        return (null == this.getFunctionSourceJava(mayInherit));
+    }
+    public boolean dropFunctionSourceJava(){
+        if (null != this.functionSourceJava){
+            this.functionSourceJava = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public Text getFunctionSourceJava(boolean mayInherit){
+        if (mayInherit){
+            Text functionSourceJava = this.functionSourceJava;
+            if (null == functionSourceJava && this.hasInheritFrom()){
+                Tool inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getFunctionSourceJava(true);
+            }
+            return functionSourceJava;
+        }
+        else
+            return this.functionSourceJava;
+    }
+    public boolean setFunctionSourceJava(Text functionSourceJava, boolean withInheritance){
+        if (IsNotEqual(this.functionSourceJava,this.getFunctionSourceJava(withInheritance))){
+            this.functionSourceJava = functionSourceJava;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setFunctionSourceJava(Text functionSourceJava){
+        if (IsNotEqual(this.functionSourceJava,functionSourceJava)){
+            this.functionSourceJava = functionSourceJava;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public boolean hasFunctionClassfileJvm(boolean mayInherit){
+        return (null != this.getFunctionClassfileJvm(mayInherit));
+    }
+    public boolean hasNotFunctionClassfileJvm(boolean mayInherit){
+        return (null == this.getFunctionClassfileJvm(mayInherit));
+    }
+    public boolean dropFunctionClassfileJvm(){
+        if (null != this.functionClassfileJvm){
+            this.functionClassfileJvm = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public Blob getFunctionClassfileJvm(boolean mayInherit){
+        if (mayInherit){
+            Blob functionClassfileJvm = this.functionClassfileJvm;
+            if (null == functionClassfileJvm && this.hasInheritFrom()){
+                Tool inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getFunctionClassfileJvm(true);
+            }
+            return functionClassfileJvm;
+        }
+        else
+            return this.functionClassfileJvm;
+    }
+    public boolean setFunctionClassfileJvm(Blob functionClassfileJvm, boolean withInheritance){
+        if (IsNotEqual(this.functionClassfileJvm,this.getFunctionClassfileJvm(withInheritance))){
+            this.functionClassfileJvm = functionClassfileJvm;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setFunctionClassfileJvm(Blob functionClassfileJvm){
+        if (IsNotEqual(this.functionClassfileJvm,functionClassfileJvm)){
+            this.functionClassfileJvm = functionClassfileJvm;
             return true;
         }
         else
