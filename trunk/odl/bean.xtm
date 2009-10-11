@@ -527,7 +527,7 @@ public final class {{=class_name}}
         {{=parent_class_name}} parent = this.parent;
         if (null == parent){
             Key parentKey = this.parentKey;
-            if (null != parentKeyKey){
+            if (null != parentKey){
                 parent = {{=parent_class_name}}.Get(parentKey);
                 this.parent = parent;
             }

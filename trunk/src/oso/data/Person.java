@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "oso.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T14:20:34.266Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T16:44:56.062Z",comments="oso.data")
 public final class Person
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -287,10 +287,6 @@ public final class Person
     public Person() {
         super();
     }
-    public Person(Key child) {
-        super();
-        this.setKey(child);
-    }
     public Person(String logonId) {
         super();
         this.setLogonId(logonId);
@@ -341,6 +337,7 @@ public final class Person
         else
             return false;
     }
+
 
     public boolean hasKey(boolean mayInherit){
         return (null != this.getKey(mayInherit));
