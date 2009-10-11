@@ -29,7 +29,7 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-11T16:44:58.096Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-11T17:31:49.948Z",comments="gap.data")
 public class Template
     extends gap.servlet.Site
 {
@@ -54,7 +54,7 @@ public class Template
 
                 Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
 
-                gap.data.Template instance = gap.data.Template.ForLongId(parentKey,req.getPath(1));
+                gap.data.Template instance = gap.data.Template.ForShortId(parentKey,req.getPath(1));
 
                 if (null != instance){
 
@@ -63,11 +63,13 @@ public class Template
                     return top;
                 }
             }
-            else {
+            else if (req.hasPath(1)){
                 req.parameters.dictionaryInto(top);
                 com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
-                com.google.appengine.api.datastore.Query query = gap.data.Template.CreateQueryFor();
+                Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
+
+                com.google.appengine.api.datastore.Query query = gap.data.Template.CreateQueryFor(parentKey);
 
                 List<gap.data.Template> list = (List<gap.data.Template>)gap.data.Template.QueryN(query,page);
 

@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T16:44:57.807Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T17:31:49.619Z",comments="gap.data")
 public final class Tool
     extends gap.data.BigTable
     implements DataInheritance<Tool>,
@@ -44,9 +44,9 @@ public final class Tool
 
 
 
-    public final static Key KeyLongIdFor(Key ancestor, String name){
+    public final static Key KeyShortIdFor(Key ancestor, String name){
         String id = IdFor(ancestor, name);
-        return KeyLongFor(ancestor,id);
+        return KeyShortFor(ancestor,id);
     }
 
 
@@ -60,9 +60,9 @@ public final class Tool
     }
 
 
-    public final static Tool ForLongName(Key ancestor, String name){
+    public final static Tool ForShortName(Key ancestor, String name){
         if (null != name){
-            Key key = KeyLongIdFor(ancestor, name);
+            Key key = KeyShortIdFor(ancestor, name);
             Tool instance = (Tool)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -76,8 +76,8 @@ public final class Tool
     }
 
 
-    public final static Tool GetCreateLong(Key ancestor, String name){
-        Tool tool = ForLongName(ancestor, name);
+    public final static Tool GetCreateShort(Key ancestor, String name){
+        Tool tool = ForShortName(ancestor, name);
         if (null == tool){
             tool = new Tool(ancestor, name);
             tool = (Tool)gap.data.Store.Put(tool);
@@ -87,14 +87,14 @@ public final class Tool
 
 
 
-    public final static Key KeyLongFor(Key ancestor, String id){
-        return KeyFactory.createKey(KIND,id);
+    public final static Key KeyShortFor(Key ancestor, String id){
+        return KeyFactory.createKey(ancestor,KIND,id);
     }
 
 
-    public final static Tool ForLongId(Key ancestor, String id){
+    public final static Tool ForShortId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyLongFor(ancestor,id);
+            Key key = KeyShortFor(ancestor,id);
             Tool instance = (Tool)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -134,7 +134,7 @@ public final class Tool
     /**
      * Test for uniqueness and iterate under collisions.
      */
-    public final static Key NewRandomKeyLong(Key ancestor){
+    public final static Key NewRandomKeyShort(Key ancestor){
         if (null != ancestor){
             /*
              * Source matter for data local uniqueness
@@ -148,7 +148,7 @@ public final class Tool
             do {
                 matter ^= random.nextLong();
                 String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(KIND,idString);
+                Key key = KeyFactory.createKey(ancestor,KIND,idString);
                 if (null == GetKey(key))
                     return key;
             }
@@ -414,7 +414,7 @@ public final class Tool
         this.parentKey = ancestor;
         String id = IdFor(ancestor,  name);
         this.setId(id);
-        Key key = KeyLongFor(ancestor,id);
+        Key key = KeyShortFor(ancestor,id);
         this.setKey(key);
     }
 

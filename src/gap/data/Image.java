@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T16:44:57.352Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T17:31:49.142Z",comments="gap.data")
 public final class Image
     extends gap.data.BigTable
     implements DataInheritance<Image>,
@@ -44,9 +44,9 @@ public final class Image
 
 
 
-    public final static Key KeyLongIdFor(Key ancestor, String base, String name){
+    public final static Key KeyShortIdFor(Key ancestor, String base, String name){
         String id = IdFor(ancestor, base,  name);
-        return KeyLongFor(ancestor,id);
+        return KeyShortFor(ancestor,id);
     }
 
 
@@ -61,9 +61,9 @@ public final class Image
     }
 
 
-    public final static Image ForLongBaseName(Key ancestor, String base, String name){
+    public final static Image ForShortBaseName(Key ancestor, String base, String name){
         if (null != base && null != name){
-            Key key = KeyLongIdFor(ancestor, base, name);
+            Key key = KeyShortIdFor(ancestor, base, name);
             Image instance = (Image)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -77,8 +77,8 @@ public final class Image
     }
 
 
-    public final static Image GetCreateLong(Key ancestor, String base, String name){
-        Image image = ForLongBaseName(ancestor, base, name);
+    public final static Image GetCreateShort(Key ancestor, String base, String name){
+        Image image = ForShortBaseName(ancestor, base, name);
         if (null == image){
             image = new Image(ancestor, base, name);
             image = (Image)gap.data.Store.Put(image);
@@ -88,14 +88,14 @@ public final class Image
 
 
 
-    public final static Key KeyLongFor(Key ancestor, String id){
-        return KeyFactory.createKey(KIND,id);
+    public final static Key KeyShortFor(Key ancestor, String id){
+        return KeyFactory.createKey(ancestor,KIND,id);
     }
 
 
-    public final static Image ForLongId(Key ancestor, String id){
+    public final static Image ForShortId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyLongFor(ancestor,id);
+            Key key = KeyShortFor(ancestor,id);
             Image instance = (Image)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -135,7 +135,7 @@ public final class Image
     /**
      * Test for uniqueness and iterate under collisions.
      */
-    public final static Key NewRandomKeyLong(Key ancestor){
+    public final static Key NewRandomKeyShort(Key ancestor){
         if (null != ancestor){
             /*
              * Source matter for data local uniqueness
@@ -149,7 +149,7 @@ public final class Image
             do {
                 matter ^= random.nextLong();
                 String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(KIND,idString);
+                Key key = KeyFactory.createKey(ancestor,KIND,idString);
                 if (null == GetKey(key))
                     return key;
             }
@@ -356,7 +356,7 @@ public final class Image
         this.parentKey = ancestor;
         String id = IdFor(ancestor,  base, name);
         this.setId(id);
-        Key key = KeyLongFor(ancestor,id);
+        Key key = KeyShortFor(ancestor,id);
         this.setKey(key);
     }
 

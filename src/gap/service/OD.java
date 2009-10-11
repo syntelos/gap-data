@@ -115,6 +115,7 @@ public class OD
 
             ClassDescriptor.Relation.Type classRelation = null;
             String classRelationParent = null;
+            ClassDescriptor parent = null;
             if (cd instanceof ClassDescriptor.Relation){
                 ClassDescriptor.Relation cdr = (ClassDescriptor.Relation)cd;
                 classRelation = cdr.getRelation();
@@ -144,8 +145,14 @@ public class OD
 
                 if (null == classRelationParent)
                     throw new ODStateException(cd,"The object data model requires a parent class name.");
-                else
+                else {
+
                     top.setVariable("parent_class_name",classRelationParent);
+
+                    parent = gap.odl.Main.ClassDescriptorFor(classRelationParent);
+                    if (null == parent)
+                        throw new ODStateException(cd,"Parent class not found.");
+                }
             }
             else if (ClassDescriptor.Relation.Type.ChildGroup.equals(classRelation)){
                 top.addSection("class_re_not_none");
@@ -156,8 +163,14 @@ public class OD
                 top.addSection("class_re_childgroup");
                 if (null == classRelationParent)
                     throw new ODStateException(cd,"The object data model requires a parent class name.");
-                else
+                else {
+
                     top.setVariable("parent_class_name",classRelationParent);
+
+                    parent = gap.odl.Main.ClassDescriptorFor(classRelationParent);
+                    if (null == parent)
+                        throw new ODStateException(cd,"Parent class not found.");
+                }
             }
             else
                 throw new IllegalStateException("Unrecognized class relation "+classRelation.name());
@@ -1049,5 +1062,45 @@ public class OD
             }
         }
         return null;
+    }
+    public final static FieldDescriptor FindFieldFor(ClassDescriptor parent, ClassDescriptor child){
+        if (null != parent && null != child){
+            if (parent.hasFields()){
+                for (FieldDescriptor parentField : parent.getFields()){
+                    String parentFieldType = ToString(parentField.getType());
+                    gap.data.List.Type listType = gap.data.List.Type.For(parentFieldType);
+                    if (null != listType){
+                        String[] parentFieldTypeParameters = FieldTypeParameters(parentFieldType);
+                        if (null != parentFieldTypeParameters && 1 == parentFieldTypeParameters.length){
+                            String childFieldType = parentFieldTypeParameters[0];
+                            if (childFieldType.equals(child.getName()))
+                                return parentField;
+                        }
+                    }
+                }
+            }
+            throw new ODStateException(child,"Child relation field not found in parent.");
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static boolean IsFieldShortIn(ClassDescriptor parent, ClassDescriptor child){
+        FieldDescriptor parentField = FindFieldFor(parent,child);
+        String parentFieldType = ToString(parentField.getType());
+        gap.data.List.Type listType = gap.data.List.Type.For(parentFieldType);
+        if (null != listType){
+            switch (listType){
+            case ListPrimitive:
+                return false;
+            case ListLong:
+                return false;
+            case ListShort:
+                return true;
+            default:
+                throw new ODStateException(child,"Unrecognized list type.");
+            }
+        }
+        else
+            throw new ODStateException(child,"Unrecognized field type.");
     }
 }

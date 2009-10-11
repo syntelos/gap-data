@@ -262,15 +262,22 @@ public final class Class
 
         if (null != spec && null != name){
 
-            if ("parent".equals(spec))
-                this.relation = Relation.Type.Parent;
-            else if ("child".equals(spec))
-                this.relation = Relation.Type.Child;
-            else
-                this.relation = Relation.Type.None;
-
             this.name = name;
             this.nameDecamel = Decamel(name);
+
+            if ("parent".equals(spec))
+                this.relation = Relation.Type.Parent;
+            else if ("child".equals(spec)){
+
+                Class parentClass = Main.ClassDescriptorFor(parent);
+
+                if (gap.service.OD.IsFieldShortIn(parentClass,this))
+                    this.relation = Relation.Type.ChildGroup;
+                else
+                    this.relation = Relation.Type.Child;
+            }
+            else
+                this.relation = Relation.Type.None;
         }
         else
             throw new Syntax("Syntax error missing class declaration.");

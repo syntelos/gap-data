@@ -29,7 +29,7 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-11T16:44:57.416Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-11T17:31:49.214Z",comments="gap.data")
 public class Image
     extends gap.servlet.Site
 {
@@ -54,7 +54,7 @@ public class Image
 
                 Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
 
-                gap.data.Image instance = gap.data.Image.ForLongId(parentKey,req.getPath(1));
+                gap.data.Image instance = gap.data.Image.ForShortId(parentKey,req.getPath(1));
 
                 if (null != instance){
 
@@ -63,11 +63,13 @@ public class Image
                     return top;
                 }
             }
-            else {
+            else if (req.hasPath(1)){
                 req.parameters.dictionaryInto(top);
                 com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
-                com.google.appengine.api.datastore.Query query = gap.data.Image.CreateQueryFor();
+                Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
+
+                com.google.appengine.api.datastore.Query query = gap.data.Image.CreateQueryFor(parentKey);
 
                 List<gap.data.Image> list = (List<gap.data.Image>)gap.data.Image.QueryN(query,page);
 
