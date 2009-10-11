@@ -352,7 +352,8 @@ public final class {{=class_name}}
     public static enum Field
         implements gap.data.Field
     {
-        InheritFromKey("inheritFromKey"),{{#pfield}}
+        InheritFromKey("inheritFromKey"),{{#class_re_child_or_group}}
+        ParentKey("parentKey"),{{/class_re_child_or_group}}{{#pfield}}
         {{=field_nameCamel}}("{{=field_name}}"){{#pfield_it_NotLast}},{{/pfield_it_NotLast}}{{#pfield_it_Last}};{{/pfield_it_Last}}{{/pfield}}
 
 
@@ -376,7 +377,9 @@ public final class {{=class_name}}
         public static Object Get(Field field, {{=class_name}} instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
-                return instance.getInheritFromKey();{{#pfield}}
+                return instance.getInheritFromKey();{{#class_re_child_or_group}}
+            case ParentKey:
+                return instance.getParentKey();{{/class_re_child_or_group}}{{#pfield}}
             case {{=field_nameCamel}}:
                 return instance.get{{=field_nameCamel}}(mayInherit);{{/pfield}}
             default:
@@ -386,7 +389,9 @@ public final class {{=class_name}}
         public static boolean Set(Field field, {{=class_name}} instance, Object value){
             switch(field){
             case InheritFromKey:
-                return instance.setInheritFromKey( (Key)value);{{#pfield}}
+                return instance.setInheritFromKey( (Key)value);{{#class_re_child_or_group}}
+            case ParentKey:
+                return instance.setParentKey( (Key)value);{{/class_re_child_or_group}}{{#pfield}}
             case {{=field_nameCamel}}:
                 return instance.set{{=field_nameCamel}}( ({{=field_class}})value);{{/pfield}}
             default:
@@ -423,15 +428,12 @@ public final class {{=class_name}}
     private volatile transient {{=field_class}} {{=field_name}};    {{#field_is_transient}}// {{=data_model}}{{/field_is_transient}}{{/tfield}}
 
 {{#class_re_child_or_group}}
-    private volatile transient Key parentKey; {{/class_re_child_or_group}}
+    private volatile Key parentKey;
+    private volatile transient {{=parent_class_name}} parent;{{/class_re_child_or_group}}
 
 
     public {{=class_name}}() {
         super();
-    }
-    public {{=class_name}}(Key child) {
-        super();
-        this.set{{=field_key_nameCamel}}(child);
     }{{#field_hash_unique}}{{#class_re_not_child_or_group}}
     public {{=class_name}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
@@ -444,6 +446,7 @@ public final class {{=class_name}}
     public {{=class_name}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
+        this.parentKey = ancestor;
         String {{=field_unique_name}} = {{=field_unique_nameCamel}}For(ancestor, {{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         this.set{{=field_unique_nameCamel}}({{=field_unique_name}});{{#class_re_childgroup}}
         Key key = KeyShortFor(ancestor,{{=field_unique_name}});{{/class_re_childgroup}}{{#class_re_child}}
@@ -466,7 +469,8 @@ public final class {{=class_name}}
         if (null != {{=field_name}}){
             this.{{=field_name}} = null;
             {{=field_name}}.destroy();
-        }{{/cfield}}
+        }{{/cfield}}{{#class_re_child_or_group}}
+        this.parent = null;{{/class_re_child_or_group}}
     }
     public boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -495,6 +499,52 @@ public final class {{=class_name}}
         else
             return false;
     }
+{{#class_re_child_or_group}}
+    public boolean hasParentKey(){
+        return (null != this.parentKey);
+    }
+    public boolean hasNotParentKey(){
+        return (null == this.parentKey);
+    }
+    public Key getParentKey(){
+        return this.parentKey;
+    }
+    public boolean setParentKey(Key ancestor){
+        if (IsNotEqual(this.parentKey,ancestor)){
+            this.parentKey = ancestor;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean hasParent(){
+        return (null != this.parent || null != this.parentKey);
+    }
+    public boolean hasNotParent(){
+        return (null == this.parent && null == this.parentKey);
+    }
+    public {{=parent_class_name}} getParent(){
+        {{=parent_class_name}} parent = this.parent;
+        if (null == parent){
+            Key parentKey = this.parentKey;
+            if (null != parentKeyKey){
+                parent = {{=parent_class_name}}.Get(parentKey);
+                this.parent = parent;
+            }
+        }
+        return parent;
+    }
+    public boolean setParent({{=parent_class_name}} ancestor){
+        if (IsNotEqual(this.parent,ancestor)){
+            this.parent = ancestor;
+            if (null != ancestor)
+                this.parentKey = ancestor.getClassFieldKeyValue();
+            return true;
+        }
+        else
+            return false;
+    }
+{{/class_re_child_or_group}}
 {{#pfield}}
     public boolean has{{=field_nameCamel}}(boolean mayInherit){
         return (null != this.get{{=field_nameCamel}}(mayInherit));

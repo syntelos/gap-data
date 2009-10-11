@@ -192,12 +192,20 @@ public final class Function
     {
         if (this.hasMethod())
             return this.invoke(this.request, this.response, this.resource, this.tool);
-        else
-            throw new IllegalStateException();
+        else {
+            try {
+                this.service();
+            }
+            catch (java.io.IOException exc){
+            }
+            return null;
+        }
     }
     public void init()
         throws Function.MethodNotFound
     {
-
+    }
+    protected void service() throws java.io.IOException {
+        throw new IllegalStateException("Undefined function");
     }
 }

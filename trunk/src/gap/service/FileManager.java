@@ -21,6 +21,7 @@ package gap.service;
 
 import gap.*;
 import gap.data.*;
+import gap.jela.JelaProgram;
 import gap.util.*;
 import gap.service.jac.*;
 
@@ -430,14 +431,17 @@ public class FileManager
             return null;
     }
 
-    public boolean compile(Tool desc)
+    public boolean compile(Resource resource, Tool desc)
         throws java.io.IOException,
                FileManager.CompileError
     {
         String className = desc.getFunctionClassname(true);
         String sourceText = gap.Strings.TextToString(desc.getFunctionSourceJava(true));
         if (null == sourceText){
-
+            JelaProgram prog = new JelaProgram(resource,desc);
+            sourceText = prog.getSource();
+            desc.setFunctionSourceJava(Strings.TextFromString(sourceText));
+            desc.setFunctionClassname(prog.fullClassName);
         }
 
         if (null != className && null != sourceText){
