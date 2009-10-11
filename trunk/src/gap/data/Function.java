@@ -100,8 +100,7 @@ public final class Function
             this.init(bindings);
         }
         else {
-            gap.jbx.Function.List methods = new gap.jbx.Function.List(instance.getClass());
-            this.init(instance,methods);
+            this.init(instance,instance.getFunctionList());
         }
     }
 

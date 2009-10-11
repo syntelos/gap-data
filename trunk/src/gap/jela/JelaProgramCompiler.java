@@ -17,29 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-/*
- * Copyright (C) 2006 Sun Microsystems, Inc. All rights reserved. 
- * Use is subject to license terms.
- *
- * Redistribution and use in source and binary forms, with or without modification, are 
- * permitted provided that the following conditions are met: Redistributions of source code 
- * must retain the above copyright notice, this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other materials 
- * provided with the distribution. Neither the name of the Sun Microsystems nor the names of 
- * is contributors may be used to endorse or promote products derived from this software 
- * without specific prior written permission. 
-
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
- * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER 
- * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
 package gap.jela;
 
 import java.io.CharArrayWriter;
@@ -51,14 +28,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import javax.tools.FileObject;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.JavaFileObject.Kind;
-import javax.tools.JavaFileManager;
-import javax.tools.JavaFileManager.Location;
-import javax.tools.JavaFileManager;
-import javax.tools.ToolProvider;
+import gap.jac.tools.FileObject;
+import gap.jac.tools.JavaCompiler;
+import gap.jac.tools.JavaFileObject;
+import gap.jac.tools.JavaFileObject.Kind;
+import gap.jac.tools.JavaFileManager;
+import gap.jac.tools.JavaFileManager.Location;
+import gap.jac.tools.JavaFileManager;
+import gap.jac.tools.ToolProvider;
 import javax.script.ScriptContext;
 import javax.script.ScriptException;
 
@@ -66,7 +43,6 @@ import javax.script.ScriptException;
  * Simple interface to Java compiler using JSR 199 Compiler API, and
  * an in memory JavaFileManager.
  * 
- * @author A. Sundararajan
  * @author J. Pritchard
  * @since 1.6
  */
@@ -174,7 +150,7 @@ public final class JelaProgramCompiler
             }
             this.errors = new CharArrayWriter();
 
-            javax.tools.JavaCompiler.CompilationTask task =
+            gap.jac.tools.JavaCompiler.CompilationTask task =
                 this.tool.getTask(this.errors, this, null, Options, null, units);
 
             return task.call();
@@ -215,7 +191,7 @@ public final class JelaProgramCompiler
         }
     }
     /*
-     * javax/tools File Manager
+     * gap.jac.tools File Manager
      */
     public ClassLoader getClassLoader(Location location) {
         if (this.alive)

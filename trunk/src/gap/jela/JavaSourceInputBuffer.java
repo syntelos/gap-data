@@ -46,7 +46,7 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.CharBuffer;
-import javax.tools.JavaFileObject.Kind;
+import gap.jac.tools.JavaFileObject.Kind;
 
 /**
  * A file object used to represent Java source coming from a string.
@@ -55,7 +55,7 @@ import javax.tools.JavaFileObject.Kind;
  * @author J. Pritchard
  */
 public final class JavaSourceInputBuffer
-    extends javax.tools.SimpleJavaFileObject
+    extends gap.jac.tools.SimpleJavaFileObject
 {
 
     public final String code;

@@ -235,7 +235,7 @@ public final class JelaProgram
         else 
             return pc.getCompiledScript(this.je);
     }
-    public javax.tools.JavaFileObject getInputSource(){
+    public gap.jac.tools.JavaFileObject getInputSource(){
         return this.source;
     }
     public JelaScriptEngine getEngine(){
