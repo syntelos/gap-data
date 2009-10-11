@@ -85,6 +85,38 @@ public final class Main
         }
         return desc;
     }
+    public final static Class ClassDescriptorFor(gap.data.HasName clas)
+        throws IOException, Syntax
+    {
+        return ClassDescriptorFor(clas.getName());
+    }
+    /**
+     * @param name Class base name, typically the big table KIND name.
+     */
+    public final static Class ClassDescriptorFor(String name)
+        throws IOException, Syntax
+    {
+        Class desc;
+        synchronized(Classes){
+            desc = Classes.get(name);
+        }
+        if (null == desc){
+            Find find = new Find(new FindClass(name),ODLDir);
+            if (find.hasNext()){
+                Reader odlReader = new Reader(find.next());
+                try {
+                    desc = (new Class(odlReader));
+                }
+                finally {
+                    odlReader.close();
+                }
+                synchronized(Classes){
+                    Classes.put(name,desc);
+                }
+            }
+        }
+        return desc;
+    }
     /**
      * Generate bean, validate, servlet and list classes.
      */
@@ -360,6 +392,27 @@ public final class Main
         }
     }
     public final static FileFilter ODLFiles = new FileFilter();
+
+    private final static File ODLDir = new File("odl");
+
+    public final static class FindClass
+        extends Object
+        implements java.io.FileFilter
+    {
+        private final String name;
+
+        public FindClass(String name){
+            super();
+            this.name = name+".odl";
+        }
+
+        public boolean accept(File file){
+            if (file.isFile())
+                return (this.name.equals(file.getName()));
+            else
+                return (!file.getName().equals(".svn"));
+        }
+    }
 
     public final static File SrcFile(File odlDir, File srcDir, File odlFile){
         String odlDirPath = odlDir.getPath();

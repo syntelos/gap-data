@@ -109,6 +109,9 @@ public class {{=class_name}}
                 Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
 
                 com.google.appengine.api.datastore.Query query = {{=package_name}}.{{=class_name}}.CreateQueryFor(parentKey);
+
+                List<{{=package_name}}.{{=class_name}}> list = (List<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,page);
+
                 for ({{=package_name}}.{{=class_name}} instance : list){
 
                     instance.dictionaryInto(top);
