@@ -92,15 +92,14 @@ public final class JelaProgram
             this.iprintln("    super(instance,request,response,resource,tool);");
             this.iprintln("}");
             this.iprintln();
-            this.iprintln("public java.lang.Object invoke()");
-            this.iprintln("        throws gap.jbx.Function.InvokeErrorTarget, gap.jbx.Function.InvokeErrorNotInitialized");
+            this.iprintln("protected void service()");
+            this.iprintln("        throws java.io.IOException");
             this.iprintln("{");
             this.iopen();
             this.iprintln();
-            boolean re = true;
+
             for (String stmt : lines){
-                if (stmt.startsWith("return"))
-                    re = false;
+
                 if (stmt.endsWith("{")){
                     this.iprintln(stmt);
                     this.iopen();
@@ -111,10 +110,6 @@ public final class JelaProgram
                 }
                 else
                     this.iprintln(stmt);
-            }
-            if (re){
-                this.iprintln();
-                this.iprintln("return null;");
             }
             this.iclose();
             this.iprintln("}");
