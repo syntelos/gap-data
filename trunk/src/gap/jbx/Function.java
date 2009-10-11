@@ -609,7 +609,7 @@ public class Function
     /**
      * Script only init
      */
-    public final void init()
+    public void init()
         throws Function.MethodNotFound
     {
         if (null != this.language && null != this.script){
@@ -724,7 +724,7 @@ public class Function
     /**
      * Universal script or method / function invoke.
      */
-    public final Object invoke(Object... args)
+    public Object invoke(Object... args)
         throws Function.InvokeErrorAccess, Function.InvokeErrorTarget,
                Function.InvokeErrorNotInitialized
     {
@@ -753,7 +753,7 @@ public class Function
     /**
      * Script invoke
      */
-    public final Object invoke()
+    public Object invoke()
         throws Function.InvokeErrorTarget,
                Function.InvokeErrorNotInitialized
     {

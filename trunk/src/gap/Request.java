@@ -27,8 +27,10 @@ import gap.service.Protocol;
 import gap.service.Path;
 import gap.service.Accept;
 import gap.service.FileManager;
+import gap.service.Function;
 import gap.service.Logon;
 import gap.service.Parameters;
+import gap.service.Servlet;
 
 import hapax.TemplateDictionary;
 
@@ -182,11 +184,14 @@ public class Request
     {
         return this.fileManager.getTemplate(path);
     }
-    public final gap.service.Servlet getServlet(){
+    public final Servlet getServlet(){
         return this.fileManager.getServlet(this.path);
     }
-    public final gap.service.Servlet getServlet(Path path){
+    public final Servlet getServlet(Path path){
         return this.fileManager.getServlet(path);
+    }
+    public final Function getFunction(Servlet instance, Request request, Response response, Resource resource, Tool tool){
+        return this.fileManager.getFunction(instance, request, response, resource, tool);
     }
     public final boolean isPath(String string){
         return this.path.equals(string);

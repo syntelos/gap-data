@@ -135,9 +135,18 @@ public class Scanner
 
             if (matcher.lookingAt()){
 
-                this.next = matcher.end();
+                if (matcher.hitEnd()){
 
-                return matcher;
+                    buf = this.read();
+
+                    if (null == buf)
+                        return null;
+                }
+                else {
+                    this.next = matcher.end();
+
+                    return matcher;
+                }
             }
             else if (matcher.hitEnd()){
 
