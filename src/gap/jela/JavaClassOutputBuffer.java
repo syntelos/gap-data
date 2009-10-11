@@ -45,7 +45,7 @@ package gap.jela;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
-import javax.tools.JavaFileObject.Kind;
+import gap.jac.tools.JavaFileObject.Kind;
 
 /**
  * A file object used to represent Java byte code coming from the compiler.
@@ -54,7 +54,7 @@ import javax.tools.JavaFileObject.Kind;
  * @author J. Pritchard
  */
 public final class JavaClassOutputBuffer
-    extends javax.tools.SimpleJavaFileObject
+    extends gap.jac.tools.SimpleJavaFileObject
 {
     private JelaProgramCompiler compiler;
     private String name;

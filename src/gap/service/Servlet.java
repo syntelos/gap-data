@@ -70,12 +70,22 @@ public class Servlet
      */
     protected volatile static ServletConfig Config;
 
+    private volatile gap.jbx.Function.List functionList;
+
 
     public Servlet(){
         super();
     }
 
 
+    public final gap.jbx.Function.List getFunctionList(){
+        gap.jbx.Function.List functionList = this.functionList;
+        if (null == functionList){
+            functionList = new gap.jbx.Function.List(this.getClass());
+            this.functionList = functionList;
+        }
+        return functionList;
+    }
     @Override
     public final void init(ServletConfig config) throws ServletException {
 
