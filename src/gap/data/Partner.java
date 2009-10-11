@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T14:20:35.344Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T16:44:57.152Z",comments="gap.data")
 public final class Partner
     extends gap.data.BigTable
     implements DataInheritance<Partner>
@@ -231,6 +231,7 @@ public final class Partner
         implements gap.data.Field
     {
         InheritFromKey("inheritFromKey"),
+        ParentKey("parentKey"),
         Key("key"),
         Id("id"),
         LogonId("logonId");
@@ -257,6 +258,8 @@ public final class Partner
             switch(field){
             case InheritFromKey:
                 return instance.getInheritFromKey();
+            case ParentKey:
+                return instance.getParentKey();
             case Key:
                 return instance.getKey(mayInherit);
             case Id:
@@ -271,6 +274,8 @@ public final class Partner
             switch(field){
             case InheritFromKey:
                 return instance.setInheritFromKey( (Key)value);
+            case ParentKey:
+                return instance.setParentKey( (Key)value);
             case Key:
                 return instance.setKey( (Key)value);
             case Id:
@@ -311,19 +316,17 @@ public final class Partner
 
 
 
-    private volatile transient Key parentKey; 
+    private volatile Key parentKey;
+    private volatile transient Resource parent;
 
 
     public Partner() {
         super();
     }
-    public Partner(Key child) {
-        super();
-        this.setKey(child);
-    }
     public Partner(Key ancestor, String logonId) {
         super();
         this.setLogonId(logonId);
+        this.parentKey = ancestor;
         String id = IdFor(ancestor,  logonId);
         this.setId(id);
         Key key = KeyLongFor(ancestor,id);
@@ -343,6 +346,7 @@ public final class Partner
         this.key = null;
         this.id = null;
         this.logonId = null;
+        this.parent = null;
     }
     public boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -371,6 +375,52 @@ public final class Partner
         else
             return false;
     }
+
+    public boolean hasParentKey(){
+        return (null != this.parentKey);
+    }
+    public boolean hasNotParentKey(){
+        return (null == this.parentKey);
+    }
+    public Key getParentKey(){
+        return this.parentKey;
+    }
+    public boolean setParentKey(Key ancestor){
+        if (IsNotEqual(this.parentKey,ancestor)){
+            this.parentKey = ancestor;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean hasParent(){
+        return (null != this.parent || null != this.parentKey);
+    }
+    public boolean hasNotParent(){
+        return (null == this.parent && null == this.parentKey);
+    }
+    public Resource getParent(){
+        Resource parent = this.parent;
+        if (null == parent){
+            Key parentKey = this.parentKey;
+            if (null != parentKey){
+                parent = Resource.Get(parentKey);
+                this.parent = parent;
+            }
+        }
+        return parent;
+    }
+    public boolean setParent(Resource ancestor){
+        if (IsNotEqual(this.parent,ancestor)){
+            this.parent = ancestor;
+            if (null != ancestor)
+                this.parentKey = ancestor.getClassFieldKeyValue();
+            return true;
+        }
+        else
+            return false;
+    }
+
 
     public boolean hasKey(boolean mayInherit){
         return (null != this.getKey(mayInherit));

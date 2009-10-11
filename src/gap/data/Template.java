@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T14:20:36.223Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T16:44:58.029Z",comments="gap.data")
 public final class Template
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -232,6 +232,7 @@ public final class Template
         implements gap.data.Field
     {
         InheritFromKey("inheritFromKey"),
+        ParentKey("parentKey"),
         Key("key"),
         Id("id"),
         Name("name"),
@@ -261,6 +262,8 @@ public final class Template
             switch(field){
             case InheritFromKey:
                 return instance.getInheritFromKey();
+            case ParentKey:
+                return instance.getParentKey();
             case Key:
                 return instance.getKey(mayInherit);
             case Id:
@@ -281,6 +284,8 @@ public final class Template
             switch(field){
             case InheritFromKey:
                 return instance.setInheritFromKey( (Key)value);
+            case ParentKey:
+                return instance.setParentKey( (Key)value);
             case Key:
                 return instance.setKey( (Key)value);
             case Id:
@@ -330,19 +335,17 @@ public final class Template
 
 
 
-    private volatile transient Key parentKey; 
+    private volatile Key parentKey;
+    private volatile transient Resource parent;
 
 
     public Template() {
         super();
     }
-    public Template(Key child) {
-        super();
-        this.setKey(child);
-    }
     public Template(Key ancestor, String name) {
         super();
         this.setName(name);
+        this.parentKey = ancestor;
         String id = IdFor(ancestor,  name);
         this.setId(id);
         Key key = KeyLongFor(ancestor,id);
@@ -365,6 +368,7 @@ public final class Template
         this.lastModified = null;
         this.templateSourceHapax = null;
         this.templateContentType = null;
+        this.parent = null;
     }
     public boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -393,6 +397,52 @@ public final class Template
         else
             return false;
     }
+
+    public boolean hasParentKey(){
+        return (null != this.parentKey);
+    }
+    public boolean hasNotParentKey(){
+        return (null == this.parentKey);
+    }
+    public Key getParentKey(){
+        return this.parentKey;
+    }
+    public boolean setParentKey(Key ancestor){
+        if (IsNotEqual(this.parentKey,ancestor)){
+            this.parentKey = ancestor;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean hasParent(){
+        return (null != this.parent || null != this.parentKey);
+    }
+    public boolean hasNotParent(){
+        return (null == this.parent && null == this.parentKey);
+    }
+    public Resource getParent(){
+        Resource parent = this.parent;
+        if (null == parent){
+            Key parentKey = this.parentKey;
+            if (null != parentKey){
+                parent = Resource.Get(parentKey);
+                this.parent = parent;
+            }
+        }
+        return parent;
+    }
+    public boolean setParent(Resource ancestor){
+        if (IsNotEqual(this.parent,ancestor)){
+            this.parent = ancestor;
+            if (null != ancestor)
+                this.parentKey = ancestor.getClassFieldKeyValue();
+            return true;
+        }
+        else
+            return false;
+    }
+
 
     public boolean hasKey(boolean mayInherit){
         return (null != this.getKey(mayInherit));
