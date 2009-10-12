@@ -6,6 +6,8 @@
 
  Of course, everyone is welcome to get a copy of Gep Data from the svn repository and run it in their own appengine space, or to use Get Data online, according to preferences.
 
+ Gap Data is always running at http://gap-data.appspot.com/
+
  For help and discussion, please join our discussion group http://groups.google.com/group/gap-data
 
  Bug reports and enhancement requests are best discussed in the group before submission to the project issues database.  The preference is for the project issues database to be reserved for vetted things that might take some time to get done.
