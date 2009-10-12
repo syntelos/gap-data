@@ -327,7 +327,6 @@ public final class Main
                     }
 
                     try {
-                        System.out.println("Template: "+beanXtm.getPath());
                         System.out.println("Source: "+odl.getPath());
                         System.out.println("Target: "+src.getPath());
                         List<File> products = Main.ProcessDirectories(beanXtm,odl,src,beans,servlets);

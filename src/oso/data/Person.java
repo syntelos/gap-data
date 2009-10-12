@@ -14,9 +14,9 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * Data bean generated from "oso.data".
+ * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T10:36:01.606Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T23:24:37.003Z")
 public final class Person
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -466,29 +466,6 @@ public final class Person
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
     }
-    public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary top){
-        if (null != params && params.hasFields()){
-            TemplateDictionary data = top.addSection(ClassName);
-            for (String name: params.getFields()){
-                Field field = Field.getField(name);
-                if (null != field){
-                    java.lang.Object value = Field.Get(field,this,MayInherit);
-                    if (null != value){
-                        if (value instanceof DictionaryInto){
-                            DictionaryInto dvalue = (DictionaryInto)value;
-                            TemplateDictionary dsection = data.addSection(field.name());
-                            dvalue.dictionaryInto(dsection);
-                        }
-                        else
-                            data.putVariable(field.name(),oso.data.validate.Person.ToString(field,value));
-                    }
-                }
-            }
-            return top;
-        }
-        else
-            return this.dictionaryInto(top);
-    }
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
@@ -505,7 +482,27 @@ public final class Person
         }
         return top;
     }
-    public boolean updateFrom(Request req){
+    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
+        TemplateDictionary data = top.addSection(ClassName);
+        for (Field field : Field.values()){
+            java.lang.Object value = Field.Get(field,this,MayInherit);
+            if (null != value){
+                if (value instanceof DictionaryInto){
+                    DictionaryInto dvalue = (DictionaryInto)value;
+                    TemplateDictionary dsection = data.addSection(field.name());
+                    dvalue.dictionaryInto(dsection,filter);
+                }
+                else {
+                    String fieldName = filter.acceptAs(this,field.name());
+                    if (null != fieldName){
+                        data.putVariable(fieldName,oso.data.validate.Person.ToString(field,value));
+                    }
+                }
+            }
+        }
+        return top;
+    }
+    public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;
         return change;
     }

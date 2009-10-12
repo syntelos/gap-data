@@ -29,7 +29,7 @@ package gap.data;
  * @see oso.data.Person
  * @author jdp
  */
-public interface Field {
+public interface Field<E extends Enum> {
 
     public final static class List
         extends gap.util.AbstractListPrimitive.Any<Field>
@@ -49,5 +49,16 @@ public interface Field {
         }
     }
 
+    /**
+     * Upcase name
+     */
+    public String name();
+    /**
+     * Runtime compiled constant value for field.
+     */
+    public int ordinal();
+    /**
+     * Downcase name
+     */
     public String getFieldName();
 }

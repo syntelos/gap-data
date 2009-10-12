@@ -13,9 +13,9 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * Data bean generated from "gap.data".
+ * Generated short list.
  */
-@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-12T10:36:02.596Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-12T23:24:38.323Z")
 public final class ListShortResourceImage
     extends gap.util.AbstractList<Image>
     implements gap.data.List.Short<Image>
@@ -37,7 +37,7 @@ public final class ListShortResourceImage
         super();
         if (null != parent){
             this.parent = parent;
-            this.ancestorKeyFieldName = ListShortResourceImage.AncestorKeyFieldName;
+            this.ancestorKeyFieldName = AncestorKeyFieldName;
             this.setValueClassAncestorKey();
         }
         else
@@ -80,6 +80,14 @@ public final class ListShortResourceImage
         for (Image value: this){
 
             value.dictionaryInto(top);
+        }
+        return top;
+    }
+    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
+
+        for (Image value: this){
+
+            value.dictionaryInto(top,filter);
         }
         return top;
     }

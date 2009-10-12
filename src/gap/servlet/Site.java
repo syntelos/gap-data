@@ -47,7 +47,21 @@ import java.util.logging.LogRecord;
 public class Site
     extends gap.service.Servlet
 {
+    public final static class DefaultToolFilter
+        extends Object
+        implements gap.data.DictionaryInto.DataFilter
+    {
+        private final Request request;
 
+        public DefaultToolFilter(Request req){
+            super();
+            this.request = req;
+        }
+
+        public String acceptAs(gap.data.BigTable instance, String fieldName){
+            return fieldName;
+        }
+    }
 
     public Site(){
         super();

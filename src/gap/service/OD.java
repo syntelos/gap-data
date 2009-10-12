@@ -47,531 +47,25 @@ import java.util.StringTokenizer;
  * 
  * @author jdp
  */
-public class OD
+public final class OD
     extends java.lang.Object
 {
-    /**
-     * Generate OD sourcecode into the output writer.
-     * 
-     * @exception gap.service.od.ODStateException Unable to generate source from description, model incomplete.
-     * @exception java.io.IOException Error writing to output.
-     * @exception hapax.TemplateException Error processing template.
-     */
+
     public final static void GenerateBeanSource(File xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
                                                 ClassDescriptor cd, PrintWriter out)
-        throws gap.service.od.ODStateException, java.io.IOException, hapax.TemplateException
+        throws ODStateException, IOException, TemplateException
     {
         if (null != xtm && null != pkg && null != imports && null != cd && null != out){
             TemplateCache loader = new TemplateCache(xtm.getParent());
             Template template = loader.getTemplate(xtm.getPath());
             TemplateDictionary top = new TemplateDictionary();
 
-            String packageName = PackageName(pkg);
+            DefineDescription(xtm,top);
 
-            String className = ClassName(cd);
+            DefinePrimitives(top);
 
-            String classNameDecamel = Decamel(className);
+            DefineClass(pkg,cd,imports,top);
 
-            String classVersion = ClassVersion(cd);
-
-            String classKind = ClassKind(cd);
-
-            String classPath = ClassPath(cd);
-
-            String defaultSortBy = null;
-
-            /*
-             * Tool globals
-             */
-            top.putVariable("odl_gen_class","gap.service.OD");
-            top.putVariable("odl_gen_xtm_src",xtm.getPath());
-            top.putVariable("odl_gen_odl_src",packageName);
-            top.putVariable("odl_gen_timestamp",(gap.Date.FormatISO8601(System.currentTimeMillis())));
-
-            /*
-             * General 
-             */
-            {
-                TemplateDictionary primitives = top.addSection("primitives");
-                for (gap.Primitive type : gap.Primitive.values()){
-                    TemplateDictionary primitive = primitives.addSection("primitives");
-                    String type_name = type.name();
-                    primitive.setVariable("type_name",type_name);
-                    primitive.setVariable("type_nameCamel",type_name);
-                    primitive.setVariable("type_nameDecamel",Decamel(type_name));
-                    primitive.addSection(type_name);
-                }
-            }
-
-            /*
-             * Class globals
-             */
-            top.putVariable("package_name", packageName);
-            top.putVariable("class_name", className);
-            top.putVariable("class_nameDecamel", classNameDecamel);
-            top.putVariable("class_version",classVersion);
-            top.putVariable("class_kind", classKind);
-            top.putVariable("class_path", classPath);
-
-            ClassDescriptor.Relation.Type classRelation = null;
-            String classRelationParent = null;
-            ClassDescriptor parent = null;
-            if (cd instanceof ClassDescriptor.Relation){
-                ClassDescriptor.Relation cdr = (ClassDescriptor.Relation)cd;
-                classRelation = cdr.getRelation();
-                classRelationParent = cdr.getParent();
-            }
-            if (null == classRelation || ClassDescriptor.Relation.Type.None.equals(classRelation)){
-                top.addSection("class_re_none");
-                top.addSection("class_re_not_parent");
-                top.addSection("class_re_not_child");
-                top.addSection("class_re_not_childgroup");
-                top.addSection("class_re_not_child_or_group");
-            }
-            else if (ClassDescriptor.Relation.Type.Parent.equals(classRelation)){
-                top.addSection("class_re_not_none");
-                top.addSection("class_re_parent");
-                top.addSection("class_re_not_child");
-                top.addSection("class_re_not_childgroup");
-                top.addSection("class_re_not_child_or_group");
-            }
-            else if (ClassDescriptor.Relation.Type.Child.equals(classRelation)){
-                top.addSection("class_re_not_none");
-                top.addSection("class_re_not_parent");
-                top.addSection("class_re_not_childgroup");
-                top.addSection("class_re_child_or_group");
-
-                TemplateDictionary child = top.addSection("class_re_child");
-
-                if (null == classRelationParent)
-                    throw new ODStateException(cd,"The object data model requires a parent class name.");
-                else {
-
-                    top.setVariable("parent_class_name",classRelationParent);
-
-                    parent = gap.odl.Main.ClassDescriptorFor(classRelationParent);
-                    if (null == parent)
-                        throw new ODStateException(cd,"Parent class not found.");
-                }
-            }
-            else if (ClassDescriptor.Relation.Type.ChildGroup.equals(classRelation)){
-                top.addSection("class_re_not_none");
-                top.addSection("class_re_not_parent");
-                top.addSection("class_re_not_child");
-                top.addSection("class_re_child_or_group");
-
-                top.addSection("class_re_childgroup");
-                if (null == classRelationParent)
-                    throw new ODStateException(cd,"The object data model requires a parent class name.");
-                else {
-
-                    top.setVariable("parent_class_name",classRelationParent);
-
-                    parent = gap.odl.Main.ClassDescriptorFor(classRelationParent);
-                    if (null == parent)
-                        throw new ODStateException(cd,"Parent class not found.");
-                }
-            }
-            else
-                throw new IllegalStateException("Unrecognized class relation "+classRelation.name());
-
-            cd.setDefinitionClassName(packageName+'.'+className);
-
-            /*
-             * Imports
-             */
-            for (ImportDescriptor imp : imports){
-                TemplateDictionary imd = top.addSection("import");
-                if (imp.hasPackageSpec())
-                    imd.putVariable("import_spec",imp.getPackageSpec());
-                else if (imp.hasClassName())
-                    imd.putVariable("import_spec",imp.getClassName());
-            }
-
-            String[] interfaces = ClassImplements(cd);
-            for (String inf : interfaces){
-                TemplateDictionary ind = top.addSection("implements");
-                ind.putVariable("interface_class",inf);
-            }
-
-            /*
-             * Fields & data
-             */
-            FieldDescriptor key = null, unique = null;
-
-            if (cd.hasFields()){
-
-                for (FieldDescriptor field : cd.getFields()){
-
-                    String fieldName = field.getName();
-                    String fieldNameCamel = Camel(fieldName);
-                    String fieldType = ToString(field.getType());
-                    String fieldTypeClean = CleanTypeName(fieldType);
-                    String fieldTypeCleanClean = CleanCleanTypeName(fieldType);
-                    Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
-                    String[] fieldTypeParameters = FieldTypeParameters(fieldType);
-                    TemplateDictionary dataField = null;
-                    boolean isPersistent = false;
-                    boolean isInheritable = true;
-                    boolean isRelation = false;
-                    boolean isCollection = false;
-                    boolean isTransient = false;
-
-                    /*
-                     * Create 'dataField' section
-                     */
-                    if (IsFieldPersistent(field,fieldTypeClass)){
-                        isPersistent = true;
-
-                        dataField = top.addSection("pfield");
-
-                        /*
-                         * Populate 'pfield' section
-                         */
-                        if (IsFieldHashUnique(field)){
-                            isInheritable = false;
-
-                            dataField.addSection("field_is_not_unique");
-                            dataField.addSection("field_is_not_inheritable");
-
-                            TemplateDictionary field_is = dataField.addSection("field_is_hash_unique");
-
-                            field_is.putVariable("data_model","*hash-unique");
-
-                            if (IsTypeClassString(fieldTypeClass)){
-                                dataField.putVariable("field_to_string_prefix","");
-                                dataField.putVariable("field_to_string_suffix","");
-                            }
-                            else if (IsTypeClassDate(fieldTypeClass)){
-                                dataField.putVariable("field_to_string_prefix","gap.Date.FormatISO8601(");
-                                dataField.putVariable("field_to_string_suffix",")");
-                            }
-                            else {
-                                dataField.putVariable("field_to_string_prefix","");
-                                dataField.putVariable("field_to_string_suffix",".toString()");
-                            }
-
-                            defaultSortBy = fieldName;
-
-                            /*
-                             * Global section 'field_hash_unique'
-                             */
-                            TemplateDictionary topDataFieldH = top.showSection("field_hash_unique").get(0);
-
-                            TemplateDictionary topDataFieldHF = topDataFieldH.addSection("field");
-
-                            topDataFieldHF.putVariable("field_name",fieldName);
-                            topDataFieldHF.putVariable("field_nameCamel",fieldNameCamel);
-                            topDataFieldHF.putVariable("field_class",fieldType);
-                            topDataFieldHF.putVariable("field_classClean",fieldTypeClean);
-                            topDataFieldHF.putVariable("field_classCleanClean",fieldTypeCleanClean);
-                        }
-                        else if (IsFieldUnique(field)){
-                            isInheritable = false;
-
-                            dataField.addSection("field_is_not_hash_unique");
-                            dataField.addSection("field_is_not_inheritable");
-
-                            TemplateDictionary field_is = dataField.addSection("field_is_unique");
-
-                            if (null == unique){
-
-                                unique = field;
-
-                                field_is.putVariable("data_model","*unique");
-
-                                /*
-                                 * Global section 'field_unique'
-                                 */
-                                TemplateDictionary topDataFieldU = top.showSection("field_unique").get(0);
-
-                                topDataFieldU.putVariable("field_name",fieldName);
-                                topDataFieldU.putVariable("field_nameCamel",fieldNameCamel);
-                                topDataFieldU.putVariable("field_class",fieldType);
-                                topDataFieldU.putVariable("field_classClean",fieldTypeClean);
-                                topDataFieldU.putVariable("field_classCleanClean",fieldTypeCleanClean);
-
-                                /*
-                                 * Global field 'unique' references
-                                 */
-                                top.putVariable("field_unique_name",fieldName);
-                                top.putVariable("field_unique_nameCamel",fieldNameCamel);
-                                top.putVariable("field_unique_class",fieldType);
-                                top.putVariable("field_unique_classClean",fieldTypeClean);
-                            }
-                            else
-                                throw new ODStateException(field,"Model has more than one '*unique' field, '"+unique.getName()+"' and '"+fieldName+"'.");
-                        }
-                        else {
-                            dataField.addSection("field_is_not_unique");
-                            dataField.addSection("field_is_not_hash_unique");
-                        }
-                    }
-                    else if (IsTypeClassCollection(fieldTypeClass)){
-                        isCollection = true;
-
-                        dataField = top.addSection("cfield");
-                        /*
-                         * Populate 'cfield' section
-                         */
-                        dataField.addSection("field_is_not_unique");
-                        dataField.addSection("field_is_not_hash_unique");
-                    }
-                    else if (IsFieldRelation(field)){
-                        isRelation = true;
-
-                        dataField = top.addSection("rfield");
-                        /*
-                         * Populate 'rfield' section
-                         */
-                        dataField.addSection("field_is_not_unique");
-                        dataField.addSection("field_is_not_hash_unique");
-
-                        if ((!IsTypeClassKey(fieldTypeClass)) && null != fieldTypeClass && IsNotTypeClassBigTable(fieldTypeClass))
-                            throw new ODStateException(field,"Relation field '"+fieldName+"' is not a subclass of 'gap.data.BigTable'.");
-
-                    }
-                    else {
-                        isTransient = true;
-
-                        dataField = top.addSection("tfield");
-                        /*
-                         * Populate 'tfield' section
-                         */
-                        dataField.addSection("field_is_not_unique");
-                        dataField.addSection("field_is_not_hash_unique");
-                        {
-                            TemplateDictionary field_is = dataField.addSection("field_is_transient");
-                            field_is.putVariable("data_model","*transient");
-                        }
-                    }
-
-                    /*
-                     * Populate 'dataField' name and type information
-                     */
-                    dataField.putVariable("field_name",fieldName);
-                    dataField.putVariable("field_nameCamel",fieldNameCamel);
-                    dataField.putVariable("field_class",fieldType);
-                    dataField.putVariable("field_classClean",fieldTypeClean);
-                    dataField.putVariable("field_classCleanClean",fieldTypeCleanClean);
-
-                    if (IsTypeClassKey(fieldTypeClass)){
-                        isInheritable = false;
-
-                        dataField.addSection("field_is_not_inheritable");
-
-                        TemplateDictionary field_is = dataField.addSection("field_is_key");
-
-                        if (null == key){
-                            key = field;
-
-                            top.putVariable("field_key_name",fieldName);
-                            top.putVariable("field_key_nameCamel",fieldNameCamel);
-                            top.putVariable("field_key_class",fieldType);
-                            top.putVariable("field_key_classClean",fieldTypeClean);
-                        }
-                    }
-                    else if (IsTypeClassList(fieldTypeClass)){
-
-                        dataField.addSection("field_is_not_map");
-
-                        if (1 == fieldTypeParameters.length){
-
-                            TemplateDictionary field_is = dataField.addSection("field_is_list");
-
-                            String typeComponent = fieldTypeParameters[0];
-                            field_is.putVariable("field_list_component",typeComponent);
-
-                            if (IsTypeOf(typeComponent,"HasName"))
-                                field_is.addSection("field_list_component_named");
-
-                            dataField.putVariable("field_impl_class_name",ListClassName(fieldTypeClean,className,typeComponent));
-                        }
-                        else
-                            throw new ODStateException(field,"Field '"+fieldName+"' type list missing type parameter.");
-                    }
-                    else if (IsTypeClassMap(fieldTypeClass)){
-
-                        dataField.addSection("field_is_not_list");
-
-                        if (2 == fieldTypeParameters.length){
-
-                            TemplateDictionary field_is = dataField.addSection("field_is_map");
-
-                            String typeComponentFrom = fieldTypeParameters[0];
-                            String typeComponentTo = fieldTypeParameters[1];
-                            field_is.putVariable("field_map_component_from",typeComponentFrom);
-                            field_is.putVariable("field_map_component_to",typeComponentTo);
-                        }
-                        else
-                            throw new ODStateException(field,"Field '"+fieldName+"' type map missing type parameter.");
-                    }
-                    else {
-                        dataField.addSection("field_is_not_key");
-                        if (isPersistent && isInheritable)
-                            dataField.addSection("field_is_inheritable");
-                    }
-                }
-            }
-
-            /*
-             * Methods
-             */
-            if (cd.hasMethods()){
-
-                for (MethodDescriptor method: cd.getMethods()){
-
-                    String method_name = method.getName();
-                    if (null != method_name){
-                        String method_body = gap.Strings.TextToString(method.getBody());
-                        if (null != method_body){
-
-                            TemplateDictionary methods = top.addSection("method");
-                            methods.setVariable("method_name",method_name);
-                            methods.setVariable("method_body",method_body);
-
-                            TemplateDictionary mb = top.addSection("method_"+method_name+"_with_body");
-                            mb.setVariable("body",method_body);
-
-                            String method_type = ToString(method.getType());
-                            if (null != method_type){
-                                TemplateDictionary ma = top.addSection("method_"+method_name+"_with_type");
-                                ma.setVariable("type",method_type);
-                                methods.setVariable("method_type",method_type);
-                            }
-                            else
-                                top.showSection("method_"+method_name+"_without_type");
-
-                            if (method instanceof MethodDescriptor.Arguments){
-                                MethodDescriptor.Arguments ma = (MethodDescriptor.Arguments)method;
-                                if (ma.hasArguments()){
-                                    String method_arguments = ma.getArguments();
-                                    if (null != method_arguments){
-                                        TemplateDictionary td = top.addSection("method_"+method_name+"_with_args");
-                                        td.setVariable("args",method_arguments);
-                                        methods.setVariable("method_arguments",method_arguments);
-                                    }
-                                    else
-                                        top.showSection("method_"+method_name+"_without_args");
-                                }
-                                else
-                                    top.showSection("method_"+method_name+"_without_args");
-                            }
-                            else
-                                top.showSection("method_"+method_name+"_without_args");
-
-                            if (method instanceof MethodDescriptor.Exceptions){
-                                MethodDescriptor.Exceptions ma = (MethodDescriptor.Exceptions)method;
-                                if (ma.hasExceptions()){
-                                    String method_exceptions = ma.getExceptions();
-                                    if (null != method_exceptions){
-                                        TemplateDictionary td = top.addSection("method_"+method_name+"_with_excs");
-                                        td.setVariable("excs",method_exceptions);
-                                        methods.setVariable("method_exceptions",method_exceptions);
-                                    }
-                                    else
-                                        top.showSection("method_"+method_name+"_without_excs");
-                                }
-                                else
-                                    top.showSection("method_"+method_name+"_without_excs");
-                            }
-                            else
-                                top.showSection("method_"+method_name+"_without_excs");
-                        }
-                        else {
-                            top.showSection("method_"+method_name+"_without_body");
-                        }
-                    }
-                }
-            }
-
-            /*
-             * Current template model requires 'key'.
-             */
-            if (null != key){
-
-                top.setVariable("class_defaultSortBy", defaultSortBy);
-
-                /*
-                 * Run template
-                 */
-                try {
-                    template.render(top,out); 
-                }
-                catch (TemplateException exc){
-                    throw new TemplateException("In "+xtm.getPath(),exc);
-                }
-            }
-            else
-                throw new ODStateException(cd,"Model requires a field having type 'com.google.appengine.api.datastore.Key'.");
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-
-    public final static void GenerateListSource(File xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
-                                                ClassDescriptor parent, FieldDescriptor field, 
-                                                String parentClassName, String childClassName, 
-                                                String listClassName, gap.data.List.Type listType, 
-                                                PrintWriter out)
-        throws gap.service.od.ODStateException, java.io.IOException, hapax.TemplateException
-    {
-        if (null != xtm && null != pkg && null != imports && null != parent && null != field
-            && null != parentClassName && null != childClassName && null != listClassName
-            && null != listType && null != out)
-        {
-            TemplateCache loader = new TemplateCache(xtm.getParent());
-            Template template = loader.getTemplate(xtm.getPath());
-            TemplateDictionary top = new TemplateDictionary();
-
-            String packageName = PackageName(pkg);
-
-            String parentClassVersion = ClassVersion(parent);
-
-            String parentClassKind = ClassKind(parent);
-
-            String parentClassPath = ClassPath(parent);
-
-            FieldDescriptor parentKeyField = KeyField(packageName,parent,imports);
-
-            /*
-             * Tool globals
-             */
-            top.putVariable("odl_gen_class","gap.service.OD");
-            top.putVariable("odl_gen_xtm_src",xtm.getPath());
-            top.putVariable("odl_gen_odl_src",packageName);
-            top.putVariable("odl_gen_timestamp",(gap.Date.FormatISO8601(System.currentTimeMillis())));
-
-            /*
-             * General 
-             */
-            {
-                TemplateDictionary primitives = top.addSection("primitives");
-                for (gap.Primitive type : gap.Primitive.values()){
-                    TemplateDictionary primitive = primitives.addSection("primitives");
-                    String type_name = type.name();
-                    primitive.setVariable("type_name",type_name);
-                    primitive.setVariable("type_nameCamel",type_name);
-                    primitive.setVariable("type_nameDecamel",Decamel(type_name));
-                    primitive.addSection(type_name);
-                }
-            }
-
-            /*
-             * Class globals
-             */
-            top.setVariable("package_name",packageName);
-            top.setVariable("parent_class_version",parentClassVersion);
-            top.setVariable("parent_class_name",parentClassName);
-            top.setVariable("parent_class_kind",parentClassKind);
-            top.setVariable("parent_class_path",parentClassPath);
-            top.setVariable("parent_keyfield_name",parentKeyField.getName());
-            top.setVariable("child_class_name",childClassName);
-            top.setVariable("list_class_name",listClassName);
-
-            /*
-             * Run template
-             */
             try {
                 template.render(top,out); 
             }
@@ -582,6 +76,481 @@ public class OD
         else
             throw new IllegalArgumentException();
     }
+
+    public final static void GenerateListSource(File xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
+                                                ClassDescriptor parent, FieldDescriptor field, 
+                                                String parentClassName, String childClassName, 
+                                                String listClassName, gap.data.List.Type listType, 
+                                                PrintWriter out)
+        throws ODStateException, IOException, TemplateException
+    {
+        if (null != xtm && null != pkg && null != imports && null != parent && null != field
+            && null != parentClassName && null != childClassName && null != listClassName
+            && null != listType && null != out)
+        {
+            TemplateCache loader = new TemplateCache(xtm.getParent());
+            Template template = loader.getTemplate(xtm.getPath());
+            TemplateDictionary top = new TemplateDictionary();
+
+            DefineDescription(xtm,top);
+
+            DefinePrimitives(top);
+
+            DefineClass(pkg,parent,imports,top,"parent_");
+
+            ClassDescriptor child = gap.odl.Main.ClassDescriptorFor(childClassName);
+
+            DefineClass(pkg,child,imports,top,"child_");
+
+            top.setVariable("list_class_name",listClassName);
+
+            try {
+                template.render(top,out); 
+            }
+            catch (TemplateException exc){
+                throw new TemplateException("In "+xtm.getPath(),exc);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+
+    public final static void DefineDescription(File xtm, TemplateDictionary top){
+
+        top.putVariable("odl_gen_class","gap.service.OD");
+        top.putVariable("odl_gen_xtm_src",xtm.getPath());
+        top.putVariable("odl_gen_timestamp",(gap.Date.FormatISO8601(System.currentTimeMillis())));
+    }
+    public final static void DefinePrimitives(TemplateDictionary top){
+
+        TemplateDictionary primitives = top.addSection("primitives");
+        for (gap.Primitive type : gap.Primitive.values()){
+            TemplateDictionary primitive = primitives.addSection("type");
+            String type_name = type.name();
+            primitive.setVariable("name",type_name);
+            primitive.setVariable("nameCamel",type_name);
+            primitive.setVariable("nameDecamel",Decamel(type_name));
+            primitive.addSection(type_name);
+        }
+    }
+    public final static void DefineClass(PackageDescriptor pkg, ClassDescriptor cd, List<ImportDescriptor> imports, TemplateDictionary top)
+        throws ODStateException, IOException
+    {
+        DefineClass(pkg,cd,imports,top,null);
+    }
+    public final static void DefineClass(PackageDescriptor pkg, ClassDescriptor cd, List<ImportDescriptor> imports, TemplateDictionary top, String prefix)
+        throws ODStateException, IOException
+    {
+        String packageName = PackageName(pkg);
+        String className = ClassName(cd);
+        String classNameDecamel = Decamel(className);
+        String classVersion = ClassVersion(cd);
+        String classKind = ClassKind(cd);
+        String classPath = ClassPath(cd);
+        String defaultSortBy = null;
+
+        /*
+         * Class globals
+         */
+        top.putVariable(DefineName(prefix,"package_name"), packageName);
+        top.putVariable(DefineName(prefix,"class_name"), className);
+        top.putVariable(DefineName(prefix,"class_nameDecamel"), classNameDecamel);
+        top.putVariable(DefineName(prefix,"class_version"),classVersion);
+        top.putVariable(DefineName(prefix,"class_kind"), classKind);
+        top.putVariable(DefineName(prefix,"class_path"), classPath);
+
+        ClassDescriptor.Relation.Type classRelation = null;
+        String classRelationParent = null;
+        ClassDescriptor parent = null;
+        if (cd instanceof ClassDescriptor.Relation){
+            ClassDescriptor.Relation cdr = (ClassDescriptor.Relation)cd;
+            classRelation = cdr.getRelation();
+            classRelationParent = cdr.getParent();
+        }
+        if (null == classRelation || ClassDescriptor.Relation.Type.None.equals(classRelation)){
+            top.addSection(DefineName(prefix,"class_re_none"));
+            top.addSection(DefineName(prefix,"class_re_not_parent"));
+            top.addSection(DefineName(prefix,"class_re_not_child"));
+            top.addSection(DefineName(prefix,"class_re_not_childgroup"));
+            top.addSection(DefineName(prefix,"class_re_not_child_or_group"));
+        }
+        else if (ClassDescriptor.Relation.Type.Parent.equals(classRelation)){
+            top.addSection(DefineName(prefix,"class_re_not_none"));
+            top.addSection(DefineName(prefix,"class_re_parent"));
+            top.addSection(DefineName(prefix,"class_re_not_child"));
+            top.addSection(DefineName(prefix,"class_re_not_childgroup"));
+            top.addSection(DefineName(prefix,"class_re_not_child_or_group"));
+        }
+        else if (ClassDescriptor.Relation.Type.Child.equals(classRelation)){
+            top.addSection(DefineName(prefix,"class_re_not_none"));
+            top.addSection(DefineName(prefix,"class_re_not_parent"));
+            top.addSection(DefineName(prefix,"class_re_not_childgroup"));
+            top.addSection(DefineName(prefix,"class_re_child_or_group"));
+
+            TemplateDictionary child = top.addSection(DefineName(prefix,"class_re_child"));
+
+            if (null == classRelationParent)
+                throw new ODStateException(cd,"The object data model requires a parent class name.");
+            else {
+
+                top.setVariable(DefineName(prefix,"parent_class_name"),classRelationParent);
+
+                parent = gap.odl.Main.ClassDescriptorFor(classRelationParent);
+                if (null == parent)
+                    throw new ODStateException(cd,"Parent class not found.");
+            }
+        }
+        else if (ClassDescriptor.Relation.Type.ChildGroup.equals(classRelation)){
+            top.addSection(DefineName(prefix,"class_re_not_none"));
+            top.addSection(DefineName(prefix,"class_re_not_parent"));
+            top.addSection(DefineName(prefix,"class_re_not_child"));
+            top.addSection(DefineName(prefix,"class_re_child_or_group"));
+
+            top.addSection(DefineName(prefix,"class_re_childgroup"));
+            if (null == classRelationParent)
+                throw new ODStateException(cd,"The object data model requires a parent class name.");
+            else {
+
+                top.setVariable(DefineName(prefix,"parent_class_name"),classRelationParent);
+
+                parent = gap.odl.Main.ClassDescriptorFor(classRelationParent);
+                if (null == parent)
+                    throw new ODStateException(cd,"Parent class not found.");
+            }
+        }
+        else
+            throw new IllegalStateException("Unrecognized class relation "+classRelation.name());
+
+        cd.setDefinitionClassName(packageName+'.'+className);
+
+        /*
+         * Imports
+         */
+        for (ImportDescriptor imp : imports){
+            TemplateDictionary imd = top.addSection(DefineName(prefix,"import"));
+            if (imp.hasPackageSpec())
+                imd.putVariable("import_spec",imp.getPackageSpec());
+            else if (imp.hasClassName())
+                imd.putVariable("import_spec",imp.getClassName());
+        }
+
+        String[] interfaces = ClassImplements(cd);
+        for (String inf : interfaces){
+            TemplateDictionary ind = top.addSection(DefineName(prefix,"implements"));
+            ind.putVariable("interface_class",inf);
+        }
+
+        /*
+         * Fields & data
+         */
+        FieldDescriptor key = null, unique = null;
+
+        if (cd.hasFields()){
+
+            for (FieldDescriptor field : cd.getFields()){
+
+                String fieldName = field.getName();
+                String fieldNameCamel = Camel(fieldName);
+                String fieldType = ToString(field.getType());
+                String fieldTypeClean = CleanTypeName(fieldType);
+                String fieldTypeCleanClean = CleanCleanTypeName(fieldType);
+                Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
+                String[] fieldTypeParameters = FieldTypeParameters(fieldType);
+                TemplateDictionary dataField = null;
+                boolean isPersistent = false;
+                boolean isInheritable = true;
+                boolean isRelation = false;
+                boolean isCollection = false;
+                boolean isTransient = false;
+
+                /*
+                 * Create 'dataField' section
+                 */
+                if (IsFieldPersistent(field,fieldTypeClass)){
+                    isPersistent = true;
+
+                    dataField = top.addSection(DefineName(prefix,"pfield"));
+
+                    /*
+                     * Populate 'pfield' section
+                     */
+                    if (IsFieldHashUnique(field)){
+                        isInheritable = false;
+
+                        dataField.addSection("field_is_not_unique");
+                        dataField.addSection("field_is_not_inheritable");
+
+                        TemplateDictionary field_is = dataField.addSection("field_is_hash_unique");
+
+                        field_is.putVariable("data_model","*hash-unique");
+
+                        if (IsTypeClassString(fieldTypeClass)){
+                            dataField.putVariable("field_to_string_prefix","");
+                            dataField.putVariable("field_to_string_suffix","");
+                        }
+                        else if (IsTypeClassDate(fieldTypeClass)){
+                            dataField.putVariable("field_to_string_prefix","gap.Date.FormatISO8601(");
+                            dataField.putVariable("field_to_string_suffix",")");
+                        }
+                        else {
+                            dataField.putVariable("field_to_string_prefix","");
+                            dataField.putVariable("field_to_string_suffix",".toString()");
+                        }
+
+                        defaultSortBy = fieldName;
+
+                        /*
+                         * Global section 'field_hash_unique'
+                         */
+                        TemplateDictionary topDataFieldH = top.showSection(DefineName(prefix,"field_hash_unique")).get(0);
+
+                        TemplateDictionary topDataFieldHF = topDataFieldH.addSection("field");
+
+                        topDataFieldHF.putVariable("field_name",fieldName);
+                        topDataFieldHF.putVariable("field_nameCamel",fieldNameCamel);
+                        topDataFieldHF.putVariable("field_class",fieldType);
+                        topDataFieldHF.putVariable("field_classClean",fieldTypeClean);
+                        topDataFieldHF.putVariable("field_classCleanClean",fieldTypeCleanClean);
+                    }
+                    else if (IsFieldUnique(field)){
+                        isInheritable = false;
+
+                        dataField.addSection("field_is_not_hash_unique");
+                        dataField.addSection("field_is_not_inheritable");
+
+                        TemplateDictionary field_is = dataField.addSection("field_is_unique");
+
+                        if (null == unique){
+
+                            unique = field;
+
+                            field_is.putVariable("data_model","*unique");
+
+                            /*
+                             * Global section 'field_unique'
+                             */
+                            TemplateDictionary topDataFieldU = top.showSection(DefineName(prefix,"field_unique")).get(0);
+
+                            topDataFieldU.putVariable("field_name",fieldName);
+                            topDataFieldU.putVariable("field_nameCamel",fieldNameCamel);
+                            topDataFieldU.putVariable("field_class",fieldType);
+                            topDataFieldU.putVariable("field_classClean",fieldTypeClean);
+                            topDataFieldU.putVariable("field_classCleanClean",fieldTypeCleanClean);
+
+                            /*
+                             * Global field 'unique' references
+                             */
+                            top.putVariable(DefineName(prefix,"field_unique_name"),fieldName);
+                            top.putVariable(DefineName(prefix,"field_unique_nameCamel"),fieldNameCamel);
+                            top.putVariable(DefineName(prefix,"field_unique_class"),fieldType);
+                            top.putVariable(DefineName(prefix,"field_unique_classClean"),fieldTypeClean);
+                        }
+                        else
+                            throw new ODStateException(field,"Model has more than one '*unique' field, '"+unique.getName()+"' and '"+fieldName+"'.");
+                    }
+                    else {
+                        dataField.addSection("field_is_not_unique");
+                        dataField.addSection("field_is_not_hash_unique");
+                    }
+                }
+                else if (IsTypeClassCollection(fieldTypeClass)){
+                    isCollection = true;
+
+                    dataField = top.addSection(DefineName(prefix,"cfield"));
+                    /*
+                     * Populate 'cfield' section
+                     */
+                    dataField.addSection("field_is_not_unique");
+                    dataField.addSection("field_is_not_hash_unique");
+                }
+                else if (IsFieldRelation(field)){
+                    isRelation = true;
+
+                    dataField = top.addSection(DefineName(prefix,"rfield"));
+                    /*
+                     * Populate 'rfield' section
+                     */
+                    dataField.addSection("field_is_not_unique");
+                    dataField.addSection("field_is_not_hash_unique");
+
+                    if ((!IsTypeClassKey(fieldTypeClass)) && null != fieldTypeClass && IsNotTypeClassBigTable(fieldTypeClass))
+                        throw new ODStateException(field,"Relation field '"+fieldName+"' is not a subclass of 'gap.data.BigTable'.");
+
+                }
+                else {
+                    isTransient = true;
+
+                    dataField = top.addSection(DefineName(prefix,"tfield"));
+                    /*
+                     * Populate 'tfield' section
+                     */
+                    dataField.addSection("field_is_not_unique");
+                    dataField.addSection("field_is_not_hash_unique");
+                    {
+                        TemplateDictionary field_is = dataField.addSection("field_is_transient");
+                        field_is.putVariable("data_model","*transient");
+                    }
+                }
+
+                /*
+                 * Populate 'dataField' name and type information
+                 */
+                dataField.putVariable("field_name",fieldName);
+                dataField.putVariable("field_nameCamel",fieldNameCamel);
+                dataField.putVariable("field_class",fieldType);
+                dataField.putVariable("field_classClean",fieldTypeClean);
+                dataField.putVariable("field_classCleanClean",fieldTypeCleanClean);
+
+                if (IsTypeClassKey(fieldTypeClass)){
+                    isInheritable = false;
+
+                    dataField.addSection("field_is_not_inheritable");
+
+                    TemplateDictionary field_is = dataField.addSection("field_is_key");
+
+                    if (null == key){
+                        key = field;
+
+                        top.putVariable(DefineName(prefix,"field_key_name"),fieldName);
+                        top.putVariable(DefineName(prefix,"field_key_nameCamel"),fieldNameCamel);
+                        top.putVariable(DefineName(prefix,"field_key_class"),fieldType);
+                        top.putVariable(DefineName(prefix,"field_key_classClean"),fieldTypeClean);
+                    }
+                }
+                else if (IsTypeClassList(fieldTypeClass)){
+
+                    dataField.addSection("field_is_not_map");
+
+                    if (1 == fieldTypeParameters.length){
+
+                        TemplateDictionary field_is = dataField.addSection("field_is_list");
+
+                        String typeComponent = fieldTypeParameters[0];
+                        field_is.putVariable("field_list_component",typeComponent);
+
+                        if (IsTypeOf(typeComponent,"HasName"))
+                            field_is.addSection("field_list_component_named");
+
+                        dataField.putVariable("field_impl_class_name",ListClassName(fieldTypeClean,className,typeComponent));
+                    }
+                    else
+                        throw new ODStateException(field,"Field '"+fieldName+"' type list missing type parameter.");
+                }
+                else if (IsTypeClassMap(fieldTypeClass)){
+
+                    dataField.addSection("field_is_not_list");
+
+                    if (2 == fieldTypeParameters.length){
+
+                        TemplateDictionary field_is = dataField.addSection("field_is_map");
+
+                        String typeComponentFrom = fieldTypeParameters[0];
+                        String typeComponentTo = fieldTypeParameters[1];
+                        field_is.putVariable("field_map_component_from",typeComponentFrom);
+                        field_is.putVariable("field_map_component_to",typeComponentTo);
+                    }
+                    else
+                        throw new ODStateException(field,"Field '"+fieldName+"' type map missing type parameter.");
+                }
+                else {
+                    dataField.addSection("field_is_not_key");
+                    if (isPersistent && isInheritable)
+                        dataField.addSection("field_is_inheritable");
+                }
+            }
+        }
+
+        /*
+         * Methods
+         */
+        if (cd.hasMethods()){
+
+            for (MethodDescriptor method: cd.getMethods()){
+
+                String method_name = method.getName();
+                if (null != method_name){
+                    String method_body = gap.Strings.TextToString(method.getBody());
+                    if (null != method_body){
+
+                        TemplateDictionary methods = top.addSection(DefineName(prefix,"method"));
+                        methods.setVariable("method_name",method_name);
+                        methods.setVariable("method_body",method_body);
+
+                        TemplateDictionary mb = top.addSection(DefineName(prefix,"method_"+method_name+"_with_body"));
+                        mb.setVariable("body",method_body);
+
+                        String method_type = ToString(method.getType());
+                        if (null != method_type){
+                            TemplateDictionary ma = top.addSection(DefineName(prefix,"method_"+method_name+"_with_type"));
+                            ma.setVariable("type",method_type);
+                            methods.setVariable("method_type",method_type);
+                        }
+                        else
+                            top.showSection(DefineName(prefix,"method_"+method_name+"_without_type"));
+
+                        if (method instanceof MethodDescriptor.Arguments){
+                            MethodDescriptor.Arguments ma = (MethodDescriptor.Arguments)method;
+                            if (ma.hasArguments()){
+                                String method_arguments = ma.getArguments();
+                                if (null != method_arguments){
+                                    TemplateDictionary td = top.addSection(DefineName(prefix,"method_"+method_name+"_with_args"));
+                                    td.setVariable("args",method_arguments);
+                                    methods.setVariable("method_arguments",method_arguments);
+                                }
+                                else
+                                    top.showSection(DefineName(prefix,"method_"+method_name+"_without_args"));
+                            }
+                            else
+                                top.showSection(DefineName(prefix,"method_"+method_name+"_without_args"));
+                        }
+                        else
+                            top.showSection(DefineName(prefix,"method_"+method_name+"_without_args"));
+
+                        if (method instanceof MethodDescriptor.Exceptions){
+                            MethodDescriptor.Exceptions ma = (MethodDescriptor.Exceptions)method;
+                            if (ma.hasExceptions()){
+                                String method_exceptions = ma.getExceptions();
+                                if (null != method_exceptions){
+                                    TemplateDictionary td = top.addSection(DefineName(prefix,"method_"+method_name+"_with_excs"));
+                                    td.setVariable("excs",method_exceptions);
+                                    methods.setVariable(DefineName(prefix,"method_exceptions"),method_exceptions);
+                                }
+                                else
+                                    top.showSection(DefineName(prefix,"method_"+method_name+"_without_excs"));
+                            }
+                            else
+                                top.showSection(DefineName(prefix,"method_"+method_name+"_without_excs"));
+                        }
+                        else
+                            top.showSection(DefineName(prefix,"method_"+method_name+"_without_excs"));
+                    }
+                    else {
+                        top.showSection(DefineName(prefix,"method_"+method_name+"_without_body"));
+                    }
+                }
+            }
+        }
+
+        /*
+         * Current template model requires 'key'.
+         */
+        if (null != key){
+
+            top.setVariable(DefineName(prefix,"class_defaultSortBy"), defaultSortBy);
+
+            return;
+        }
+        else
+            throw new ODStateException(cd,"Model requires a field having type 'com.google.appengine.api.datastore.Key'.");
+
+    }
+    public final static String DefineName(String prefix, String name){
+        if (null == prefix || 0 == prefix.length())
+            return name;
+        else
+            return (prefix+name);
+    }
+
     public final static List<FieldDescriptor> FieldsOfTypeList(PackageDescriptor pkg, ClassDescriptor cd, List<ImportDescriptor> imports){
         List<FieldDescriptor> re = new java.util.ArrayList<FieldDescriptor>();
         if (cd.hasFields()){

@@ -25,9 +25,9 @@ import java.io.IOException;
 import javax.annotation.Generated;
 
 /**
- * Data validation functions.
+ * Generated data bean string I/O functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-12T10:36:02.801Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-12T23:24:38.545Z")
 public abstract class Partner
     extends gap.Strings
 {

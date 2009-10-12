@@ -32,10 +32,10 @@ import java.util.StringTokenizer;
  * 
  * @author J. Pritchard
  */
-public final class JelaProgram
+public abstract class JelaProgram
     extends java.io.CharArrayWriter
 {
-    private final static String[] Imports = {
+    protected final static String[] Imports = {
         "import gap.*;",
         "import gap.data.*;",
         "import gap.service.*;",
@@ -60,67 +60,22 @@ public final class JelaProgram
         return null;
     }
 
-    public final String packageName, className, fullClassName;
 
     private LineNumbered lined;
 
     private int indent;
 
 
-    public JelaProgram(Resource resource, Tool tool){
+    protected JelaProgram(){
         super();
-        String[] lines = Lines(tool);
-        if (null != resource && null != lines){
-            this.packageName = FileManager.DerivePackage(resource);
-            this.className = Function.DeriveName(tool);
-            this.fullClassName = (this.packageName+'.'+this.className);
-
-            this.iprintln("package "+this.packageName+";");
-            this.iprintln();
-            for (String imp : Imports){
-                this.iprintln(imp);
-            }
-            this.iprintln();
-            this.iprintln("public final class "+this.className);
-            this.iprintln("    extends Function");
-            this.iprintln("{");
-            this.iprintln();
-            this.iopen();
-            this.iprintln("public "+this.className+"(Servlet instance, Request request, Response response, Resource resource, Tool tool)");
-            this.iprintln("        throws java.io.IOException, gap.jbx.Function.MethodNotFound");
-            this.iprintln("{");
-            this.iprintln("    super(instance,request,response,resource,tool);");
-            this.iprintln("}");
-            this.iprintln();
-            this.iprintln("protected void service()");
-            this.iprintln("        throws java.io.IOException");
-            this.iprintln("{");
-            this.iopen();
-            this.iprintln();
-
-            for (String stmt : lines){
-
-                if (stmt.endsWith("{")){
-                    this.iprintln(stmt);
-                    this.iopen();
-                }
-                else if (stmt.endsWith("}")){
-                    this.iclose();
-                    this.iprintln(stmt);
-                }
-                else
-                    this.iprintln(stmt);
-            }
-            this.iclose();
-            this.iprintln("}");
-            this.iprintln();
-            this.iclose();
-            this.iprintln("}");
-        }
-        else 
-            throw new IllegalArgumentException();
     }
 
+
+    public abstract String getPackageName();
+
+    public abstract String getClassName();
+
+    public abstract String getFullClassName();
 
     public String getSource(){
         return this.toString();
@@ -134,20 +89,19 @@ public final class JelaProgram
         return lined.toString();
     }
 
-    private void iopen(){
+    protected void iopen(){
         this.indent += 1;
     }
-    private void iclose(){
-        this.indent -= 1;
-        if (0 > this.indent)
-            this.indent = 0;
+    protected void iclose(){
+        if (0 < this.indent)
+            this.indent -= 1;
     }
-    private void iprintln(String string){
+    protected void iprintln(String string){
         super.append(I[this.indent % I.length]);
         super.append(string);
         super.append('\n');
     }
-    private void iprintln(){
+    protected void iprintln(){
         super.append('\n');
     }
 

@@ -26,9 +26,21 @@ import hapax.TemplateDictionary;
  */
 public interface DictionaryInto {
 
+    public interface DataFilter {
+        /**
+         * @return Mapped field name or null to reject.
+         */
+        public String acceptAs(BigTable instance, String fieldName);
+    }
+
     /**
      * Install all with inheritance.
      */
     public TemplateDictionary dictionaryInto(TemplateDictionary dict);
+
+    /**
+     * Install with inheritance as directed by filter.
+     */
+    public TemplateDictionary dictionaryInto(TemplateDictionary dict, DataFilter filter);
 
 }

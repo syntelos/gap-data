@@ -371,11 +371,6 @@ public abstract class BigTable
      */
     public abstract void store();
 
-    /**
-     * Install possibly filtered set.
-     */
-    public abstract TemplateDictionary dictionaryInto(Parameters params, TemplateDictionary dict);
-
     public boolean hasInheritFromKey(){
         return (null != this.inheritFromKey);
     }

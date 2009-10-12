@@ -19,13 +19,28 @@
  */
 package gap.data;
 
-/**
- * Implemented by {@link BigTable} classes 
- */
-public interface RequestCreateUpdate {
-    /**
-     * @return True for modifications requiring store.
-     */
-    public boolean updateFrom(gap.Request req) throws ValidationError;
 
+/**
+ * Thrown by data bean update from request.
+ * 
+ * @see RequestCreateUpdate
+ */
+public final class ValidationError
+    extends java.lang.IllegalArgumentException
+{
+    public final String kind, name, value;
+
+
+    public ValidationError(String kind, String name, String value, Exception cause){
+        super(name,cause);
+        this.kind = kind;
+        this.name = name;
+        this.value = value;
+    }
+    public ValidationError(String kind, String name, String value){
+        super(name);
+        this.kind = kind;
+        this.name = name;
+        this.value = value;
+    }
 }

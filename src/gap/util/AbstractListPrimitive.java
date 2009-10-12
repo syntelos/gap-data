@@ -254,15 +254,31 @@ public abstract class AbstractListPrimitive<V>
         String typeName = type.name();
 
         for (V value: this){
-            TemplateDictionary item = top.addSection(typeName);
 
             if (value instanceof DictionaryInto){
                 DictionaryInto dvalue = (DictionaryInto)value;
 
-                dvalue.dictionaryInto(item);
+                dvalue.dictionaryInto(top);
             }
             else {
-                item.putVariable("value",gap.Strings.ToString(type,value));
+                top.putVariable(typeName,gap.Strings.ToString(type,value));
+            }
+        }
+        return top;
+    }
+    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
+        gap.Primitive type = this.getType();
+        String typeName = type.name();
+
+        for (V value: this){
+
+            if (value instanceof DictionaryInto){
+                DictionaryInto dvalue = (DictionaryInto)value;
+
+                dvalue.dictionaryInto(top,filter);
+            }
+            else {
+                top.putVariable(typeName,gap.Strings.ToString(type,value));
             }
         }
         return top;

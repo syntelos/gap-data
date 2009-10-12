@@ -1,5 +1,5 @@
 
-package {{=package_name}};
+package {{=parent_package_name}};
 {{#import}}
 import {{=import_spec}};{{/import}}
 
@@ -14,9 +14,9 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * Data bean generated from "{{=odl_gen_odl_src}}".
+ * Generated short list.
  */
-@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
+@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}")
 public final class ListShort{{=parent_class_name}}{{=child_class_name}}
     extends gap.util.AbstractList<{{=child_class_name}}>
     implements gap.data.List.Short<{{=child_class_name}}>
@@ -24,7 +24,7 @@ public final class ListShort{{=parent_class_name}}{{=child_class_name}}
 
     private final static long serialVersionUID = {{=parent_class_version}};
 
-    public final static String AncestorKeyFieldName = "{{=parent_keyfield_name}}";
+    public final static String AncestorKeyFieldName = "{{=parent_field_key_name}}";
 
     public final static String ParentTypeName = "{{=parent_class_name}}";
 
@@ -38,7 +38,7 @@ public final class ListShort{{=parent_class_name}}{{=child_class_name}}
         super();
         if (null != parent){
             this.parent = parent;
-            this.ancestorKeyFieldName = ListShort{{=parent_class_name}}{{=child_class_name}}.AncestorKeyFieldName;
+            this.ancestorKeyFieldName = AncestorKeyFieldName;
             this.setValueClassAncestorKey();
         }
         else
@@ -81,6 +81,14 @@ public final class ListShort{{=parent_class_name}}{{=child_class_name}}
         for ({{=child_class_name}} value: this){
 
             value.dictionaryInto(top);
+        }
+        return top;
+    }
+    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
+
+        for ({{=child_class_name}} value: this){
+
+            value.dictionaryInto(top,filter);
         }
         return top;
     }
