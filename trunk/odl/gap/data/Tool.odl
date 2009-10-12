@@ -4,6 +4,7 @@ path /tools;
 child Tool version 1 
     parent Resource
     implements LastModified
+    implements HasName
 {
     Key key;
     *unique String id;

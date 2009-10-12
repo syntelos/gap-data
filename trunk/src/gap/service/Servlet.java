@@ -38,6 +38,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -53,6 +54,7 @@ import java.util.logging.LogRecord;
  */
 public class Servlet
     extends javax.servlet.http.HttpServlet
+    implements gap.data.DataInheritance.Notation
 {
     public final static gap.util.Services Services = (new gap.util.Services(Servlet.class)).init();
     static {
@@ -69,6 +71,30 @@ public class Servlet
      * One servlet config in the classloader scope.
      */
     protected volatile static ServletConfig Config;
+
+    private final static String TemplateIndex = "index.html";
+
+    private final static String[] TemplateIndexFlist = {
+        TemplateIndex,
+        "div.logon.html",
+        "div.overlay.html",
+        "div.tool.html",
+        "div.tool.off.html",
+        "form.create.html",
+        "form.delete.html",
+        "form.export.html",
+        "form.goto.html",
+        "form.import.html",
+        "form.update.html",
+        "head.tool.html"
+    };
+
+    private final static String TemplateErrors = "errors.html";
+
+    private final static String[] TemplateErrorsFlist = {
+        TemplateErrors,
+        "div.logon.html"
+    };
 
     private volatile gap.jbx.Function.List functionList;
 
@@ -93,6 +119,27 @@ public class Servlet
             Config = config;
 
         super.init(config);
+    }
+    @Override
+    public void init() throws ServletException {
+        this.serviceEnter();
+        try {
+            if (this.installResource(TemplateIndex,TemplateIndexFlist))
+                this.installResource(TemplateErrors,TemplateErrorsFlist);
+        }
+        catch (TemplateException exc){
+            LogRecord rec = new LogRecord(Level.SEVERE,"init");
+            rec.setThrown(exc);
+            Log.log(rec);
+        }
+        catch (IOException exc){
+            LogRecord rec = new LogRecord(Level.SEVERE,"init");
+            rec.setThrown(exc);
+            Log.log(rec);
+        }
+        finally {
+            this.serviceExit();
+        }
     }
     /**
      * This method injects store enter and exit, and defines an
@@ -301,89 +348,78 @@ public class Servlet
     protected TemplateDictionary doGetDefine(Request req, Response rep){
         return req.getTop();
     }
-    protected Template doGetTemplate(Request req, Response rep)
-        throws TemplateException
-    {
-        return null;
-    }
     protected final void doGet(Request req, Response rep)
         throws ServletException, IOException
     {
         TemplateDictionary top = this.doGetDefine(req,rep);
         if (null != top){
             try {
-                Template template = this.doGetTemplate(req,rep);
+                Template template = req.getTemplate();
                 if (null != template){
                     this.render(req,rep,template,top);
                     return ;
                 }
             }
             catch (TemplateException exc){
-                LogRecord rec = new LogRecord(Level.SEVERE,"error");
+                LogRecord rec = new LogRecord(Level.SEVERE,req.userReference);
                 rec.setThrown(exc);
                 Servlet.Log.log(rec);
+                this.error(req,rep,500,"Template error.",exc);
+                return;
             }
-            this.error(req,rep);
         }
-        else
-            this.error(req,rep,404,"Not found.");
+        this.error(req,rep,404,"Not found.");
     }
     protected final void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
-        if (req.hasBase() && req.hasName()){
-            String base = req.getBase();
-            String name = req.getName();
-            Resource resource = Resource.ForLongBaseName(base,name);
-            if (null != resource){
-                String op = req.getParameter("op");
-                if (null == op)
-                    this.error(req,rep,400,"Missing request parameter 'op'.");
-                
-                else if ("create".equals(op)){
+        Resource resource = req.resource;
+        if (null != resource){
+            String op = req.getParameter("op");
+            if (null == op)
+                this.error(req,rep,400,"Missing request parameter 'op'.");
 
-                    this.error(req,rep,400,"Not available to create.");
-                }
-                else {
-                    ListFilter filter = new ListFilter.ListFilterTool(op);
-                    Tool tool = resource.getTools(filter);
-                    if (null != tool){
-                        Function function = req.getFunction(this,req,rep,resource,tool);
-                        if (null != function)
-                            function.invoke();
-                        else
-                            this.error(req,rep,400,"Operator function not found.");
-                    }
-                    else
-                        this.error(req,rep,400,"Unrecognized request parameter 'op'.");
-                }
+            else if ("create".equals(op)){
+
+                this.error(req,rep,400,"Not available to create.");
             }
             else {
-                String op = req.getParameter("op");
-                if (null == op)
-                    this.error(req,rep,400,"Missing request parameter 'op'.");
-
-                else if ("create".equals(op)){
-                    if (this.canCreate(req)){
-
-                        resource = Resource.GetCreateLong(base,name);
-
-                        if (resource.updateFrom(req))
-                            resource.save();
-
-                        this.createTools(resource);
-
-                        this.redirectToItem(req,rep,resource.getId());
-                    }
+                ListFilter filter = new ListFilter.Name(op);
+                Tool tool = resource.getTools(filter);
+                if (null != tool){
+                    Function function = req.getFunction(this,req,rep,resource,tool);
+                    if (null != function)
+                        function.invoke();
                     else
-                        this.error(req,rep,403,"Access not granted.");
+                        this.error(req,rep,400,"Operator function not found.");
                 }
                 else
-                    this.error(req,rep,400,"Unrecognized request parameter 'op' not 'create'.");
+                    this.error(req,rep,400,"Unrecognized request parameter 'op'.");
             }
         }
-        else
-            this.undefined(req,rep);
+        else {
+            String op = req.getParameter("op");
+            if (null == op)
+                this.error(req,rep,400,"Missing request parameter 'op'.");
+
+            else if ("create".equals(op)){
+                if (this.canCreate(req)){
+
+                    resource = FileManager.GetCreateResource(req.path);
+
+                    if (resource.updateFrom(req))
+                        resource.save();
+
+                    this.createTools(resource);
+
+                    this.redirectToItem(req,rep,resource.getId());
+                }
+                else
+                    this.error(req,rep,403,"Access not granted.");
+            }
+            else
+                this.error(req,rep,400,"Unrecognized request parameter 'op' not 'create'.");
+        }
     }
     protected void doPut(Request req, Response rep)
         throws ServletException, IOException
@@ -410,17 +446,17 @@ public class Servlet
     {
         this.undefined(req,rep);
     }
-    protected void error(HttpServletRequest req, HttpServletResponse rep)
+    protected final void error(HttpServletRequest req, HttpServletResponse rep)
         throws IOException, ServletException
     {
         this.error(req, rep, 0, null, null);
     }
-    protected void error(HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage)
+    protected final void error(HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage)
         throws IOException, ServletException
     {
         this.error(req, rep, status, statusMessage, null);
     }
-    protected void error(HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage, Throwable any)
+    protected final void error(HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage, Throwable any)
         throws IOException, ServletException
     {
         if (req instanceof Request && rep instanceof Response){
@@ -472,7 +508,7 @@ public class Servlet
 
             if (null != templateName){
                 try {
-                    Template template = FileManager.Get().getTemplate(templateName);
+                    Template template = Templates.GetTemplate(templateName);
                     if (null != template)
                         this.render(request, ((Response)rep), template, error);
                 }
@@ -486,37 +522,15 @@ public class Servlet
         else if (0 < status)
             rep.setStatus(status,statusMessage);
     }
-    protected void undefined(Request req, Response rep)
+    protected final void undefined(Request req, Response rep)
         throws ServletException, IOException
     {
         this.error(req,rep,HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+Method.Get()+"' not implemented");
     }
-    protected void render(Request req, Response rep, String templateName)
-        throws IOException, ServletException
-    {
-        try {
-            Template template = req.getTemplate(templateName);
-            if (null != template)
-                this.render(req, rep, template, req.getTop());
-            else
-                this.error(req,rep,404,"Not found.");
-        }
-        catch (TemplateException exc){
-            LogRecord rec = new LogRecord(Level.SEVERE,"error");
-            rec.setThrown(exc);
-            Log.log(rec);
-            this.error(req,rep,500,"Internal error.",exc);
-        }
-    }
-    protected void render(Request req, Response rep, Template template, TemplateDictionary top)
+    protected final void render(Request req, Response rep, Template template, TemplateDictionary top)
         throws IOException, ServletException, TemplateException
     {
-        this.render(req,rep,template,top,(rep.getWriter()));
-    }
-    private void render(Request req, Response rep, Template template, TemplateDictionary top, PrintWriter out)
-        throws IOException, ServletException, TemplateException
-    {
-        template.render(top,out);
+        template.render(top,rep.getWriter());
 
         if (req.accept("text/html"))
             rep.setContentType("text/html;charset=utf-8");
@@ -558,6 +572,8 @@ public class Servlet
         XMessaging.Exit();
         Method.Exit();
         FileManager.Exit();
+        Request.Exit();
+        Response.Exit();
     }
     protected Parameters createParameters(HttpServletRequest req){
         return new Parameters(req,Parameters.Special.Page.Default,null);
@@ -579,14 +595,36 @@ public class Servlet
     protected Response createResponse(Request req, HttpServletResponse rep){
         return new Response(rep);
     }
+    protected boolean installResource(String name, String[] templates)
+        throws IOException, TemplateException
+    {
+        Resource resource = Resource.GetCreateLong("",name);
+        if (resource.hasNotTemplates(MayInherit)){
+            Key resourceKey = resource.getKey();
+            for (String templateName: templates){
+                File templateFile = Templates.TemplateFile(templateName);
+                if (null != templateFile && templateFile.isFile()){
+                    gap.data.Template template = new gap.data.Template(resourceKey,templateName);
+                    String templateSource = Templates.TemplateSource(templateFile);
+                    template.setLastModified(templateFile.lastModified());
+                    template.setTemplateSourceHapax(gap.Strings.TextFromString(templateSource));
+                    template.save();
+                }
+            }
+            this.createTools(resource);
+            return true;
+        }
+        else
+            return false;
+    }
     protected void createTools(Resource resource){
         Key resourceKey = resource.getKey();
         Resource index_html = Resource.ForLongBaseName("","index.html");
-        if (null != index_html){
-            for (Tool indexTool: index_html.getTools(true)){
+        if (null != index_html && index_html.hasTools(MayInherit)){
+            for (Tool indexTool: index_html.getTools(MayInherit)){
                 String name = indexTool.getName();
                 Tool resourceTool = new Tool(resourceKey,name);
-                resourceTool.updateFrom(indexTool);
+                resourceTool.inheritFrom(indexTool);
                 resourceTool.save();
             }
         }
@@ -601,6 +639,14 @@ public class Servlet
     }
     /*
      */
+    protected final static String Safe(String string){
+        if (null == string)
+            return "";
+        else
+            return string;
+    }
+
+
     protected final static String HEADER_IFMODSINCE = "If-Modified-Since";
     protected final static String HEADER_LASTMOD = "Last-Modified";
     

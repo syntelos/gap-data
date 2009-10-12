@@ -29,7 +29,7 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-11T17:31:48.712Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-12T10:36:02.565Z",comments="gap.data")
 public class Resource
     extends gap.servlet.Site
 {

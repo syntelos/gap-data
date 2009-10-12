@@ -62,11 +62,11 @@ public class {{=class_name}}
                     return top;
                 }
             }{{/class_re_not_child_or_group}}{{#class_re_child}}
-            if (req.hasPath(1) && req.hasPath(3)){
+            if (req.hasPath(1) && req.hasPath(2)){
 
                 Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
 
-                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForLong{{=field_unique_nameCamel}}(parentKey,req.getPath(1));
+                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForLong{{=field_unique_nameCamel}}(parentKey,req.getPath(2));
 
                 if (null != instance){
 
@@ -75,11 +75,11 @@ public class {{=class_name}}
                     return top;
                 }
             }{{/class_re_child}}{{#class_re_childgroup}}
-            if (req.hasPath(1) && req.hasPath(3)){
+            if (req.hasPath(1) && req.hasPath(2)){
 
                 Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
 
-                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForShort{{=field_unique_nameCamel}}(parentKey,req.getPath(1));
+                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForShort{{=field_unique_nameCamel}}(parentKey,req.getPath(2));
 
                 if (null != instance){
 

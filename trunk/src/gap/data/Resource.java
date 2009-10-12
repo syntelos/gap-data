@@ -16,11 +16,12 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T17:31:48.603Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T10:36:02.394Z",comments="gap.data")
 public final class Resource
     extends gap.data.BigTable
     implements DataInheritance<Resource>,
-               LastModified
+               LastModified,
+               HasName
 {
 
     private final static long serialVersionUID = 1;
@@ -212,9 +213,7 @@ public final class Resource
         Tag("tag"),
         ServletClassname("servletClassname"),
         ServletSourceJava("servletSourceJava"),
-        ServletClassfileJvm("servletClassfileJvm"),
-        TemplateSourceHapax("templateSourceHapax"),
-        TemplateContentType("templateContentType");
+        ServletClassfileJvm("servletClassfileJvm");
 
 
         private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -256,10 +255,6 @@ public final class Resource
                 return instance.getServletSourceJava(mayInherit);
             case ServletClassfileJvm:
                 return instance.getServletClassfileJvm(mayInherit);
-            case TemplateSourceHapax:
-                return instance.getTemplateSourceHapax(mayInherit);
-            case TemplateContentType:
-                return instance.getTemplateContentType(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
             }
@@ -286,10 +281,6 @@ public final class Resource
                 return instance.setServletSourceJava( (Text)value);
             case ServletClassfileJvm:
                 return instance.setServletClassfileJvm( (Blob)value);
-            case TemplateSourceHapax:
-                return instance.setTemplateSourceHapax( (Text)value);
-            case TemplateContentType:
-                return instance.setTemplateContentType( (String)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
             }
@@ -324,8 +315,6 @@ public final class Resource
     private volatile String servletClassname;    
     private volatile Text servletSourceJava;    
     private volatile Blob servletClassfileJvm;    
-    private volatile Text templateSourceHapax;    
-    private volatile String templateContentType;    
 
 
     private volatile List.Long<Partner> partners;
@@ -361,6 +350,7 @@ public final class Resource
 
     }
     public void destroy(){
+        this.inheritFrom = null;
         this.datastoreEntity = null;
         this.key = null;
         this.id = null;
@@ -371,8 +361,6 @@ public final class Resource
         this.servletClassname = null;
         this.servletSourceJava = null;
         this.servletClassfileJvm = null;
-        this.templateSourceHapax = null;
-        this.templateContentType = null;
         List.Long<Partner> partners = this.partners;
         if (null != partners){
             this.partners = null;
@@ -417,6 +405,16 @@ public final class Resource
         return inheritFrom;
     }
     public boolean setInheritFrom(Resource ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean inheritFrom(Resource ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
@@ -564,7 +562,7 @@ public final class Resource
             if (null == lastModified && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getLastModified(true);
+                    return inheritFrom.getLastModified(MayInherit);
             }
             return lastModified;
         }
@@ -608,7 +606,7 @@ public final class Resource
             if (null == tag && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getTag(true);
+                    return inheritFrom.getTag(MayInherit);
             }
             return tag;
         }
@@ -652,7 +650,7 @@ public final class Resource
             if (null == servletClassname && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getServletClassname(true);
+                    return inheritFrom.getServletClassname(MayInherit);
             }
             return servletClassname;
         }
@@ -696,7 +694,7 @@ public final class Resource
             if (null == servletSourceJava && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getServletSourceJava(true);
+                    return inheritFrom.getServletSourceJava(MayInherit);
             }
             return servletSourceJava;
         }
@@ -740,7 +738,7 @@ public final class Resource
             if (null == servletClassfileJvm && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getServletClassfileJvm(true);
+                    return inheritFrom.getServletClassfileJvm(MayInherit);
             }
             return servletClassfileJvm;
         }
@@ -764,103 +762,17 @@ public final class Resource
             return false;
     }
 
-    public boolean hasTemplateSourceHapax(boolean mayInherit){
-        return (null != this.getTemplateSourceHapax(mayInherit));
-    }
-    public boolean hasNotTemplateSourceHapax(boolean mayInherit){
-        return (null == this.getTemplateSourceHapax(mayInherit));
-    }
-    public boolean dropTemplateSourceHapax(){
-        if (null != this.templateSourceHapax){
-            this.templateSourceHapax = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public Text getTemplateSourceHapax(boolean mayInherit){
-        if (mayInherit){
-            Text templateSourceHapax = this.templateSourceHapax;
-            if (null == templateSourceHapax && this.hasInheritFrom()){
-                Resource inheritFrom = this.getInheritFrom();
-                if (null != inheritFrom)
-                    return inheritFrom.getTemplateSourceHapax(true);
-            }
-            return templateSourceHapax;
-        }
-        else
-            return this.templateSourceHapax;
-    }
-    public boolean setTemplateSourceHapax(Text templateSourceHapax, boolean withInheritance){
-        if (IsNotEqual(this.templateSourceHapax,this.getTemplateSourceHapax(withInheritance))){
-            this.templateSourceHapax = templateSourceHapax;
-            return true;
-        }
-        else
-            return false;
-    }
-    public boolean setTemplateSourceHapax(Text templateSourceHapax){
-        if (IsNotEqual(this.templateSourceHapax,templateSourceHapax)){
-            this.templateSourceHapax = templateSourceHapax;
-            return true;
-        }
-        else
-            return false;
-    }
-
-    public boolean hasTemplateContentType(boolean mayInherit){
-        return (null != this.getTemplateContentType(mayInherit));
-    }
-    public boolean hasNotTemplateContentType(boolean mayInherit){
-        return (null == this.getTemplateContentType(mayInherit));
-    }
-    public boolean dropTemplateContentType(){
-        if (null != this.templateContentType){
-            this.templateContentType = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public String getTemplateContentType(boolean mayInherit){
-        if (mayInherit){
-            String templateContentType = this.templateContentType;
-            if (null == templateContentType && this.hasInheritFrom()){
-                Resource inheritFrom = this.getInheritFrom();
-                if (null != inheritFrom)
-                    return inheritFrom.getTemplateContentType(true);
-            }
-            return templateContentType;
-        }
-        else
-            return this.templateContentType;
-    }
-    public boolean setTemplateContentType(String templateContentType, boolean withInheritance){
-        if (IsNotEqual(this.templateContentType,this.getTemplateContentType(withInheritance))){
-            this.templateContentType = templateContentType;
-            return true;
-        }
-        else
-            return false;
-    }
-    public boolean setTemplateContentType(String templateContentType){
-        if (IsNotEqual(this.templateContentType,templateContentType)){
-            this.templateContentType = templateContentType;
-            return true;
-        }
-        else
-            return false;
-    }
-
     public boolean hasPartners(boolean mayInherit){
-        return (null != this.getPartners(mayInherit));
+        return (this.getPartners(mayInherit).isNotEmpty());
     }
     public boolean hasNotPartners(boolean mayInherit){
-        return (null == this.getPartners(mayInherit));
+        return (this.getPartners(mayInherit).isEmpty());
     }
     public boolean dropPartners(){
-        if (null != this.partners){
+        List.Long<Partner> partners = this.partners;
+        if (null != partners){
             this.partners = null;
+            partners.destroy();
             return true;
         }
         else
@@ -872,7 +784,7 @@ public final class Resource
             if (mayInherit && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom){
-                    partners = inheritFrom.getPartners(true);
+                    partners = inheritFrom.getPartners(MayInherit);
                     if (null != partners)
                         return partners;
                 }
@@ -902,7 +814,7 @@ public final class Resource
     }
     public Partner getPartners(gap.data.ListFilter<Partner> filter){
         if (null != filter){
-            List.Long<Partner> list = this.getPartners(true);
+            List.Long<Partner> list = this.getPartners(MayInherit);
             for (Partner item : list){
                 if (filter.accept(item))
                     return item;
@@ -914,14 +826,16 @@ public final class Resource
     }
 
     public boolean hasAccounts(boolean mayInherit){
-        return (null != this.getAccounts(mayInherit));
+        return (this.getAccounts(mayInherit).isNotEmpty());
     }
     public boolean hasNotAccounts(boolean mayInherit){
-        return (null == this.getAccounts(mayInherit));
+        return (this.getAccounts(mayInherit).isEmpty());
     }
     public boolean dropAccounts(){
-        if (null != this.accounts){
+        List.Long<Account> accounts = this.accounts;
+        if (null != accounts){
             this.accounts = null;
+            accounts.destroy();
             return true;
         }
         else
@@ -933,7 +847,7 @@ public final class Resource
             if (mayInherit && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom){
-                    accounts = inheritFrom.getAccounts(true);
+                    accounts = inheritFrom.getAccounts(MayInherit);
                     if (null != accounts)
                         return accounts;
                 }
@@ -963,7 +877,7 @@ public final class Resource
     }
     public Account getAccounts(gap.data.ListFilter<Account> filter){
         if (null != filter){
-            List.Long<Account> list = this.getAccounts(true);
+            List.Long<Account> list = this.getAccounts(MayInherit);
             for (Account item : list){
                 if (filter.accept(item))
                     return item;
@@ -975,14 +889,16 @@ public final class Resource
     }
 
     public boolean hasImages(boolean mayInherit){
-        return (null != this.getImages(mayInherit));
+        return (this.getImages(mayInherit).isNotEmpty());
     }
     public boolean hasNotImages(boolean mayInherit){
-        return (null == this.getImages(mayInherit));
+        return (this.getImages(mayInherit).isEmpty());
     }
     public boolean dropImages(){
-        if (null != this.images){
+        List.Short<Image> images = this.images;
+        if (null != images){
             this.images = null;
+            images.destroy();
             return true;
         }
         else
@@ -994,7 +910,7 @@ public final class Resource
             if (mayInherit && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom){
-                    images = inheritFrom.getImages(true);
+                    images = inheritFrom.getImages(MayInherit);
                     if (null != images)
                         return images;
                 }
@@ -1024,7 +940,7 @@ public final class Resource
     }
     public Image getImages(gap.data.ListFilter<Image> filter){
         if (null != filter){
-            List.Short<Image> list = this.getImages(true);
+            List.Short<Image> list = this.getImages(MayInherit);
             for (Image item : list){
                 if (filter.accept(item))
                     return item;
@@ -1034,16 +950,26 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
+    public Image getImagesByName(String name){
+        List.Short<Image> list = this.getImages(MayInherit);
+        for (Image item : list){
+            if (item.getName().equals(name))
+                return item;
+        }
+        return null;
+    }
 
     public boolean hasTemplates(boolean mayInherit){
-        return (null != this.getTemplates(mayInherit));
+        return (this.getTemplates(mayInherit).isNotEmpty());
     }
     public boolean hasNotTemplates(boolean mayInherit){
-        return (null == this.getTemplates(mayInherit));
+        return (this.getTemplates(mayInherit).isEmpty());
     }
     public boolean dropTemplates(){
-        if (null != this.templates){
+        List.Short<Template> templates = this.templates;
+        if (null != templates){
             this.templates = null;
+            templates.destroy();
             return true;
         }
         else
@@ -1055,7 +981,7 @@ public final class Resource
             if (mayInherit && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom){
-                    templates = inheritFrom.getTemplates(true);
+                    templates = inheritFrom.getTemplates(MayInherit);
                     if (null != templates)
                         return templates;
                 }
@@ -1085,7 +1011,7 @@ public final class Resource
     }
     public Template getTemplates(gap.data.ListFilter<Template> filter){
         if (null != filter){
-            List.Short<Template> list = this.getTemplates(true);
+            List.Short<Template> list = this.getTemplates(MayInherit);
             for (Template item : list){
                 if (filter.accept(item))
                     return item;
@@ -1095,16 +1021,26 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
+    public Template getTemplatesByName(String name){
+        List.Short<Template> list = this.getTemplates(MayInherit);
+        for (Template item : list){
+            if (item.getName().equals(name))
+                return item;
+        }
+        return null;
+    }
 
     public boolean hasTools(boolean mayInherit){
-        return (null != this.getTools(mayInherit));
+        return (this.getTools(mayInherit).isNotEmpty());
     }
     public boolean hasNotTools(boolean mayInherit){
-        return (null == this.getTools(mayInherit));
+        return (this.getTools(mayInherit).isEmpty());
     }
     public boolean dropTools(){
-        if (null != this.tools){
+        List.Short<Tool> tools = this.tools;
+        if (null != tools){
             this.tools = null;
+            tools.destroy();
             return true;
         }
         else
@@ -1116,7 +1052,7 @@ public final class Resource
             if (mayInherit && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom){
-                    tools = inheritFrom.getTools(true);
+                    tools = inheritFrom.getTools(MayInherit);
                     if (null != tools)
                         return tools;
                 }
@@ -1146,7 +1082,7 @@ public final class Resource
     }
     public Tool getTools(gap.data.ListFilter<Tool> filter){
         if (null != filter){
-            List.Short<Tool> list = this.getTools(true);
+            List.Short<Tool> list = this.getTools(MayInherit);
             for (Tool item : list){
                 if (filter.accept(item))
                     return item;
@@ -1155,6 +1091,14 @@ public final class Resource
         }
         else
             throw new IllegalArgumentException();
+    }
+    public Tool getToolsByName(String name){
+        List.Short<Tool> list = this.getTools(MayInherit);
+        for (Tool item : list){
+            if (item.getName().equals(name))
+                return item;
+        }
+        return null;
     }
 
 
@@ -1192,7 +1136,7 @@ public final class Resource
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
-                    java.lang.Object value = Field.Get(field,this,true);
+                    java.lang.Object value = Field.Get(field,this,MayInherit);
                     if (null != value){
                         if (value instanceof DictionaryInto){
                             DictionaryInto dvalue = (DictionaryInto)value;
@@ -1212,7 +1156,7 @@ public final class Resource
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this,true);
+            java.lang.Object value = Field.Get(field,this,MayInherit);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;

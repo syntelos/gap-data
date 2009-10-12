@@ -16,11 +16,12 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T17:31:49.879Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T10:36:03.719Z",comments="gap.data")
 public final class Template
     extends gap.data.BigTable
     implements DataInheritance<Template>,
-               LastModified
+               LastModified,
+               HasName
 {
 
     private final static long serialVersionUID = 1;
@@ -237,8 +238,7 @@ public final class Template
         Id("id"),
         Name("name"),
         LastModified("lastModified"),
-        TemplateSourceHapax("templateSourceHapax"),
-        TemplateContentType("templateContentType");
+        TemplateSourceHapax("templateSourceHapax");
 
 
         private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -274,8 +274,6 @@ public final class Template
                 return instance.getLastModified(mayInherit);
             case TemplateSourceHapax:
                 return instance.getTemplateSourceHapax(mayInherit);
-            case TemplateContentType:
-                return instance.getTemplateContentType(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }
@@ -296,8 +294,6 @@ public final class Template
                 return instance.setLastModified( (Long)value);
             case TemplateSourceHapax:
                 return instance.setTemplateSourceHapax( (Text)value);
-            case TemplateContentType:
-                return instance.setTemplateContentType( (String)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }
@@ -328,7 +324,6 @@ public final class Template
     private volatile String name;    // *hash-unique
     private volatile Long lastModified;    
     private volatile Text templateSourceHapax;    
-    private volatile String templateContentType;    
 
 
 
@@ -361,13 +356,13 @@ public final class Template
 
     }
     public void destroy(){
+        this.inheritFrom = null;
         this.datastoreEntity = null;
         this.key = null;
         this.id = null;
         this.name = null;
         this.lastModified = null;
         this.templateSourceHapax = null;
-        this.templateContentType = null;
         this.parent = null;
     }
     public boolean hasInheritFrom(){
@@ -388,6 +383,16 @@ public final class Template
         return inheritFrom;
     }
     public boolean setInheritFrom(Template ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean inheritFrom(Template ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
@@ -551,7 +556,7 @@ public final class Template
             if (null == lastModified && this.hasInheritFrom()){
                 Template inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getLastModified(true);
+                    return inheritFrom.getLastModified(MayInherit);
             }
             return lastModified;
         }
@@ -595,7 +600,7 @@ public final class Template
             if (null == templateSourceHapax && this.hasInheritFrom()){
                 Template inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getTemplateSourceHapax(true);
+                    return inheritFrom.getTemplateSourceHapax(MayInherit);
             }
             return templateSourceHapax;
         }
@@ -613,50 +618,6 @@ public final class Template
     public boolean setTemplateSourceHapax(Text templateSourceHapax){
         if (IsNotEqual(this.templateSourceHapax,templateSourceHapax)){
             this.templateSourceHapax = templateSourceHapax;
-            return true;
-        }
-        else
-            return false;
-    }
-
-    public boolean hasTemplateContentType(boolean mayInherit){
-        return (null != this.getTemplateContentType(mayInherit));
-    }
-    public boolean hasNotTemplateContentType(boolean mayInherit){
-        return (null == this.getTemplateContentType(mayInherit));
-    }
-    public boolean dropTemplateContentType(){
-        if (null != this.templateContentType){
-            this.templateContentType = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public String getTemplateContentType(boolean mayInherit){
-        if (mayInherit){
-            String templateContentType = this.templateContentType;
-            if (null == templateContentType && this.hasInheritFrom()){
-                Template inheritFrom = this.getInheritFrom();
-                if (null != inheritFrom)
-                    return inheritFrom.getTemplateContentType(true);
-            }
-            return templateContentType;
-        }
-        else
-            return this.templateContentType;
-    }
-    public boolean setTemplateContentType(String templateContentType, boolean withInheritance){
-        if (IsNotEqual(this.templateContentType,this.getTemplateContentType(withInheritance))){
-            this.templateContentType = templateContentType;
-            return true;
-        }
-        else
-            return false;
-    }
-    public boolean setTemplateContentType(String templateContentType){
-        if (IsNotEqual(this.templateContentType,templateContentType)){
-            this.templateContentType = templateContentType;
             return true;
         }
         else
@@ -698,7 +659,7 @@ public final class Template
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
-                    java.lang.Object value = Field.Get(field,this,true);
+                    java.lang.Object value = Field.Get(field,this,MayInherit);
                     if (null != value){
                         if (value instanceof DictionaryInto){
                             DictionaryInto dvalue = (DictionaryInto)value;
@@ -718,7 +679,7 @@ public final class Template
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this,true);
+            java.lang.Object value = Field.Get(field,this,MayInherit);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;

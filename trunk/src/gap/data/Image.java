@@ -16,11 +16,12 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T17:31:49.142Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T10:36:03.008Z",comments="gap.data")
 public final class Image
     extends gap.data.BigTable
     implements DataInheritance<Image>,
-               LastModified
+               LastModified,
+               HasName
 {
 
     private final static long serialVersionUID = 1;
@@ -369,6 +370,7 @@ public final class Image
 
     }
     public void destroy(){
+        this.inheritFrom = null;
         this.datastoreEntity = null;
         this.key = null;
         this.id = null;
@@ -397,6 +399,16 @@ public final class Image
         return inheritFrom;
     }
     public boolean setInheritFrom(Image ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean inheritFrom(Image ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
@@ -589,7 +601,7 @@ public final class Image
             if (null == lastModified && this.hasInheritFrom()){
                 Image inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getLastModified(true);
+                    return inheritFrom.getLastModified(MayInherit);
             }
             return lastModified;
         }
@@ -633,7 +645,7 @@ public final class Image
             if (null == contentType && this.hasInheritFrom()){
                 Image inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getContentType(true);
+                    return inheritFrom.getContentType(MayInherit);
             }
             return contentType;
         }
@@ -677,7 +689,7 @@ public final class Image
             if (null == bytes && this.hasInheritFrom()){
                 Image inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getBytes(true);
+                    return inheritFrom.getBytes(MayInherit);
             }
             return bytes;
         }
@@ -736,7 +748,7 @@ public final class Image
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
-                    java.lang.Object value = Field.Get(field,this,true);
+                    java.lang.Object value = Field.Get(field,this,MayInherit);
                     if (null != value){
                         if (value instanceof DictionaryInto){
                             DictionaryInto dvalue = (DictionaryInto)value;
@@ -756,7 +768,7 @@ public final class Image
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this,true);
+            java.lang.Object value = Field.Get(field,this,MayInherit);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;

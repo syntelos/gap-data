@@ -4,11 +4,11 @@ path /templates;
 child Template version 1 
     parent Resource
     implements LastModified
+    implements HasName
 {
     Key key;
     *unique String id;
     *hash-unique String name;
     Long lastModified;
     Text templateSourceHapax;
-    String templateContentType;
 }

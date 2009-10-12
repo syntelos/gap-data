@@ -382,6 +382,9 @@ public class OD
                             String typeComponent = fieldTypeParameters[0];
                             field_is.putVariable("field_list_component",typeComponent);
 
+                            if (IsTypeOf(typeComponent,"HasName"))
+                                field_is.addSection("field_list_component_named");
+
                             dataField.putVariable("field_impl_class_name",ListClassName(fieldTypeClean,className,typeComponent));
                         }
                         else
@@ -1102,5 +1105,30 @@ public class OD
         }
         else
             throw new ODStateException(child,"Unrecognized field type.");
+    }
+    public final static boolean IsTypeOf(String typeName, String interfaceName){
+        if (gap.Primitive.Is(typeName))
+            return false;
+        else {
+            try {
+                ClassDescriptor type = gap.odl.Main.ClassDescriptorFor(typeName);
+                if (null != type){
+                    if (type instanceof ClassDescriptor.Implements){
+                        ClassDescriptor.Implements typei = (ClassDescriptor.Implements)type;
+                        if (typei.hasInterfaces()){
+                            for (Object inf : typei.getInterfaces()){
+                                String infName = ToString(inf);
+                                if (interfaceName.equals(infName))
+                                    return true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ignore){
+                ignore.printStackTrace();//(only likely at dev time)
+            }
+            return false;
+        }
     }
 }

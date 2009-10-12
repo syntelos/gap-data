@@ -29,7 +29,7 @@ import javax.annotation.Generated;
 /**
  * Data binding methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-11T17:31:49.458Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-12T10:36:03.338Z",comments="gap.data")
 public class Account
     extends gap.servlet.Site
 {
@@ -50,11 +50,11 @@ public class Account
 
         if (this.canRead(req)){
 
-            if (req.hasPath(1) && req.hasPath(3)){
+            if (req.hasPath(1) && req.hasPath(2)){
 
                 Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
 
-                gap.data.Account instance = gap.data.Account.ForLongId(parentKey,req.getPath(1));
+                gap.data.Account instance = gap.data.Account.ForLongId(parentKey,req.getPath(2));
 
                 if (null != instance){
 

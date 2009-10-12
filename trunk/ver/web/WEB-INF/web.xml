@@ -3,133 +3,112 @@
 
   <display-name>@ProjectTarget@</display-name>
 
-  <!-- 
-     - Servlet
-    -->
-
   <servlet>
     <servlet-name>Site</servlet-name>
     <servlet-class>gap.servlet.Site</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
-
-  <servlet>
-    <servlet-name>Errors</servlet-name>
-    <servlet-class>gap.servlet.Error</servlet-class>
-  </servlet>
-
-  <!-- 
-     - Mapping
-    -->
 
   <servlet-mapping>
     <servlet-name>Site</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>Errors</servlet-name>
-    <url-pattern>/errors/*</url-pattern>
-  </servlet-mapping>
-
-  <!-- 
-     - Errors
-    -->
-
   <error-page>
     <error-code>400</error-code>
-    <location>/errors/400.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>401</error-code>
-    <location>/errors/401.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>402</error-code>
-    <location>/errors/402.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>403</error-code>
-    <location>/errors/403.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>404</error-code>
-    <location>/errors/404.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>405</error-code>
-    <location>/errors/405.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>406</error-code>
-    <location>/errors/406.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>407</error-code>
-    <location>/errors/407.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>408</error-code>
-    <location>/errors/408.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>409</error-code>
-    <location>/errors/409.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>410</error-code>
-    <location>/errors/410.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>411</error-code>
-    <location>/errors/411.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>412</error-code>
-    <location>/errors/412.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>413</error-code>
-    <location>/errors/413.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>414</error-code>
-    <location>/errors/414.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>415</error-code>
-    <location>/errors/415.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>416</error-code>
-    <location>/errors/416.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>417</error-code>
-    <location>/errors/417.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>500</error-code>
-    <location>/errors/500.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>501</error-code>
-    <location>/errors/501.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>502</error-code>
-    <location>/errors/502.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>503</error-code>
-    <location>/errors/503.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>504</error-code>
-    <location>/errors/504.html</location>
+    <location>/errors.html</location>
   </error-page>
   <error-page>
     <error-code>505</error-code>
-    <location>/errors/505.html</location>
+    <location>/errors.html</location>
   </error-page>
 
 </web-app>

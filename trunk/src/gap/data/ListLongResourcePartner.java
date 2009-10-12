@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-11T17:31:48.725Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-12T10:36:02.577Z",comments="gap.data")
 public final class ListLongResourcePartner
     extends gap.util.AbstractList<Partner>
     implements gap.data.List.Long<Partner>
@@ -38,7 +38,7 @@ public final class ListLongResourcePartner
         if (null != parent){
             this.parent = parent;
             this.ancestorKeyFieldName = ListLongResourcePartner.AncestorKeyFieldName;
-            this.query = Resource.CreateQueryFor();
+            this.query = Partner.CreateQueryFor();
         }
         else
             throw new IllegalArgumentException();

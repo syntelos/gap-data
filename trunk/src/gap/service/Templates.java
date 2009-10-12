@@ -19,20 +19,17 @@
  */
 package gap.service;
 
-import gap.data.Resource;
+import gap.*;
+import gap.data.*;
 import gap.jac.tools.JavaFileManager.Location;
-
-import hapax.Template;
-import hapax.TemplateDictionary;
-import hapax.TemplateException;
-import hapax.TemplateLoader;
-import hapax.TemplateLoaderContext;
 
 import com.google.appengine.api.datastore.Text;
 
 import javax.servlet.ServletResponse;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -43,11 +40,12 @@ import java.io.PrintWriter;
  */
 public final class Templates
     extends hapax.TemplateCache
+    implements DataInheritance.Notation
 {
     /**
      * Default data dictionary variables.
      */
-    private static TemplateDictionary TemplateDictionaryDefault = TemplateDictionary.create();
+    private static hapax.TemplateDictionary TemplateDictionaryDefault = hapax.TemplateDictionary.create();
     static {
         TemplateDictionaryDefault.putVariable("gap_version_short",gap.Version.Short);
         TemplateDictionaryDefault.putVariable("gap_version_long",gap.Version.Long);
@@ -55,69 +53,39 @@ public final class Templates
     /**
      * Templates file cache location
      */
-    public final static String TemplatesLocation = "WEB-INF/templates";
-    public final static int TemplatesLocationLen = TemplatesLocation.length();
+    private final static String TemplatesLocation = "WEB-INF/templates";
+    private final static int TemplatesLocationLen = TemplatesLocation.length();
     /**
      * Shared templates file cache instance
      */
     private final static Templates Instance = new Templates();
 
 
-    public static void Render(String name, TemplateDictionary td, PrintWriter writer)
-        throws IOException, TemplateException
-    {
-        if (null != Instance){
-
-            Template template = Instance.getTemplate(name);
-
-            if (null == td)
-                td = TemplateDictionaryDefault.clone();
-
-            template.render(td,writer);
-        }
-        else
-            throw new IllegalStateException();
-    }
-    public static void Render(String name, TemplateDictionary td, ServletResponse rep)
-        throws IOException, TemplateException
-    {
-        rep.setCharacterEncoding("UTF-8");
-        Render(name,td,rep.getWriter());
-    }
-    public static void Render(String name, PrintWriter writer)
-        throws IOException, TemplateException
-    {
-        Render(name,TemplateDictionaryDefault.clone(),writer);
-    }
-    public static void Render(String name, ServletResponse rep)
-        throws IOException, TemplateException
-    {
-        rep.setCharacterEncoding("UTF-8");
-        Render(name,rep.getWriter());
-    }
-    public static TemplateDictionary CreateDictionary(){
+    public static hapax.TemplateDictionary CreateDictionary(){
         return TemplateDictionaryDefault.clone();
     }
-    public static Template GetTemplate(String name)
-        throws TemplateException
+    public final static hapax.Template GetTemplate(Resource resource)
+        throws hapax.TemplateException
+    {
+        return Instance.getTemplate(resource);
+    }
+    static hapax.Template GetTemplate(String name)
+        throws hapax.TemplateException
     {
         if (null != Instance)
             return Instance.getTemplate(name);
         else
             throw new IllegalStateException();
     }
-    public static File GetTemplatesLocation(){
-        return Instance.getTemplatesLocation();
-    }
-    public static Template GetTemplate(TemplateLoaderContext context, Resource resource,
-                                       String path)
-        throws TemplateException
+    static File TemplateFile(String name)
+        throws hapax.TemplateException
     {
-        return Instance.getTemplate(context,resource,path);
+        return Instance.templateFile(name);
     }
-    static TemplateLoaderContext CreateTemplateLoaderContext(FileManager fm, Location fmLocation){
-
-        return new TemplateLoaderContext(Instance,fmLocation.getName());
+    static String TemplateSource(File file)
+        throws IOException
+    {
+        return Instance.templateSource(file);
     }
     static String Clean(String path){
 
@@ -134,26 +102,96 @@ public final class Templates
     }
 
 
-    private final File templatesLocation;
-
 
     private Templates(){
         super(TemplatesLocation);
-        this.templatesLocation = new File(TemplatesLocation);
     }
 
 
-    public File getTemplatesLocation(){
-        return this.templatesLocation;
-    }
-    public Template getTemplate(TemplateLoaderContext context, Resource resource, String path)
-        throws TemplateException
+    public hapax.Template getTemplate(String name)
+        throws hapax.TemplateException
     {
-        if (null != resource){
-            String source = gap.Strings.TextToString(resource.getTemplateSourceHapax(true));
-            if (null != source)
-                return new Template(source,context);
+        Request request = Request.Get();
+        if (null != request){
+            Resource resource = request.resource;
+            if (null != resource){
+                gap.data.Template templateData = resource.getTemplatesByName(name);
+                if (null != templateData)
+                    return this.getTemplate(resource,templateData);
+                else {
+                    resource = Resource.ForLongBaseName(resource.getBase(),name);
+                    if (null != resource)
+                        return this.getTemplate(resource);
+                }
+            }
+            resource = Resource.ForLongBaseName("",name);
+            if (null != resource){
+                if (null == request.resource)
+                    request.resource = resource;
+
+                return this.getTemplate(resource);
+            }
         }
         return null;
+    }
+    public hapax.Template getTemplate(hapax.TemplateLoader context, String name)
+        throws hapax.TemplateException
+    {
+        return this.getTemplate(name);
+    }
+    protected File templateFile(String name)
+        throws hapax.TemplateException
+    {
+        return new File(hapax.Path.toFile(TemplatesLocation,name));
+    }
+    protected String templateSource(File file)
+        throws IOException
+    {
+        FileReader reader = new FileReader(file);
+        try {
+            return this.readToString(reader);
+        }
+        finally {
+            reader.close();
+        }
+    }
+    protected hapax.Template getTemplate(Resource resource)
+        throws hapax.TemplateException
+    {
+        if (null == resource)
+            return null;
+        else {
+            gap.data.Template templateData = resource.getTemplatesByName(resource.getName());
+            return this.getTemplate(resource,templateData);
+        }
+    }
+    private hapax.Template getTemplate(Resource resource, gap.data.Template templateData)
+        throws hapax.TemplateException
+    {
+        if (null != templateData){
+            long last = 0;
+            if (templateData.hasLastModified(MayInherit))
+                last = resource.getLastModified(MayInherit);
+
+            String cachePath = hapax.Path.toFile(FileManager.GetPath(resource),templateData.getName());
+
+            hapax.Template template = this.hitCache(cachePath, last);
+            if (null != template)
+                return template;
+            else {
+                hapax.TemplateLoader context = new hapax.TemplateLoader.Context(this, resource.getBase());
+
+                String contents = Strings.TextToString(templateData.getTemplateSourceHapax(MayInherit));
+
+                template = new hapax.Template(last, contents, context);
+
+                synchronized(this.cache){
+                    this.cache.put(cachePath,template);
+                }
+                return template;
+            }
+        }
+        else
+            return null;
     }
 }

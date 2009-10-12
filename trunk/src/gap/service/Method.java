@@ -93,7 +93,7 @@ public final class Method
     }
 
 
-    public final String name, binding;
+    public final String name, lower, binding;
 
     public final int type;
 
@@ -101,6 +101,7 @@ public final class Method
     private Method(String name, int type, String binding){
         super();
         this.name = name;
+        this.lower = name.toLowerCase();
         this.type = type;
         this.binding = binding;
     }

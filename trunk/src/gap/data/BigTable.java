@@ -63,7 +63,8 @@ public abstract class BigTable
     extends java.lang.Object
     implements java.io.Serializable,
                DictionaryInto,
-               RequestCreateUpdate
+               RequestCreateUpdate,
+               DataInheritance.Notation
 {
     public final static gap.util.Services Services = (new gap.util.Services(BigTable.class)).init();
 
@@ -288,7 +289,7 @@ public abstract class BigTable
     public abstract String getClassFieldKeyName();
 
     public final Key getClassFieldKeyValue(){
-        return (Key)this.valueOf(this.getClassKeyField(),false);
+        return (Key)this.valueOf(this.getClassKeyField(),MayNotInherit);
     }
     public final Field getClassKeyField(){
         return (this.getClassFieldByName(this.getClassFieldKeyName()));
@@ -392,13 +393,21 @@ public abstract class BigTable
         else
             return false;
     }
+    public boolean inheritFrom(Key key){
+        if (IsNotEqual(this.inheritFromKey,key)){
+            this.inheritFromKey = key;
+            return true;
+        }
+        else
+            return false;
+    }
     public abstract gap.service.od.ClassDescriptor getClassDescriptorFor();
 
     protected final Entity fillTo(Entity entity){
 
         for (Field field: this.getClassFields()){
             String fieldName = field.getFieldName();
-            java.io.Serializable value = this.valueOf(field,false);
+            java.io.Serializable value = this.valueOf(field,MayNotInherit);
             if (null != value){
 
                 if (IsIndexed(value))

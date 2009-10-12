@@ -3,6 +3,7 @@ path /resources;
 
 parent Resource version 1 
     implements LastModified
+    implements HasName
 {
     Key key;
     *unique String id;
@@ -13,8 +14,6 @@ parent Resource version 1
     String servletClassname;
     Text servletSourceJava;
     Blob servletClassfileJvm;
-    Text templateSourceHapax;
-    String templateContentType;
     List.Long<Partner> partners;
     List.Long<Account> accounts;
     List.Short<Image> images;
