@@ -21,7 +21,7 @@ package gap.service;
 
 import gap.*;
 import gap.data.*;
-import gap.jela.JelaProgram;
+import gap.jela.JelaFunction;
 import gap.util.*;
 import gap.service.jac.*;
 
@@ -324,7 +324,7 @@ public class FileManager
         String className = desc.getFunctionClassname(true);
         String sourceText = gap.Strings.TextToString(desc.getFunctionSourceJava(true));
         if (null == sourceText){
-            JelaProgram prog = new JelaProgram(resource,desc);
+            JelaFunction prog = new JelaFunction(resource,desc);
             sourceText = prog.getSource();
             desc.setFunctionSourceJava(Strings.TextFromString(sourceText));
             desc.setFunctionClassname(prog.fullClassName);

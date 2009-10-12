@@ -27,9 +27,9 @@ import java.util.logging.LogRecord;
 import javax.annotation.Generated;
 
 /**
- * Data binding methods.
+ * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-12T10:36:02.193Z",comments="oso.data")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-12T23:24:37.844Z")
 public class Person
     extends gap.servlet.Site
 {

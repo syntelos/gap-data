@@ -13,9 +13,9 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * Data bean generated from "gap.data".
+ * Generated long list.
  */
-@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-12T10:36:02.590Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-12T23:24:38.310Z")
 public final class ListLongResourceAccount
     extends gap.util.AbstractList<Account>
     implements gap.data.List.Long<Account>
@@ -37,7 +37,7 @@ public final class ListLongResourceAccount
         super();
         if (null != parent){
             this.parent = parent;
-            this.ancestorKeyFieldName = ListLongResourceAccount.AncestorKeyFieldName;
+            this.ancestorKeyFieldName = AncestorKeyFieldName;
             this.query = Account.CreateQueryFor();
         }
         else
@@ -76,6 +76,14 @@ public final class ListLongResourceAccount
         for (Account value: this){
 
             value.dictionaryInto(top);
+        }
+        return top;
+    }
+    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
+
+        for (Account value: this){
+
+            value.dictionaryInto(top,filter);
         }
         return top;
     }

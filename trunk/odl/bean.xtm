@@ -15,9 +15,9 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * Data bean generated from "{{=odl_gen_odl_src}}".
+ * Generated data bean
  */
-@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
+@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}")
 public final class {{=class_name}}
     extends gap.data.BigTable
     implements DataInheritance<{{=class_name}}>{{#implements}}{{#implements_it_First}},{{/implements_it_First}}
@@ -731,29 +731,6 @@ public final class {{=class_name}}
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
     }
-    public TemplateDictionary dictionaryInto(gap.service.Parameters params, TemplateDictionary top){
-        if (null != params && params.hasFields()){
-            TemplateDictionary data = top.addSection(ClassName);
-            for (String name: params.getFields()){
-                Field field = Field.getField(name);
-                if (null != field){
-                    java.lang.Object value = Field.Get(field,this,MayInherit);
-                    if (null != value){
-                        if (value instanceof DictionaryInto){
-                            DictionaryInto dvalue = (DictionaryInto)value;
-                            TemplateDictionary dsection = data.addSection(field.name());
-                            dvalue.dictionaryInto(dsection);
-                        }
-                        else
-                            data.putVariable(field.name(),{{=package_name}}.validate.{{=class_name}}.ToString(field,value));
-                    }
-                }
-            }
-            return top;
-        }
-        else
-            return this.dictionaryInto(top);
-    }
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
@@ -770,11 +747,37 @@ public final class {{=class_name}}
         }
         return top;
     }
-    public boolean updateFrom(Request req){
+    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
+        TemplateDictionary data = top.addSection(ClassName);
+        for (Field field : Field.values()){
+            java.lang.Object value = Field.Get(field,this,MayInherit);
+            if (null != value){
+                if (value instanceof DictionaryInto){
+                    DictionaryInto dvalue = (DictionaryInto)value;
+                    TemplateDictionary dsection = data.addSection(field.name());
+                    dvalue.dictionaryInto(dsection,filter);
+                }
+                else {
+                    String fieldName = filter.acceptAs(this,field.name());
+                    if (null != fieldName){
+                        data.putVariable(fieldName,{{=package_name}}.validate.{{=class_name}}.ToString(field,value));
+                    }
+                }
+            }
+        }
+        return top;
+    }
+    public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;{{#pfield}}{{#field_is_updatable}}
-        {{=field_class}} {{=field_name}} = Strings.{{=field_class}}FromString(req.getParameter("{{=field_name}}"));
-        if (this.set{{=field_nameCamel}}({{=field_name}},MayInherit)){
-            change = true;
+        String {{=field_name}}Request = req.getParameter("{{=field_name}}");
+        try {
+            {{=field_class}} {{=field_name}} = Strings.{{=field_class}}FromString({{=field_name}}Request);
+            if (this.set{{=field_nameCamel}}({{=field_name}},MayInherit)){
+                change = true;
+            }
+        }
+        catch (RuntimeException exc){
+            throw new ValidationError(ClassName,"{{=field_name}}",{{=field_name}}Request,exc);
         }{{/field_is_updatable}}{{/pfield}}
         return change;
     }

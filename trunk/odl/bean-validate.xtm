@@ -26,9 +26,9 @@ import java.io.IOException;
 import javax.annotation.Generated;
 
 /**
- * Data validation functions.
+ * Generated data bean string I/O functions.
  */
-@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}",comments="{{=odl_gen_odl_src}}")
+@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}")
 public abstract class {{=class_name}}
     extends gap.Strings
 {

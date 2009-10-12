@@ -13,9 +13,9 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * Data bean generated from "gap.data".
+ * Generated long list.
  */
-@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-12T10:36:02.577Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-12T23:24:38.292Z")
 public final class ListLongResourcePartner
     extends gap.util.AbstractList<Partner>
     implements gap.data.List.Long<Partner>
@@ -37,7 +37,7 @@ public final class ListLongResourcePartner
         super();
         if (null != parent){
             this.parent = parent;
-            this.ancestorKeyFieldName = ListLongResourcePartner.AncestorKeyFieldName;
+            this.ancestorKeyFieldName = AncestorKeyFieldName;
             this.query = Partner.CreateQueryFor();
         }
         else
@@ -76,6 +76,14 @@ public final class ListLongResourcePartner
         for (Partner value: this){
 
             value.dictionaryInto(top);
+        }
+        return top;
+    }
+    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
+
+        for (Partner value: this){
+
+            value.dictionaryInto(top,filter);
         }
         return top;
     }
