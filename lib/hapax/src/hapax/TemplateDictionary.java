@@ -107,7 +107,15 @@ public final class TemplateDictionary
         else
             return false;
     }
+    public boolean hasVariable(String varName) {
 
+        if (this.variables.containsKey(varName))
+            return true;
+        else if (this.parent != null)
+            return this.parent.containsVariable(varName);
+        else
+            return false;
+    }
     public String getVariable(String varName) {
 
         String value = this.variables.get(varName);
@@ -169,16 +177,29 @@ public final class TemplateDictionary
         if (null != list)
             return list;
         else {
+            /*
+             * Inherit section
+             */
             TemplateDictionary parent = this.parent;
             if (null != parent){
 
                 List<TemplateDictionary> ancestor = parent.getSection(sectionName);
                 if (null != ancestor){
 
-                    return SectionClone(this,ancestor);
+                    ancestor = SectionClone(this,ancestor);
+
+                    this.sections.put(sectionName,ancestor);
+
+                    return ancestor;
                 }
             }
-            return null;
+            /*
+             * Synthesize section
+             */
+            if (this.hasVariable(sectionName))
+                return this.showSection(sectionName);
+            else
+                return null;
         }
     }
     /**

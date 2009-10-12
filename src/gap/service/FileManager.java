@@ -34,10 +34,6 @@ import gap.jac.tools.JavaFileManager.Location;
 import gap.jac.tools.JavaFileManager;
 import gap.jac.tools.ToolProvider;
 
-import hapax.Template;
-import hapax.TemplateException;
-import hapax.TemplateLoaderContext;
-
 import com.google.appengine.api.datastore.Blob;
 
 import java.io.ByteArrayOutputStream;
@@ -156,28 +152,6 @@ public class FileManager
 
     public final Map<URI,Input> input = new java.util.HashMap<URI,Input>();
 
-    public final Map<String,Template> templates = new java.util.HashMap<String,Template>();
-
-    public final TemplateLoaderContext templatesContext;
-
-    /**
-     * Use parent class loader
-     */
-    public FileManager(ClassLoader parent, String location){
-        this(parent, (new StringLocation(location)));
-    }
-    public FileManager(ClassLoader parent, String location, boolean canOutput){
-        this(parent, (new StringLocation(location,canOutput)));
-    }
-    public FileManager(ClassLoader parent, Location location){
-        super(parent);
-        if (null != location){
-            this.location = location;
-            this.templatesContext = Templates.CreateTemplateLoaderContext(this,location);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
     /**
      * Define thread context class loader
      */
@@ -195,7 +169,6 @@ public class FileManager
         if (null != location){
             this.location = location;
             current.setContextClassLoader(this);
-            this.templatesContext = Templates.CreateTemplateLoaderContext(this,location);
         }
         else
             throw new IllegalArgumentException();
@@ -203,93 +176,6 @@ public class FileManager
 
 
 
-    public String getPath(Resource desc){
-        String base = desc.getBase();
-        String name = desc.getName();
-        return this.getPath(base,name);
-    }
-    public String getPath(String base, String name){
-        if (null != name){
-            if (null == base)
-                return name;
-            else
-                return base+'/'+name;
-        }
-        else if (null == base)
-            return null;
-        else
-            return base;
-    }
-    public String getPath(Path path){
-        String base = null;
-        String name = null;
-        if (path.hasBase()){
-            if (path.hasName()){
-                base = path.getBase();
-                name = path.getName();
-            }
-            else {
-                name = path.getBase();
-            }
-        }
-        return getPath(base,name);
-    }
-    public Template getTemplate(String pathString)
-        throws TemplateException
-    {
-        if (null != pathString){
-
-            pathString = Templates.Clean(pathString);
-
-            Path path = new Path(pathString);
-
-            return this.getTemplate(path);
-        }
-        else
-            return null;
-    }
-    public Template getTemplate(Path path){
-        Template template = null;
-        try {
-            Resource desc = FileManager.GetResource(path);
-            if (null != desc){
-                template = this.getTemplate(desc);
-                if (null != template)
-                    return template;
-            }
-
-            String pathString = this.getPath(path);
-            template = this.templates.get(pathString);
-            if (null == template){
-                template = Templates.GetTemplate(this.templatesContext,desc,pathString);
-                if (null == template)
-                    template = Templates.GetTemplate(pathString);
-                else 
-                    this.templates.put(pathString,template);
-            }
-        }
-        catch (TemplateException ignore){
-        }
-        return template;
-    }
-    public Template getTemplate(Resource desc)
-        throws TemplateException
-    {
-        String path = this.getPath(desc);
-        if (null != path){
-            Template template = this.templates.get(path);
-            if (null == template){
-                template = Templates.GetTemplate(this.templatesContext,desc,path);
-                if (null == template)
-                    template = Templates.GetTemplate(path);
-                else 
-                    this.templates.put(path,template);
-            }
-            return template;
-        }
-        else
-            return null;
-    }
     public Servlet getServlet(Path path){
 
         String base = "";
@@ -619,8 +505,35 @@ public class FileManager
         else {
             name = "";
         }
-
         return Resource.ForLongBaseName(base,name);
+    }
+    public final static Resource GetCreateResource(Path path){
+
+        String base = "";
+        String name = null;
+        if (path.hasBase()){
+            if (path.hasName()){
+                base = path.getBase();
+                name = path.getName();
+            }
+            else {
+                name = path.getBase();
+            }
+        }
+        else {
+            name = "";
+        }
+        return Resource.GetCreateLong(base,name);
+    }
+    public final static Tool GetTool(Resource resource, Method method, String name){
+        if (null != resource){
+            if (null != name)
+                return resource.getToolsByName(name);
+            else
+                return resource.getToolsByName(method.lower);
+        }
+        else
+            return null;
     }
     public final static String DerivePackage(Resource resource){
         String base = resource.getBase();
@@ -636,6 +549,39 @@ public class FileManager
         else
             throw new IllegalStateException();
     }
+
+    public final static String GetPath(Resource desc){
+        String base = desc.getBase();
+        String name = desc.getName();
+        return GetPath(base,name);
+    }
+    public final static String GetPath(String base, String name){
+        if (null != name){
+            if (null == base)
+                return name;
+            else
+                return base+'/'+name;
+        }
+        else if (null == base)
+            return null;
+        else
+            return base;
+    }
+    public final static String GetPath(Path path){
+        String base = null;
+        String name = null;
+        if (path.hasBase()){
+            if (path.hasName()){
+                base = path.getBase();
+                name = path.getName();
+            }
+            else {
+                name = path.getBase();
+            }
+        }
+        return GetPath(base,name);
+    }
+
 
     private final static List<String> Options;
     static {

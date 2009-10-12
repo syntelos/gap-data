@@ -295,14 +295,5 @@ public class Site
         }
         return tool;
     }
-    @Override
-    protected Template doGetTemplate(Request req, Response rep)
-        throws TemplateException
-    {
-        if (req.accept("text/html"))
-            return req.getTemplate("index.html");
-        else
-            return null;
-    }
 
 }

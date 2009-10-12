@@ -16,7 +16,7 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T17:31:48.932Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T10:36:02.775Z",comments="gap.data")
 public final class Partner
     extends gap.data.BigTable
     implements DataInheritance<Partner>
@@ -342,6 +342,7 @@ public final class Partner
 
     }
     public void destroy(){
+        this.inheritFrom = null;
         this.datastoreEntity = null;
         this.key = null;
         this.id = null;
@@ -366,6 +367,16 @@ public final class Partner
         return inheritFrom;
     }
     public boolean setInheritFrom(Partner ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean inheritFrom(Partner ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
@@ -544,7 +555,7 @@ public final class Partner
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
-                    java.lang.Object value = Field.Get(field,this,true);
+                    java.lang.Object value = Field.Get(field,this,MayInherit);
                     if (null != value){
                         if (value instanceof DictionaryInto){
                             DictionaryInto dvalue = (DictionaryInto)value;
@@ -564,7 +575,7 @@ public final class Partner
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this,true);
+            java.lang.Object value = Field.Get(field,this,MayInherit);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;

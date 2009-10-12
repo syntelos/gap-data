@@ -26,6 +26,11 @@ import com.google.appengine.api.datastore.Key;
  */
 public interface DataInheritance<SubClass> {
 
+    public interface Notation {
+        public final static boolean MayInherit = true;
+        public final static boolean MayNotInherit = false;
+    }
+
     public boolean hasInheritFromKey();
 
     public boolean hasNotInheritFromKey();

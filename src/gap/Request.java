@@ -19,20 +19,13 @@
  */
 package gap;
 
-import oso.data.Person;
-import gap.data.Resource;
-import gap.data.Tool;
-import gap.service.Method;
-import gap.service.Protocol;
-import gap.service.Path;
-import gap.service.Accept;
-import gap.service.FileManager;
-import gap.service.Function;
-import gap.service.Logon;
-import gap.service.Parameters;
-import gap.service.Servlet;
+import oso.data.*;
+import gap.data.*;
+import gap.service.*;
 
+import hapax.Template;
 import hapax.TemplateDictionary;
+import hapax.TemplateException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,11 +38,21 @@ import java.nio.charset.Charset;
  */
 public class Request 
     extends javax.servlet.http.HttpServletRequestWrapper
+    implements DataInheritance.Notation
 {
     /**
      * Universal charset
      */
     public final static Charset UTF8 = Charset.forName("UTF-8");
+
+    private final static java.lang.ThreadLocal<Request> RTL = new java.lang.ThreadLocal<Request>();
+
+    public final static Request Get(){
+        return RTL.get();
+    }
+    public final static void Exit(){
+        RTL.set(null);
+    }
 
     /**
      * Request content type
@@ -106,8 +109,8 @@ public class Request
     public final TemplateDictionary top;
     public final Logon logon;
     public final ContentType contentType;
-    private Resource resource;
-    private Tool tool;
+    public Resource resource;
+    public Tool tool;
 
 
     public Request(HttpServletRequest req, Method method, Protocol protocol, Path path, 
@@ -125,6 +128,15 @@ public class Request
         this.top = top;
         this.logon = logon;
         this.contentType = ContentType.For(req);
+        this.resource = FileManager.GetResource(path);
+        if (null != this.resource){
+            this.tool = FileManager.GetTool(this.resource,method,req.getParameter("op"));
+        }
+        else {
+            this.tool = null;
+        }
+
+        RTL.set(this);
     }
 
 
@@ -134,17 +146,18 @@ public class Request
     public Resource getResource(){
         return this.resource;
     }
-    public void setResource(Resource resource){
-        this.resource = resource;
-    }
     public boolean hasTool(){
         return (null != this.tool);
     }
     public Tool getTool(){
         return this.tool;
     }
-    public void setTool(Tool tool){
-        this.tool = tool;
+    public List<Tool> getTools(){
+        Resource resource = this.resource;
+        if (null != resource)
+            return resource.getTools(MayInherit);
+        else
+            return null;
     }
     public final hapax.TemplateDictionary getTop(){
         return logon.dict;
@@ -173,16 +186,10 @@ public class Request
     public final boolean accept(String name){
         return this.accept.accept(name);
     }
-    public final hapax.Template getTemplate(){
-        return this.fileManager.getTemplate(this.path);
-    }
-    public final hapax.Template getTemplate(Path path){
-        return this.fileManager.getTemplate(path);
-    }
-    public final hapax.Template getTemplate(String path)
-        throws hapax.TemplateException
+    public final hapax.Template getTemplate()
+        throws TemplateException
     {
-        return this.fileManager.getTemplate(path);
+        return Templates.GetTemplate(this.resource);
     }
     public final Servlet getServlet(){
         return this.fileManager.getServlet(this.path);

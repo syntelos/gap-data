@@ -36,11 +36,21 @@ import java.nio.charset.Charset;
  */
 public class Response 
     extends javax.servlet.http.HttpServletResponseWrapper
+    implements gap.data.DataInheritance.Notation
 {
     /**
      * Universal charset
      */
     public final static Charset UTF8 = Charset.forName("UTF-8");
+
+    private final static java.lang.ThreadLocal<Response> RTL = new java.lang.ThreadLocal<Response>();
+
+    public final static Response Get(){
+        return RTL.get();
+    }
+    public final static void Exit(){
+        RTL.set(null);
+    }
 
 
     private ServletOutputStream out;
@@ -50,6 +60,8 @@ public class Response
     public Response(HttpServletResponse req){
         super(req);
         this.setCharacterEncoding("UTF-8");
+
+        RTL.set(this);
     }
 
 

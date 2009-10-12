@@ -73,7 +73,7 @@ public final class ListShort{{=parent_class_name}}{{=child_class_name}}
         Key key = this.getParent().getClassFieldKeyValue();
         if (key != this.ancestorKey){
             this.ancestorKey = key;
-            this.query = {{=parent_class_name}}.CreateQueryFor(this.ancestorKey);
+            this.query = {{=child_class_name}}.CreateQueryFor(this.ancestorKey);
         }
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary top){

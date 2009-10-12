@@ -235,7 +235,7 @@ public abstract class Strings {
     }
     public final static java.lang.String CategoryToString(com.google.appengine.api.datastore.Category instance){
         if (null != instance)
-            return instance.toString();
+            return instance.getCategory();
         else
             return null;
     }
@@ -247,7 +247,7 @@ public abstract class Strings {
     }
     public final static java.lang.String EmailToString(com.google.appengine.api.datastore.Email instance){
         if (null != instance)
-            return instance.toString();
+            return instance.getEmail();
         else
             return null;
     }
@@ -293,7 +293,7 @@ public abstract class Strings {
     }
     public final static java.lang.String LinkToString(com.google.appengine.api.datastore.Link instance){
         if (null != instance)
-            return instance.toString();
+            return instance.getValue();
         else
             return null;
     }
@@ -305,7 +305,7 @@ public abstract class Strings {
     }
     public final static java.lang.String PhoneNumberToString(com.google.appengine.api.datastore.PhoneNumber instance){
         if (null != instance)
-            return instance.toString();
+            return instance.getNumber();
         else
             return null;
     }
@@ -317,7 +317,7 @@ public abstract class Strings {
     }
     public final static java.lang.String PostalAddressToString(com.google.appengine.api.datastore.PostalAddress instance){
         if (null != instance)
-            return instance.toString();
+            return instance.getAddress();
         else
             return null;
     }
@@ -341,7 +341,7 @@ public abstract class Strings {
     }
     public final static java.lang.String TextToString(com.google.appengine.api.datastore.Text instance){
         if (null != instance)
-            return instance.toString();
+            return instance.getValue();
         else
             return null;
     }

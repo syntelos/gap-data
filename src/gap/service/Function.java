@@ -38,6 +38,7 @@ import javax.script.ScriptException;
  */
 public final class Function
     extends gap.jbx.Function
+    implements gap.data.DataInheritance.Notation
 {
 
     private final static java.util.List<String> JelaImports = new java.util.ArrayList<String>();

@@ -41,11 +41,11 @@ public class TemplateCache
     }
 
 
-    private final Map<String, Template> cache = new HashMap<String, Template>();
+    protected final Map<String, Template> cache = new HashMap<String, Template>();
 
-    private final String baseDir;
+    protected final String baseDir;
 
-    private final TemplateParser parser;
+    protected final TemplateParser parser;
 
 
     public TemplateCache(String baseDir){
@@ -60,11 +60,10 @@ public class TemplateCache
     }
 
 
+    public String getTemplateDirectory() {
+        return this.baseDir;
+    }
     /**
-     * Parses and fetches a template from disk.
-     *
-     * @param resource The path to the template, relative to the templateDirectory
-     *                 passed to the ctor of TemplateCache.
      */
     public Template getTemplate(String resource)
         throws TemplateException
@@ -92,7 +91,13 @@ public class TemplateCache
                 return this.read( file, fileLast);
         }
     }
-
+    /**
+     */
+    public Template getTemplate(TemplateLoader context, String filename)
+        throws TemplateException
+    {
+        return this.getTemplate(Path.toFile(context.getTemplateDirectory(), filename));
+    }
     /**
      * Url fetch with no caching.
      */
@@ -101,7 +106,7 @@ public class TemplateCache
     {
         String parent = Parent(url);
 
-        TemplateLoaderContext context = new TemplateLoaderContext(this, parent, false);
+        TemplateLoader context = new TemplateLoader.Context(this, parent);
 
         String contents;
 
@@ -133,7 +138,7 @@ public class TemplateCache
     protected Template read(File file, long fileLast)
         throws TemplateException
     {
-        TemplateLoaderContext context = new TemplateLoaderContext(this, file.getParent());
+        TemplateLoader context = new TemplateLoader.Context(this, file.getParent());
 
         String contents;
 

@@ -21,13 +21,13 @@ package gap.data;
 
 public interface ListFilter<V> {
 
-    public final static class ListFilterTool
+    public final static class Name
         extends java.lang.Object
-        implements ListFilter<Tool>
+        implements ListFilter<HasName>
     {
         public final String name;
 
-        public ListFilterTool(String name){
+        public Name(String name){
             super();
             if (null != name)
                 this.name = name;
@@ -35,26 +35,8 @@ public interface ListFilter<V> {
                 throw new IllegalArgumentException();
         }
 
-        public boolean accept(Tool tool){
-            return (null != tool && this.name.equals(tool.getName()));
-        }
-    }
-    public final static class ListFilterTemplate
-        extends java.lang.Object
-        implements ListFilter<Template>
-    {
-        public final String name;
-
-        public ListFilterTemplate(String name){
-            super();
-            if (null != name)
-                this.name = name;
-            else
-                throw new IllegalArgumentException();
-        }
-
-        public boolean accept(Template template){
-            return (null != template && this.name.equals(template.getName()));
+        public boolean accept(HasName hasName){
+            return (null != hasName && this.name.equals(hasName.getName()));
         }
     }
 

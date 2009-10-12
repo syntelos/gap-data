@@ -39,7 +39,7 @@ public final class ListLong{{=parent_class_name}}{{=child_class_name}}
         if (null != parent){
             this.parent = parent;
             this.ancestorKeyFieldName = ListLong{{=parent_class_name}}{{=child_class_name}}.AncestorKeyFieldName;
-            this.query = {{=parent_class_name}}.CreateQueryFor();
+            this.query = {{=child_class_name}}.CreateQueryFor();
         }
         else
             throw new IllegalArgumentException();

@@ -16,11 +16,12 @@ import javax.annotation.Generated;
 /**
  * Data bean generated from "gap.data".
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-11T17:31:49.619Z",comments="gap.data")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T10:36:03.480Z",comments="gap.data")
 public final class Tool
     extends gap.data.BigTable
     implements DataInheritance<Tool>,
-               LastModified
+               LastModified,
+               HasName
 {
 
     private final static long serialVersionUID = 1;
@@ -427,6 +428,7 @@ public final class Tool
 
     }
     public void destroy(){
+        this.inheritFrom = null;
         this.datastoreEntity = null;
         this.key = null;
         this.id = null;
@@ -465,6 +467,16 @@ public final class Tool
         return inheritFrom;
     }
     public boolean setInheritFrom(Tool ancestor){
+        if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.inheritFrom = ancestor;
+            if (null != ancestor)
+                this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean inheritFrom(Tool ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
@@ -628,7 +640,7 @@ public final class Tool
             if (null == lastModified && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getLastModified(true);
+                    return inheritFrom.getLastModified(MayInherit);
             }
             return lastModified;
         }
@@ -672,7 +684,7 @@ public final class Tool
             if (null == headXtm && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getHeadXtm(true);
+                    return inheritFrom.getHeadXtm(MayInherit);
             }
             return headXtm;
         }
@@ -716,7 +728,7 @@ public final class Tool
             if (null == overlayXtm && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getOverlayXtm(true);
+                    return inheritFrom.getOverlayXtm(MayInherit);
             }
             return overlayXtm;
         }
@@ -760,7 +772,7 @@ public final class Tool
             if (null == formXtm && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getFormXtm(true);
+                    return inheritFrom.getFormXtm(MayInherit);
             }
             return formXtm;
         }
@@ -804,7 +816,7 @@ public final class Tool
             if (null == titleHiGraphicUri && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getTitleHiGraphicUri(true);
+                    return inheritFrom.getTitleHiGraphicUri(MayInherit);
             }
             return titleHiGraphicUri;
         }
@@ -848,7 +860,7 @@ public final class Tool
             if (null == titleLoGraphicUri && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getTitleLoGraphicUri(true);
+                    return inheritFrom.getTitleLoGraphicUri(MayInherit);
             }
             return titleLoGraphicUri;
         }
@@ -892,7 +904,7 @@ public final class Tool
             if (null == buttonHiGraphicUri && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getButtonHiGraphicUri(true);
+                    return inheritFrom.getButtonHiGraphicUri(MayInherit);
             }
             return buttonHiGraphicUri;
         }
@@ -936,7 +948,7 @@ public final class Tool
             if (null == buttonLoGraphicUri && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getButtonLoGraphicUri(true);
+                    return inheritFrom.getButtonLoGraphicUri(MayInherit);
             }
             return buttonLoGraphicUri;
         }
@@ -980,7 +992,7 @@ public final class Tool
             if (null == buttonOffGraphicUri && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getButtonOffGraphicUri(true);
+                    return inheritFrom.getButtonOffGraphicUri(MayInherit);
             }
             return buttonOffGraphicUri;
         }
@@ -1024,7 +1036,7 @@ public final class Tool
             if (null == functionMethodname && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getFunctionMethodname(true);
+                    return inheritFrom.getFunctionMethodname(MayInherit);
             }
             return functionMethodname;
         }
@@ -1068,7 +1080,7 @@ public final class Tool
             if (null == functionClassname && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getFunctionClassname(true);
+                    return inheritFrom.getFunctionClassname(MayInherit);
             }
             return functionClassname;
         }
@@ -1112,7 +1124,7 @@ public final class Tool
             if (null == functionBody && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getFunctionBody(true);
+                    return inheritFrom.getFunctionBody(MayInherit);
             }
             return functionBody;
         }
@@ -1156,7 +1168,7 @@ public final class Tool
             if (null == functionSourceJava && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getFunctionSourceJava(true);
+                    return inheritFrom.getFunctionSourceJava(MayInherit);
             }
             return functionSourceJava;
         }
@@ -1200,7 +1212,7 @@ public final class Tool
             if (null == functionClassfileJvm && this.hasInheritFrom()){
                 Tool inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom)
-                    return inheritFrom.getFunctionClassfileJvm(true);
+                    return inheritFrom.getFunctionClassfileJvm(MayInherit);
             }
             return functionClassfileJvm;
         }
@@ -1259,7 +1271,7 @@ public final class Tool
             for (String name: params.getFields()){
                 Field field = Field.getField(name);
                 if (null != field){
-                    java.lang.Object value = Field.Get(field,this,true);
+                    java.lang.Object value = Field.Get(field,this,MayInherit);
                     if (null != value){
                         if (value instanceof DictionaryInto){
                             DictionaryInto dvalue = (DictionaryInto)value;
@@ -1279,7 +1291,7 @@ public final class Tool
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
         TemplateDictionary data = top.addSection(ClassName);
         for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this,true);
+            java.lang.Object value = Field.Get(field,this,MayInherit);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;
