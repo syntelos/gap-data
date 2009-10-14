@@ -20,21 +20,17 @@
 package gap.data;
 
 /**
- * Thrown from {@link Store} for violations of the {@link
- * AdminReadWrite} access control policy.
+ * Marker interface for subclasses of {@link BigTable} for Partner
+ * permissions, implemented at the store level.
+ * 
+ * Data beans implementing this interface may be read by anyone, but
+ * only written to or deleted by partners.
  */
-public class AdminAccessException
-    extends java.security.AccessControlException
-{
-
-    public AdminAccessException(){
-        super("Requires admin status.");
-    }
-    public AdminAccessException(Kind kind){
-        super(kind+" requires admin status.");
-    }
-    public AdminAccessException(String kind){
-        super(kind+" requires admin status.");
-    }
-
+public interface PartnerReadWrite {
+    /**
+     * Data beans implementing this interface may not be read by anyone.
+     */
+    public interface ReadRestricted
+        extends PartnerReadWrite
+    {}
 }

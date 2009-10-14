@@ -1,4 +1,22 @@
-
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
 package gap.data;
 
 
@@ -16,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T23:24:38.103Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-14T11:47:11.132Z")
 public final class Resource
     extends gap.data.BigTable
     implements DataInheritance<Resource>,
@@ -26,7 +44,7 @@ public final class Resource
 
     private final static long serialVersionUID = 1;
 
-    public final static String KIND = "Resource";
+    public final static Kind KIND = Kind.Create("Resource","gap.data","Resource");
 
     public final static String ClassName = "Resource";
 
@@ -36,9 +54,6 @@ public final class Resource
         return ClassDescriptorFor(Resource.class);
     }
 
-    static {
-        Register(Resource.class);
-    }
 
 
 
@@ -87,7 +102,7 @@ public final class Resource
 
 
     public final static Key KeyLongFor(String id){
-        return KeyFactory.createKey(KIND,id);
+        return KeyFactory.createKey(KIND.getName(),id);
     }
 
 
@@ -138,7 +153,7 @@ public final class Resource
     public final static void Delete(Resource instance){
         if (null != instance){
             Key key = instance.getKey();
-            gap.data.Store.DeleteCollection(new Query(key));
+            gap.data.Store.DeleteCollection(KIND,new Query(key));
             gap.data.Store.Delete(key);
         }
     }
@@ -168,19 +183,25 @@ public final class Resource
         }
     }
     public final static Query CreateQueryFor(){
-        return new Query(KIND);
+        return new Query(KIND.getName());
     }
     public final static Query CreateQueryFor(Key key){
-        return new Query(KIND,key);
+        return new Query(KIND.getName(),key);
     }
+    public final static Query CreateQueryFor(Filter filter){
+        Query query = new Query(KIND.getName());
+        return filter.update(query);
+    }
+    
+    
     public final static Resource Query1(Query query){
         if (null != query)
             return (Resource)gap.data.Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
-    public final static List QueryN(Query query, FetchOptions page){
-        if (null != query)
+    public final static BigTableIterator QueryN(Query query, Page page){
+        if (null != query && null != page)
             return gap.data.Store.QueryN(query,page);
         else
             throw new IllegalArgumentException();
@@ -191,7 +212,7 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
-    public final static List<Key> QueryKeyN(Query query, FetchOptions page){
+    public final static List.Primitive<Key> QueryKeyN(Query query, Page page){
         if (null != query)
             return gap.data.Store.QueryKeyN(query,page);
         else
@@ -202,7 +223,7 @@ public final class Resource
      * Persistent fields' binding for {@link Resource}
      */
     public static enum Field
-        implements gap.data.Field
+        implements gap.data.Field<Field>
     {
         InheritFromKey("inheritFromKey"),
         Key("key"),
@@ -232,6 +253,13 @@ public final class Resource
         }
         public static Field getField(String name) {
             return FieldName.get(name);
+        }
+        public static Field For(String name) {
+            Field field = FieldName.get(name);
+            if (null == field)
+                return Field.valueOf(name);
+            else
+                return field;
         }
         public static Object Get(Field field, Resource instance, boolean mayInherit){
             switch(field){
@@ -824,6 +852,26 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
+    public Partner fetchPartners(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            List.Long<Partner> list = this.getPartners(MayInherit);
+            return list.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public Partner getPartnersByName(String name){
+        List.Long<Partner> list = this.getPartners(MayInherit);
+        for (Partner item : list){
+            if (item.getName().equals(name))
+                return item;
+        }
+        if (list.hitEnd()){
+            Filter filter = new Filter("Partner").add(Partner.Field.For("name"),Filter.Op.eq,name);
+            return list.fetch(filter);
+        }
+        return null;
+    }
 
     public boolean hasAccounts(boolean mayInherit){
         return (this.getAccounts(mayInherit).isNotEmpty());
@@ -883,6 +931,14 @@ public final class Resource
                     return item;
             }
             return null;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public Account fetchAccounts(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            List.Long<Account> list = this.getAccounts(MayInherit);
+            return list.fetch(filter);
         }
         else
             throw new IllegalArgumentException();
@@ -950,11 +1006,23 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
+    public Image fetchImages(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            List.Short<Image> list = this.getImages(MayInherit);
+            return list.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public Image getImagesByName(String name){
         List.Short<Image> list = this.getImages(MayInherit);
         for (Image item : list){
             if (item.getName().equals(name))
                 return item;
+        }
+        if (list.hitEnd()){
+            Filter filter = new Filter("Image").add(Image.Field.For("name"),Filter.Op.eq,name);
+            return list.fetch(filter);
         }
         return null;
     }
@@ -1021,11 +1089,23 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
+    public Template fetchTemplates(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            List.Short<Template> list = this.getTemplates(MayInherit);
+            return list.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public Template getTemplatesByName(String name){
         List.Short<Template> list = this.getTemplates(MayInherit);
         for (Template item : list){
             if (item.getName().equals(name))
                 return item;
+        }
+        if (list.hitEnd()){
+            Filter filter = new Filter("Template").add(Template.Field.For("name"),Filter.Op.eq,name);
+            return list.fetch(filter);
         }
         return null;
     }
@@ -1092,11 +1172,23 @@ public final class Resource
         else
             throw new IllegalArgumentException();
     }
+    public Tool fetchTools(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            List.Short<Tool> list = this.getTools(MayInherit);
+            return list.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public Tool getToolsByName(String name){
         List.Short<Tool> list = this.getTools(MayInherit);
         for (Tool item : list){
             if (item.getName().equals(name))
                 return item;
+        }
+        if (list.hitEnd()){
+            Filter filter = new Filter("Tool").add(Tool.Field.For("name"),Filter.Op.eq,name);
+            return list.fetch(filter);
         }
         return null;
     }
@@ -1106,7 +1198,7 @@ public final class Resource
     /*
      * Data binding supports
      */
-    public String getClassKind(){
+    public Kind getClassKind(){
         return KIND;
     }
     public String getClassName(){

@@ -69,7 +69,7 @@ public final class Templates
     {
         return Instance.getTemplate(resource);
     }
-    static hapax.Template GetTemplate(String name)
+    public static hapax.Template GetTemplate(String name)
         throws hapax.TemplateException
     {
         if (null != Instance)
@@ -77,17 +77,22 @@ public final class Templates
         else
             throw new IllegalStateException();
     }
-    static File TemplateFile(String name)
+    public static File TemplateFile(String name)
         throws hapax.TemplateException
     {
         return Instance.templateFile(name);
     }
-    static String TemplateSource(File file)
+    public static String TemplateSource(File file)
         throws IOException
     {
-        return Instance.templateSource(file);
+        return Instance.readToString(file);
     }
-    static String Clean(String path){
+    public static String ReadToString(File file)
+        throws IOException
+    {
+        return Instance.readToString(file);
+    }
+    public static String Clean(String path){
 
         if (null != path){
 
@@ -124,15 +129,8 @@ public final class Templates
                         return this.getTemplate(resource);
                 }
             }
-            resource = Resource.ForLongBaseName("",name);
-            if (null != resource){
-                if (null == request.resource)
-                    request.resource = resource;
-
-                return this.getTemplate(resource);
-            }
         }
-        return null;
+        return super.getTemplate(name);
     }
     public hapax.Template getTemplate(hapax.TemplateLoader context, String name)
         throws hapax.TemplateException
@@ -144,7 +142,7 @@ public final class Templates
     {
         return new File(hapax.Path.toFile(TemplatesLocation,name));
     }
-    protected String templateSource(File file)
+    protected String readToString(File file)
         throws IOException
     {
         FileReader reader = new FileReader(file);

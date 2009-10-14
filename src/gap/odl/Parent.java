@@ -56,7 +56,7 @@ public final class Parent
                 throw new Syntax("Malformed ODL parent statement '"+line+"'.");
         }
         else 
-            throw new Jump();
+            throw new Jump(this.comment);
     }
 
     public String getName(){

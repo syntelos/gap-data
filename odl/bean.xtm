@@ -1,4 +1,22 @@
-
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
 package {{=package_name}};
 {{#import}}
 import {{=import_spec}};{{/import}}
@@ -26,7 +44,7 @@ public final class {{=class_name}}
 
     private final static long serialVersionUID = {{=class_version}};
 
-    public final static String KIND = "{{=class_kind}}";
+    public final static Kind KIND = Kind.Create("{{=class_kind}}","{{=package_name}}","{{=class_name}}");
 
     public final static String ClassName = "{{=class_name}}";
 
@@ -39,9 +57,6 @@ public final class {{=class_name}}
         return ClassDescriptorFor({{=parent_class_name}}.class);
     }{{/class_re_child_or_group}}
 
-    static {
-        Register({{=class_name}}.class);
-    }
 {{#field_hash_unique}}
 
 {{#class_re_not_child_or_group}}
@@ -149,13 +164,13 @@ public final class {{=class_name}}
 {{#field_unique}}
 {{#class_re_not_child_or_group}}
     public final static Key KeyLongFor(String {{=field_name}}){
-        return KeyFactory.createKey(KIND,id);
+        return KeyFactory.createKey(KIND.getName(),id);
     }{{/class_re_not_child_or_group}}{{#class_re_childgroup}}
     public final static Key KeyShortFor(Key ancestor, String {{=field_name}}){
-        return KeyFactory.createKey(ancestor,KIND,id);
+        return KeyFactory.createKey(ancestor,KIND.getName(),id);
     }{{/class_re_childgroup}}{{#class_re_child}}
     public final static Key KeyLongFor(Key ancestor, String {{=field_name}}){
-        return KeyFactory.createKey(KIND,id);
+        return KeyFactory.createKey(KIND.getName(),id);
     }{{/class_re_child}}
 
 {{#class_re_not_child_or_group}}
@@ -243,7 +258,7 @@ public final class {{=class_name}}
             do {
                 matter ^= random.nextLong();
                 String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(KIND,idString);
+                Key key = KeyFactory.createKey(KIND.getName(),idString);
                 if (null == GetKey(key))
                     return key;
             }
@@ -269,7 +284,7 @@ public final class {{=class_name}}
             do {
                 matter ^= random.nextLong();
                 String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(ancestor,KIND,idString);
+                Key key = KeyFactory.createKey(ancestor,KIND.getName(),idString);
                 if (null == GetKey(key))
                     return key;
             }
@@ -286,7 +301,7 @@ public final class {{=class_name}}
     public final static void Delete({{=class_name}} instance){
         if (null != instance){
             Key key = instance.get{{=field_key_nameCamel}}();
-            gap.data.Store.DeleteCollection(new Query(key));
+            gap.data.Store.DeleteCollection(KIND,new Query(key));
             gap.data.Store.Delete(key);
         }
     }
@@ -316,19 +331,33 @@ public final class {{=class_name}}
         }
     }
     public final static Query CreateQueryFor(){
-        return new Query(KIND);
+        return new Query(KIND.getName());
     }
     public final static Query CreateQueryFor(Key key){
-        return new Query(KIND,key);
-    }
+        return new Query(KIND.getName(),key);
+    }{{#class_re_not_child_or_group}}
+    public final static Query CreateQueryFor(Filter filter){
+        Query query = new Query(KIND.getName());
+        return filter.update(query);
+    }{{/class_re_not_child_or_group}}
+    {{#class_re_child}}
+    public final static Query CreateQueryFor(Filter filter){
+        Query query = new Query(KIND.getName());
+        return filter.update(query);
+    }{{/class_re_child}}
+    {{#class_re_childgroup}}
+    public final static Query CreateQueryFor(Key ancestor, Filter filter){
+        Query query = new Query(KIND.getName(),ancestor);
+        return filter.update(query);
+    }{{/class_re_childgroup}}
     public final static {{=class_name}} Query1(Query query){
         if (null != query)
             return ({{=class_name}})gap.data.Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
-    public final static List QueryN(Query query, FetchOptions page){
-        if (null != query)
+    public final static BigTableIterator QueryN(Query query, Page page){
+        if (null != query && null != page)
             return gap.data.Store.QueryN(query,page);
         else
             throw new IllegalArgumentException();
@@ -339,7 +368,7 @@ public final class {{=class_name}}
         else
             throw new IllegalArgumentException();
     }
-    public final static List<Key> QueryKeyN(Query query, FetchOptions page){
+    public final static List.Primitive<Key> QueryKeyN(Query query, Page page){
         if (null != query)
             return gap.data.Store.QueryKeyN(query,page);
         else
@@ -350,7 +379,7 @@ public final class {{=class_name}}
      * Persistent fields' binding for {@link {{=class_name}}}
      */
     public static enum Field
-        implements gap.data.Field
+        implements gap.data.Field<Field>
     {
         InheritFromKey("inheritFromKey"),{{#class_re_child_or_group}}
         ParentKey("parentKey"),{{/class_re_child_or_group}}{{#pfield}}
@@ -373,6 +402,13 @@ public final class {{=class_name}}
         }
         public static Field getField(String name) {
             return FieldName.get(name);
+        }
+        public static Field For(String name) {
+            Field field = FieldName.get(name);
+            if (null == field)
+                return Field.valueOf(name);
+            else
+                return field;
         }
         public static Object Get(Field field, {{=class_name}} instance, boolean mayInherit){
             switch(field){
@@ -668,12 +704,24 @@ public final class {{=class_name}}
         }
         else
             throw new IllegalArgumentException();
+    }
+    public {{=field_list_component}} fetch{{=field_nameCamel}}(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            {{=field_class}} list = this.get{{=field_nameCamel}}(MayInherit);
+            return list.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
     }{{#field_list_component_named}}
     public {{=field_list_component}} get{{=field_nameCamel}}ByName(String name){
         {{=field_class}} list = this.get{{=field_nameCamel}}(MayInherit);
         for ({{=field_list_component}} item : list){
             if (item.getName().equals(name))
                 return item;
+        }
+        if (list.hitEnd()){
+            Filter filter = new Filter("{{=field_list_component_kind}}").add({{=field_list_component}}.Field.For("name"),Filter.Op.eq,name);
+            return list.fetch(filter);
         }
         return null;
     }{{/field_list_component_named}}{{/field_is_list}}{{#field_is_map}}
@@ -707,7 +755,7 @@ public final class {{=class_name}}
     /*
      * Data binding supports
      */
-    public String getClassKind(){
+    public Kind getClassKind(){
         return KIND;
     }
     public String getClassName(){

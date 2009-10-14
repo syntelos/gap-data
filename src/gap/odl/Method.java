@@ -159,7 +159,7 @@ public final class Method
                 throw new Syntax("Missing arguments following '"+open+"'.");
         }
         else 
-            throw new Jump();
+            throw new Jump(this.comment);
     }
 
 

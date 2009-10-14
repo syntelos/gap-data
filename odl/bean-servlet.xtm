@@ -1,4 +1,22 @@
-
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
 package {{=package_name}}.servlet;
 
 {{#import}}import {{=import_spec}};
@@ -21,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.LogRecord;
@@ -91,11 +110,10 @@ public class {{=class_name}}
 }}{{#class_re_not_childgroup}}
             else {
                 req.parameters.dictionaryInto(top);
-                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 com.google.appengine.api.datastore.Query query = {{=package_name}}.{{=class_name}}.CreateQueryFor();
 
-                List<{{=package_name}}.{{=class_name}}> list = (List<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,page);
+                BigTableIterator<{{=package_name}}.{{=class_name}}> list = (BigTableIterator<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,req.parameters.page);
 
                 for ({{=package_name}}.{{=class_name}} instance : list){
 
@@ -104,13 +122,12 @@ public class {{=class_name}}
                 return top;{{/class_re_not_childgroup}}{{#class_re_childgroup}}
             else if (req.hasPath(1)){
                 req.parameters.dictionaryInto(top);
-                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
 
                 com.google.appengine.api.datastore.Query query = {{=package_name}}.{{=class_name}}.CreateQueryFor(parentKey);
 
-                List<{{=package_name}}.{{=class_name}}> list = (List<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,page);
+                BigTableIterator<{{=package_name}}.{{=class_name}}> list = (BigTableIterator<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,req.parameters.page);
 
                 for ({{=package_name}}.{{=class_name}} instance : list){
 

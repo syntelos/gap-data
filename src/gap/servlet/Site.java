@@ -19,27 +19,11 @@
  */
 package gap.servlet;
 
-import gap.Request;
-import gap.Response;
+import gap.*;
+import gap.data.*;
+import gap.util.*;
 
-import gap.service.Accept;
-import gap.service.FileManager;
-import gap.service.Logon;
-import gap.service.Parameters;
-import gap.service.Path;
-
-import hapax.Template;
 import hapax.TemplateDictionary;
-import hapax.TemplateException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.security.Principal;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 /**
  * Bound to path <code>'/*'</code>
@@ -51,6 +35,10 @@ public class Site
         extends Object
         implements gap.data.DictionaryInto.DataFilter
     {
+        private final static Kind Resource = Kind.For("Resource");
+        private final static Kind Tool = Kind.For("Tool");
+
+
         private final Request request;
 
         public DefaultToolFilter(Request req){
@@ -59,6 +47,10 @@ public class Site
         }
 
         public String acceptAs(gap.data.BigTable instance, String fieldName){
+
+            if (Tool == instance.getClassKind()){
+
+            }
             return fieldName;
         }
     }
@@ -72,8 +64,6 @@ public class Site
     protected TemplateDictionary doGetDefine(Request req, Response rep){
 
         TemplateDictionary top = super.doGetDefine(req,rep);
-
-        top.setVariable("logon","div.logon.html");
 
         boolean canCreate = this.canCreate(req);
         boolean canUpdate = this.canUpdate(req);

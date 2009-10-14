@@ -1,4 +1,22 @@
-
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
 package oso.data.servlet;
 
 
@@ -20,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.LogRecord;
@@ -29,7 +48,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-12T23:24:37.844Z")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-14T11:47:10.929Z")
 public class Person
     extends gap.servlet.Site
 {
@@ -63,11 +82,10 @@ public class Person
             }
             else {
                 req.parameters.dictionaryInto(top);
-                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 com.google.appengine.api.datastore.Query query = oso.data.Person.CreateQueryFor();
 
-                List<oso.data.Person> list = (List<oso.data.Person>)oso.data.Person.QueryN(query,page);
+                BigTableIterator<oso.data.Person> list = (BigTableIterator<oso.data.Person>)oso.data.Person.QueryN(query,req.parameters.page);
 
                 for (oso.data.Person instance : list){
 

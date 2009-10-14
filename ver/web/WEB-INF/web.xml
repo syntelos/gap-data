@@ -9,9 +9,31 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
+  <servlet>
+    <servlet-name>Update</servlet-name>
+    <servlet-class>gap.servlet.Update</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Source</servlet-name>
+    <servlet-class>gap.servlet.Source</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>Site</servlet-name>
     <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Update</servlet-name>
+    <url-pattern>/update/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Source</servlet-name>
+    <url-pattern>/src/*</url-pattern>
   </servlet-mapping>
 
   <error-page>

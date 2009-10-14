@@ -22,7 +22,6 @@ package gap.service;
 import hapax.TemplateDictionary;
 
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.FetchOptions;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,60 +46,38 @@ public final class Parameters
          * 
          * startIndex={startIndex}	Index into a paged collection.
          */
-        public final static class Page {
-
-            public final static int Default = 20;
-
-
-            public final static String Count = "count";
-            public final static String StartIndex = "startIndex";
-
-            public final int count, startIndex, nextIndex, prevIndex;
-
-            public Page(Map<String,String[]> parameters, int page){
-                super();
-                int count = page, startIndex = 0, nextIndex = page, prevIndex = 0;
-                try {
-                    String[] value = parameters.get(Count);
-                    if (null != value && 0 < value.length){
-                        count = Integer.parseInt(value[0]);
-                        if (1 > count)
-                            count = page;
-                    }
-                }
-                catch (NumberFormatException exc){
-                }
+        public final static class Page 
+            extends gap.util.Page
+        {
+            public final static int GetStartIndex(Map<String,String[]> parameters){
                 try {
                     String[] value = parameters.get(StartIndex);
                     if (null != value && 0 < value.length){
-                        startIndex = Integer.parseInt(value[0]);
-                        if (0 > startIndex)
-                            startIndex = 0;
-
-                        prevIndex = (startIndex - count);
-                        if (0 > prevIndex)
-                            prevIndex = 0;
-
-                        nextIndex = (startIndex + count);
+                        int startIndex = Integer.parseInt(value[0]);
+                        if (0 < startIndex)
+                            return startIndex;
                     }
                 }
                 catch (NumberFormatException exc){
                 }
-                this.count = count; 
-                this.startIndex = startIndex;
-                this.nextIndex = nextIndex;
-                this.prevIndex = prevIndex;
+                return 0;
+            }
+            public final static int GetCount(Map<String,String[]> parameters, int page){
+                try {
+                    String[] value = parameters.get(Count);
+                    if (null != value && 0 < value.length){
+                        int count = Integer.parseInt(value[0]);
+                        if (0 < count)
+                            return count;
+                    }
+                }
+                catch (NumberFormatException exc){
+                }
+                return page;
             }
 
-
-            public void dictionaryInto(TemplateDictionary dict){
-
-                dict.setVariable("startIndex",this.startIndex);
-                dict.setVariable("startIndexPrev",this.prevIndex);
-                dict.setVariable("startIndexNext",this.nextIndex);
-            }
-            public FetchOptions createFetchOptions(){
-                return FetchOptions.Builder.withLimit(this.count).offset(this.startIndex);
+            public Page(Map<String,String[]> parameters, int page){
+                super(GetStartIndex(parameters),GetCount(parameters,page));
             }
         }
         /**

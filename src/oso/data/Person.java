@@ -1,4 +1,22 @@
-
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
 package oso.data;
 
 
@@ -16,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T23:24:37.003Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-14T11:47:10.322Z")
 public final class Person
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -24,7 +42,7 @@ public final class Person
 
     private final static long serialVersionUID = 2;
 
-    public final static String KIND = "Person";
+    public final static Kind KIND = Kind.Create("Person","oso.data","Person");
 
     public final static String ClassName = "Person";
 
@@ -34,9 +52,6 @@ public final class Person
         return ClassDescriptorFor(Person.class);
     }
 
-    static {
-        Register(Person.class);
-    }
 
 
 
@@ -84,7 +99,7 @@ public final class Person
 
 
     public final static Key KeyLongFor(String id){
-        return KeyFactory.createKey(KIND,id);
+        return KeyFactory.createKey(KIND.getName(),id);
     }
 
 
@@ -135,7 +150,7 @@ public final class Person
     public final static void Delete(Person instance){
         if (null != instance){
             Key key = instance.getKey();
-            gap.data.Store.DeleteCollection(new Query(key));
+            gap.data.Store.DeleteCollection(KIND,new Query(key));
             gap.data.Store.Delete(key);
         }
     }
@@ -165,19 +180,25 @@ public final class Person
         }
     }
     public final static Query CreateQueryFor(){
-        return new Query(KIND);
+        return new Query(KIND.getName());
     }
     public final static Query CreateQueryFor(Key key){
-        return new Query(KIND,key);
+        return new Query(KIND.getName(),key);
     }
+    public final static Query CreateQueryFor(Filter filter){
+        Query query = new Query(KIND.getName());
+        return filter.update(query);
+    }
+    
+    
     public final static Person Query1(Query query){
         if (null != query)
             return (Person)gap.data.Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
-    public final static List QueryN(Query query, FetchOptions page){
-        if (null != query)
+    public final static BigTableIterator QueryN(Query query, Page page){
+        if (null != query && null != page)
             return gap.data.Store.QueryN(query,page);
         else
             throw new IllegalArgumentException();
@@ -188,7 +209,7 @@ public final class Person
         else
             throw new IllegalArgumentException();
     }
-    public final static List<Key> QueryKeyN(Query query, FetchOptions page){
+    public final static List.Primitive<Key> QueryKeyN(Query query, Page page){
         if (null != query)
             return gap.data.Store.QueryKeyN(query,page);
         else
@@ -199,7 +220,7 @@ public final class Person
      * Persistent fields' binding for {@link Person}
      */
     public static enum Field
-        implements gap.data.Field
+        implements gap.data.Field<Field>
     {
         InheritFromKey("inheritFromKey"),
         Key("key"),
@@ -223,6 +244,13 @@ public final class Person
         }
         public static Field getField(String name) {
             return FieldName.get(name);
+        }
+        public static Field For(String name) {
+            Field field = FieldName.get(name);
+            if (null == field)
+                return Field.valueOf(name);
+            else
+                return field;
         }
         public static Object Get(Field field, Person instance, boolean mayInherit){
             switch(field){
@@ -442,7 +470,7 @@ public final class Person
     /*
      * Data binding supports
      */
-    public String getClassKind(){
+    public Kind getClassKind(){
         return KIND;
     }
     public String getClassName(){

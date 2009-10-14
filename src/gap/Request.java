@@ -109,6 +109,7 @@ public class Request
     public final TemplateDictionary top;
     public final Logon logon;
     public final ContentType contentType;
+    public final boolean isPartner;
     public Resource resource;
     public Tool tool;
 
@@ -131,9 +132,20 @@ public class Request
         this.resource = FileManager.GetResource(path);
         if (null != this.resource){
             this.tool = FileManager.GetTool(this.resource,method,req.getParameter("op"));
+
+            if (logon.serviceAdmin)
+                this.isPartner = true;
+            else {
+                String logonId = logon.serviceLogon;
+                if (null != logonId)
+                    this.isPartner = (null != resource.getPartnersByName(logonId));
+                else
+                    this.isPartner = false;
+            }
         }
         else {
             this.tool = null;
+            this.isPartner = false;
         }
 
         RTL.set(this);
@@ -205,6 +217,9 @@ public class Request
     }
     public final String getPathFull(){
         return this.path.getFull();
+    }
+    public final String getPathFullClean(){
+        return Path.Clean(this.path.getFull());
     }
     public final boolean hasPath(int idx){
         return this.path.has(idx);

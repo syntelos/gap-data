@@ -1,4 +1,22 @@
-
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
 package gap.data;
 
 
@@ -15,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-12T23:24:38.340Z")
+@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-14T11:47:11.379Z")
 public final class ListShortResourceTemplate
     extends gap.util.AbstractList<Template>
     implements gap.data.List.Short<Template>
@@ -90,5 +108,14 @@ public final class ListShortResourceTemplate
             value.dictionaryInto(top,filter);
         }
         return top;
+    }
+    public Template fetch(Filter filter){
+        Key ancestor = this.ancestorKey;
+        if (null != ancestor){
+            Query query = Template.CreateQueryFor(ancestor,filter);
+            return Template.Query1(query);
+        }
+        else
+            throw new IllegalStateException("Missing ancestor key.");
     }
 }

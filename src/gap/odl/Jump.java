@@ -28,7 +28,14 @@ final class Jump
     extends java.lang.RuntimeException
 {
 
+    public final Comment comment;
+
     Jump(){
         super();
+        this.comment = null;
+    }
+    Jump(Comment comment){
+        super();
+        this.comment = comment;
     }
 }

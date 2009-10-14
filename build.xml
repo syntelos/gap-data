@@ -15,8 +15,8 @@
   <property name="out.webinf" value="${out}/WEB-INF"/>
   <property name="out.bin" value="${out.webinf}/classes"/>
   <property name="out.lib" value="${out.webinf}/lib"/>
-  <property name="out.src" value="${out}/src"/>
-  <property name="out.odl" value="${out}/odl"/>
+  <property name="out.src" value="${out.webinf}/src"/>
+  <property name="out.odl" value="${out.webinf}/odl"/>
   <property name="lib" value="lib"/>
   <property name="doc" value="doc"/>
   <property name="odl" value="odl"/>
@@ -31,6 +31,7 @@
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.version.xml"/>
   <import file="ant/build.in.odl.xml"/>
+  <import file="ant/build.in.gap.xml"/>
 
   <!-- 
      - G.App Engine
@@ -67,6 +68,14 @@
       </fileset>
     </copy>
 
+  </target>
+
+  <target name="local" description="Run installation routine on local debug server, once running.">
+    <gap-update host="localhost:8888" out="/dev/null"/>
+  </target>
+
+  <target name="remote" description="Run installation routine on remote appspot server, once updated.">
+    <gap-update host="${project.application}.appspot.com" out="/dev/null"/>
   </target>
 
   <target name="clean" description="Delete all products: 'out', 'jar', etc..">

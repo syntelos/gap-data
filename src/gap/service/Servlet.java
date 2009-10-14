@@ -19,10 +19,9 @@
  */
 package gap.service;
 
-import gap.Request;
-import gap.Response;
-
+import gap.*;
 import gap.data.*;
+import gap.util.*;
 
 import hapax.Template;
 import hapax.TemplateException;
@@ -120,27 +119,6 @@ public class Servlet
 
         super.init(config);
     }
-    @Override
-    public void init() throws ServletException {
-        this.serviceEnter();
-        try {
-            if (this.installResource(TemplateIndex,TemplateIndexFlist))
-                this.installResource(TemplateErrors,TemplateErrorsFlist);
-        }
-        catch (TemplateException exc){
-            LogRecord rec = new LogRecord(Level.SEVERE,"init");
-            rec.setThrown(exc);
-            Log.log(rec);
-        }
-        catch (IOException exc){
-            LogRecord rec = new LogRecord(Level.SEVERE,"init");
-            rec.setThrown(exc);
-            Log.log(rec);
-        }
-        finally {
-            this.serviceExit();
-        }
-    }
     /**
      * This method injects store enter and exit, and defines an
      * efficient servlet processor for this package.
@@ -227,14 +205,10 @@ public class Servlet
                 servlet.doGet(req,rep);
                 return;
             }
-            else if (req.accept("text/html") && req.hasNotSource()){
-                rep.sendRedirect("/index.html");
-                return;
-            }
             else if (req.isPath("/version.txt")){
                 PrintWriter out = rep.getWriter();
                 out.println(gap.Version.Name+' '+gap.Version.Target+' '+gap.Version.Long);
-                rep.setContentType("text/plain");
+                rep.setContentTypeText();
                 return;
             }
             else {
@@ -264,12 +238,10 @@ public class Servlet
             try {
                 if (null != servlet)
                     servlet.doGet(req,rep);
-                else if (req.accept("text/html") && req.hasNotSource())
-                    rep.sendRedirect("/index.html");
                 else if (req.isPath("/version.txt")){
                     PrintWriter out = rep.getWriter();
                     out.println(gap.Version.Name+' '+gap.Version.Target+' '+gap.Version.Long);
-                    rep.setContentType("text/plain");
+                    rep.setContentTypeText();
                 }
                 else 
                     this.doGet(req,rep);
@@ -346,31 +318,41 @@ public class Servlet
     }
 
     protected TemplateDictionary doGetDefine(Request req, Response rep){
-        return req.getTop();
+        TemplateDictionary top = req.getTop();
+
+        top.setVariable("logon","div.logon.html");
+
+        return top;
     }
-    protected final void doGet(Request req, Response rep)
+    protected void doGet(Request req, Response rep)
         throws ServletException, IOException
     {
-        TemplateDictionary top = this.doGetDefine(req,rep);
-        if (null != top){
-            try {
-                Template template = req.getTemplate();
-                if (null != template){
-                    this.render(req,rep,template,top);
-                    return ;
+        if (req.accept("text/html") && req.hasNotSource()){
+            rep.sendRedirect("/index.html");
+            return;
+        }
+        else {
+            TemplateDictionary top = this.doGetDefine(req,rep);
+            if (null != top){
+                try {
+                    Template template = req.getTemplate();
+                    if (null != template){
+                        this.render(req,rep,template,top);
+                        return ;
+                    }
+                }
+                catch (TemplateException exc){
+                    LogRecord rec = new LogRecord(Level.SEVERE,req.userReference);
+                    rec.setThrown(exc);
+                    Servlet.Log.log(rec);
+                    this.error(req,rep,500,"Template error.",exc);
+                    return;
                 }
             }
-            catch (TemplateException exc){
-                LogRecord rec = new LogRecord(Level.SEVERE,req.userReference);
-                rec.setThrown(exc);
-                Servlet.Log.log(rec);
-                this.error(req,rep,500,"Template error.",exc);
-                return;
-            }
+            this.error(req,rep,404,"Not found.");
         }
-        this.error(req,rep,404,"Not found.");
     }
-    protected final void doPost(Request req, Response rep)
+    protected void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
         Resource resource = req.resource;
@@ -576,7 +558,7 @@ public class Servlet
         Response.Exit();
     }
     protected Parameters createParameters(HttpServletRequest req){
-        return new Parameters(req,Parameters.Special.Page.Default,null);
+        return new Parameters(req,Page.DefaultCount,null);
     }
     /**
      * Must not throw an exception.  May only return a null value when
@@ -594,6 +576,16 @@ public class Servlet
      */
     protected Response createResponse(Request req, HttpServletResponse rep){
         return new Response(rep);
+    }
+    protected boolean installResourceIndex()
+        throws IOException, TemplateException
+    {
+        return this.installResource(TemplateIndex,TemplateIndexFlist);
+    }
+    protected boolean installResourceErrors()
+        throws IOException, TemplateException
+    {
+        return this.installResource(TemplateErrors,TemplateErrorsFlist);
     }
     protected boolean installResource(String name, String[] templates)
         throws IOException, TemplateException
@@ -657,6 +649,34 @@ public class Servlet
             return;
         else if (0 <= lastModified)
             rep.setDateHeader(HEADER_LASTMOD, lastModified);
+    }
+    /**
+     */
+    protected final static String QuoteXml(String string){
+        if (null == string)
+            return null;
+        else {
+            StringBuilder re = new StringBuilder();
+            char[] cary = string.toCharArray();
+            for (int cc = 0, count = cary.length; cc < count; cc++){
+                char ch = cary[cc];
+                switch (ch){
+                case '<':
+                    re.append("&lt;");
+                    break;
+                case '&':
+                    re.append("&amp;");
+                    break;
+                case '>':
+                    re.append("&gt;");
+                    break;
+                default:
+                    re.append(ch);
+                    break;
+                }
+            }
+            return re.toString();
+        }
     }
     /**
      */

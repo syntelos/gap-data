@@ -96,8 +96,7 @@ public final class Logon
         return LTL.get().isLoggedIn();
     }
     public static boolean IsPartner(){
-
-        return false;//(TODO)
+        return gap.Request.Get().isPartner;
     }
     public static boolean IsAdmin(){
         return LTL.get().serviceAdmin;

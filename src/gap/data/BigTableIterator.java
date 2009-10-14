@@ -20,38 +20,53 @@
 package gap.data;
 
 import gap.service.Logon;
+import gap.util.Page;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.PreparedQuery;
 
 import java.util.Iterator;
 
 /**
- * Implemented by an Enum for the fields of a persistent data class.
- * 
- * @see oso.data.Activity
- * @see oso.data.Message
- * @see oso.data.MessageCollection
- * @see oso.data.Person
+ * @see Store#QueryN
  * @author jdp
  */
-public final class BigTableIterator
+public final class BigTableIterator<V extends BigTable>
     extends Object
-    implements Iterator<BigTable>,
-               Iterable<BigTable>
+    implements Iterator<V>,
+               Iterable<V>
 {
+    public final int gross;
+
+    public final boolean hitEnd;
 
     private final Iterator<Entity> ds;
 
 
-    BigTableIterator(Iterable<Entity> ds){
+    BigTableIterator(PreparedQuery stmt, Page page){
         super();
+        
+        this.gross = stmt.countEntities();
+
+        this.hitEnd = (this.gross > page.count);
+
+        Iterable<Entity> ds = stmt.asIterable(page.createFetchOptions());
+
         this.ds = ds.iterator();
     }
 
+
+    public int getGross(){
+        return this.gross;
+    }
+    public boolean hitEnd(){
+        return this.hitEnd;
+    }
     public boolean hasNext(){
         return this.ds.hasNext();
     }
-    public BigTable next(){
+    public V next(){
         Entity entity = this.ds.next();
         BigTable gdo = BigTable.From(entity);
         if (gdo instanceof AdminReadWrite){
@@ -59,14 +74,19 @@ public final class BigTableIterator
             if (!Logon.IsAdmin())
                 throw new AdminAccessException();
         }
+        else if (gdo instanceof PartnerReadWrite.ReadRestricted){
+
+            if (!Logon.IsPartner())
+                throw new PartnerAccessException();
+        }
         gdo.setFromDatastore();
         gdo.onread();
-        return gdo;
+        return (V)gdo;
     }
     public void remove(){
         throw new java.lang.UnsupportedOperationException();
     }
-    public Iterator<BigTable> iterator(){
+    public Iterator<V> iterator(){
         return this;
     }
 }
