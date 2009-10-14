@@ -77,15 +77,17 @@ public abstract class AbstractList<V extends BigTable>
 
     protected String ancestorKeyFieldName;
 
-    protected transient BigTable[] buffer;
-
     protected Query query;
 
-    protected int startIndex = 0;
+    protected Page page = Page.Default;
 
-    protected int limit = gap.service.Parameters.Special.Page.Default;
+    protected transient BigTable[] buffer;
 
-    protected boolean fillable = true;
+    protected transient boolean fillable = true;
+
+    private transient int gross;
+
+    private transient boolean hitEnd;
 
 
     protected AbstractList(){
@@ -97,7 +99,7 @@ public abstract class AbstractList<V extends BigTable>
         this.fill();
     }
     /**
-     * Attempt buffer fill once only.
+     * Attempt buffer fill once only per instance.
      */
     public final List<V> fill(){
         if (this.fillable){
@@ -111,11 +113,11 @@ public abstract class AbstractList<V extends BigTable>
      * Attempt buffer fill every time
      */
     public final List<V> refill(){
-        Query query = this.getQuery();
+        Query query = this.query;
         if (null != query){
-            FetchOptions page = FetchOptions.Builder.withLimit(this.limit).offset(this.startIndex);
-
-            Iterable<BigTable> iterable = Store.QueryNIterable(query,page);
+            BigTableIterator<BigTable> iterable = Store.QueryN(query,this.page);
+            this.gross = iterable.gross;
+            this.hitEnd = iterable.hitEnd;
             this.clearBuffer();
             for (BigTable table: iterable){
                 this.addToBuffer(table);
@@ -129,26 +131,39 @@ public abstract class AbstractList<V extends BigTable>
 
     public abstract BigTable getParent();
 
+    /**
+     * Get value from datastore without adding into the list buffer,
+     * and without disturbing the relationship between the page and
+     * the buffer.
+     */
+    public abstract V fetch(Filter filter);
+
     public final Query getQuery(){
         return this.query;
     }
     public final int getStartIndex(){
-        return this.startIndex;
-    }
-    public final void setStartIndex(int startIndex){
-        if (0 < startIndex)
-            this.startIndex = startIndex;
-        else
-            throw new IllegalArgumentException(String.valueOf(startIndex));
+        return this.page.startIndex;
     }
     public final int getLimit(){
-        return this.limit;
+        return this.page.count;
     }
-    public final void setLimit(int limit){
-        if (0 < limit)
-            this.limit = limit;
+    public final int getGross(){
+        return this.gross;
+    }
+    public final boolean getHitEnd(){
+        return this.hitEnd;
+    }
+    public final boolean hitEnd(){
+        return this.hitEnd;
+    }
+    public final Page getPage(){
+        return this.page;
+    }
+    public final void setPage(Page page){
+        if (null != page)
+            this.page = page;
         else
-            throw new IllegalArgumentException(String.valueOf(limit));
+            throw new IllegalArgumentException();
     }
     public final Key getValueClassAncestorKey(){
         return this.ancestorKey;

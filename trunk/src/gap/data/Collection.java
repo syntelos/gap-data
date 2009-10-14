@@ -19,6 +19,8 @@
  */
 package gap.data;
 
+import gap.util.Page;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
@@ -74,11 +76,13 @@ public interface Collection<V>
     public interface ShortC<V>
         extends Collection<V>
     {
-        public int size();
+        public Query getQuery();
 
-        public boolean contains(V instance);
+        public Page getPage();
 
-        public boolean containsNot(V instance);
+        public boolean hitEnd();
+
+        public V fetch(Filter filter);
     }
 
     /**
@@ -90,9 +94,11 @@ public interface Collection<V>
     {
         public Query getQuery();
 
-        public int getStartIndex();
+        public Page getPage();
 
-        public int getLimit();
+        public boolean hitEnd();
+
+        public V fetch(Filter filter);
     }
 
 

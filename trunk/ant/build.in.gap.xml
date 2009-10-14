@@ -1,0 +1,11 @@
+<project name="build-gap-data">
+
+  <macrodef name="gap-update">
+    <attribute name="host"/>
+    <attribute name="out"/>
+    <sequential>
+      <get src="http://@{host}/update/*" dest="@{out}"/>
+    </sequential>
+  </macrodef>
+
+</project>

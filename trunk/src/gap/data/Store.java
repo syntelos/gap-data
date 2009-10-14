@@ -21,6 +21,7 @@ package gap.data;
 
 import gap.service.Logon;
 import gap.util.AbstractListPrimitive;
+import gap.util.Page;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;
@@ -30,7 +31,6 @@ import javax.cache.CacheManager;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
@@ -84,7 +84,12 @@ public final class Store
                     if (gdo instanceof AdminReadWrite){
 
                         if (!Logon.IsAdmin())
-                            throw new AdminAccessException();
+                            throw new AdminAccessException(gdo.getClassKind());
+                    }
+                    else if (gdo instanceof PartnerReadWrite.ReadRestricted){
+
+                        if (!Logon.IsPartner())
+                            throw new PartnerAccessException(gdo.getClassKind());
                     }
                     gdo.setFromDatastore();
                     gdo.onread();
@@ -105,7 +110,12 @@ public final class Store
                 if (gdo instanceof AdminReadWrite){
 
                     if (!Logon.IsAdmin())
-                        throw new AdminAccessException();
+                        throw new AdminAccessException(gdo.getClassKind());
+                }
+                else if (gdo instanceof PartnerReadWrite.ReadRestricted){
+
+                    if (!Logon.IsPartner())
+                        throw new PartnerAccessException(gdo.getClassKind());
                 }
                 gdo.setFromDatastore();
                 gdo.onread();
@@ -117,7 +127,12 @@ public final class Store
             if (table instanceof AdminReadWrite){
 
                 if (!Logon.IsAdmin())
-                    throw new AdminAccessException();
+                    throw new AdminAccessException(table.getClassKind());
+            }
+            else if (table instanceof PartnerReadWrite){
+
+                if (!Logon.IsPartner())
+                    throw new PartnerAccessException(table.getClassKind());
             }
             Entity entity = table.fillToDatastoreEntity();
             Key key = Get().put(entity);
@@ -128,7 +143,12 @@ public final class Store
                 if (BigTable.IsAdmin(key.getKind())){
 
                     if (!Logon.IsAdmin())
-                        throw new AdminAccessException();
+                        throw new AdminAccessException(key.getKind());
+                }
+                else if (BigTable.IsPartner(key.getKind())){
+
+                    if (!Logon.IsPartner())
+                        throw new PartnerAccessException(key.getKind());
                 }
                 Get().delete(new Key[]{key});
             }
@@ -145,7 +165,12 @@ public final class Store
                     if (gdo instanceof AdminReadWrite){
 
                         if (!Logon.IsAdmin())
-                            throw new AdminAccessException();
+                            throw new AdminAccessException(gdo.getClassKind());
+                    }
+                    else if (gdo instanceof PartnerReadWrite.ReadRestricted){
+
+                        if (!Logon.IsPartner())
+                            throw new PartnerAccessException(gdo.getClassKind());
                     }
                     gdo.setFromDatastore();
                     gdo.onread();
@@ -174,7 +199,12 @@ public final class Store
                         if (gdo instanceof AdminReadWrite){
 
                             if (!Logon.IsAdmin())
-                                throw new AdminAccessException();
+                                throw new AdminAccessException(gdo.getClassKind());
+                        }
+                        else if (gdo instanceof PartnerReadWrite.ReadRestricted){
+
+                            if (!Logon.IsPartner())
+                                throw new PartnerAccessException(gdo.getClassKind());
                         }
                         gdo.setFromDatastore();
                         gdo.onread();
@@ -186,42 +216,11 @@ public final class Store
                 }
             }
         }
-        protected static List.Primitive<BigTable> QueryN(Query query, FetchOptions page){
+        protected static BigTableIterator QueryN(Query query, Page page){
             DatastoreService ds = Get();
             PreparedQuery stmt = ds.prepare(query);
 
-            Iterable<Entity> it;
-            if (null != page)
-                it = stmt.asIterable(page);
-            else
-                it = stmt.asIterable();
-
-            List.Primitive<BigTable> list = new AbstractListPrimitive.Any<BigTable>();
-
-            for (Entity entity : it){
-                BigTable gdo = BigTable.From(entity);
-                if (gdo instanceof AdminReadWrite){
-
-                    if (!Logon.IsAdmin())
-                        throw new AdminAccessException();
-                }
-                gdo.setFromDatastore();
-                gdo.onread();
-                list.add(gdo);
-            }
-            return list;
-        }
-        protected static Iterable<BigTable> QueryNIterable(Query query, FetchOptions page){
-            DatastoreService ds = Get();
-            PreparedQuery stmt = ds.prepare(query);
-
-            Iterable<Entity> it;
-            if (null != page)
-                it = stmt.asIterable(page);
-            else
-                it = stmt.asIterable();
-
-            return new BigTableIterator(it);
+            return new BigTableIterator(stmt,page);
         }
         protected static Key QueryKey1(Query query){
             if (BigTable.IsAdmin(query.getKind())){
@@ -256,7 +255,7 @@ public final class Store
                 return highKey;
             }
         }
-        protected static List.Primitive<Key> QueryKeyN(Query query, FetchOptions page){
+        protected static List.Primitive<Key> QueryKeyN(Query query, Page page){
             if (BigTable.IsAdmin(query.getKind())){
 
                 if (!Logon.IsAdmin())
@@ -267,11 +266,7 @@ public final class Store
             DatastoreService ds = Get();
             PreparedQuery stmt = ds.prepare(query);
 
-            Iterable<Entity> it;
-            if (null != page)
-                it = stmt.asIterable(page);
-            else
-                it = stmt.asIterable();
+            Iterable<Entity> it = stmt.asIterable(page.createFetchOptions());
 
             List.Primitive<Key> list = new AbstractListPrimitive.Any<Key>();
 
@@ -318,7 +313,12 @@ public final class Store
                     if (gdo instanceof AdminReadWrite){
 
                         if (!Logon.IsAdmin())
-                            throw new AdminAccessException();
+                            throw new AdminAccessException(gdo.getClassKind());
+                    }
+                    else if (gdo instanceof PartnerReadWrite.ReadRestricted){
+
+                        if (!Logon.IsPartner())
+                            throw new PartnerAccessException(gdo.getClassKind());
                     }
                     gdo.setFromMemcache();
                     gdo.onread();
@@ -353,7 +353,12 @@ public final class Store
                     if (gdo instanceof AdminReadWrite){
 
                         if (!Logon.IsAdmin())
-                            throw new AdminAccessException();
+                            throw new AdminAccessException(gdo.getClassKind());
+                    }
+                    else if (gdo instanceof PartnerReadWrite.ReadRestricted){
+
+                        if (!Logon.IsPartner())
+                            throw new PartnerAccessException(gdo.getClassKind());
                     }
                     gdo.setFromMemcache();
                     gdo.onread();
@@ -366,7 +371,12 @@ public final class Store
                             if (gdo instanceof AdminReadWrite){
 
                                 if (!Logon.IsAdmin())
-                                    throw new AdminAccessException();
+                                    throw new AdminAccessException(gdo.getClassKind());
+                            }
+                            else if (gdo instanceof PartnerReadWrite.ReadRestricted){
+
+                                if (!Logon.IsPartner())
+                                    throw new PartnerAccessException(gdo.getClassKind());
                             }
                             gdo.setFromDatastore();
                             gdo.onread();
@@ -385,7 +395,12 @@ public final class Store
             if (table instanceof AdminReadWrite){
 
                 if (!Logon.IsAdmin())
-                    throw new AdminAccessException();
+                    throw new AdminAccessException(table.getClassKind());
+            }
+            else if (table instanceof PartnerReadWrite){
+
+                if (!Logon.IsPartner())
+                    throw new PartnerAccessException(table.getClassKind());
             }
             String ck = BigTable.ToString(key);
 
@@ -398,7 +413,12 @@ public final class Store
                 if (BigTable.IsAdmin(key.getKind())){
 
                     if (!Logon.IsAdmin())
-                        throw new AdminAccessException();
+                        throw new AdminAccessException(key.getKind());
+                }
+                else if (BigTable.IsPartner(key.getKind())){
+
+                    if (!Logon.IsPartner())
+                        throw new PartnerAccessException(key.getKind());
                 }
 
                 String ck = BigTable.ToString(key);
@@ -441,16 +461,13 @@ public final class Store
     public static BigTable Query1(Query q){
         return Store.P.Query1(q);
     }
-    public static List.Primitive<BigTable> QueryN(Query q, FetchOptions p){
+    public static BigTableIterator QueryN(Query q, Page p){
         return Store.P.QueryN(q,p);
-    }
-    public static Iterable<BigTable> QueryNIterable(Query q, FetchOptions p){
-        return Store.P.QueryNIterable(q,p);
     }
     public static Key QueryKey1(Query q){
         return Store.P.QueryKey1(q);
     }
-    public static List.Primitive<Key> QueryKeyN(Query q, FetchOptions p){
+    public static List.Primitive<Key> QueryKeyN(Query q, Page p){
         return Store.P.QueryKeyN(q,p);
     }
     public static BigTable Put(BigTable table){
@@ -476,9 +493,16 @@ public final class Store
     public static void Clean(Key key){
         C.Delete(key);
     }
-    public static void DeleteCollection(Query query){
-        if (BigTable.IsAdmin(query.getKind())){
+    public static void DeleteCollection(Kind access, Query query){
+        if (BigTable.IsAdmin(access)){
 
+            if (!Logon.IsAdmin())
+                throw new AdminAccessException(access);
+        }
+        else if (BigTable.IsPartner(access)){
+
+            if (!Logon.IsPartner())
+                throw new PartnerAccessException(access);
         }
         query.setKeysOnly();
 

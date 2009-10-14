@@ -103,7 +103,7 @@ public final class Import
                 throw new Syntax("Malformed statement '"+line+"'.");
         }
         else 
-            throw new Jump();
+            throw new Jump(this.comment);
     }
 
 

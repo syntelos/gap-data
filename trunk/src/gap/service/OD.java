@@ -431,6 +431,13 @@ public final class OD
                         if (IsTypeOf(typeComponent,"HasName"))
                             field_is.addSection("field_list_component_named");
 
+                        ClassDescriptor component = gap.odl.Main.ClassDescriptorFor(typeComponent);
+                        if (null != component){
+                            String componentKind = ClassKind(component);
+                            if (null != componentKind)
+                                dataField.putVariable("field_list_component_kind",componentKind);
+                        }
+
                         dataField.putVariable("field_impl_class_name",ListClassName(fieldTypeClean,className,typeComponent));
                     }
                     else

@@ -1,4 +1,22 @@
-
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
 package gap.data;
 
 
@@ -16,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T23:24:39.533Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-14T11:47:12.723Z")
 public final class Template
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -26,7 +44,7 @@ public final class Template
 
     private final static long serialVersionUID = 1;
 
-    public final static String KIND = "Template";
+    public final static Kind KIND = Kind.Create("Template","gap.data","Template");
 
     public final static String ClassName = "Template";
 
@@ -39,9 +57,6 @@ public final class Template
         return ClassDescriptorFor(Resource.class);
     }
 
-    static {
-        Register(Template.class);
-    }
 
 
 
@@ -89,7 +104,7 @@ public final class Template
 
 
     public final static Key KeyShortFor(Key ancestor, String id){
-        return KeyFactory.createKey(ancestor,KIND,id);
+        return KeyFactory.createKey(ancestor,KIND.getName(),id);
     }
 
 
@@ -149,7 +164,7 @@ public final class Template
             do {
                 matter ^= random.nextLong();
                 String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(ancestor,KIND,idString);
+                Key key = KeyFactory.createKey(ancestor,KIND.getName(),idString);
                 if (null == GetKey(key))
                     return key;
             }
@@ -166,7 +181,7 @@ public final class Template
     public final static void Delete(Template instance){
         if (null != instance){
             Key key = instance.getKey();
-            gap.data.Store.DeleteCollection(new Query(key));
+            gap.data.Store.DeleteCollection(KIND,new Query(key));
             gap.data.Store.Delete(key);
         }
     }
@@ -196,10 +211,16 @@ public final class Template
         }
     }
     public final static Query CreateQueryFor(){
-        return new Query(KIND);
+        return new Query(KIND.getName());
     }
     public final static Query CreateQueryFor(Key key){
-        return new Query(KIND,key);
+        return new Query(KIND.getName(),key);
+    }
+    
+    
+    public final static Query CreateQueryFor(Key ancestor, Filter filter){
+        Query query = new Query(KIND.getName(),ancestor);
+        return filter.update(query);
     }
     public final static Template Query1(Query query){
         if (null != query)
@@ -207,8 +228,8 @@ public final class Template
         else
             throw new IllegalArgumentException();
     }
-    public final static List QueryN(Query query, FetchOptions page){
-        if (null != query)
+    public final static BigTableIterator QueryN(Query query, Page page){
+        if (null != query && null != page)
             return gap.data.Store.QueryN(query,page);
         else
             throw new IllegalArgumentException();
@@ -219,7 +240,7 @@ public final class Template
         else
             throw new IllegalArgumentException();
     }
-    public final static List<Key> QueryKeyN(Query query, FetchOptions page){
+    public final static List.Primitive<Key> QueryKeyN(Query query, Page page){
         if (null != query)
             return gap.data.Store.QueryKeyN(query,page);
         else
@@ -230,7 +251,7 @@ public final class Template
      * Persistent fields' binding for {@link Template}
      */
     public static enum Field
-        implements gap.data.Field
+        implements gap.data.Field<Field>
     {
         InheritFromKey("inheritFromKey"),
         ParentKey("parentKey"),
@@ -257,6 +278,13 @@ public final class Template
         }
         public static Field getField(String name) {
             return FieldName.get(name);
+        }
+        public static Field For(String name) {
+            Field field = FieldName.get(name);
+            if (null == field)
+                return Field.valueOf(name);
+            else
+                return field;
         }
         public static Object Get(Field field, Template instance, boolean mayInherit){
             switch(field){
@@ -629,7 +657,7 @@ public final class Template
     /*
      * Data binding supports
      */
-    public String getClassKind(){
+    public Kind getClassKind(){
         return KIND;
     }
     public String getClassName(){

@@ -1,4 +1,22 @@
-
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
 package gap.data.servlet;
 
 
@@ -20,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.LogRecord;
@@ -29,7 +48,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-12T23:24:39.615Z")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-14T11:47:12.794Z")
 public class Template
     extends gap.servlet.Site
 {
@@ -65,13 +84,12 @@ public class Template
             }
             else if (req.hasPath(1)){
                 req.parameters.dictionaryInto(top);
-                com.google.appengine.api.datastore.FetchOptions page = req.parameters.page.createFetchOptions();
 
                 Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
 
                 com.google.appengine.api.datastore.Query query = gap.data.Template.CreateQueryFor(parentKey);
 
-                List<gap.data.Template> list = (List<gap.data.Template>)gap.data.Template.QueryN(query,page);
+                BigTableIterator<gap.data.Template> list = (BigTableIterator<gap.data.Template>)gap.data.Template.QueryN(query,req.parameters.page);
 
                 for (gap.data.Template instance : list){
 

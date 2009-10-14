@@ -1,4 +1,22 @@
-
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
 package gap.data;
 
 
@@ -16,19 +34,20 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-12T23:24:38.521Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-14T11:47:11.582Z")
 public final class Partner
     extends gap.data.BigTable
-    implements DataInheritance<Partner>
+    implements DataInheritance<Partner>,
+               HasName
 {
 
     private final static long serialVersionUID = 1;
 
-    public final static String KIND = "Partner";
+    public final static Kind KIND = Kind.Create("Partner","gap.data","Partner");
 
     public final static String ClassName = "Partner";
 
-    public final static String DefaultSortBy = "logonId";
+    public final static String DefaultSortBy = "name";
 
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
         return ClassDescriptorFor(Partner.class);
@@ -37,31 +56,28 @@ public final class Partner
         return ClassDescriptorFor(Resource.class);
     }
 
-    static {
-        Register(Partner.class);
-    }
 
 
 
-    public final static Key KeyLongIdFor(Key ancestor, String logonId){
-        String id = IdFor(ancestor, logonId);
+    public final static Key KeyLongIdFor(Key ancestor, String name){
+        String id = IdFor(ancestor, name);
         return KeyLongFor(ancestor,id);
     }
 
 
-    public final static String IdFor(Key ancestor, String logonId){
-        if (ancestor.isComplete() && null != logonId){
-            String logonIdString = logonId;
-            return gap.data.Hash.For(ToString(ancestor)+'/'+logonIdString);
+    public final static String IdFor(Key ancestor, String name){
+        if (ancestor.isComplete() && null != name){
+            String nameString = name;
+            return gap.data.Hash.For(ToString(ancestor)+'/'+nameString);
         }
         else
             throw new IllegalArgumentException();
     }
 
 
-    public final static Partner ForLongLogonId(Key ancestor, String logonId){
-        if (null != logonId){
-            Key key = KeyLongIdFor(ancestor, logonId);
+    public final static Partner ForLongName(Key ancestor, String name){
+        if (null != name){
+            Key key = KeyLongIdFor(ancestor, name);
             Partner instance = (Partner)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -75,10 +91,10 @@ public final class Partner
     }
 
 
-    public final static Partner GetCreateLong(Key ancestor, String logonId){
-        Partner partner = ForLongLogonId(ancestor, logonId);
+    public final static Partner GetCreateLong(Key ancestor, String name){
+        Partner partner = ForLongName(ancestor, name);
         if (null == partner){
-            partner = new Partner(ancestor, logonId);
+            partner = new Partner(ancestor, name);
             partner = (Partner)gap.data.Store.Put(partner);
         }
         return partner;
@@ -87,7 +103,7 @@ public final class Partner
 
 
     public final static Key KeyLongFor(Key ancestor, String id){
-        return KeyFactory.createKey(KIND,id);
+        return KeyFactory.createKey(KIND.getName(),id);
     }
 
 
@@ -147,7 +163,7 @@ public final class Partner
             do {
                 matter ^= random.nextLong();
                 String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(KIND,idString);
+                Key key = KeyFactory.createKey(KIND.getName(),idString);
                 if (null == GetKey(key))
                     return key;
             }
@@ -164,7 +180,7 @@ public final class Partner
     public final static void Delete(Partner instance){
         if (null != instance){
             Key key = instance.getKey();
-            gap.data.Store.DeleteCollection(new Query(key));
+            gap.data.Store.DeleteCollection(KIND,new Query(key));
             gap.data.Store.Delete(key);
         }
     }
@@ -194,19 +210,25 @@ public final class Partner
         }
     }
     public final static Query CreateQueryFor(){
-        return new Query(KIND);
+        return new Query(KIND.getName());
     }
     public final static Query CreateQueryFor(Key key){
-        return new Query(KIND,key);
+        return new Query(KIND.getName(),key);
     }
+    
+    public final static Query CreateQueryFor(Filter filter){
+        Query query = new Query(KIND.getName());
+        return filter.update(query);
+    }
+    
     public final static Partner Query1(Query query){
         if (null != query)
             return (Partner)gap.data.Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
-    public final static List QueryN(Query query, FetchOptions page){
-        if (null != query)
+    public final static BigTableIterator QueryN(Query query, Page page){
+        if (null != query && null != page)
             return gap.data.Store.QueryN(query,page);
         else
             throw new IllegalArgumentException();
@@ -217,7 +239,7 @@ public final class Partner
         else
             throw new IllegalArgumentException();
     }
-    public final static List<Key> QueryKeyN(Query query, FetchOptions page){
+    public final static List.Primitive<Key> QueryKeyN(Query query, Page page){
         if (null != query)
             return gap.data.Store.QueryKeyN(query,page);
         else
@@ -228,13 +250,13 @@ public final class Partner
      * Persistent fields' binding for {@link Partner}
      */
     public static enum Field
-        implements gap.data.Field
+        implements gap.data.Field<Field>
     {
         InheritFromKey("inheritFromKey"),
         ParentKey("parentKey"),
         Key("key"),
         Id("id"),
-        LogonId("logonId");
+        Name("name");
 
 
         private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -254,6 +276,13 @@ public final class Partner
         public static Field getField(String name) {
             return FieldName.get(name);
         }
+        public static Field For(String name) {
+            Field field = FieldName.get(name);
+            if (null == field)
+                return Field.valueOf(name);
+            else
+                return field;
+        }
         public static Object Get(Field field, Partner instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
@@ -264,8 +293,8 @@ public final class Partner
                 return instance.getKey(mayInherit);
             case Id:
                 return instance.getId(mayInherit);
-            case LogonId:
-                return instance.getLogonId(mayInherit);
+            case Name:
+                return instance.getName(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Partner");
             }
@@ -280,8 +309,8 @@ public final class Partner
                 return instance.setKey( (Key)value);
             case Id:
                 return instance.setId( (String)value);
-            case LogonId:
-                return instance.setLogonId( (String)value);
+            case Name:
+                return instance.setName( (String)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Partner");
             }
@@ -309,7 +338,7 @@ public final class Partner
 
     private volatile Key key;    
     private volatile String id;    // *unique
-    private volatile String logonId;    // *hash-unique
+    private volatile String name;    // *hash-unique
 
 
 
@@ -323,11 +352,11 @@ public final class Partner
     public Partner() {
         super();
     }
-    public Partner(Key ancestor, String logonId) {
+    public Partner(Key ancestor, String name) {
         super();
-        this.setLogonId(logonId);
+        this.setName(name);
         this.parentKey = ancestor;
-        String id = IdFor(ancestor,  logonId);
+        String id = IdFor(ancestor,  name);
         this.setId(id);
         Key key = KeyLongFor(ancestor,id);
         this.setKey(key);
@@ -346,7 +375,7 @@ public final class Partner
         this.datastoreEntity = null;
         this.key = null;
         this.id = null;
-        this.logonId = null;
+        this.name = null;
         this.parent = null;
     }
     public boolean hasInheritFrom(){
@@ -491,29 +520,29 @@ public final class Partner
             return false;
     }
 
-    public boolean hasLogonId(boolean mayInherit){
-        return (null != this.getLogonId(mayInherit));
+    public boolean hasName(boolean mayInherit){
+        return (null != this.getName(mayInherit));
     }
-    public boolean hasNotLogonId(boolean mayInherit){
-        return (null == this.getLogonId(mayInherit));
+    public boolean hasNotName(boolean mayInherit){
+        return (null == this.getName(mayInherit));
     }
-    public boolean dropLogonId(){
-        if (null != this.logonId){
-            this.logonId = null;
+    public boolean dropName(){
+        if (null != this.name){
+            this.name = null;
             return true;
         }
         else
             return false;
     }
-    public String getLogonId(){
-        return this.logonId;
+    public String getName(){
+        return this.name;
     }
-    public String getLogonId(boolean ignore){
-        return this.logonId;
+    public String getName(boolean ignore){
+        return this.name;
     }
-    public boolean setLogonId(String logonId){
-        if (IsNotEqual(this.logonId,logonId)){
-            this.logonId = logonId;
+    public boolean setName(String name){
+        if (IsNotEqual(this.name,name)){
+            this.name = name;
             return true;
         }
         else
@@ -525,7 +554,7 @@ public final class Partner
     /*
      * Data binding supports
      */
-    public String getClassKind(){
+    public Kind getClassKind(){
         return KIND;
     }
     public String getClassName(){

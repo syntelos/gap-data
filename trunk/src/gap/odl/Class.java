@@ -193,6 +193,7 @@ public final class Class
                         this.imports.add(imp);
                     }
                     catch (Jump local){
+                        reader.comment(local);
                         this.comment = reader.comment();
                         String line = reader.getNext(Open);
                         if (null != line){
@@ -218,6 +219,7 @@ public final class Class
                                     parent = new Parent(reader);
                                 }
                                 catch (Jump to){
+                                    reader.comment(to);
                                 }
                                 try {
                                     while (true){
@@ -226,6 +228,7 @@ public final class Class
                                     }
                                 }
                                 catch (Jump to){
+                                    reader.comment(to);
                                 }
                                 String open2 = reader.getNext(Open2);
                             }
@@ -240,6 +243,7 @@ public final class Class
                         this.methods.add(method);
                     }
                     catch (Jump to){
+                        reader.comment(to);
 
                         field = new Field(reader);
                         this.fields.add(field);
@@ -247,6 +251,7 @@ public final class Class
                 }
             }
             catch (Jump terminal){
+                reader.comment(terminal);
                 break;
             }
         }

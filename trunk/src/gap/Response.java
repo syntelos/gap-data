@@ -93,5 +93,23 @@ public class Response
         else
             return super.getWriter();
     }
-    
+    public void println(String line) throws IOException {
+        this.getWriter().println(line);
+    }
+    public void printf(String format, Object... args) throws IOException {
+        this.getWriter().printf(format,args);
+    }
+    public void write(String string) throws IOException {
+        this.getWriter().write(string);
+    }
+    public void setContentTypeText(){
+        this.setContentType("text/plain;charset=utf-8");
+    }
+    public void setContentTypeHtml(){
+        this.setContentType("text/html;charset=utf-8");
+    }
+    public void setContentTypeXml(){
+        this.setContentType("text/xml;charset=utf-8");
+    }
+
 }

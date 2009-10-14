@@ -29,7 +29,9 @@ package gap.data;
  * @see oso.data.Person
  * @author jdp
  */
-public interface Field<E extends Enum> {
+public interface Field<E extends Enum>
+    extends java.lang.Comparable<E>
+{
 
     public final static class List
         extends gap.util.AbstractListPrimitive.Any<Field>

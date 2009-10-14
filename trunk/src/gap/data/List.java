@@ -91,8 +91,6 @@ public interface List<V>
     public interface Primitive<V>
         extends List<V>, Collection.PrimitiveC<V>
     {
-        public V get(int index);
-
         public List<V> add(V instance);
 
         public List<V> remove(V instance);
@@ -101,10 +99,17 @@ public interface List<V>
     public interface Short<V>
         extends List<V>, Collection.ShortC<V>
     {
-        public V get(int index);
     }
 
     public interface Long<V>
         extends List<V>, Collection.LongC<V>
-    {}
+    {
+    }
+
+    /**
+     * Index in memory 
+     * @see Collection#hitEnd()
+     * @see Collection#size()
+     */
+    public V get(int index);
 }

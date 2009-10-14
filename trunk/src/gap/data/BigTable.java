@@ -68,27 +68,24 @@ public abstract class BigTable
 {
     public final static gap.util.Services Services = (new gap.util.Services(BigTable.class)).init();
 
-    protected final static java.util.Set<String> Imports = new java.util.HashSet<String>();
-
-    protected final static void Register(Class<? extends BigTable> dc){
-        String pkg = dc.getPackage().getName();
-        if (null != pkg)
-            Imports.add(pkg);
-        else
-            throw new IllegalStateException(dc.getName());
-    }
-    public static Class<? extends BigTable> Find(String kind)
+    public static Class<? extends BigTable> Find(Kind kind)
         throws ClassNotFoundException
     {
-        for (String pkg : Imports){
-            String classname = (pkg+'.'+kind);
+        if (null != kind){
             try {
-                return (Class<? extends BigTable>)Class.forName(classname);
+                return (Class<? extends BigTable>)Class.forName(kind.fullClassName);
             }
             catch (ClassNotFoundException exc){
+                throw new ClassNotFoundException(kind.name,exc);
             }
         }
-        throw new ClassNotFoundException(kind);
+        else
+            throw new IllegalArgumentException();
+    }
+    public static Class<? extends BigTable> Find(String kindName)
+        throws ClassNotFoundException
+    {
+        return Find(Kind.For(kindName));
     }
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(String kind){
         try {
@@ -116,6 +113,18 @@ public abstract class BigTable
         else
             throw new IllegalArgumentException();
     }
+    public final static boolean IsAdmin(Kind kind){        
+        if (null != kind){
+            try {
+                return IsAdmin(Find(kind));
+            }
+            catch (ClassNotFoundException exc){
+                return false;
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public final static boolean IsAdmin(String kind){
         if (null != kind){
             try {
@@ -126,13 +135,43 @@ public abstract class BigTable
             }
         }
         else
-            return false;
+            throw new IllegalArgumentException();
     }
     public final static boolean IsAdmin(Class kind){
         if (null != kind)
             return (AdminReadWrite.class.isAssignableFrom(kind));
         else
-            return false;
+            throw new IllegalArgumentException();
+    }
+    public final static boolean IsPartner(Kind kind){        
+        if (null != kind){
+            try {
+                return IsPartner(Find(kind));
+            }
+            catch (ClassNotFoundException exc){
+                return false;
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static boolean IsPartner(String kind){
+        if (null != kind){
+            try {
+                return IsPartner(Find(kind));
+            }
+            catch (ClassNotFoundException exc){
+                return false;
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static boolean IsPartner(Class kind){
+        if (null != kind)
+            return (PartnerReadWrite.class.isAssignableFrom(kind));
+        else
+            throw new IllegalArgumentException();
     }
 
     /**
@@ -273,7 +312,7 @@ public abstract class BigTable
      * @return A class static value naming the datastore class name,
      * e.g., "Person".
      */
-    public abstract String getClassKind();
+    public abstract Kind getClassKind();
     /**
      * @return The class static unqualified class name.
      */
@@ -319,32 +358,21 @@ public abstract class BigTable
     public final Entity getDatastoreEntity(){
         Entity datastoreEntity = this.datastoreEntity;
         if (null == datastoreEntity){
-            String kind = this.getClassKind();
-            if (null != kind){
-                Key key = this.getClassFieldKeyValue();
-                if (null != key){
-                    /*
-                     * Entity for object from memcache
-                     * 
-                     * Key.name identity code needs to be aware that
-                     * the datastore key can have multiple key.id's
-                     * for a key.name.
-                     */
-                    try {
-                        datastoreEntity = Store.P.Get().get(key);
-                        this.defineKeyFrom(datastoreEntity);
-                    }
-                    catch (com.google.appengine.api.datastore.EntityNotFoundException exc){
-                        datastoreEntity = new Entity(kind,key);
-                    }
+            Key key = this.getClassFieldKeyValue();
+            if (null != key){
+                try {
+                    datastoreEntity = Store.P.Get().get(key);
+                    this.defineKeyFrom(datastoreEntity);
                 }
-                else
-                    throw new IllegalStateException("Missing key field value.");
-
-                this.datastoreEntity = datastoreEntity;
+                catch (com.google.appengine.api.datastore.EntityNotFoundException exc){
+                    Kind kind = this.getClassKind();
+                    datastoreEntity = new Entity(kind.getName(),key);
+                }
             }
             else
-                throw new IllegalStateException("Missing class kind.");
+                throw new IllegalStateException("Missing key field value.");
+
+            this.datastoreEntity = datastoreEntity;
         }
         return datastoreEntity;
     }

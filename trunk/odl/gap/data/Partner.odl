@@ -3,8 +3,12 @@ path /partners;
 
 child Partner version 1 
     parent Resource
+    implements HasName
 {
     Key key;
     *unique String id;
-    *hash-unique String logonId;
+    /*
+     * logonID
+     */
+    *hash-unique String name;
 }

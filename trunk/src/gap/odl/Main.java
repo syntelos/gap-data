@@ -54,6 +54,7 @@ public final class Main
     extends java.lang.Object
 {
     private final static java.util.Map<String,Class> Classes = new java.util.HashMap<String,Class>();
+    private final static java.util.Map<String,File> Files = new java.util.HashMap<String,File>();
 
     public final static String ClassName(File odl){
         String name = odl.getName();
@@ -101,9 +102,12 @@ public final class Main
             desc = Classes.get(name);
         }
         if (null == desc){
-            Find find = new Find(new FindClass(name),ODLDir);
-            if (find.hasNext()){
-                Reader odlReader = new Reader(find.next());
+            if (Files.isEmpty()){
+                SInit(new File("WEB-INF/odl"));
+            }
+            File file = Files.get(name);
+            if (null != file){
+                Reader odlReader = new Reader(file);
                 try {
                     desc = (new Class(odlReader));
                 }
@@ -269,8 +273,9 @@ public final class Main
     {
         List<File> products = new java.util.ArrayList<File>();
 
-        Find odlFiles = new Find(ODLFiles,odlDir);
-        for (File odlFile: odlFiles){
+        SInit(odlDir);
+
+        for (File odlFile: Files.values()){
             File srcFile = SrcFile(odlDir,srcDir,odlFile);
             try {
                 List<File> files = Main.ProcessFiles(xtmFile,odlFile,srcFile,beans,servlets);
@@ -392,8 +397,6 @@ public final class Main
     }
     public final static FileFilter ODLFiles = new FileFilter();
 
-    private final static File ODLDir = new File("odl");
-
     public final static class FindClass
         extends Object
         implements java.io.FileFilter
@@ -420,5 +423,15 @@ public final class Main
         while ('/' == fileLocal.charAt(0))
             fileLocal = fileLocal.substring(1);
         return new File(srcDir, fileLocal+".java");
+    }
+    static void SInit(File odlDir){
+        if (Files.isEmpty()){
+            Find find = new Find(ODLFiles,odlDir);
+            while (find.hasNext()){
+                File odl = find.next();
+                String name = ClassName(odl);
+                Files.put(name,odl);
+            }
+        }
     }
 }

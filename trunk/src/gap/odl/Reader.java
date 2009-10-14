@@ -73,6 +73,10 @@ public final class Reader
     }
 
 
+    public void comment(Jump jump){
+        if (null == this.comment)
+            this.comment = jump.comment;
+    }
     public Comment comment()
         throws IOException, Syntax
     {

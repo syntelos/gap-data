@@ -294,7 +294,7 @@ public final class Path
             return this.full.equals(that.toString());
     }
 
-    private final static String Clean(String string){
+    public final static String Clean(String string){
         if (null == string || 0 == string.length())
             return "";
         else if ('/' == string.charAt(0))

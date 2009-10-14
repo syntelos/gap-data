@@ -17,42 +17,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.odl;
-
-import gap.service.od.ImportDescriptor;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.regex.Pattern;
+package gap.data;
 
 /**
- * 
- * @see Class
- * @author jdp
+ * Thrown from {@link Store} for violations of the {@link
+ * PartnerReadWrite} access control policy.
  */
-public final class Comment
-    extends Object
+public class PartnerAccessException
+    extends java.security.AccessControlException
 {
-    private final static String ReLine1 = "#.*";
-    private final static String ReLine2 = "//.*";
-    private final static String ReMultiline = "/\\*(?:.|[\\r\\n])*?\\*/";
 
-    public final static Pattern Re = Pattern.compile("\\s*(?:"+ReLine1+")|(?:"+ReLine2+")|(?:"+ReMultiline+")\\s*",Pattern.MULTILINE);
-
-
-
-    public final String text;
-
-
-    public Comment(Reader reader)
-        throws IOException, Syntax
-    {
-        super();
-        String text = reader.getNext(Re);
-        if (null != text)
-            this.text = text;
-        else 
-            throw new Jump();
+    public PartnerAccessException(){
+        super("Requires partner status.");
+    }
+    public PartnerAccessException(Kind kind){
+        super(kind+" requires partner status.");
+    }
+    public PartnerAccessException(String kind){
+        super(kind+" requires partner status.");
     }
 
 }

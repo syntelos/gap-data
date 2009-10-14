@@ -125,7 +125,7 @@ public final class Field
             }
         }
         else
-            throw new Jump();
+            throw new Jump(this.comment);
     }
 
 
