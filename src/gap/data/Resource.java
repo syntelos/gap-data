@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-16T09:31:30.389Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-16T11:37:45.030Z")
 public final class Resource
     extends gap.data.BigTable
     implements DataInheritance<Resource>,
@@ -841,13 +841,27 @@ public final class Resource
         else
             return false;
     }
+    public Partner fetchPartners(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            Map.Long<String,Partner> collection = this.getPartners(MayInherit);
+            return collection.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public Partner getPartners(String partnersName){
         if (null != partnersName){
             Map.Long<String,Partner> map = this.getPartners(MayInherit);
-            if (null != map)
-                return map.get(partnersName);
-            else
-                return null;
+            if (null != map){
+                Partner value = map.get(partnersName);
+                if (null != value)
+                    return value;
+                else if (map.hitEnd()){
+                    Filter filter = new Filter("Partner").add(Partner.Field.For("name"),Filter.Op.eq,name);
+                    return map.fetch(filter);
+                }
+            }
+            return null;
         }
         else
             throw new IllegalArgumentException();
@@ -903,6 +917,14 @@ public final class Resource
         else
             return false;
     }
+    public Account fetchAccounts(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            List.Long<Account> collection = this.getAccounts(MayInherit);
+            return collection.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public Account getAccounts(gap.data.ListFilter<Account> filter){
         if (null != filter){
             List.Long<Account> list = this.getAccounts(MayInherit);
@@ -911,14 +933,6 @@ public final class Resource
                     return item;
             }
             return null;
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public Account fetchAccounts(Filter filter){
-        if (null != filter && KIND == filter.kind){
-            List.Long<Account> list = this.getAccounts(MayInherit);
-            return list.fetch(filter);
         }
         else
             throw new IllegalArgumentException();
@@ -974,13 +988,27 @@ public final class Resource
         else
             return false;
     }
+    public Image fetchImages(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            Map.Short<String,Image> collection = this.getImages(MayInherit);
+            return collection.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public Image getImages(String imagesName){
         if (null != imagesName){
             Map.Short<String,Image> map = this.getImages(MayInherit);
-            if (null != map)
-                return map.get(imagesName);
-            else
-                return null;
+            if (null != map){
+                Image value = map.get(imagesName);
+                if (null != value)
+                    return value;
+                else if (map.hitEnd()){
+                    Filter filter = new Filter("Image").add(Image.Field.For("name"),Filter.Op.eq,name);
+                    return map.fetch(filter);
+                }
+            }
+            return null;
         }
         else
             throw new IllegalArgumentException();
@@ -1036,13 +1064,27 @@ public final class Resource
         else
             return false;
     }
+    public Template fetchTemplates(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            Map.Short<String,Template> collection = this.getTemplates(MayInherit);
+            return collection.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public Template getTemplates(String templatesName){
         if (null != templatesName){
             Map.Short<String,Template> map = this.getTemplates(MayInherit);
-            if (null != map)
-                return map.get(templatesName);
-            else
-                return null;
+            if (null != map){
+                Template value = map.get(templatesName);
+                if (null != value)
+                    return value;
+                else if (map.hitEnd()){
+                    Filter filter = new Filter("Template").add(Template.Field.For("name"),Filter.Op.eq,name);
+                    return map.fetch(filter);
+                }
+            }
+            return null;
         }
         else
             throw new IllegalArgumentException();
@@ -1098,13 +1140,27 @@ public final class Resource
         else
             return false;
     }
+    public Tool fetchTools(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            Map.Short<String,Tool> collection = this.getTools(MayInherit);
+            return collection.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public Tool getTools(String toolsName){
         if (null != toolsName){
             Map.Short<String,Tool> map = this.getTools(MayInherit);
-            if (null != map)
-                return map.get(toolsName);
-            else
-                return null;
+            if (null != map){
+                Tool value = map.get(toolsName);
+                if (null != value)
+                    return value;
+                else if (map.hitEnd()){
+                    Filter filter = new Filter("Tool").add(Tool.Field.For("name"),Filter.Op.eq,name);
+                    return map.fetch(filter);
+                }
+            }
+            return null;
         }
         else
             throw new IllegalArgumentException();

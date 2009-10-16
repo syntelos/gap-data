@@ -45,7 +45,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean string I/O functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-16T09:31:32.673Z")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-16T11:37:47.409Z")
 public abstract class Person
     extends gap.Strings
 {

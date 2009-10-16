@@ -552,6 +552,7 @@ public final class OD
                         dataField.putVariable("field_map_component_from_name",typeComponentFromName);
                         dataField.putVariable("field_map_component_from_nameCamel",Camel(typeComponentFromName));
                         dataField.putVariable("field_map_component_to",typeComponentTo);
+                        dataField.putVariable("field_map_component",typeComponentTo);
 
                         if (IsTypeOf(typeComponentTo,"HasName"))
                             dataField.addSection("field_map_component_named");
