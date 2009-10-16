@@ -466,20 +466,14 @@ public class FileManager
     public void close() throws IOException {
     }
 
-    public int hashCode(){
-        return this.location.getName().hashCode();
-    }
     public String toString(){
-        return this.location.getName();
-    }
-    public boolean equals(Object that){
-        if (this == that)
-            return true;
-        else if (that instanceof FileManager)
-            return (this.location.getName().equals( ((FileManager)that).location.getName()));
+        Location location = this.location;
+        if (null != location)
+            return location.getName();
         else
-            return false;
+            return "";
     }
+
     public final static URI ToUri(String name) {
         StringBuilder strbuf = new StringBuilder();
         strbuf.append("mfm:///");
@@ -528,9 +522,9 @@ public class FileManager
     public final static Tool GetTool(Resource resource, Method method, String name){
         if (null != resource){
             if (null != name)
-                return resource.getToolsByName(name);
+                return resource.getTools(name);
             else
-                return resource.getToolsByName(method.lower);
+                return resource.getTools(method.lower);
         }
         else
             return null;

@@ -71,6 +71,7 @@ public interface Map<K,V>
             }
         }
         public final static Map.Type For(String name){
+            name = gap.service.OD.CleanTypeName(name);
             Map.Type type = DotNameMap.get(name);
             if (null != type)
                 return type;
@@ -99,7 +100,7 @@ public interface Map<K,V>
     public interface Short<K,V>
         extends Map<K,V>, Collection.ShortC<V>
     {
-        public Primitive getMapKeyType();
+        public gap.Primitive getMapKeyType();
 
         public String getMapKeyFieldName();
     }
@@ -107,7 +108,7 @@ public interface Map<K,V>
     public interface Long<K,V>
         extends Map<K,V>, Collection.LongC<V>
     {
-        public Primitive getMapKeyType();
+        public gap.Primitive getMapKeyType();
 
         public String getMapKeyFieldName();
     }

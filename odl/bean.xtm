@@ -726,11 +726,11 @@ public final class {{=class_name}}
         }
         return null;
     }{{/field_list_component_named}}{{/field_is_list}}{{#field_is_map}}
-    public {{=field_map_component_to}} get{{=field_nameCamel}}({{=field_map_component_from}} {{=field_name}}Key){
-        if (null != {{=field_name}}Key){
+    public {{=field_map_component_to}} get{{=field_nameCamel}}({{=field_map_component_from}} {{=field_name}}{{=field_map_component_from_nameCamel}}){
+        if (null != {{=field_name}}{{=field_map_component_from_nameCamel}}){
             {{=field_class}} map = this.get{{=field_nameCamel}}(MayInherit);
             if (null != map)
-                return map.get({{=field_name}}Key);
+                return map.get({{=field_name}}{{=field_map_component_from_nameCamel}});
             else
                 return null;
         }

@@ -28,12 +28,13 @@ import hapax.TemplateDictionary;
 import com.google.appengine.api.datastore.*;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.annotation.Generated;
 
 /**
  * Generated long list.
  */
-@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-15T10:18:13.299Z")
+@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-16T09:23:18.638Z")
 public final class ListLongResourcePartner
     extends gap.util.AbstractList<Partner>
     implements gap.data.List.Long<Partner>

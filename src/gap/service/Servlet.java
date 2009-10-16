@@ -344,8 +344,7 @@ public class Servlet
                 this.error(req,rep,400,"Not available to create.");
             }
             else {
-                ListFilter filter = new ListFilter.Name(op);
-                Tool tool = resource.getTools(filter);
+                Tool tool = resource.getTools(op);
                 if (null != tool){
                     Function function = req.getFunction(this,req,rep,resource,tool);
                     if (null != function)

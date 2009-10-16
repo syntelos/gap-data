@@ -275,7 +275,7 @@ public final class Main
                         case MapShort:
                             if (mapShortXtm.isFile()){
                                 OD.MapChild mapChild = new OD.MapChild(field);
-                                String mapClassName = OD.MapShortClassName(parentClassName,mapChild.childValueClassName);
+                                String mapClassName = OD.MapShortClassName(parentClassName,mapChild);
                                 if (null != mapClassName){
                                     File mapFile = new File(javaDir,mapClassName+".java");
                                     PrintWriter out = new PrintWriter(new FileWriter(mapFile));
@@ -294,7 +294,7 @@ public final class Main
                         case MapLong:
                             if (mapLongXtm.isFile()){
                                 OD.MapChild mapChild = new OD.MapChild(field);
-                                String mapClassName = OD.MapLongClassName(parentClassName,mapChild.childValueClassName);
+                                String mapClassName = OD.MapLongClassName(parentClassName,mapChild);
                                 if (null != mapClassName){
                                     File mapFile = new File(javaDir,mapClassName+".java");
                                     PrintWriter out = new PrintWriter(new FileWriter(mapFile));

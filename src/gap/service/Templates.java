@@ -120,7 +120,7 @@ public final class Templates
         if (null != request){
             Resource resource = request.resource;
             if (null != resource){
-                gap.data.Template templateData = resource.getTemplatesByName(name);
+                gap.data.Template templateData = resource.getTemplates(name);
                 if (null != templateData)
                     return this.getTemplate(resource,templateData);
                 else {
@@ -159,7 +159,7 @@ public final class Templates
         if (null == resource)
             return null;
         else {
-            gap.data.Template templateData = resource.getTemplatesByName(resource.getName());
+            gap.data.Template templateData = resource.getTemplates(resource.getName());
             return this.getTemplate(resource,templateData);
         }
     }

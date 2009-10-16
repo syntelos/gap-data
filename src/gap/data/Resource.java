@@ -29,12 +29,13 @@ import hapax.TemplateDictionary;
 import com.google.appengine.api.datastore.*;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.annotation.Generated;
 
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-15T10:18:12.586Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-16T09:31:30.389Z")
 public final class Resource
     extends gap.data.BigTable
     implements DataInheritance<Resource>,
@@ -345,11 +346,11 @@ public final class Resource
     private volatile Blob servletClassfileJvm;    
 
 
-    private volatile List.Long<Partner> partners;
+    private volatile Map.Long<String,Partner> partners;
     private volatile List.Long<Account> accounts;
-    private volatile List.Short<Image> images;
-    private volatile List.Short<Template> templates;
-    private volatile List.Short<Tool> tools;
+    private volatile Map.Short<String,Image> images;
+    private volatile Map.Short<String,Template> templates;
+    private volatile Map.Short<String,Tool> tools;
 
 
 
@@ -389,7 +390,7 @@ public final class Resource
         this.servletClassname = null;
         this.servletSourceJava = null;
         this.servletClassfileJvm = null;
-        List.Long<Partner> partners = this.partners;
+        Map.Long<String,Partner> partners = this.partners;
         if (null != partners){
             this.partners = null;
             partners.destroy();
@@ -399,17 +400,17 @@ public final class Resource
             this.accounts = null;
             accounts.destroy();
         }
-        List.Short<Image> images = this.images;
+        Map.Short<String,Image> images = this.images;
         if (null != images){
             this.images = null;
             images.destroy();
         }
-        List.Short<Template> templates = this.templates;
+        Map.Short<String,Template> templates = this.templates;
         if (null != templates){
             this.templates = null;
             templates.destroy();
         }
-        List.Short<Tool> tools = this.tools;
+        Map.Short<String,Tool> tools = this.tools;
         if (null != tools){
             this.tools = null;
             tools.destroy();
@@ -797,7 +798,7 @@ public final class Resource
         return (this.getPartners(mayInherit).isEmpty());
     }
     public boolean dropPartners(){
-        List.Long<Partner> partners = this.partners;
+        Map.Long<String,Partner> partners = this.partners;
         if (null != partners){
             this.partners = null;
             partners.destroy();
@@ -806,8 +807,8 @@ public final class Resource
         else
             return false;
     }
-    public List.Long<Partner> getPartners(boolean mayInherit){
-        List.Long<Partner> partners = this.partners;
+    public Map.Long<String,Partner> getPartners(boolean mayInherit){
+        Map.Long<String,Partner> partners = this.partners;
         if (null == partners){
             if (mayInherit && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
@@ -817,60 +818,39 @@ public final class Resource
                         return partners;
                 }
             }
-            partners = new ListLongResourcePartner(this);
+            partners = new MapLongResourceStringPartner(this);
             this.partners = partners;
             partners.init();
         }
         return partners;
     }
-    public void setPartners(List.Long<Partner> partners){
+    public void setPartners(Map.Long<String,Partner> partners){
         this.partners = partners;
     }
     public boolean isEmptyPartners(){
-        List.Long<Partner> collection = this.partners;
+        Map.Long<String,Partner> collection = this.partners;
         if (null != collection)
             return collection.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyPartners(){
-        List.Long<Partner> collection = this.partners;
+        Map.Long<String,Partner> collection = this.partners;
         if (null != collection)
             return (!collection.isEmpty());
         else
             return false;
     }
-    public Partner getPartners(gap.data.ListFilter<Partner> filter){
-        if (null != filter){
-            List.Long<Partner> list = this.getPartners(MayInherit);
-            for (Partner item : list){
-                if (filter.accept(item))
-                    return item;
-            }
-            return null;
+    public Partner getPartners(String partnersName){
+        if (null != partnersName){
+            Map.Long<String,Partner> map = this.getPartners(MayInherit);
+            if (null != map)
+                return map.get(partnersName);
+            else
+                return null;
         }
         else
             throw new IllegalArgumentException();
-    }
-    public Partner fetchPartners(Filter filter){
-        if (null != filter && KIND == filter.kind){
-            List.Long<Partner> list = this.getPartners(MayInherit);
-            return list.fetch(filter);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public Partner getPartnersByName(String name){
-        List.Long<Partner> list = this.getPartners(MayInherit);
-        for (Partner item : list){
-            if (item.getName().equals(name))
-                return item;
-        }
-        if (list.hitEnd()){
-            Filter filter = new Filter("Partner").add(Partner.Field.For("name"),Filter.Op.eq,name);
-            return list.fetch(filter);
-        }
-        return null;
     }
 
     public boolean hasAccounts(boolean mayInherit){
@@ -951,7 +931,7 @@ public final class Resource
         return (this.getImages(mayInherit).isEmpty());
     }
     public boolean dropImages(){
-        List.Short<Image> images = this.images;
+        Map.Short<String,Image> images = this.images;
         if (null != images){
             this.images = null;
             images.destroy();
@@ -960,8 +940,8 @@ public final class Resource
         else
             return false;
     }
-    public List.Short<Image> getImages(boolean mayInherit){
-        List.Short<Image> images = this.images;
+    public Map.Short<String,Image> getImages(boolean mayInherit){
+        Map.Short<String,Image> images = this.images;
         if (null == images){
             if (mayInherit && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
@@ -971,60 +951,39 @@ public final class Resource
                         return images;
                 }
             }
-            images = new ListShortResourceImage(this);
+            images = new MapShortResourceStringImage(this);
             this.images = images;
             images.init();
         }
         return images;
     }
-    public void setImages(List.Short<Image> images){
+    public void setImages(Map.Short<String,Image> images){
         this.images = images;
     }
     public boolean isEmptyImages(){
-        List.Short<Image> collection = this.images;
+        Map.Short<String,Image> collection = this.images;
         if (null != collection)
             return collection.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyImages(){
-        List.Short<Image> collection = this.images;
+        Map.Short<String,Image> collection = this.images;
         if (null != collection)
             return (!collection.isEmpty());
         else
             return false;
     }
-    public Image getImages(gap.data.ListFilter<Image> filter){
-        if (null != filter){
-            List.Short<Image> list = this.getImages(MayInherit);
-            for (Image item : list){
-                if (filter.accept(item))
-                    return item;
-            }
-            return null;
+    public Image getImages(String imagesName){
+        if (null != imagesName){
+            Map.Short<String,Image> map = this.getImages(MayInherit);
+            if (null != map)
+                return map.get(imagesName);
+            else
+                return null;
         }
         else
             throw new IllegalArgumentException();
-    }
-    public Image fetchImages(Filter filter){
-        if (null != filter && KIND == filter.kind){
-            List.Short<Image> list = this.getImages(MayInherit);
-            return list.fetch(filter);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public Image getImagesByName(String name){
-        List.Short<Image> list = this.getImages(MayInherit);
-        for (Image item : list){
-            if (item.getName().equals(name))
-                return item;
-        }
-        if (list.hitEnd()){
-            Filter filter = new Filter("Image").add(Image.Field.For("name"),Filter.Op.eq,name);
-            return list.fetch(filter);
-        }
-        return null;
     }
 
     public boolean hasTemplates(boolean mayInherit){
@@ -1034,7 +993,7 @@ public final class Resource
         return (this.getTemplates(mayInherit).isEmpty());
     }
     public boolean dropTemplates(){
-        List.Short<Template> templates = this.templates;
+        Map.Short<String,Template> templates = this.templates;
         if (null != templates){
             this.templates = null;
             templates.destroy();
@@ -1043,8 +1002,8 @@ public final class Resource
         else
             return false;
     }
-    public List.Short<Template> getTemplates(boolean mayInherit){
-        List.Short<Template> templates = this.templates;
+    public Map.Short<String,Template> getTemplates(boolean mayInherit){
+        Map.Short<String,Template> templates = this.templates;
         if (null == templates){
             if (mayInherit && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
@@ -1054,60 +1013,39 @@ public final class Resource
                         return templates;
                 }
             }
-            templates = new ListShortResourceTemplate(this);
+            templates = new MapShortResourceStringTemplate(this);
             this.templates = templates;
             templates.init();
         }
         return templates;
     }
-    public void setTemplates(List.Short<Template> templates){
+    public void setTemplates(Map.Short<String,Template> templates){
         this.templates = templates;
     }
     public boolean isEmptyTemplates(){
-        List.Short<Template> collection = this.templates;
+        Map.Short<String,Template> collection = this.templates;
         if (null != collection)
             return collection.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyTemplates(){
-        List.Short<Template> collection = this.templates;
+        Map.Short<String,Template> collection = this.templates;
         if (null != collection)
             return (!collection.isEmpty());
         else
             return false;
     }
-    public Template getTemplates(gap.data.ListFilter<Template> filter){
-        if (null != filter){
-            List.Short<Template> list = this.getTemplates(MayInherit);
-            for (Template item : list){
-                if (filter.accept(item))
-                    return item;
-            }
-            return null;
+    public Template getTemplates(String templatesName){
+        if (null != templatesName){
+            Map.Short<String,Template> map = this.getTemplates(MayInherit);
+            if (null != map)
+                return map.get(templatesName);
+            else
+                return null;
         }
         else
             throw new IllegalArgumentException();
-    }
-    public Template fetchTemplates(Filter filter){
-        if (null != filter && KIND == filter.kind){
-            List.Short<Template> list = this.getTemplates(MayInherit);
-            return list.fetch(filter);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public Template getTemplatesByName(String name){
-        List.Short<Template> list = this.getTemplates(MayInherit);
-        for (Template item : list){
-            if (item.getName().equals(name))
-                return item;
-        }
-        if (list.hitEnd()){
-            Filter filter = new Filter("Template").add(Template.Field.For("name"),Filter.Op.eq,name);
-            return list.fetch(filter);
-        }
-        return null;
     }
 
     public boolean hasTools(boolean mayInherit){
@@ -1117,7 +1055,7 @@ public final class Resource
         return (this.getTools(mayInherit).isEmpty());
     }
     public boolean dropTools(){
-        List.Short<Tool> tools = this.tools;
+        Map.Short<String,Tool> tools = this.tools;
         if (null != tools){
             this.tools = null;
             tools.destroy();
@@ -1126,8 +1064,8 @@ public final class Resource
         else
             return false;
     }
-    public List.Short<Tool> getTools(boolean mayInherit){
-        List.Short<Tool> tools = this.tools;
+    public Map.Short<String,Tool> getTools(boolean mayInherit){
+        Map.Short<String,Tool> tools = this.tools;
         if (null == tools){
             if (mayInherit && this.hasInheritFrom()){
                 Resource inheritFrom = this.getInheritFrom();
@@ -1137,60 +1075,39 @@ public final class Resource
                         return tools;
                 }
             }
-            tools = new ListShortResourceTool(this);
+            tools = new MapShortResourceStringTool(this);
             this.tools = tools;
             tools.init();
         }
         return tools;
     }
-    public void setTools(List.Short<Tool> tools){
+    public void setTools(Map.Short<String,Tool> tools){
         this.tools = tools;
     }
     public boolean isEmptyTools(){
-        List.Short<Tool> collection = this.tools;
+        Map.Short<String,Tool> collection = this.tools;
         if (null != collection)
             return collection.isEmpty();
         else
             return true;
     }
     public boolean isNotEmptyTools(){
-        List.Short<Tool> collection = this.tools;
+        Map.Short<String,Tool> collection = this.tools;
         if (null != collection)
             return (!collection.isEmpty());
         else
             return false;
     }
-    public Tool getTools(gap.data.ListFilter<Tool> filter){
-        if (null != filter){
-            List.Short<Tool> list = this.getTools(MayInherit);
-            for (Tool item : list){
-                if (filter.accept(item))
-                    return item;
-            }
-            return null;
+    public Tool getTools(String toolsName){
+        if (null != toolsName){
+            Map.Short<String,Tool> map = this.getTools(MayInherit);
+            if (null != map)
+                return map.get(toolsName);
+            else
+                return null;
         }
         else
             throw new IllegalArgumentException();
-    }
-    public Tool fetchTools(Filter filter){
-        if (null != filter && KIND == filter.kind){
-            List.Short<Tool> list = this.getTools(MayInherit);
-            return list.fetch(filter);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public Tool getToolsByName(String name){
-        List.Short<Tool> list = this.getTools(MayInherit);
-        for (Tool item : list){
-            if (item.getName().equals(name))
-                return item;
-        }
-        if (list.hitEnd()){
-            Filter filter = new Filter("Tool").add(Tool.Field.For("name"),Filter.Op.eq,name);
-            return list.fetch(filter);
-        }
-        return null;
     }
 
 

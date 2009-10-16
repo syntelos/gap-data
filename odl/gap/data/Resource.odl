@@ -14,9 +14,9 @@ parent Resource version 1
     String servletClassname;
     Text servletSourceJava;
     Blob servletClassfileJvm;
-    List.Long<Partner> partners;
+    Map.Long<String:name,Partner> partners;
     List.Long<Account> accounts;
-    List.Short<Image> images;
-    List.Short<Template> templates;
-    List.Short<Tool> tools;
+    Map.Short<String:name,Image> images;
+    Map.Short<String:name,Template> templates;
+    Map.Short<String:name,Tool> tools;
 }

@@ -143,7 +143,7 @@ public class Request
                 this.isPartner = true;
             else {
                 if (null != logonId)
-                    this.isPartner = (null != resource.getPartnersByName(logonId));
+                    this.isPartner = (null != resource.getPartners(logonId));
                 else
                     this.isPartner = false;
             }
@@ -169,7 +169,7 @@ public class Request
     public Tool getTool(){
         return this.tool;
     }
-    public List<Tool> getTools(){
+    public Map<String,Tool> getTools(){
         Resource resource = this.resource;
         if (null != resource)
             return resource.getTools(MayInherit);
