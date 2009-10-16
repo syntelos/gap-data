@@ -34,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-14T11:47:12.723Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-15T10:18:13.571Z")
 public final class Template
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -708,7 +708,7 @@ public final class Template
                     dvalue.dictionaryInto(dsection,filter);
                 }
                 else {
-                    String fieldName = filter.acceptAs(this,field.name());
+                    String fieldName = filter.acceptAs(this,KIND,field);
                     if (null != fieldName){
                         data.putVariable(fieldName,gap.data.validate.Template.ToString(field,value));
                     }

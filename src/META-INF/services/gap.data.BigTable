@@ -1,7 +1,7 @@
-oso.data.Person
 gap.data.Resource
-gap.data.Partner
+gap.data.Template
+gap.data.Tool
 gap.data.Image
 gap.data.Account
-gap.data.Tool
-gap.data.Template
+gap.data.Partner
+oso.data.Person

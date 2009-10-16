@@ -295,28 +295,6 @@ public class Servlet
         }
     }
 
-    protected boolean canRead(Request req){
-        return true;
-    }
-    protected boolean canCreate(Request req){
-        return (req.isAdmin());
-    }
-    protected boolean canUpdate(Request req){
-        return (req.isAdmin());
-    }
-    protected boolean canGoto(Request req){
-        return (req.isAdmin());
-    }
-    protected boolean canDelete(Request req){
-        return (req.isAdmin());
-    }
-    protected boolean canExport(Request req){
-        return (req.isAdmin());
-    }
-    protected boolean canImport(Request req){
-        return (req.isAdmin());
-    }
-
     protected TemplateDictionary doGetDefine(Request req, Response rep){
         TemplateDictionary top = req.getTop();
 
@@ -385,7 +363,7 @@ public class Servlet
                 this.error(req,rep,400,"Missing request parameter 'op'.");
 
             else if ("create".equals(op)){
-                if (this.canCreate(req)){
+                if (req.isMember){
 
                     resource = FileManager.GetCreateResource(req.path);
 

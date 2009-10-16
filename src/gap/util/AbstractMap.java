@@ -17,31 +17,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.data;
+package gap.util;
 
-import hapax.TemplateDictionary;
+import gap.data.*;
+
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Query;
 
 /**
- * Implemented by table and collection classes.
+ * Short and long list base class.  Instances are generated via {@link
+ * gap.service.OD}.
+ * 
+ * @author jdp
  */
-public interface DictionaryInto {
+public abstract class AbstractMap<K,V extends BigTable>
+    extends AbstractList<V>
+    implements Map<K,V>
+{
 
-    public interface DataFilter {
-        /**
-         * @return Field name or null to reject.
-         * @see Field#getFieldName()
-         */
-        public String acceptAs(BigTable instance, Kind instanceKind, Field field);
+    protected transient Index index;
+
+
+    protected AbstractMap(){
+        super();
     }
 
-    /**
-     * Install all with inheritance.
-     */
-    public TemplateDictionary dictionaryInto(TemplateDictionary dict);
 
-    /**
-     * Install with inheritance as directed by filter.
-     */
-    public TemplateDictionary dictionaryInto(TemplateDictionary dict, DataFilter filter);
-
+    protected void buffering(Page page){
+        this.index = new Index(page);
+    }
 }

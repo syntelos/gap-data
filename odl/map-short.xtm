@@ -21,6 +21,7 @@ package {{=parent_package_name}};
 {{#import}}
 import {{=import_spec}};{{/import}}
 
+import gap.*;
 import gap.data.*;
 import gap.service.Templates;
 
@@ -33,12 +34,12 @@ import java.util.Date;
 import javax.annotation.Generated;
 
 /**
- * Generated long list.
+ * Generated short map.
  */
 @Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}")
-public final class ListLong{{=parent_class_name}}{{=child_class_name}}
-    extends gap.util.AbstractList<{{=child_class_name}}>
-    implements gap.data.List.Long<{{=child_class_name}}>
+public final class MapShort{{=parent_class_name}}{{=child_class_name}}
+    extends gap.util.AbstractMap<{{=map_key_type}},{{=child_class_name}}>
+    implements gap.data.Map.Short<{{=map_key_type}},{{=child_class_name}}>
 {
 
     private final static long serialVersionUID = {{=parent_class_version}};
@@ -49,21 +50,27 @@ public final class ListLong{{=parent_class_name}}{{=child_class_name}}
 
     public final static String ChildTypeName = "{{=child_class_name}}";
 
+    public final static Primitive MapKeyType = Primitive.{{=map_key_type}};
+
+    public final static String MapKeyFieldName = "{{=map_key_field_name}}";
+
+    public final static {{=child_class_name}}.Field MapKeyField = {{=child_class_name}}.Field.{{=map_key_field_nameCamel}};
+
 
     protected transient {{=parent_class_name}} parent;
 
 
-    public ListLong{{=parent_class_name}}{{=child_class_name}}({{=parent_class_name}} parent) {
+    public MapShort{{=parent_class_name}}{{=child_class_name}}({{=parent_class_name}} parent) {
         super();
         if (null != parent){
             this.parent = parent;
             this.ancestorKeyFieldName = AncestorKeyFieldName;
-            this.query = {{=child_class_name}}.CreateQueryFor();
+            this.setValueClassAncestorKey();
         }
         else
             throw new IllegalArgumentException();
     }
-    public ListLong{{=parent_class_name}}{{=child_class_name}}(){
+    public MapShort{{=parent_class_name}}{{=child_class_name}}(){
         super();
     }
 
@@ -89,7 +96,11 @@ public final class ListLong{{=parent_class_name}}{{=child_class_name}}
         return parent;
     }
     public void setValueClassAncestorKey(){
-        this.ancestorKey = this.getParent().getClassFieldKeyValue();
+        Key key = this.getParent().getClassFieldKeyValue();
+        if (key != this.ancestorKey){
+            this.ancestorKey = key;
+            this.query = {{=child_class_name}}.CreateQueryFor(this.ancestorKey);
+        }
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
 
@@ -108,7 +119,29 @@ public final class ListLong{{=parent_class_name}}{{=child_class_name}}
         return top;
     }
     public {{=child_class_name}} fetch(Filter filter){
-        Query query = {{=child_class_name}}.CreateQueryFor(filter);
-        return {{=child_class_name}}.Query1(query);
+        Key ancestor = this.ancestorKey;
+        if (null != ancestor){
+            Query query = {{=child_class_name}}.CreateQueryFor(ancestor,filter);
+            return {{=child_class_name}}.Query1(query);
+        }
+        else
+            throw new IllegalStateException("Missing ancestor key.");
+    }
+    public Primitive getMapKeyType(){
+        return MapKeyType;
+    }
+    public String getMapKeyFieldName(){
+        return MapKeyFieldName;
+    }
+    protected void buffered(BigTable instance, int index){
+        Object field = instance.valueOf(MapKeyField);
+        this.index.add(field,index);
+    }
+    public {{=child_class_name}} get({{=map_key_type}} mapKey){
+        int index = this.index.get(mapKey);
+        if (-1 != index)
+            return this.buffer[index];
+        else
+            return null;
     }
 }

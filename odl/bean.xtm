@@ -30,6 +30,7 @@ import hapax.TemplateDictionary;
 import com.google.appengine.api.datastore.*;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.annotation.Generated;
 
 /**
@@ -806,7 +807,7 @@ public final class {{=class_name}}
                     dvalue.dictionaryInto(dsection,filter);
                 }
                 else {
-                    String fieldName = filter.acceptAs(this,field.name());
+                    String fieldName = filter.acceptAs(this,KIND,field);
                     if (null != fieldName){
                         data.putVariable(fieldName,{{=package_name}}.validate.{{=class_name}}.ToString(field,value));
                     }

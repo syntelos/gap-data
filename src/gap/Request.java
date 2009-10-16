@@ -57,7 +57,7 @@ public class Request
     /**
      * Request content type
      */
-    public enum ContentType {
+    public static enum ContentType {
         Nil,
         Form,
         Multipart,
@@ -109,7 +109,7 @@ public class Request
     public final TemplateDictionary top;
     public final Logon logon;
     public final ContentType contentType;
-    public final boolean isPartner;
+    public final boolean isAdmin, isPartner, isMember;
     public Resource resource;
     public Tool tool;
 
@@ -130,13 +130,18 @@ public class Request
         this.logon = logon;
         this.contentType = ContentType.For(req);
         this.resource = FileManager.GetResource(path);
+        this.isAdmin = logon.serviceAdmin;
+
+        String logonId = logon.serviceLogon;
+
+        this.isMember = (null != logonId);
+
         if (null != this.resource){
             this.tool = FileManager.GetTool(this.resource,method,req.getParameter("op"));
 
             if (logon.serviceAdmin)
                 this.isPartner = true;
             else {
-                String logonId = logon.serviceLogon;
                 if (null != logonId)
                     this.isPartner = (null != resource.getPartnersByName(logonId));
                 else
@@ -173,9 +178,6 @@ public class Request
     }
     public final hapax.TemplateDictionary getTop(){
         return logon.dict;
-    }
-    public final boolean isAdmin(){
-        return this.logon.serviceAdmin;
     }
     public final String getLogonId(){
         return this.logon.serviceLogon;

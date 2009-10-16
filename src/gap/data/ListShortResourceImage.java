@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-14T11:47:11.355Z")
+@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-15T10:18:13.338Z")
 public final class ListShortResourceImage
     extends gap.util.AbstractList<Image>
     implements gap.data.List.Short<Image>

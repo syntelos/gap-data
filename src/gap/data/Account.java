@@ -34,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-14T11:47:12.177Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-15T10:18:14.296Z")
 public final class Account
     extends gap.data.BigTable
     implements DataInheritance<Account>
@@ -642,7 +642,7 @@ public final class Account
                     dvalue.dictionaryInto(dsection,filter);
                 }
                 else {
-                    String fieldName = filter.acceptAs(this,field.name());
+                    String fieldName = filter.acceptAs(this,KIND,field);
                     if (null != fieldName){
                         data.putVariable(fieldName,gap.data.validate.Account.ToString(field,value));
                     }

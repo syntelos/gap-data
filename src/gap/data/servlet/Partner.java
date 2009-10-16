@@ -48,7 +48,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-14T11:47:11.645Z")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-15T10:18:14.555Z")
 public class Partner
     extends gap.servlet.Site
 {
@@ -67,34 +67,32 @@ public class Partner
 
         TemplateDictionary top = req.getTop();
 
-        if (this.canRead(req)){
 
-            if (req.hasPath(1) && req.hasPath(2)){
+        if (req.hasPath(1) && req.hasPath(2)){
 
-                Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
+            Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
 
-                gap.data.Partner instance = gap.data.Partner.ForLongId(parentKey,req.getPath(2));
+            gap.data.Partner instance = gap.data.Partner.ForLongId(parentKey,req.getPath(2));
 
-                if (null != instance){
+            if (null != instance){
 
-                    instance.dictionaryInto(top);
+                instance.dictionaryInto(top);
 
-                    return top;
-                }
-            }
-            else {
-                req.parameters.dictionaryInto(top);
-
-                com.google.appengine.api.datastore.Query query = gap.data.Partner.CreateQueryFor();
-
-                BigTableIterator<gap.data.Partner> list = (BigTableIterator<gap.data.Partner>)gap.data.Partner.QueryN(query,req.parameters.page);
-
-                for (gap.data.Partner instance : list){
-
-                    instance.dictionaryInto(top);
-                }
                 return top;
             }
+        }
+        else {
+            req.parameters.dictionaryInto(top);
+
+            com.google.appengine.api.datastore.Query query = gap.data.Partner.CreateQueryFor();
+
+            BigTableIterator<gap.data.Partner> list = (BigTableIterator<gap.data.Partner>)gap.data.Partner.QueryN(query,req.parameters.page);
+
+            for (gap.data.Partner instance : list){
+
+                instance.dictionaryInto(top);
+            }
+            return top;
         }
         return null;
     }

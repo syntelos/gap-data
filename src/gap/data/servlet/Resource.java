@@ -48,7 +48,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-14T11:47:11.286Z")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-15T10:18:13.256Z")
 public class Resource
     extends gap.servlet.Site
 {
@@ -67,32 +67,30 @@ public class Resource
 
         TemplateDictionary top = req.getTop();
 
-        if (this.canRead(req)){
 
-            if (req.hasPath(1)){
+        if (req.hasPath(1)){
 
-                gap.data.Resource instance = gap.data.Resource.ForLongId(req.getPath(1));
+            gap.data.Resource instance = gap.data.Resource.ForLongId(req.getPath(1));
 
-                if (null != instance){
+            if (null != instance){
 
-                    instance.dictionaryInto(top);
+                instance.dictionaryInto(top);
 
-                    return top;
-                }
-            }
-            else {
-                req.parameters.dictionaryInto(top);
-
-                com.google.appengine.api.datastore.Query query = gap.data.Resource.CreateQueryFor();
-
-                BigTableIterator<gap.data.Resource> list = (BigTableIterator<gap.data.Resource>)gap.data.Resource.QueryN(query,req.parameters.page);
-
-                for (gap.data.Resource instance : list){
-
-                    instance.dictionaryInto(top);
-                }
                 return top;
             }
+        }
+        else {
+            req.parameters.dictionaryInto(top);
+
+            com.google.appengine.api.datastore.Query query = gap.data.Resource.CreateQueryFor();
+
+            BigTableIterator<gap.data.Resource> list = (BigTableIterator<gap.data.Resource>)gap.data.Resource.QueryN(query,req.parameters.page);
+
+            for (gap.data.Resource instance : list){
+
+                instance.dictionaryInto(top);
+            }
+            return top;
         }
         return null;
     }
