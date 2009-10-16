@@ -39,13 +39,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-
+import java.util.Date;
 import javax.annotation.Generated;
 
 /**
  * Generated data bean string I/O functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-15T10:18:13.221Z")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-16T09:31:31.022Z")
 public abstract class Resource
     extends gap.Strings
 {

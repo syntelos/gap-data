@@ -39,13 +39,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-
+import java.util.Date;
 import javax.annotation.Generated;
 
 /**
  * Generated data bean string I/O functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-15T10:18:14.732Z")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-16T09:31:32.673Z")
 public abstract class Person
     extends gap.Strings
 {

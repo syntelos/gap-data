@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +49,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-15T10:18:14.555Z")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-16T09:31:32.490Z")
 public class Partner
     extends gap.servlet.Site
 {

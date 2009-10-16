@@ -29,12 +29,13 @@ import hapax.TemplateDictionary;
 import com.google.appengine.api.datastore.*;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.annotation.Generated;
 
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-15T10:18:13.790Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-16T09:31:31.663Z")
 public final class Tool
     extends gap.data.BigTable
     implements DataInheritance<Tool>,

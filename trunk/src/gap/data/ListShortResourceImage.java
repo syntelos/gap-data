@@ -28,12 +28,13 @@ import hapax.TemplateDictionary;
 import com.google.appengine.api.datastore.*;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.annotation.Generated;
 
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-15T10:18:13.338Z")
+@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-16T09:23:18.710Z")
 public final class ListShortResourceImage
     extends gap.util.AbstractList<Image>
     implements gap.data.List.Short<Image>

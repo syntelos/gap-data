@@ -1,6 +1,0 @@
-
-Copies from Jetty 6.1.3 for expression and debugging.
-A guess about the version found here.
-
-Please refer to http://jetty.mortbay.com/ for more info.
-
