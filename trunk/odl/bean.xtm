@@ -693,7 +693,23 @@ public final class {{=class_name}}
             return (!collection.isEmpty());
         else
             return false;
-    }{{#field_is_list}}
+    }{{#field_is_list_long_or_short}}
+    public {{=field_list_component}} fetch{{=field_nameCamel}}(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            {{=field_class}} collection = this.get{{=field_nameCamel}}(MayInherit);
+            return collection.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }{{/field_is_list_long_or_short}}{{#field_is_map_long_or_short}}
+    public {{=field_map_component_to}} fetch{{=field_nameCamel}}(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            {{=field_class}} collection = this.get{{=field_nameCamel}}(MayInherit);
+            return collection.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }{{/field_is_map_long_or_short}}{{#field_is_list}}
     public {{=field_list_component}} get{{=field_nameCamel}}(gap.data.ListFilter<{{=field_list_component}}> filter){
         if (null != filter){
             {{=field_class}} list = this.get{{=field_nameCamel}}(MayInherit);
@@ -702,14 +718,6 @@ public final class {{=class_name}}
                     return item;
             }
             return null;
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public {{=field_list_component}} fetch{{=field_nameCamel}}(Filter filter){
-        if (null != filter && KIND == filter.kind){
-            {{=field_class}} list = this.get{{=field_nameCamel}}(MayInherit);
-            return list.fetch(filter);
         }
         else
             throw new IllegalArgumentException();
@@ -733,6 +741,10 @@ public final class {{=class_name}}
                 return map.get({{=field_name}}{{=field_map_component_from_nameCamel}});
             else
                 return null;
+            if (map.hitEnd()){
+                Filter filter = new Filter("{{=field_map_component_kind}}").add({{=field_map_component}}.Field.For("name"),Filter.Op.eq,name);
+                return map.fetch(filter);
+            }
         }
         else
             throw new IllegalArgumentException();

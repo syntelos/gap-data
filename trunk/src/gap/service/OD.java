@@ -466,13 +466,38 @@ public final class OD
 
                     if (1 == fieldTypeParameters.length){
 
-                        TemplateDictionary field_is = dataField.addSection("field_is_list");
+                        dataField.addSection("field_is_list");
+
+                        gap.data.List.Type listType = gap.data.List.Type.For(fieldTypeClean);
+                        switch(listType){
+                        case ListPrimitive:
+                            dataField.addSection("field_is_list_primitive");
+                            dataField.addSection("field_is_not_collection_long_or_short");
+                            dataField.addSection("field_is_not_list_long_or_short");
+                            dataField.addSection("field_is_not_list_long");
+                            dataField.addSection("field_is_not_list_short");
+                            break;
+                        case ListShort:
+                            dataField.addSection("field_is_not_list_primitive");
+                            dataField.addSection("field_is_collection_long_or_short");
+                            dataField.addSection("field_is_list_long_or_short");
+                            dataField.addSection("field_is_not_list_long");
+                            dataField.addSection("field_is_list_short");
+                            break;
+                        case ListLong:
+                            dataField.addSection("field_is_not_list_primitive");
+                            dataField.addSection("field_is_collection_long_or_short");
+                            dataField.addSection("field_is_list_long_or_short");
+                            dataField.addSection("field_is_list_long");
+                            dataField.addSection("field_is_not_list_short");
+                            break;
+                        }
 
                         String typeComponent = fieldTypeParameters[0];
-                        field_is.putVariable("field_list_component",typeComponent);
+                        dataField.putVariable("field_list_component",typeComponent);
 
                         if (IsTypeOf(typeComponent,"HasName"))
-                            field_is.addSection("field_list_component_named");
+                            dataField.addSection("field_list_component_named");
 
                         ClassDescriptor component = gap.odl.Main.ClassDescriptorFor(typeComponent);
                         if (null != component){
@@ -492,20 +517,44 @@ public final class OD
 
                     if (2 == fieldTypeParameters.length){
 
-                        TemplateDictionary field_is = dataField.addSection("field_is_map");
+                        dataField.addSection("field_is_map");
 
                         OD.MapChild mapChild = new OD.MapChild(field);
+                        switch(mapChild.mapType){
+                        case MapPrimitive:
+                            dataField.addSection("field_is_map_primitive");
+                            dataField.addSection("field_is_not_collection_long_or_short");
+                            dataField.addSection("field_is_not_map_long_or_short");
+                            dataField.addSection("field_is_not_map_long");
+                            dataField.addSection("field_is_not_map_short");
+                            break;
+                        case MapShort:
+                            dataField.addSection("field_is_not_map_primitive");
+                            dataField.addSection("field_is_collection_long_or_short");
+                            dataField.addSection("field_is_map_long_or_short");
+                            dataField.addSection("field_is_not_map_long");
+                            dataField.addSection("field_is_map_short");
+                            break;
+                        case MapLong:
+                            dataField.addSection("field_is_not_map_primitive");
+                            dataField.addSection("field_is_collection_long_or_short");
+                            dataField.addSection("field_is_map_long_or_short");
+                            dataField.addSection("field_is_map_long");
+                            dataField.addSection("field_is_not_map_short");
+                            break;
+                        }
+
 
                         String typeComponentFrom = mapChild.childKeyFieldType;
                         String typeComponentFromName = mapChild.childKeyFieldName;
                         String typeComponentTo = mapChild.childValueClassName;
-                        field_is.putVariable("field_map_component_from",typeComponentFrom);
-                        field_is.putVariable("field_map_component_from_name",typeComponentFromName);
-                        field_is.putVariable("field_map_component_from_nameCamel",Camel(typeComponentFromName));
-                        field_is.putVariable("field_map_component_to",typeComponentTo);
+                        dataField.putVariable("field_map_component_from",typeComponentFrom);
+                        dataField.putVariable("field_map_component_from_name",typeComponentFromName);
+                        dataField.putVariable("field_map_component_from_nameCamel",Camel(typeComponentFromName));
+                        dataField.putVariable("field_map_component_to",typeComponentTo);
 
                         if (IsTypeOf(typeComponentTo,"HasName"))
-                            field_is.addSection("field_map_component_named");
+                            dataField.addSection("field_map_component_named");
 
                         ClassDescriptor componentTo = gap.odl.Main.ClassDescriptorFor(typeComponentTo);
                         if (null != componentTo){
