@@ -106,11 +106,27 @@ public final class MapLong{{=parent_class_name}}{{=map_key_type}}{{=child_class_
         }
         return top;
     }
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top){
+
+        for ({{=child_class_name}} value: this){
+
+            value.dictionaryInto(section,top);
+        }
+        return top;
+    }
     public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
 
         for ({{=child_class_name}} value: this){
 
             value.dictionaryInto(top,filter);
+        }
+        return top;
+    }
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top, DictionaryInto.DataFilter filter){
+
+        for ({{=child_class_name}} value: this){
+
+            value.dictionaryInto(section,top,filter);
         }
         return top;
     }

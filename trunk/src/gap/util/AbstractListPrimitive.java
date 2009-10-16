@@ -250,36 +250,22 @@ public abstract class AbstractListPrimitive<V>
         }
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
+        return this.dictionaryInto(this.getType().name(),top);
+    }
+    public TemplateDictionary dictionaryInto(String typeName, TemplateDictionary top){
         gap.Primitive type = this.getType();
-        String typeName = type.name();
-
         for (V value: this){
-
-            if (value instanceof DictionaryInto){
-                DictionaryInto dvalue = (DictionaryInto)value;
-
-                dvalue.dictionaryInto(top);
-            }
-            else {
-                top.putVariable(typeName,gap.Strings.ToString(type,value));
-            }
+            top.putVariable(typeName,gap.Strings.ToString(type,value));
         }
         return top;
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
+        return this.dictionaryInto(this.getType().name(),top,filter);
+    }
+    public TemplateDictionary dictionaryInto(String typeName, TemplateDictionary top, DictionaryInto.DataFilter filter){
         gap.Primitive type = this.getType();
-        String typeName = type.name();
-
         for (V value: this){
-
-            if (value instanceof DictionaryInto){
-                DictionaryInto dvalue = (DictionaryInto)value;
-
-                dvalue.dictionaryInto(top,filter);
-            }
-            else {
-                top.putVariable(typeName,gap.Strings.ToString(type,value));
-            }
+            top.putVariable(typeName,gap.Strings.ToString(type,value));
         }
         return top;
     }

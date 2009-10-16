@@ -31,6 +31,10 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 /**
+ * Normal field types are either {@link gap.Primitive primitives} or
+ * {@link gap.data.Collection collections}.  Transient fields and
+ * relation declarations may be {@link gap.data.BigTable data bean}
+ * types.
  * 
  * @see Class
  * @author jdp

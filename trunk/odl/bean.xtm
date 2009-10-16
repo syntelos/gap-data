@@ -795,7 +795,14 @@ public final class {{=class_name}}
         Field.Set((Field)field,this,value);
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
-        TemplateDictionary data = top.addSection(ClassName);
+        return this.dictionaryInto(ClassName,top);
+    }
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top){
+        TemplateDictionary data;
+        if (null != section)
+            data = top.addSection(section);
+        else
+            data = top;
         for (Field field : Field.values()){
             java.lang.Object value = Field.Get(field,this,MayInherit);
             if (null != value){
@@ -811,14 +818,23 @@ public final class {{=class_name}}
         return top;
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
-        TemplateDictionary data = top.addSection(ClassName);
+        return this.dictionaryInto(ClassName,top,filter);
+    }
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top, DictionaryInto.DataFilter filter){
+        TemplateDictionary data;
+        if (null != section)
+            data = top.addSection(section);
+        else
+            data = top;
         for (Field field : Field.values()){
             java.lang.Object value = Field.Get(field,this,MayInherit);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;
-                    TemplateDictionary dsection = data.addSection(field.name());
-                    dvalue.dictionaryInto(dsection,filter);
+                    String fieldName = filter.acceptAs(this,KIND,field);
+                    if (null != fieldName){
+                        dvalue.dictionaryInto(fieldName,data,filter);
+                    }
                 }
                 else {
                     String fieldName = filter.acceptAs(this,KIND,field);

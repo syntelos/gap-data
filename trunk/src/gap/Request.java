@@ -197,6 +197,17 @@ public class Request
     public final Person getViewer(){
         return this.logon.getPerson();
     }
+    public final boolean acceptHtml(){
+        return this.accept.accept("text/html");
+    }
+    public final boolean acceptJson(){
+        return (this.accept.accept("text/json")
+                ||this.accept.accept("application/json"));
+    }
+    public final boolean acceptXml(){
+        return (this.accept.accept("text/xml")
+                ||this.accept.accept("application/xml"));
+    }
     public final boolean accept(String name){
         return this.accept.accept(name);
     }

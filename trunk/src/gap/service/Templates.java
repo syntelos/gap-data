@@ -130,7 +130,12 @@ public final class Templates
                 }
             }
         }
-        return super.getTemplate(name);
+        try {
+            return super.getTemplate(name);
+        }
+        catch (hapax.TemplateException exc){
+            return null;
+        }
     }
     public hapax.Template getTemplate(hapax.TemplateLoader context, String name)
         throws hapax.TemplateException
