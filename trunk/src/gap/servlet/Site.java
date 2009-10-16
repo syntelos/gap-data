@@ -21,7 +21,10 @@ package gap.servlet;
 
 import gap.*;
 import gap.data.*;
+import static gap.data.Tool.Field.*;
+import static gap.data.Tools.Set.*;
 import gap.util.*;
+import gap.service.*;
 
 import hapax.TemplateDictionary;
 
@@ -31,27 +34,102 @@ import hapax.TemplateDictionary;
 public class Site
     extends gap.service.Servlet
 {
-    public final static class DefaultToolFilter
+    public final static class DefaultToolingFilter
         extends Object
         implements gap.data.DictionaryInto.DataFilter
     {
-        private final static Kind Resource = Kind.For("Resource");
-        private final static Kind Tool = Kind.For("Tool");
+        private final static Kind KindResource = Kind.For("Resource");
+        private final static Kind KindTool = Kind.For("Tool");
 
 
         private final Request request;
+        private final boolean canCreate;
+        private final boolean canUpdate;
+        private final boolean canGoto;
+        private final boolean canDelete;
+        private final boolean canExport;
+        private final boolean canImport;
 
-        public DefaultToolFilter(Request req){
+        public DefaultToolingFilter(Servlet servlet, Request req){
             super();
             this.request = req;
+            this.canCreate = req.isMember;
+            this.canUpdate = req.isPartner;
+            this.canGoto   = true;
+            this.canDelete = req.isAdmin;
+            this.canExport = req.isMember;
+            this.canImport = req.isPartner;
         }
 
-        public String acceptAs(gap.data.BigTable instance, String fieldName){
-
-            if (Tool == instance.getClassKind()){
-
+        protected boolean isExecutable(Tool tool){
+            Tools.Set set = Tools.Set.For(tool);
+            if (null == set)
+                return this.request.isPartner;
+            else {
+                switch (set){
+                case Update:
+                    return this.canUpdate;
+                case Create:
+                    return this.canCreate;
+                case Goto:
+                    return this.canGoto;
+                case Delete:
+                    return this.canDelete;
+                case Export:
+                    return this.canExport;
+                case Import:
+                    return this.canImport;
+                default:
+                    return this.request.isPartner;
+                }
             }
-            return fieldName;
+        }
+        protected String filterAs(Tool tool, Tool.Field field){
+            switch (field){
+            case TitleHiGraphicUri:
+                if (this.request.isAdmin)
+                    return "titleGraphicUri";
+                else
+                    return null;
+
+            case TitleLoGraphicUri:
+                if (this.request.isAdmin)
+                    return null;
+                else if (this.isExecutable(tool))
+                    return "titleGraphicUri";
+
+            case ButtonHiGraphicUri:
+                if (this.request.isAdmin)
+                    return "buttonGraphicUri";
+                else
+                    return null;
+
+            case ButtonLoGraphicUri:
+                if (this.request.isAdmin)
+                    return null;
+                else if (this.isExecutable(tool))
+                    return "buttonGraphicUri";
+
+            case ButtonOffGraphicUri:
+                if (this.isExecutable(tool))
+                    return null;
+                else
+                    return "buttonGraphicUri";
+
+            case FunctionClassfileJvm:
+                return null;
+            default:
+                return field.getFieldName();
+            }
+        }
+        public String acceptAs(gap.data.BigTable instance, Kind instanceKind, Field field){
+            if (KindTool == instanceKind)
+                return this.filterAs((Tool)instance,(Tool.Field)field);
+            else if (KindResource == instanceKind){
+                if (Resource.Field.ServletClassfileJvm == field)
+                    return null;
+            }
+            return field.getFieldName();
         }
     }
 
@@ -65,14 +143,13 @@ public class Site
 
         TemplateDictionary top = super.doGetDefine(req,rep);
 
-        boolean canCreate = this.canCreate(req);
-        boolean canUpdate = this.canUpdate(req);
-        boolean canGoto = this.canGoto(req);
-        boolean canDelete = this.canDelete(req);
-        boolean canExport = this.canExport(req);
-        boolean canImport = this.canImport(req);
 
-
+            boolean canCreate = req.isMember;
+            boolean canUpdate = req.isPartner;
+            boolean canGoto   = true;
+            boolean canDelete = req.isAdmin;
+            boolean canExport = req.isMember;
+            boolean canImport = req.isPartner;
         //        TemplateDictionary head;
         //         if (canUpdate){
         //             head = top.addSection("head","head.tool.html");
@@ -212,7 +289,7 @@ public class Site
     protected TemplateDictionary doGetDefineUpdate(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","update");
         tool.setVariable("tool_nameCamel","Update");
-        if (req.isAdmin()){
+        if (req.isAdmin){
             tool.setVariable("tool_titleUri","/icons/update-up-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/update-up-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/update-up-b-200x50-aaa.png");
@@ -227,7 +304,7 @@ public class Site
     protected TemplateDictionary doGetDefineCreate(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","create");
         tool.setVariable("tool_nameCamel","Create");
-        if (req.isAdmin()){
+        if (req.isAdmin){
             tool.setVariable("tool_titleUri","/icons/create-cr-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/create-cr-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/create-cr-b-200x50-aaa.png");
@@ -242,7 +319,7 @@ public class Site
     protected TemplateDictionary doGetDefineGoto(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","goto");
         tool.setVariable("tool_nameCamel","Goto");
-        if (req.isAdmin()){
+        if (req.isAdmin){
             tool.setVariable("tool_titleUri","/icons/goto-gt-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/goto-gt-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/goto-gt-b-200x50-aaa.png");
@@ -257,7 +334,7 @@ public class Site
     protected TemplateDictionary doGetDefineDelete(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","delete");
         tool.setVariable("tool_nameCamel","Delete");
-        if (req.isAdmin()){
+        if (req.isAdmin){
             tool.setVariable("tool_titleUri","/icons/delete-de-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/delete-de-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/delete-de-b-200x50-aaa.png");
@@ -272,7 +349,7 @@ public class Site
     protected TemplateDictionary doGetDefineExport(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","export");
         tool.setVariable("tool_nameCamel","Export");
-        if (req.isAdmin()){
+        if (req.isAdmin){
             tool.setVariable("tool_titleUri","/icons/export-ex-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/export-ex-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/export-ex-b-200x50-aaa.png");
@@ -287,7 +364,7 @@ public class Site
     protected TemplateDictionary doGetDefineImport(Request req, Response rep, TemplateDictionary tool, boolean isDivTool){
         tool.setVariable("tool_name","import");
         tool.setVariable("tool_nameCamel","Import");
-        if (req.isAdmin()){
+        if (req.isAdmin){
             tool.setVariable("tool_titleUri","/icons/import-im-200x50-a00.png");
             tool.setVariable("tool_buttonUri","/icons/import-im-b-200x50-a00.png");
             tool.setVariable("tool_buttonOffUri","/icons/import-im-b-200x50-aaa.png");

@@ -22,7 +22,6 @@ package gap.util;
 import gap.data.*;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 
 /**
@@ -115,7 +114,9 @@ public abstract class AbstractList<V extends BigTable>
     public final List<V> refill(){
         Query query = this.query;
         if (null != query){
-            BigTableIterator<BigTable> iterable = Store.QueryN(query,this.page);
+            Page page = this.page;
+            this.buffering(page);
+            BigTableIterator<BigTable> iterable = Store.QueryN(query,page);
             this.gross = iterable.gross;
             this.hitEnd = iterable.hitEnd;
             this.clearBuffer();
@@ -269,17 +270,24 @@ public abstract class AbstractList<V extends BigTable>
     public final void clearBuffer(){
         this.buffer = null;
     }
+    protected void buffering(Page page){
+    }
+    protected void buffered(BigTable instance, int index){
+    }
     public final List<V> addToBuffer(BigTable instance){
         if (null != instance){
             BigTable[] buffer = this.buffer;
-            if (null == buffer)
+            if (null == buffer){
                 this.buffer = new BigTable[]{instance};
+                this.buffered(instance,0);
+            }
             else {
                 int len = buffer.length;
                 BigTable[] copier = new BigTable[len+1];
                 System.arraycopy(buffer,0,copier,0,len);
                 copier[len] = instance;
                 this.buffer = copier;
+                this.buffered(instance,len);
             }
             return this;
         }

@@ -36,6 +36,10 @@ public class ODStateException
         super(m);
         this.member = member;
     }
+    public ODStateException(Object member, String m, Exception exc){
+        super(m,exc);
+        this.member = member;
+    }
     public ODStateException(String m, ODStateException exc){
         super(m,exc);
         this.member = exc.member;

@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,74 +69,73 @@ public class {{=class_name}}
 
         TemplateDictionary top = req.getTop();
 
-        if (this.canRead(req)){
 {{#class_re_not_child_or_group}}
-            if (req.hasPath(1)){
+        if (req.hasPath(1)){
 
-                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForLong{{=field_unique_nameCamel}}(req.getPath(1));
+            {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForLong{{=field_unique_nameCamel}}(req.getPath(1));
 
-                if (null != instance){
+            if (null != instance){
 
-                    instance.dictionaryInto(top);
+                instance.dictionaryInto(top);
 
-                    return top;
-                }
-            }{{/class_re_not_child_or_group}}{{#class_re_child}}
-            if (req.hasPath(1) && req.hasPath(2)){
-
-                Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
-
-                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForLong{{=field_unique_nameCamel}}(parentKey,req.getPath(2));
-
-                if (null != instance){
-
-                    instance.dictionaryInto(top);
-
-                    return top;
-                }
-            }{{/class_re_child}}{{#class_re_childgroup}}
-            if (req.hasPath(1) && req.hasPath(2)){
-
-                Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
-
-                {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForShort{{=field_unique_nameCamel}}(parentKey,req.getPath(2));
-
-                if (null != instance){
-
-                    instance.dictionaryInto(top);
-
-                    return top;
-                }
-            }{{/class_re_childgroup}}{{!
-}}{{#class_re_not_childgroup}}
-            else {
-                req.parameters.dictionaryInto(top);
-
-                com.google.appengine.api.datastore.Query query = {{=package_name}}.{{=class_name}}.CreateQueryFor();
-
-                BigTableIterator<{{=package_name}}.{{=class_name}}> list = (BigTableIterator<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,req.parameters.page);
-
-                for ({{=package_name}}.{{=class_name}} instance : list){
-
-                    instance.dictionaryInto(top);
-                }
-                return top;{{/class_re_not_childgroup}}{{#class_re_childgroup}}
-            else if (req.hasPath(1)){
-                req.parameters.dictionaryInto(top);
-
-                Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
-
-                com.google.appengine.api.datastore.Query query = {{=package_name}}.{{=class_name}}.CreateQueryFor(parentKey);
-
-                BigTableIterator<{{=package_name}}.{{=class_name}}> list = (BigTableIterator<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,req.parameters.page);
-
-                for ({{=package_name}}.{{=class_name}} instance : list){
-
-                    instance.dictionaryInto(top);
-                }
-                return top;{{/class_re_childgroup}}
+                return top;
             }
-        }
+        }{{/class_re_not_child_or_group}}{{#class_re_child}}
+        if (req.hasPath(1) && req.hasPath(2)){
+
+            Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
+
+            {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForLong{{=field_unique_nameCamel}}(parentKey,req.getPath(2));
+
+            if (null != instance){
+
+                instance.dictionaryInto(top);
+
+                return top;
+            }
+        }{{/class_re_child}}{{#class_re_childgroup}}
+        if (req.hasPath(1) && req.hasPath(2)){
+
+            Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
+
+            {{=package_name}}.{{=class_name}} instance = {{=package_name}}.{{=class_name}}.ForShort{{=field_unique_nameCamel}}(parentKey,req.getPath(2));
+
+            if (null != instance){
+
+                instance.dictionaryInto(top);
+
+                return top;
+            }
+        }{{/class_re_childgroup}}{{!
+}}{{#class_re_not_childgroup}}
+        else {
+            req.parameters.dictionaryInto(top);
+
+            com.google.appengine.api.datastore.Query query = {{=package_name}}.{{=class_name}}.CreateQueryFor();
+
+            BigTableIterator<{{=package_name}}.{{=class_name}}> list = (BigTableIterator<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,req.parameters.page);
+
+            for ({{=package_name}}.{{=class_name}} instance : list){
+
+                instance.dictionaryInto(top);
+            }
+            return top;
+        }{{/class_re_not_childgroup}}{{#class_re_childgroup}}
+        else if (req.hasPath(1)){
+            req.parameters.dictionaryInto(top);
+
+            Key parentKey = {{=package_name}}.{{=parent_class_name}}.KeyLongFor(req.getPath(1));
+
+            com.google.appengine.api.datastore.Query query = {{=package_name}}.{{=class_name}}.CreateQueryFor(parentKey);
+
+            BigTableIterator<{{=package_name}}.{{=class_name}}> list = (BigTableIterator<{{=package_name}}.{{=class_name}}>){{=package_name}}.{{=class_name}}.QueryN(query,req.parameters.page);
+
+            for ({{=package_name}}.{{=class_name}} instance : list){
+
+                instance.dictionaryInto(top);
+            }
+            return top;
+        }{{/class_re_childgroup}}
         return null;
     }
 

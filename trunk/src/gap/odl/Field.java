@@ -41,7 +41,7 @@ public final class Field
                FieldDescriptor.Uniqueness,
                FieldDescriptor.Relation
 {
-    public final static Pattern Statement = Pattern.compile("\\s*[\\w\\.\\*\\-<>,\\s]+\\s*[\\w]+\\s*[;\\s]*");
+    public final static Pattern Statement = Pattern.compile("\\s*[\\w\\.\\*\\-<:>,\\s]+\\s*[\\w]+\\s*[;\\s]*");
 
 
     private Comment comment;

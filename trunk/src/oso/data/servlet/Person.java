@@ -48,7 +48,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-14T11:47:10.929Z")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-15T10:18:14.746Z")
 public class Person
     extends gap.servlet.Site
 {
@@ -67,32 +67,30 @@ public class Person
 
         TemplateDictionary top = req.getTop();
 
-        if (this.canRead(req)){
 
-            if (req.hasPath(1)){
+        if (req.hasPath(1)){
 
-                oso.data.Person instance = oso.data.Person.ForLongId(req.getPath(1));
+            oso.data.Person instance = oso.data.Person.ForLongId(req.getPath(1));
 
-                if (null != instance){
+            if (null != instance){
 
-                    instance.dictionaryInto(top);
+                instance.dictionaryInto(top);
 
-                    return top;
-                }
-            }
-            else {
-                req.parameters.dictionaryInto(top);
-
-                com.google.appengine.api.datastore.Query query = oso.data.Person.CreateQueryFor();
-
-                BigTableIterator<oso.data.Person> list = (BigTableIterator<oso.data.Person>)oso.data.Person.QueryN(query,req.parameters.page);
-
-                for (oso.data.Person instance : list){
-
-                    instance.dictionaryInto(top);
-                }
                 return top;
             }
+        }
+        else {
+            req.parameters.dictionaryInto(top);
+
+            com.google.appengine.api.datastore.Query query = oso.data.Person.CreateQueryFor();
+
+            BigTableIterator<oso.data.Person> list = (BigTableIterator<oso.data.Person>)oso.data.Person.QueryN(query,req.parameters.page);
+
+            for (oso.data.Person instance : list){
+
+                instance.dictionaryInto(top);
+            }
+            return top;
         }
         return null;
     }

@@ -215,7 +215,7 @@ public final class Main
                             break;
                         case ListShort:
                             if (listShortXtm.isFile()){
-                                String childClassName = OD.ChildClassName(field);
+                                String childClassName = OD.ListChildClassName(field);
                                 String listClassName = OD.ListShortClassName(parentClassName,childClassName);
                                 if (null != listClassName){
                                     File listFile = new File(javaDir,listClassName+".java");
@@ -234,7 +234,7 @@ public final class Main
                             break;
                         case ListLong:
                             if (listLongXtm.isFile()){
-                                String childClassName = OD.ChildClassName(field);
+                                String childClassName = OD.ListChildClassName(field);
                                 String listClassName = OD.ListLongClassName(parentClassName,childClassName);
                                 if (null != listClassName){
                                     File listFile = new File(javaDir,listClassName+".java");
@@ -244,6 +244,65 @@ public final class Main
                                                               parentClassName, childClassName, listClassName, listType, 
                                                               out);
                                         products.add(listFile);
+                                    }
+                                    finally {
+                                        out.close();
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }
+            }
+            /*
+             * Maps
+             */
+            List<FieldDescriptor> fieldsOfMap = OD.FieldsOfTypeMap(pack, odlClass, imports);
+            if (!fieldsOfMap.isEmpty()){
+                File mapShortXtm = new File(odlDir,"map-short.xtm");
+                File mapLongXtm = new File(odlDir,"map-long.xtm");
+
+                for (FieldDescriptor field: fieldsOfMap){
+                    String typeName = OD.ToString(field.getType());
+                    gap.data.Map.Type mapType = gap.data.Map.Type.For(typeName);
+                    if (null != mapType){
+                        switch(mapType){
+                        case MapPrimitive:
+                            break;
+                        case MapShort:
+                            if (mapShortXtm.isFile()){
+                                OD.MapChild mapChild = new OD.MapChild(field);
+                                String mapClassName = OD.MapShortClassName(parentClassName,mapChild.childValueClassName);
+                                if (null != mapClassName){
+                                    File mapFile = new File(javaDir,mapClassName+".java");
+                                    PrintWriter out = new PrintWriter(new FileWriter(mapFile));
+                                    try {
+                                        OD.GenerateMapSource(mapShortXtm, pack, imports, odlClass, field,
+                                                             parentClassName, mapClassName, mapType,
+                                                             mapChild, out);
+                                        products.add(mapFile);
+                                    }
+                                    finally {
+                                        out.close();
+                                    }
+                                }
+                            }
+                            break;
+                        case MapLong:
+                            if (mapLongXtm.isFile()){
+                                OD.MapChild mapChild = new OD.MapChild(field);
+                                String mapClassName = OD.MapLongClassName(parentClassName,mapChild.childValueClassName);
+                                if (null != mapClassName){
+                                    File mapFile = new File(javaDir,mapClassName+".java");
+                                    PrintWriter out = new PrintWriter(new FileWriter(mapFile));
+                                    try {
+                                        OD.GenerateMapSource(mapLongXtm, pack, imports, odlClass, field,
+                                                             parentClassName, mapClassName, mapType, 
+                                                             mapChild, out);
+                                        products.add(mapFile);
                                     }
                                     finally {
                                         out.close();

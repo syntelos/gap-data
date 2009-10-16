@@ -35,7 +35,7 @@ import com.google.appengine.api.datastore.Query;
 public interface List<V>
     extends Collection<V>
 {
-    public enum Type {
+    public static enum Type {
         ListPrimitive("List.Primitive",gap.data.List.Primitive.class),
         ListShort("List.Short",gap.data.List.Short.class),
         ListLong("List.Long",gap.data.List.Long.class);

@@ -34,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-14T11:47:11.834Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-15T10:18:14.073Z")
 public final class Image
     extends gap.data.BigTable
     implements DataInheritance<Image>,
@@ -797,7 +797,7 @@ public final class Image
                     dvalue.dictionaryInto(dsection,filter);
                 }
                 else {
-                    String fieldName = filter.acceptAs(this,field.name());
+                    String fieldName = filter.acceptAs(this,KIND,field);
                     if (null != fieldName){
                         data.putVariable(fieldName,gap.data.validate.Image.ToString(field,value));
                     }

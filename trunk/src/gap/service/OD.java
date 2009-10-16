@@ -19,8 +19,10 @@
  */
 package gap.service;
 
+import gap.Primitive;
 import gap.data.HasName;
 import static gap.data.List.Type.*;
+import static gap.data.Map.Type.*;
 import gap.service.od.ClassDescriptor;
 import gap.service.od.FieldDescriptor;
 import gap.service.od.ImportDescriptor;
@@ -115,6 +117,47 @@ public final class OD
             throw new IllegalArgumentException();
     }
 
+    public final static void GenerateMapSource(File xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
+                                               ClassDescriptor parent, FieldDescriptor field, 
+                                               String parentClassName, String mapClassName, 
+                                               gap.data.Map.Type mapType, OD.MapChild mapChild,
+                                               PrintWriter out)
+        throws ODStateException, IOException, TemplateException
+    {
+        if (null != xtm && null != pkg && null != imports && null != parent && null != field
+            && null != parentClassName && null != mapClassName && null != mapType
+            && null != mapChild && null != out)
+        {
+            TemplateCache loader = new TemplateCache(xtm.getParent());
+            Template template = loader.getTemplate(xtm.getPath());
+            TemplateDictionary top = new TemplateDictionary();
+
+            DefineDescription(xtm,top);
+
+            DefinePrimitives(top);
+
+            DefineClass(pkg,parent,imports,top,"parent_");
+
+            ClassDescriptor child = gap.odl.Main.ClassDescriptorFor(mapChild.childValueClassName);
+
+            DefineClass(pkg,child,imports,top,"child_");
+
+            top.setVariable("map_class_name",mapClassName);
+            top.setVariable("map_key_type",mapChild.childKeyFieldType);
+            top.setVariable("map_key_field_name",mapChild.childKeyFieldName);
+            top.setVariable("map_key_field_nameCamel",Camel(mapChild.childKeyFieldName));
+
+            try {
+                template.render(top,out); 
+            }
+            catch (TemplateException exc){
+                throw new TemplateException("In "+xtm.getPath(),exc);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+
     public final static void DefineDescription(File xtm, TemplateDictionary top){
 
         top.putVariable("odl_gen_class","gap.service.OD");
@@ -124,7 +167,7 @@ public final class OD
     public final static void DefinePrimitives(TemplateDictionary top){
 
         TemplateDictionary primitives = top.addSection("primitives");
-        for (gap.Primitive type : gap.Primitive.values()){
+        for (Primitive type : Primitive.values()){
             TemplateDictionary primitive = primitives.addSection("type");
             String type_name = type.name();
             primitive.setVariable("name",type_name);
@@ -251,11 +294,11 @@ public final class OD
 
                 String fieldName = field.getName();
                 String fieldNameCamel = Camel(fieldName);
-                String fieldType = ToString(field.getType());
+                String fieldType = OD.MapChild.Type(ToString(field.getType()));
                 String fieldTypeClean = CleanTypeName(fieldType);
                 String fieldTypeCleanClean = CleanCleanTypeName(fieldType);
                 Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
-                String[] fieldTypeParameters = FieldTypeParameters(fieldType);
+                String[] fieldTypeParameters = FieldTypeParameters(ToString(field.getType()));
                 TemplateDictionary dataField = null;
                 boolean isPersistent = false;
                 boolean isInheritable = true;
@@ -451,7 +494,7 @@ public final class OD
 
                         TemplateDictionary field_is = dataField.addSection("field_is_map");
 
-                        String typeComponentFrom = fieldTypeParameters[0];
+                        String typeComponentFrom = OD.MapChild.TypeKey(fieldTypeParameters[0]);
                         String typeComponentTo = fieldTypeParameters[1];
                         field_is.putVariable("field_map_component_from",typeComponentFrom);
                         field_is.putVariable("field_map_component_to",typeComponentTo);
@@ -566,6 +609,21 @@ public final class OD
                 String typeName = OD.ToString(field.getType());
                 Class typeClass = OD.FieldClass(packageName,typeName,imports);
                 if (IsTypeClassList(typeClass)){
+                    re.add(field);
+                }
+            }
+        }
+        return re;
+    }
+
+    public final static List<FieldDescriptor> FieldsOfTypeMap(PackageDescriptor pkg, ClassDescriptor cd, List<ImportDescriptor> imports){
+        List<FieldDescriptor> re = new java.util.ArrayList<FieldDescriptor>();
+        if (cd.hasFields()){
+            String packageName = OD.PackageName(pkg);
+            for (FieldDescriptor field : cd.getFields()){
+                String typeName = OD.ToString(field.getType());
+                Class typeClass = OD.FieldClass(packageName,typeName,imports);
+                if (IsTypeClassMap(typeClass)){
                     re.add(field);
                 }
             }
@@ -691,7 +749,7 @@ public final class OD
     }
     public final static Class FieldClass(String pkg, String fieldType, List<ImportDescriptor> imports){
         String cleanTypeName = CleanTypeName(fieldType);
-        gap.Primitive primitive = gap.Primitive.For(cleanTypeName);
+        Primitive primitive = Primitive.For(cleanTypeName);
         if (null != primitive)
             return primitive.type;
         else {
@@ -730,13 +788,83 @@ public final class OD
             }
         }
     }
-    public final static String ChildClassName(FieldDescriptor field){
+    public final static String ListChildClassName(FieldDescriptor field){
         String typeName = OD.ToString(field.getType());
         String[] parameters = FieldTypeParameters(typeName);
         if (null != parameters && 1 == parameters.length)
             return parameters[0];
         else
             return null;
+    }
+    /**
+     * Parse map type components.  A map type field declaration
+     * requires its key component declared from the child class in
+     * 'FieldType:fieldName' format, as in
+     * 'Map.Short&lt;String:name,TableClass&gt;' (for field type
+     * 'String' name 'name' in child 'TableClass').
+     */
+    public final static class MapChild
+        extends Object
+    {
+        public final static String ClassName(FieldDescriptor field){
+            String typeName = OD.ToString(field.getType());
+            String[] parameters = FieldTypeParameters(typeName);
+            if (null != parameters && 2 == parameters.length)
+                return parameters[1];
+            else
+                return null;
+        }
+        /**
+         * Normalize Type string.
+         */
+        public final static String Type(String type){
+            int idx0 = type.indexOf(':');
+            if (-1 != idx0){
+                int idx1 = type.indexOf(',',idx0);
+                if (-1 != idx1){
+                    return (type.substring(0,idx0)+type.substring(idx1));
+                }
+            }
+            return type;
+        }
+        /**
+         * Normalize Type parameter string.
+         */
+        public final static String TypeKey(String type){
+            int idx = type.indexOf(':');
+            if (-1 != idx)
+                return (type.substring(0,idx));
+            else
+                return type;
+        }
+
+        public final String childKeyFieldType, childKeyFieldName, childValueClassName;
+
+        public MapChild(FieldDescriptor field)
+            throws ODStateException
+        {
+            super();
+            String[] parameters = FieldTypeParameters(OD.ToString(field.getType()));
+            if (null != parameters && 2 == parameters.length){
+                this.childValueClassName = parameters[1];
+                String childKeyField = parameters[0];
+                int idx = childKeyField.indexOf(':');
+                if (-1 != idx){
+                    this.childKeyFieldType = childKeyField.substring(0,idx);
+                    try {
+                        Primitive.valueOf(this.childKeyFieldType);
+                        this.childKeyFieldName = childKeyField.substring(idx+1);
+                    }
+                    catch (IllegalArgumentException notPrimitive){
+                        throw new ODStateException(field,"Map type parameter key '"+this.childKeyFieldType+"' not primitive.",notPrimitive);
+                    }
+                }
+                else
+                    throw new ODStateException(field,"Map type requires key component 'type:fieldName' as in 'Map.Short<String:name,TableClass>'.");
+            }
+            else
+                throw new ODStateException(field,"Map type parameters not found.");
+        }
     }
     public final static String[] FieldTypeParameters(String typeName){
         int start = typeName.indexOf('<');
@@ -1010,7 +1138,7 @@ public final class OD
     }
     public final static String ListShortClassName(ClassDescriptor cd, FieldDescriptor fd){
         String parentClassName = ClassName(cd);
-        String childClassName = ChildClassName(fd);
+        String childClassName = ListChildClassName(fd);
         return ListShortClassName(parentClassName,childClassName);
     }
     public final static String ListShortClassName(String parentClassName, String childClassName){
@@ -1021,12 +1149,53 @@ public final class OD
     }
     public final static String ListLongClassName(ClassDescriptor cd, FieldDescriptor fd){
         String parentClassName = ClassName(cd);
-        String childClassName = ChildClassName(fd);
+        String childClassName = ListChildClassName(fd);
         return ListLongClassName(parentClassName,childClassName);
     }
     public final static String ListLongClassName(String parentClassName, String childClassName){
         if (null != parentClassName && null != childClassName)
             return "ListLong"+parentClassName+childClassName;
+        else
+            return null;
+    }
+    public final static String MapClassName(String fieldType, String parentClassName, String childClassName){
+        gap.data.Map.Type mapType = gap.data.Map.Type.For(fieldType);
+        switch(mapType){
+        case MapPrimitive:
+            return MapPrimitiveClassName(childClassName);
+        case MapShort:
+            return MapShortClassName(parentClassName,childClassName);
+        case MapLong:
+            return MapLongClassName(parentClassName,childClassName);
+        default:
+            throw new IllegalStateException("Unrecognized type '"+fieldType+"'.");
+        }
+    }
+    public final static String MapPrimitiveClassName(String childClassName){
+        if (null != childClassName)
+            return "MapPrimitive"+childClassName;
+        else
+            return null;
+    }
+    public final static String MapShortClassName(ClassDescriptor cd, FieldDescriptor fd){
+        String parentClassName = ClassName(cd);
+        String childClassName = MapChild.ClassName(fd);
+        return MapShortClassName(parentClassName,childClassName);
+    }
+    public final static String MapShortClassName(String parentClassName, String childClassName){
+        if (null != parentClassName && null != childClassName)
+            return "MapShort"+parentClassName+childClassName;
+        else
+            return null;
+    }
+    public final static String MapLongClassName(ClassDescriptor cd, FieldDescriptor fd){
+        String parentClassName = ClassName(cd);
+        String childClassName = MapChild.ClassName(fd);
+        return MapLongClassName(parentClassName,childClassName);
+    }
+    public final static String MapLongClassName(String parentClassName, String childClassName){
+        if (null != parentClassName && null != childClassName)
+            return "MapLong"+parentClassName+childClassName;
         else
             return null;
     }
@@ -1054,6 +1223,17 @@ public final class OD
                             String childFieldType = parentFieldTypeParameters[0];
                             if (childFieldType.equals(child.getName()))
                                 return parentField;
+                        }
+                    }
+                    else {
+                        gap.data.Map.Type mapType = gap.data.Map.Type.For(parentFieldType);
+                        if (null != mapType){
+                            String[] parentFieldTypeParameters = FieldTypeParameters(parentFieldType);
+                            if (null != parentFieldTypeParameters && 2 == parentFieldTypeParameters.length){
+                                String childFieldType = parentFieldTypeParameters[1];
+                                if (childFieldType.equals(child.getName()))
+                                    return parentField;
+                            }
                         }
                     }
                 }

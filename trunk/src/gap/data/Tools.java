@@ -20,13 +20,53 @@
 package gap.data;
 
 /**
- * Future jbxml binding point for generic site toolset XML.
+ * Default site toolset.
  * 
  * @author jdp
  */
 public class Tools
     extends Object
 {
+    public static enum Set 
+        implements HasName
+    {
+        Update("update-up"),
+        Create("create-cr"),
+        Goto("goto-gt"),
+        Delete("delete-de"),
+        Export("export-ex"),
+        Import("import-im");
+
+
+        private final static java.util.Map<String,Set> Lookup = new java.util.HashMap<String,Set>();
+        static {
+            for (Set set : Set.values()){
+                Lookup.put(set.lname,set);
+                Lookup.put(set.name(),set);
+            }
+        }
+        private final static String LName(String imgPrefix){
+            return imgPrefix.substring(0,imgPrefix.length()-3);
+        }
+        public final static Set For(String name){
+            return Lookup.get(name);
+        }
+        public final static Set For(Tool tool){
+            return For(tool.getName());
+        }
+
+        public final String imagePrefix, lname;
+
+        Set(String imgPrefix){
+            this.imagePrefix = imgPrefix;
+            this.lname = LName(imgPrefix);
+        }
+
+        public String getName(){
+            return this.lname;
+        }
+    }
+
     public final static Tools Default = new Tools();
 
 
@@ -35,72 +75,20 @@ public class Tools
 
     public Tools(){
         super();
-        Tool updateTool = new Tool();
-        updateTool.setName("update");
-        updateTool.setOverlayXtm("div.overlay.html");
-        updateTool.setFormXtm("form.update.html");
-        updateTool.setTitleHiGraphicUri("/icons/update-up-200x50-a00.png");
-        updateTool.setTitleLoGraphicUri("/icons/update-up-200x50-000.png");
-        updateTool.setButtonHiGraphicUri("/icons/update-up-b-200x50-a00.png");
-        updateTool.setButtonLoGraphicUri("/icons/update-up-b-200x50-000.png");
-        updateTool.setButtonOffGraphicUri("/icons/update-up-b-200x50-aaa.png");
-        this.tools.addToBuffer(updateTool);
-
-        Tool createTool = new Tool();
-        createTool.setName("create");
-        createTool.setOverlayXtm("div.overlay.html");
-        createTool.setFormXtm("form.create.html");
-        createTool.setTitleHiGraphicUri("/icons/create-cr-200x50-a00.png");
-        createTool.setTitleLoGraphicUri("/icons/create-cr-200x50-000.png");
-        createTool.setButtonHiGraphicUri("/icons/create-cr-b-200x50-a00.png");
-        createTool.setButtonLoGraphicUri("/icons/create-cr-b-200x50-000.png");
-        createTool.setButtonOffGraphicUri("/icons/create-cr-b-200x50-aaa.png");
-        this.tools.addToBuffer(createTool);
-
-        Tool gotoTool = new Tool();
-        gotoTool.setName("goto");
-        gotoTool.setOverlayXtm("div.overlay.html");
-        gotoTool.setFormXtm("form.goto.html");
-        gotoTool.setTitleHiGraphicUri("/icons/goto-gt-200x50-a00.png");
-        gotoTool.setTitleLoGraphicUri("/icons/goto-gt-200x50-000.png");
-        gotoTool.setButtonHiGraphicUri("/icons/goto-gt-b-200x50-a00.png");
-        gotoTool.setButtonLoGraphicUri("/icons/goto-gt-b-200x50-000.png");
-        gotoTool.setButtonOffGraphicUri("/icons/goto-gt-b-200x50-aaa.png");
-        this.tools.addToBuffer(gotoTool);
-
-        Tool deleteTool = new Tool();
-        deleteTool.setName("delete");
-        deleteTool.setOverlayXtm("div.overlay.html");
-        deleteTool.setFormXtm("form.delete.html");
-        deleteTool.setTitleHiGraphicUri("/icons/delete-de-200x50-a00.png");
-        deleteTool.setTitleLoGraphicUri("/icons/delete-de-200x50-000.png");
-        deleteTool.setButtonHiGraphicUri("/icons/delete-de-b-200x50-a00.png");
-        deleteTool.setButtonLoGraphicUri("/icons/delete-de-b-200x50-000.png");
-        deleteTool.setButtonOffGraphicUri("/icons/delete-de-b-200x50-aaa.png");
-        this.tools.addToBuffer(deleteTool);
-
-        Tool exportTool = new Tool();
-        exportTool.setName("export");
-        exportTool.setOverlayXtm("div.overlay.html");
-        exportTool.setFormXtm("form.export.html");
-        exportTool.setTitleHiGraphicUri("/icons/export-ex-200x50-a00.png");
-        exportTool.setTitleLoGraphicUri("/icons/export-ex-200x50-000.png");
-        exportTool.setButtonHiGraphicUri("/icons/export-ex-b-200x50-a00.png");
-        exportTool.setButtonLoGraphicUri("/icons/export-ex-b-200x50-000.png");
-        exportTool.setButtonOffGraphicUri("/icons/export-ex-b-200x50-aaa.png");
-        this.tools.addToBuffer(exportTool);
-
-        Tool importTool = new Tool();
-        importTool.setName("import");
-        importTool.setOverlayXtm("div.overlay.html");
-        importTool.setFormXtm("form.import.html");
-        importTool.setTitleHiGraphicUri("/icons/import-im-200x50-a00.png");
-        importTool.setTitleLoGraphicUri("/icons/import-im-200x50-000.png");
-        importTool.setButtonHiGraphicUri("/icons/import-im-b-200x50-a00.png");
-        importTool.setButtonLoGraphicUri("/icons/import-im-b-200x50-000.png");
-        importTool.setButtonOffGraphicUri("/icons/import-im-b-200x50-aaa.png");
-        this.tools.addToBuffer(importTool);
-
+        for (Tools.Set toolSet : Tools.Set.values()){
+            String lname = toolSet.lname;
+            String imagePrefix = toolSet.imagePrefix;
+            Tool tool = new Tool();
+            tool.setName(lname);
+            tool.setOverlayXtm("div.overlay.html");
+            tool.setFormXtm("form."+lname+".html");
+            tool.setTitleHiGraphicUri("/icons/"+imagePrefix+"-200x50-a00.png");
+            tool.setTitleLoGraphicUri("/icons/"+imagePrefix+"-200x50-000.png");
+            tool.setButtonHiGraphicUri("/icons/"+imagePrefix+"-b-200x50-a00.png");
+            tool.setButtonLoGraphicUri("/icons/"+imagePrefix+"-b-200x50-000.png");
+            tool.setButtonOffGraphicUri("/icons/"+imagePrefix+"-b-200x50-aaa.png");
+            this.tools.addToBuffer(tool);
+        }
     }
 
 

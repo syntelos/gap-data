@@ -29,7 +29,7 @@ public final class Filter
 {
     private final static long serialVersionUID = 1;
 
-    public enum Op {
+    public static enum Op {
         lt(Query.FilterOperator.LESS_THAN),
         le(Query.FilterOperator.LESS_THAN_OR_EQUAL),
         eq(Query.FilterOperator.EQUAL),

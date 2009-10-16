@@ -26,12 +26,14 @@ import com.google.appengine.api.datastore.Query;
  * The map key for a mapped value is the value of a field of the
  * mapped value.
  * 
+ * Keys are {@link gap.Primitive primitive} types.
+ * 
  * @author jdp
  */
 public interface Map<K,V>
     extends Collection<V>
 {
-    public enum Type {
+    public static enum Type {
         MapPrimitive("Map.Primitive",gap.data.Map.Primitive.class),
         MapShort("Map.Short",gap.data.Map.Short.class),
         MapLong("Map.Long",gap.data.Map.Long.class);
@@ -97,14 +99,17 @@ public interface Map<K,V>
     public interface Short<K,V>
         extends Map<K,V>, Collection.ShortC<V>
     {
-        public Map<K,V> add(K key);
+        public Primitive getMapKeyType();
 
-        public Map<K,V> remove(K key);
+        public String getMapKeyFieldName();
     }
 
     public interface Long<K,V>
         extends Map<K,V>, Collection.LongC<V>
     {
+        public Primitive getMapKeyType();
+
+        public String getMapKeyFieldName();
     }
 
     public V get(K key);

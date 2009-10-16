@@ -48,7 +48,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-14T11:47:12.794Z")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-15T10:18:13.630Z")
 public class Template
     extends gap.servlet.Site
 {
@@ -67,36 +67,34 @@ public class Template
 
         TemplateDictionary top = req.getTop();
 
-        if (this.canRead(req)){
 
-            if (req.hasPath(1) && req.hasPath(2)){
+        if (req.hasPath(1) && req.hasPath(2)){
 
-                Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
+            Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
 
-                gap.data.Template instance = gap.data.Template.ForShortId(parentKey,req.getPath(2));
+            gap.data.Template instance = gap.data.Template.ForShortId(parentKey,req.getPath(2));
 
-                if (null != instance){
+            if (null != instance){
 
-                    instance.dictionaryInto(top);
+                instance.dictionaryInto(top);
 
-                    return top;
-                }
-            }
-            else if (req.hasPath(1)){
-                req.parameters.dictionaryInto(top);
-
-                Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
-
-                com.google.appengine.api.datastore.Query query = gap.data.Template.CreateQueryFor(parentKey);
-
-                BigTableIterator<gap.data.Template> list = (BigTableIterator<gap.data.Template>)gap.data.Template.QueryN(query,req.parameters.page);
-
-                for (gap.data.Template instance : list){
-
-                    instance.dictionaryInto(top);
-                }
                 return top;
             }
+        }
+        else if (req.hasPath(1)){
+            req.parameters.dictionaryInto(top);
+
+            Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
+
+            com.google.appengine.api.datastore.Query query = gap.data.Template.CreateQueryFor(parentKey);
+
+            BigTableIterator<gap.data.Template> list = (BigTableIterator<gap.data.Template>)gap.data.Template.QueryN(query,req.parameters.page);
+
+            for (gap.data.Template instance : list){
+
+                instance.dictionaryInto(top);
+            }
+            return top;
         }
         return null;
     }
