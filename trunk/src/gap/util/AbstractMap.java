@@ -46,4 +46,10 @@ public abstract class AbstractMap<K,V extends BigTable>
     protected void buffering(Page page){
         this.index = new Index(page);
     }
+    public AbstractMap clone(){
+        AbstractMap clone = (AbstractMap)super.clone();
+        if (null != this.index)
+            clone.index = this.index.clone();
+        return clone;
+    }
 }

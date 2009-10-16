@@ -30,13 +30,14 @@ import java.io.PrintStream;
  */
 public final class Index 
     extends Object
-    implements java.io.Serializable
+    implements java.io.Serializable,
+               java.lang.Cloneable
 {
     private final static long serialVersionUID = 1;
     /**
      * Collision table entry holds a list element key and index.
      */
-    public static class Entry 
+    public final static class Entry 
         extends Object
         implements java.io.Serializable,
                    java.lang.Comparable
@@ -75,7 +76,7 @@ public final class Index
         }
     }
 
-    private final Entry[][] table;
+    private Entry[][] table;
 
     public final int size;
 
@@ -90,6 +91,23 @@ public final class Index
     }
 
 
+    public Index clone(){
+        try {
+            Index clone = (Index)super.clone();
+            clone.table = this.table.clone();
+
+            Entry list[], table[][] = clone.table;
+            for (int cc = 0, len = this.size; cc < len; cc++){
+                list = table[cc];
+                if (null != list)
+                    table[cc] = list.clone();
+            }
+            return clone;
+        }
+        catch(CloneNotSupportedException exc){
+            throw new InternalError(exc.toString());
+        }
+    }
     public int get(Comparable key){
         int table = ((null == key)?(0):(Math.abs(key.hashCode())%this.size));
         Entry[] list = this.table[table];
