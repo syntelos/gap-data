@@ -70,7 +70,7 @@ public class Tools
     public final static Tools Default = new Tools();
 
 
-    private final ListShortResourceTool tools = new ListShortResourceTool();
+    private final List.Primitive<Tool> tools = new gap.util.AbstractListPrimitive.Any<Tool>();
 
 
     public Tools(){
@@ -87,12 +87,12 @@ public class Tools
             tool.setButtonHiGraphicUri("/icons/"+imagePrefix+"-b-200x50-a00.png");
             tool.setButtonLoGraphicUri("/icons/"+imagePrefix+"-b-200x50-000.png");
             tool.setButtonOffGraphicUri("/icons/"+imagePrefix+"-b-200x50-aaa.png");
-            this.tools.addToBuffer(tool);
+            this.tools.add(tool);
         }
     }
 
 
-    public List.Short<Tool> getTools(){
+    public List<Tool> getTools(){
         return this.tools;
     }
 

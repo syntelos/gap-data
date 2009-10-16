@@ -40,8 +40,18 @@ public interface DictionaryInto {
     public TemplateDictionary dictionaryInto(TemplateDictionary dict);
 
     /**
+     * Install all with inheritance.
+     */
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary dict);
+
+    /**
      * Install with inheritance as directed by filter.
      */
     public TemplateDictionary dictionaryInto(TemplateDictionary dict, DataFilter filter);
+
+    /**
+     * Install with inheritance as directed by filter.
+     */
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary dict, DataFilter filter);
 
 }

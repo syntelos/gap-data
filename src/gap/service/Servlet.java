@@ -27,6 +27,7 @@ import hapax.Template;
 import hapax.TemplateException;
 import hapax.TemplateDictionary;
 
+import com.google.gson.Gson;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.UserServiceFactory;
 
@@ -296,18 +297,18 @@ public class Servlet
     }
 
     protected TemplateDictionary doGetDefine(Request req, Response rep){
-        TemplateDictionary top = req.getTop();
-
-        top.setVariable("logon","div.logon.html");
-
-        return top;
+        return req.getTop();
     }
     protected void doGet(Request req, Response rep)
         throws ServletException, IOException
     {
-        if (req.accept("text/html") && req.hasNotSource()){
-            rep.sendRedirect("/index.html");
-            return;
+        if (req.hasNotSource()){
+            if (req.acceptHtml()){
+                rep.sendRedirect("/index.html");
+                return;
+            }
+            else
+                this.error(req,rep,404,"Not found.");
         }
         else {
             TemplateDictionary top = this.doGetDefine(req,rep);
@@ -317,6 +318,13 @@ public class Servlet
                     if (null != template){
                         this.render(req,rep,template,top);
                         return ;
+                    }
+                    else if (req.acceptJson()){
+                        Gson gson = new Gson();
+                        String json = gson.toJson(top);
+                        rep.println(json);
+                        rep.setContentTypeJson();
+                        return;
                     }
                 }
                 catch (TemplateException exc){

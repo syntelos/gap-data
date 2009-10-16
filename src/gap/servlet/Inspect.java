@@ -20,38 +20,35 @@
 package gap.servlet;
 
 import gap.*;
-import gap.data.*;
+import gap.service.*;
 
 import hapax.TemplateDictionary;
 
+import com.google.gson.Gson;
+
+import javax.servlet.ServletException;
+
+import java.io.IOException;
+
 /**
- * Bound to path <code>'/*'</code>
+ * Bound to path <code>'/inspect/*'</code> for syntax highlighted java code display.
  */
-public class Site
-    extends gap.service.Servlet
+public class Inspect
+    extends Site
 {
 
-    public Site(){
-        super();
-    }
-
-
     @Override
-    protected TemplateDictionary doGetDefine(Request req, Response rep){
-
-        TemplateDictionary top = super.doGetDefine(req,rep);
-
-        Resource resource = req.resource;
-        if (null != resource){
-
-            Map<String,Template> templates = resource.getTemplates(true);
-            templates.dictionaryInto("template",top,ToolingFilter.Templates.Instance);
-
-            Map<String,Tool> tools = resource.getTools(true);
-            ToolingFilter.Tools toolsFilter = new ToolingFilter.Tools(req);
-            tools.dictionaryInto("tool",top,toolsFilter);
+    protected void doGet(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        TemplateDictionary top = this.doGetDefine(req,rep);
+        if (null != top){
+            Gson gson = new Gson();
+            String json = gson.toJson(top);
+            rep.println(json);
+            rep.setContentTypeJson();
+            return;
         }
-        return top;
+        this.error(req,rep,404,"Not found.");
     }
-
 }

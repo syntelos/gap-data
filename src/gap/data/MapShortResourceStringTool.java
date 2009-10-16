@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated short map.
  */
-@Generated(value={"gap.service.OD","odl/map-short.xtm"},date="2009-10-16T11:37:45.925Z")
+@Generated(value={"gap.service.OD","odl/map-short.xtm"},date="2009-10-16T23:09:13.448Z")
 public final class MapShortResourceStringTool
     extends gap.util.AbstractMap<String,Tool>
     implements gap.data.Map.Short<String,Tool>
@@ -109,11 +109,27 @@ public final class MapShortResourceStringTool
         }
         return top;
     }
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top){
+
+        for (Tool value: this){
+
+            value.dictionaryInto(section,top);
+        }
+        return top;
+    }
     public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
 
         for (Tool value: this){
 
             value.dictionaryInto(top,filter);
+        }
+        return top;
+    }
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top, DictionaryInto.DataFilter filter){
+
+        for (Tool value: this){
+
+            value.dictionaryInto(section,top,filter);
         }
         return top;
     }

@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated long map.
  */
-@Generated(value={"gap.service.OD","odl/map-long.xtm"},date="2009-10-16T11:37:45.810Z")
+@Generated(value={"gap.service.OD","odl/map-long.xtm"},date="2009-10-16T23:09:13.293Z")
 public final class MapLongResourceStringPartner
     extends gap.util.AbstractMap<String,Partner>
     implements gap.data.Map.Long<String,Partner>
@@ -105,11 +105,27 @@ public final class MapLongResourceStringPartner
         }
         return top;
     }
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top){
+
+        for (Partner value: this){
+
+            value.dictionaryInto(section,top);
+        }
+        return top;
+    }
     public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
 
         for (Partner value: this){
 
             value.dictionaryInto(top,filter);
+        }
+        return top;
+    }
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top, DictionaryInto.DataFilter filter){
+
+        for (Partner value: this){
+
+            value.dictionaryInto(section,top,filter);
         }
         return top;
     }

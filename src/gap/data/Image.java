@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-16T11:37:46.693Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-16T23:09:14.709Z")
 public final class Image
     extends gap.data.BigTable
     implements DataInheritance<Image>,
@@ -772,7 +772,14 @@ public final class Image
         Field.Set((Field)field,this,value);
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary top){
-        TemplateDictionary data = top.addSection(ClassName);
+        return this.dictionaryInto(ClassName,top);
+    }
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top){
+        TemplateDictionary data;
+        if (null != section)
+            data = top.addSection(section);
+        else
+            data = top;
         for (Field field : Field.values()){
             java.lang.Object value = Field.Get(field,this,MayInherit);
             if (null != value){
@@ -788,14 +795,23 @@ public final class Image
         return top;
     }
     public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
-        TemplateDictionary data = top.addSection(ClassName);
+        return this.dictionaryInto(ClassName,top,filter);
+    }
+    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top, DictionaryInto.DataFilter filter){
+        TemplateDictionary data;
+        if (null != section)
+            data = top.addSection(section);
+        else
+            data = top;
         for (Field field : Field.values()){
             java.lang.Object value = Field.Get(field,this,MayInherit);
             if (null != value){
                 if (value instanceof DictionaryInto){
                     DictionaryInto dvalue = (DictionaryInto)value;
-                    TemplateDictionary dsection = data.addSection(field.name());
-                    dvalue.dictionaryInto(dsection,filter);
+                    String fieldName = filter.acceptAs(this,KIND,field);
+                    if (null != fieldName){
+                        dvalue.dictionaryInto(fieldName,data,filter);
+                    }
                 }
                 else {
                     String fieldName = filter.acceptAs(this,KIND,field);

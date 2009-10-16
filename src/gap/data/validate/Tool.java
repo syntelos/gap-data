@@ -45,20 +45,88 @@ import javax.annotation.Generated;
 /**
  * Generated data bean string I/O functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-16T11:37:46.463Z")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-16T23:09:14.219Z")
 public abstract class Tool
     extends gap.Strings
 {
     public final static Object FromString(gap.data.Tool.Field field, String string){
         switch(field){
+          case Key:
+            return KeyFromString(string);
+          case Id:
+            return StringFromString(string);
+          case Name:
+            return StringFromString(string);
+          case LastModified:
+            return LongFromString(string);
+          case HeadXtm:
+            return StringFromString(string);
+          case OverlayXtm:
+            return StringFromString(string);
+          case FormXtm:
+            return StringFromString(string);
+          case TitleHiGraphicUri:
+            return StringFromString(string);
+          case TitleLoGraphicUri:
+            return StringFromString(string);
+          case ButtonHiGraphicUri:
+            return StringFromString(string);
+          case ButtonLoGraphicUri:
+            return StringFromString(string);
+          case ButtonOffGraphicUri:
+            return StringFromString(string);
+          case FunctionMethodname:
+            return StringFromString(string);
+          case FunctionClassname:
+            return StringFromString(string);
+          case FunctionBody:
+            return TextFromString(string);
+          case FunctionSourceJava:
+            return TextFromString(string);
+          case FunctionClassfileJvm:
+            return BlobFromString(string);
         default:
-            throw new IllegalStateException(field.name());
+            return null;
         }
     }
     public final static String ToString(gap.data.Tool.Field field, Object value){
         switch(field){
+          case Key:
+            return KeyToString( (Key)value);
+          case Id:
+            return StringToString( (String)value);
+          case Name:
+            return StringToString( (String)value);
+          case LastModified:
+            return LongToString( (Long)value);
+          case HeadXtm:
+            return StringToString( (String)value);
+          case OverlayXtm:
+            return StringToString( (String)value);
+          case FormXtm:
+            return StringToString( (String)value);
+          case TitleHiGraphicUri:
+            return StringToString( (String)value);
+          case TitleLoGraphicUri:
+            return StringToString( (String)value);
+          case ButtonHiGraphicUri:
+            return StringToString( (String)value);
+          case ButtonLoGraphicUri:
+            return StringToString( (String)value);
+          case ButtonOffGraphicUri:
+            return StringToString( (String)value);
+          case FunctionMethodname:
+            return StringToString( (String)value);
+          case FunctionClassname:
+            return StringToString( (String)value);
+          case FunctionBody:
+            return TextToString( (Text)value);
+          case FunctionSourceJava:
+            return TextToString( (Text)value);
+          case FunctionClassfileJvm:
+            return BlobToString( (Blob)value);
         default:
-            throw new IllegalStateException(field.name());
+            return null;
         }
     }
 }

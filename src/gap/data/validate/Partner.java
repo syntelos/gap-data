@@ -45,20 +45,32 @@ import javax.annotation.Generated;
 /**
  * Generated data bean string I/O functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-16T11:37:47.183Z")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-16T23:09:15.538Z")
 public abstract class Partner
     extends gap.Strings
 {
     public final static Object FromString(gap.data.Partner.Field field, String string){
         switch(field){
+          case Key:
+            return KeyFromString(string);
+          case Id:
+            return StringFromString(string);
+          case Name:
+            return StringFromString(string);
         default:
-            throw new IllegalStateException(field.name());
+            return null;
         }
     }
     public final static String ToString(gap.data.Partner.Field field, Object value){
         switch(field){
+          case Key:
+            return KeyToString( (Key)value);
+          case Id:
+            return StringToString( (String)value);
+          case Name:
+            return StringToString( (String)value);
         default:
-            throw new IllegalStateException(field.name());
+            return null;
         }
     }
 }

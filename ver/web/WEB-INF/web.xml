@@ -21,6 +21,12 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
+  <servlet>
+    <servlet-name>Inspect</servlet-name>
+    <servlet-class>gap.servlet.Inspect</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>Site</servlet-name>
     <url-pattern>/*</url-pattern>
@@ -34,6 +40,11 @@
   <servlet-mapping>
     <servlet-name>Source</servlet-name>
     <url-pattern>/src/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Inspect</servlet-name>
+    <url-pattern>/inspect/*</url-pattern>
   </servlet-mapping>
 
   <error-page>

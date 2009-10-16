@@ -103,13 +103,22 @@ public class Response
         this.getWriter().write(string);
     }
     public void setContentTypeText(){
-        this.setContentType("text/plain;charset=utf-8");
+        this.setContentType("text/plain");
     }
     public void setContentTypeHtml(){
-        this.setContentType("text/html;charset=utf-8");
+        this.setContentType("text/html");
     }
     public void setContentTypeXml(){
-        this.setContentType("text/xml;charset=utf-8");
+        this.setContentType("text/xml");
+    }
+    public void setContentTypeXml(Request req){
+        if (req.accept("application/xml"))
+            this.setContentType("application/xml");
+        else
+            this.setContentType("text/xml");
+    }
+    public void setContentTypeJson(){
+        this.setContentType("application/json");
     }
 
 }
