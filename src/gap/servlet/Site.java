@@ -21,10 +21,6 @@ package gap.servlet;
 
 import gap.*;
 import gap.data.*;
-import static gap.data.Tool.Field.*;
-import static gap.data.Tools.Set.*;
-import gap.util.*;
-import gap.service.*;
 
 import hapax.TemplateDictionary;
 
@@ -34,104 +30,6 @@ import hapax.TemplateDictionary;
 public class Site
     extends gap.service.Servlet
 {
-    public final static class DefaultToolingFilter
-        extends Object
-        implements gap.data.DictionaryInto.DataFilter
-    {
-        private final static Kind KindResource = Kind.For("Resource");
-        private final static Kind KindTool = Kind.For("Tool");
-
-
-        private final Request request;
-        private final boolean canCreate;
-        private final boolean canUpdate;
-        private final boolean canGoto;
-        private final boolean canDelete;
-        private final boolean canExport;
-        private final boolean canImport;
-
-        public DefaultToolingFilter(Servlet servlet, Request req){
-            super();
-            this.request = req;
-            this.canCreate = req.isMember;
-            this.canUpdate = req.isPartner;
-            this.canGoto   = true;
-            this.canDelete = req.isAdmin;
-            this.canExport = req.isMember;
-            this.canImport = req.isPartner;
-        }
-
-        protected boolean isExecutable(Tool tool){
-            Tools.Set set = Tools.Set.For(tool);
-            if (null == set)
-                return this.request.isPartner;
-            else {
-                switch (set){
-                case Update:
-                    return this.canUpdate;
-                case Create:
-                    return this.canCreate;
-                case Goto:
-                    return this.canGoto;
-                case Delete:
-                    return this.canDelete;
-                case Export:
-                    return this.canExport;
-                case Import:
-                    return this.canImport;
-                default:
-                    return this.request.isPartner;
-                }
-            }
-        }
-        protected String filterAs(Tool tool, Tool.Field field){
-            switch (field){
-            case TitleHiGraphicUri:
-                if (this.request.isAdmin)
-                    return "titleGraphicUri";
-                else
-                    return null;
-
-            case TitleLoGraphicUri:
-                if (this.request.isAdmin)
-                    return null;
-                else if (this.isExecutable(tool))
-                    return "titleGraphicUri";
-
-            case ButtonHiGraphicUri:
-                if (this.request.isAdmin)
-                    return "buttonGraphicUri";
-                else
-                    return null;
-
-            case ButtonLoGraphicUri:
-                if (this.request.isAdmin)
-                    return null;
-                else if (this.isExecutable(tool))
-                    return "buttonGraphicUri";
-
-            case ButtonOffGraphicUri:
-                if (this.isExecutable(tool))
-                    return null;
-                else
-                    return "buttonGraphicUri";
-
-            case FunctionClassfileJvm:
-                return null;
-            default:
-                return field.getFieldName();
-            }
-        }
-        public String acceptAs(gap.data.BigTable instance, Kind instanceKind, Field field){
-            if (KindTool == instanceKind)
-                return this.filterAs((Tool)instance,(Tool.Field)field);
-            else if (KindResource == instanceKind){
-                if (Resource.Field.ServletClassfileJvm == field)
-                    return null;
-            }
-            return field.getFieldName();
-        }
-    }
 
     public Site(){
         super();
