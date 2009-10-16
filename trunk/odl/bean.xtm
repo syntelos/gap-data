@@ -737,14 +737,16 @@ public final class {{=class_name}}
     public {{=field_map_component_to}} get{{=field_nameCamel}}({{=field_map_component_from}} {{=field_name}}{{=field_map_component_from_nameCamel}}){
         if (null != {{=field_name}}{{=field_map_component_from_nameCamel}}){
             {{=field_class}} map = this.get{{=field_nameCamel}}(MayInherit);
-            if (null != map)
-                return map.get({{=field_name}}{{=field_map_component_from_nameCamel}});
-            else
-                return null;
-            if (map.hitEnd()){
-                Filter filter = new Filter("{{=field_map_component_kind}}").add({{=field_map_component}}.Field.For("name"),Filter.Op.eq,name);
-                return map.fetch(filter);
+            if (null != map){
+                {{=field_map_component_to}} value = map.get({{=field_name}}{{=field_map_component_from_nameCamel}});
+                if (null != value)
+                    return value;
+                else if (map.hitEnd()){
+                    Filter filter = new Filter("{{=field_map_component_kind}}").add({{=field_map_component_to}}.Field.For("name"),Filter.Op.eq,name);
+                    return map.fetch(filter);
+                }
             }
+            return null;
         }
         else
             throw new IllegalArgumentException();
