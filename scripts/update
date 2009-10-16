@@ -1,0 +1,39 @@
+#!/bin/bash
+
+dir=appengine-java-sdk
+
+if [ -d ${dir} ]&&[ -f ${dir}/current.properties ]
+then
+ sdk=$(egrep sdk.version ${dir}/current.properties | sed 's/.*=//')
+ if [ -n "${sdk}" ]&&[ -d ${dir}/${sdk} ]
+ then
+  dir=${dir}/${sdk}
+  if [ -x ${dir}/bin/appcfg.sh ]
+  then
+   if [ -n "${1}" ]&&[ -n "echo ${1} | egrep '.*@[a-z0-9-\.]+\.[a-z]+" ]
+   then
+    set -x
+    ${dir}/bin/appcfg.sh -e ${1} update war
+   else
+    cat<<EOF
+usage:  update 'email@domain'
+EOF
+    exit 1
+   fi
+  else
+   cat<<EOF
+Error, file not found '${dir}/bin/appcfg.sh'.
+EOF
+  fi
+ else
+  cat<<EOF
+Error, current sdk version not found '${dir}/${sdk}'.
+EOF
+  exit 1
+ fi
+else
+ cat<<EOF
+Error, directory not found '${dir}'.
+EOF
+ exit 1
+fi
