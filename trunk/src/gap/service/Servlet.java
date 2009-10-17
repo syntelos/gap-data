@@ -27,7 +27,6 @@ import hapax.Template;
 import hapax.TemplateException;
 import hapax.TemplateDictionary;
 
-import com.google.gson.Gson;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.UserServiceFactory;
 
@@ -320,8 +319,7 @@ public class Servlet
                         return ;
                     }
                     else if (req.acceptJson()){
-                        Gson gson = new Gson();
-                        String json = gson.toJson(top);
+                        String json = Gson.ToJson(top);
                         rep.println(json);
                         rep.setContentTypeJson();
                         return;

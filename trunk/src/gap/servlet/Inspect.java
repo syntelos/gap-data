@@ -21,10 +21,9 @@ package gap.servlet;
 
 import gap.*;
 import gap.service.*;
+import gap.util.*;
 
 import hapax.TemplateDictionary;
-
-import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
 
@@ -43,8 +42,7 @@ public class Inspect
     {
         TemplateDictionary top = this.doGetDefine(req,rep);
         if (null != top){
-            Gson gson = new Gson();
-            String json = gson.toJson(top);
+            String json = Gson.ToJson(top);
             rep.println(json);
             rep.setContentTypeJson();
             return;
