@@ -54,7 +54,8 @@ class Escaper {
     htmlEscapeSet.add('>');
     htmlEscapeSet.add('&');
     htmlEscapeSet.add('=');
- //   htmlEscapeSet.add('/');  -- Removing slash for now since it causes some incompatibilities
+    htmlEscapeSet.add('\''); 
+//    htmlEscapeSet.add('/');  -- Removing slash for now since it causes some incompatibilities
     HTML_ESCAPE_CHARS = Collections.unmodifiableSet(htmlEscapeSet);
   }
 
@@ -111,7 +112,7 @@ class Escaper {
            out.append("\\/");
            break;
          case '"':
-           out.append('\\').append((char) codePoint);
+           out.append("\\\"");
            break;
          default:
            appendHexJavaScriptRepresentation(codePoint, out);
@@ -133,7 +134,7 @@ class Escaper {
 
   private static boolean isControlCharacter(int codePoint) {
     // JSON spec defines these code points as control characters, so they must be escaped
-    return codePoint < 0x20 
+    return codePoint < 0x20
         || codePoint == 0x2028  // Line separator
         || codePoint == 0x2029  // Paragraph separator
         || (codePoint >= 0x7f && codePoint <= 0x9f);

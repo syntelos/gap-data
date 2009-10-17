@@ -31,22 +31,38 @@ final class JsonSerializationVisitor implements ObjectNavigator.Visitor {
   private final ObjectNavigatorFactory factory;
   private final ParameterizedTypeHandlerMap<JsonSerializer<?>> serializers;
   private final boolean serializeNulls;
-
   private final JsonSerializationContext context;
-
+  private final MemoryRefStack ancestors;
   private JsonElement root;
 
   JsonSerializationVisitor(ObjectNavigatorFactory factory, boolean serializeNulls,
-      ParameterizedTypeHandlerMap<JsonSerializer<?>> serializers,
-      JsonSerializationContext context) {
+      ParameterizedTypeHandlerMap<JsonSerializer<?>> serializers, JsonSerializationContext context,
+      MemoryRefStack ancestors) {
     this.factory = factory;
     this.serializeNulls = serializeNulls;
     this.serializers = serializers;
     this.context = context;
+    this.ancestors = ancestors;
   }
-  
+
   public Object getTarget() {
     return null;
+  }
+
+  public void start(ObjectTypePair node) {
+    if (node == null) {
+      return;
+    }
+    if (ancestors.contains(node)) {
+      throw new CircularReferenceException(node);
+    }
+    ancestors.push(node);
+  }
+
+  public void end(ObjectTypePair node) {
+    if (node != null) {
+      ancestors.pop();
+    }
   }
 
   public void startVisitingObject(Object node) {
@@ -60,39 +76,54 @@ final class JsonSerializationVisitor implements ObjectNavigator.Visitor {
     Type componentType = fieldTypeInfo.getSecondLevelType();
     for (int i = 0; i < length; ++i) {
       Object child = Array.get(array, i);
-      addAsArrayElement(componentType, child);
+      Type childType = componentType;
+      // we should not get more specific component type yet since it is possible
+      // that a custom
+      // serializer is registered for the componentType
+      addAsArrayElement(new ObjectTypePair(child, childType, false));
     }
   }
 
   public void visitArrayField(Field f, Type typeOfF, Object obj) {
-    if (isFieldNull(f, obj)) {
-      if (serializeNulls) {
-        addChildAsElement(f, JsonNull.createJsonNull());
+    try {
+      if (isFieldNull(f, obj)) {
+        if (serializeNulls) {
+          addChildAsElement(f, JsonNull.createJsonNull());
+        }
+      } else {
+        Object array = getFieldValue(f, obj);
+        addAsChildOfObject(f, new ObjectTypePair(array, typeOfF, false));
       }
-    } else {
-      Object array = getFieldValue(f, obj);
-      addAsChildOfObject(f, typeOfF, array);
+    } catch (CircularReferenceException e) {
+      throw e.createDetailedException(f);
     }
   }
 
   public void visitObjectField(Field f, Type typeOfF, Object obj) {
-    if (isFieldNull(f, obj)) {
-      if (serializeNulls) {
-        addChildAsElement(f, JsonNull.createJsonNull());
+    try {
+      if (isFieldNull(f, obj)) {
+        if (serializeNulls) {
+          addChildAsElement(f, JsonNull.createJsonNull());
+        }
+      } else {
+        Object fieldValue = getFieldValue(f, obj);
+        // we should not get more specific component type yet since it is
+        // possible that a custom
+        // serializer is registered for the componentType
+        addAsChildOfObject(f, new ObjectTypePair(fieldValue, typeOfF, false));
       }
-    } else {
-      Object fieldValue = getFieldValue(f, obj);
-      // This takes care of situations where the field was declared as an Object, but the
-      // actual value contains something more specific. See Issue 54.
-      if (fieldValue != null && typeOfF == Object.class) {
-        typeOfF = fieldValue.getClass();
-      }
-      addAsChildOfObject(f, typeOfF, fieldValue);
+    } catch (CircularReferenceException e) {
+      throw e.createDetailedException(f);
     }
   }
 
-  private void addAsChildOfObject(Field f, Type fieldType, Object fieldValue) {
-    JsonElement childElement = getJsonElementForChild(fieldType, fieldValue);
+  public void visitPrimitive(Object obj) {
+    JsonElement json = obj == null ? JsonNull.createJsonNull() : new JsonPrimitive(obj);
+    assignToRoot(json);
+  }
+
+  private void addAsChildOfObject(Field f, ObjectTypePair fieldValuePair) {
+    JsonElement childElement = getJsonElementForChild(fieldValuePair);
     addChildAsElement(f, childElement);
   }
 
@@ -101,39 +132,66 @@ final class JsonSerializationVisitor implements ObjectNavigator.Visitor {
     root.getAsJsonObject().add(namingPolicy.translateName(f), childElement);
   }
 
-  private void addAsArrayElement(Type elementType, Object elementValue) {
-    if (elementValue == null) {
+  private void addAsArrayElement(ObjectTypePair elementTypePair) {
+    if (elementTypePair.getObject() == null) {
       root.getAsJsonArray().add(JsonNull.createJsonNull());
     } else {
-      JsonElement childElement = getJsonElementForChild(elementType, elementValue);
+      JsonElement childElement = getJsonElementForChild(elementTypePair);
       root.getAsJsonArray().add(childElement);
     }
   }
 
-  private JsonElement getJsonElementForChild(Type fieldType, Object fieldValue) {
-    ObjectNavigator on = factory.create(fieldValue, fieldType);
+  private JsonElement getJsonElementForChild(ObjectTypePair fieldValueTypePair) {
+    ObjectNavigator on = factory.create(fieldValueTypePair);
     JsonSerializationVisitor childVisitor =
-        new JsonSerializationVisitor(factory, serializeNulls, serializers, context);
+        new JsonSerializationVisitor(factory, serializeNulls, serializers, context, ancestors);
     on.accept(childVisitor);
     return childVisitor.getJsonElement();
   }
 
-  @SuppressWarnings("unchecked")
-  public boolean visitUsingCustomHandler(Object obj, Type objType) {
-    JsonSerializer serializer = serializers.getHandlerFor(objType);
-    if (serializer != null) {
+  public boolean visitUsingCustomHandler(ObjectTypePair objTypePair) {
+    try {
+      Object obj = objTypePair.getObject();
       if (obj == null) {
-        assignToRoot(JsonNull.createJsonNull());
-      } else {
-        assignToRoot(serializer.serialize(obj, objType, context));
+        if (serializeNulls) {
+          assignToRoot(JsonNull.createJsonNull());
+        }
+        return true;
       }
-      return true;
+      JsonElement element = findAndInvokeCustomSerializer(objTypePair);
+      if (element != null) {
+        assignToRoot(element);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (CircularReferenceException e) {
+      throw e.createDetailedException(null);
     }
-    return false;
   }
 
+  /**
+   * objTypePair.getObject() must not be null
+   */
   @SuppressWarnings("unchecked")
-  public boolean visitFieldUsingCustomHandler(Field f, Type actualTypeOfField, Object parent) {
+  private JsonElement findAndInvokeCustomSerializer(ObjectTypePair objTypePair) {
+    Pair<JsonSerializer<?>,ObjectTypePair> pair = objTypePair.getMatchingHandler(serializers);
+    if (pair == null) {
+      return null;
+    }
+    JsonSerializer serializer = pair.getFirst();
+    objTypePair = pair.getSecond();
+    start(objTypePair);
+    try {
+      JsonElement element =
+          serializer.serialize(objTypePair.getObject(), objTypePair.getType(), context);
+      return element == null ? JsonNull.createJsonNull() : element;
+    } finally {
+      end(objTypePair);
+    }
+  }
+
+  public boolean visitFieldUsingCustomHandler(Field f, Type declaredTypeOfField, Object parent) {
     try {
       Preconditions.checkState(root.isJsonObject());
       Object obj = f.get(parent);
@@ -143,15 +201,18 @@ final class JsonSerializationVisitor implements ObjectNavigator.Visitor {
         }
         return true;
       }
-      JsonSerializer serializer = serializers.getHandlerFor(actualTypeOfField);
-      if (serializer != null) {
-        JsonElement child = serializer.serialize(obj, actualTypeOfField, context);
+      ObjectTypePair objTypePair = new ObjectTypePair(obj, declaredTypeOfField, false);
+      JsonElement child = findAndInvokeCustomSerializer(objTypePair);
+      if (child != null) {
         addChildAsElement(f, child);
         return true;
+      } else {
+        return false;
       }
-      return false;
     } catch (IllegalAccessException e) {
       throw new RuntimeException();
+    } catch (CircularReferenceException e) {
+      throw e.createDetailedException(f);
     }
   }
 

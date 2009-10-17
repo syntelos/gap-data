@@ -16,8 +16,6 @@
 
 package com.google.gson;
 
-import java.lang.reflect.Type;
-
 /**
  * A factory class used to simplify {@link ObjectNavigator} creation.
  * This object holds on to a reference of the {@link ExclusionStrategy}
@@ -28,7 +26,6 @@ import java.lang.reflect.Type;
 final class ObjectNavigatorFactory {
   private final ExclusionStrategy strategy;
   private final FieldNamingStrategy fieldNamingPolicy;
-  private final MemoryRefStack<Object> stack;
 
   /**
    * Creates a factory object that will be able to create new
@@ -43,22 +40,19 @@ final class ObjectNavigatorFactory {
     Preconditions.checkNotNull(fieldNamingPolicy);
     this.strategy = (strategy == null ? new NullExclusionStrategy() : strategy);
     this.fieldNamingPolicy = fieldNamingPolicy;
-    this.stack = new MemoryRefStack<Object>();
   }
 
   /**
    * Creates a new {@link ObjectNavigator} for this {@code srcObject},
    * {@code type} pair.
    *
-   * @param srcObject object to navigate
-   * @param type the "actual" type of this {@code srcObject}.  NOTE: this can
-   *        be a {@link java.lang.reflect.ParameterizedType} rather than a {@link Class}.
+   * @param objTypePair The object,type (fully genericized) being navigated
    * @return a new instance of a {@link ObjectNavigator} ready to navigate the
    *         {@code srcObject} while taking into consideration the
    *         {@code type}.
    */
-  public ObjectNavigator create(Object srcObject, Type type) {
-    return new ObjectNavigator(srcObject, type, strategy, stack);
+  public ObjectNavigator create(ObjectTypePair objTypePair) {
+    return new ObjectNavigator(objTypePair, strategy);
   }
 
   FieldNamingStrategy getFieldNamingPolicy() {

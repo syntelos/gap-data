@@ -28,22 +28,31 @@ final class JsonSerializationContextDefault implements JsonSerializationContext 
   private final ObjectNavigatorFactory factory;
   private final ParameterizedTypeHandlerMap<JsonSerializer<?>> serializers;
   private final boolean serializeNulls;
+  private final MemoryRefStack ancestors;
 
   JsonSerializationContextDefault(ObjectNavigatorFactory factory, boolean serializeNulls,
       ParameterizedTypeHandlerMap<JsonSerializer<?>> serializers) {
     this.factory = factory;
     this.serializeNulls = serializeNulls;
     this.serializers = serializers;
+    this.ancestors = new MemoryRefStack();
   }
 
   public JsonElement serialize(Object src) {
-    return serialize(src, src.getClass());
+    if (src == null) {
+      return JsonNull.createJsonNull();
+    }
+    return serialize(src, src.getClass(), true);
   }
 
   public JsonElement serialize(Object src, Type typeOfSrc) {
-    ObjectNavigator on = factory.create(src, typeOfSrc);
+    return serialize(src, typeOfSrc, true);
+  }
+
+  public JsonElement serialize(Object src, Type typeOfSrc, boolean preserveType) {
+    ObjectNavigator on = factory.create(new ObjectTypePair(src, typeOfSrc, preserveType));
     JsonSerializationVisitor visitor =
-        new JsonSerializationVisitor(factory, serializeNulls, serializers, this);
+        new JsonSerializationVisitor(factory, serializeNulls, serializers, this, ancestors);
     on.accept(visitor);
     return visitor.getJsonElement();
   }

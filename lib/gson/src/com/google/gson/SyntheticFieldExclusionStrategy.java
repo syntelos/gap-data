@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 Google Inc.
+ * Copyright (C) 2009 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,29 @@
 
 package com.google.gson;
 
-
 /**
- * This acts as a "Null Object" pattern for the {@link ExclusionStrategy}.
- * Passing an instance of this class into the {@link ObjectNavigator} will
- * make the {@link ObjectNavigator} parse/visit every field of the object
- * being navigated.
+ * A data object that stores attributes of a field.
  *
+ * <p>This class is immutable; therefore, it can be safely shared across threads.
+ *
+ * @author Inderjeet Singh
  * @author Joel Leitch
+ *
+ * @since 1.4
  */
-final class NullExclusionStrategy implements ExclusionStrategy {
+class SyntheticFieldExclusionStrategy implements ExclusionStrategy {
+  private final boolean skipSyntheticFields;
 
-  public boolean shouldSkipField(FieldAttributes f) {
-    return false;
+  SyntheticFieldExclusionStrategy(boolean skipSyntheticFields) {
+    this.skipSyntheticFields = skipSyntheticFields;
   }
 
   public boolean shouldSkipClass(Class<?> clazz) {
     return false;
   }
+
+  public boolean shouldSkipField(FieldAttributes f) {
+    return skipSyntheticFields && f.isSynthetic();
+  }
+
 }

@@ -19,9 +19,9 @@ package com.google.gson;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -39,7 +39,7 @@ public final class JsonArray extends JsonElement implements Iterable<JsonElement
    * Creates an empty JsonArray.
    */
   public JsonArray() {
-    elements = new LinkedList<JsonElement>();
+    elements = new ArrayList<JsonElement>();
   }
 
   /**
@@ -48,6 +48,9 @@ public final class JsonArray extends JsonElement implements Iterable<JsonElement
    * @param element the element that needs to be added to the array.
    */
   public void add(JsonElement element) {
+    if (element == null) {
+      element = JsonNull.createJsonNull();
+    }
     elements.add(element);
   }
 
@@ -235,7 +238,7 @@ public final class JsonArray extends JsonElement implements Iterable<JsonElement
     }
     throw new IllegalStateException();
   }
-  
+
   @Override
   public char getAsCharacter() {
     if (elements.size() == 1) {
@@ -293,7 +296,7 @@ public final class JsonArray extends JsonElement implements Iterable<JsonElement
   }
 
   @Override
-  protected void toString(Appendable sb) throws IOException {
+  protected void toString(Appendable sb, Escaper escaper) throws IOException {
     sb.append('[');
     boolean first = true;
     for (JsonElement element : elements) {
@@ -302,7 +305,7 @@ public final class JsonArray extends JsonElement implements Iterable<JsonElement
       } else {
         sb.append(',');
       }
-      element.toString(sb);
+      element.toString(sb, escaper);
     }
     sb.append(']');
   }

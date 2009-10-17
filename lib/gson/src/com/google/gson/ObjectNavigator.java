@@ -29,6 +29,9 @@ import java.lang.reflect.Type;
 final class ObjectNavigator {
 
   public interface Visitor {
+    public void start(ObjectTypePair node);
+    public void end(ObjectTypePair node);
+
     /**
      * This is called before the object navigator starts visiting the current object
      */
@@ -53,39 +56,34 @@ final class ObjectNavigator {
      * This is called to visit an object using a custom handler
      * @return true if a custom handler exists, false otherwise
      */
-    public boolean visitUsingCustomHandler(Object obj, Type objType);
+    public boolean visitUsingCustomHandler(ObjectTypePair objTypePair);
 
     /**
      * This is called to visit a field of the current object using a custom handler
      */
     public boolean visitFieldUsingCustomHandler(Field f, Type actualTypeOfField, Object parent);
-    
+
     /**
      * Retrieve the current target
      */
     Object getTarget();
+
+    void visitPrimitive(Object primitive);
   }
 
   private final ExclusionStrategy exclusionStrategy;
-  private final MemoryRefStack<Object> ancestors;
-  private final Object obj;
-  private final Type objType;
+  private final ObjectTypePair objTypePair;
 
   /**
-   * @param obj The object being navigated
-   * @param objType The (fully genericized) type of the object being navigated
+   * @param objTypePair The object,type (fully genericized) being navigated
    * @param exclusionStrategy the concrete strategy object to be used to
    *        filter out fields of an object.
    */
-  ObjectNavigator(Object obj, Type objType, ExclusionStrategy exclusionStrategy,
-      MemoryRefStack<Object> ancestors) {
+  ObjectNavigator(ObjectTypePair objTypePair, ExclusionStrategy exclusionStrategy) {
     Preconditions.checkNotNull(exclusionStrategy);
-    Preconditions.checkNotNull(ancestors);
 
-    this.obj = obj;
-    this.objType = objType;
+    this.objTypePair = objTypePair;
     this.exclusionStrategy = exclusionStrategy;
-    this.ancestors = ancestors;
   }
 
   /**
@@ -93,58 +91,69 @@ final class ObjectNavigator {
    * If a field is null, it does not get visited.
    */
   public void accept(Visitor visitor) {
-    boolean visitedWithCustomHandler = visitor.visitUsingCustomHandler(obj, objType);
+    TypeInfo objTypeInfo = new TypeInfo(objTypePair.getType());
+    if (exclusionStrategy.shouldSkipClass(objTypeInfo.getRawClass())) {
+      return;
+    }
+    boolean visitedWithCustomHandler = visitor.visitUsingCustomHandler(objTypePair);
     if (!visitedWithCustomHandler) {
+      Object obj = objTypePair.getObject();
       Object objectToVisit = (obj == null) ? visitor.getTarget() : obj;
       if (objectToVisit == null) {
         return;
       }
-      TypeInfo objTypeInfo = new TypeInfo(objType);
-      if (exclusionStrategy.shouldSkipClass(objTypeInfo.getRawClass())) {
-        return;
-      }
-  
-      if (ancestors.contains(objectToVisit)) {
-        throw new IllegalStateException("Circular reference found: " + objectToVisit);
-      }
-      ancestors.push(objectToVisit);
-  
+      objTypePair.setObject(objectToVisit);
+      visitor.start(objTypePair);
       try {
         if (objTypeInfo.isArray()) {
-          visitor.visitArray(objectToVisit, objType);
+          visitor.visitArray(objectToVisit, objTypePair.getType());
+        } else if (objTypeInfo.getActualType() == Object.class
+            && isPrimitiveOrString(objectToVisit)) {
+          // TODO(Joel): this is only used for deserialization of "primitives"
+          //             we should rethink this!!!
+          visitor.visitPrimitive(objectToVisit);
+          objectToVisit = visitor.getTarget();
         } else {
           visitor.startVisitingObject(objectToVisit);
-          // For all classes in the inheritance hierarchy (including the current class),
-          // visit all fields
-          for (Class<?> curr = objTypeInfo.getRawClass();
-          curr != null && !curr.equals(Object.class); curr = curr.getSuperclass()) {
+          ObjectTypePair currObjTypePair = objTypePair.toMoreSpecificType();
+          Class<?> topLevelClass = new TypeInfo(currObjTypePair.getType()).getRawClass();
+          for (Class<?> curr = topLevelClass; curr != null && !curr.equals(Object.class);
+              curr = curr.getSuperclass()) {
             if (!curr.isSynthetic()) {
               navigateClassFields(objectToVisit, curr, visitor);
             }
           }
         }
       } finally {
-        ancestors.pop();
+        visitor.end(objTypePair);
       }
     }
+  }
+
+  private boolean isPrimitiveOrString(Object objectToVisit) {
+    Class<?> realClazz = objectToVisit.getClass();
+    return realClazz == Object.class || realClazz == String.class
+        || Primitives.unwrap(realClazz).isPrimitive();
   }
 
   private void navigateClassFields(Object obj, Class<?> clazz, Visitor visitor) {
     Field[] fields = clazz.getDeclaredFields();
     AccessibleObject.setAccessible(fields, true);
     for (Field f : fields) {
-      TypeInfo fieldTypeInfo = TypeInfoFactory.getTypeInfoForField(f, objType);
-      Type actualTypeOfField = fieldTypeInfo.getActualType();
-      if (exclusionStrategy.shouldSkipField(f)) {
+      FieldAttributes fieldAttributes = new FieldAttributes(f);
+      if (exclusionStrategy.shouldSkipField(fieldAttributes)
+          || exclusionStrategy.shouldSkipClass(fieldAttributes.getDeclaredClass())) {
         continue; // skip
       } else {
-        boolean visitedWithCustomHandler = 
-          visitor.visitFieldUsingCustomHandler(f, actualTypeOfField, obj);
+        TypeInfo fieldTypeInfo = TypeInfoFactory.getTypeInfoForField(f, objTypePair.getType());
+        Type declaredTypeOfField = fieldTypeInfo.getActualType();
+        boolean visitedWithCustomHandler =
+            visitor.visitFieldUsingCustomHandler(f, declaredTypeOfField, obj);
         if (!visitedWithCustomHandler) {
           if (fieldTypeInfo.isArray()) {
-            visitor.visitArrayField(f, actualTypeOfField, obj);
+            visitor.visitArrayField(f, declaredTypeOfField, obj);
           } else {
-            visitor.visitObjectField(f, actualTypeOfField, obj);
+            visitor.visitObjectField(f, declaredTypeOfField, obj);
           }
         }
       }
