@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 Google Inc.
+ * Copyright (C) 2009 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.gson;
 
+import com.google.gson.annotations.Expose;
 
 /**
- * This acts as a "Null Object" pattern for the {@link ExclusionStrategy}.
- * Passing an instance of this class into the {@link ObjectNavigator} will
- * make the {@link ObjectNavigator} parse/visit every field of the object
- * being navigated.
+ * Excludes fields that do not have the {@link Expose} annotation
  *
+ * @author Inderjeet Singh
  * @author Joel Leitch
  */
-final class NullExclusionStrategy implements ExclusionStrategy {
-
-  public boolean shouldSkipField(FieldAttributes f) {
-    return false;
-  }
+final class ExposeAnnotationDeserializationExclusionStrategy implements ExclusionStrategy {
 
   public boolean shouldSkipClass(Class<?> clazz) {
     return false;
+  }
+
+  public boolean shouldSkipField(FieldAttributes f) {
+    Expose annotation = f.getAnnotation(Expose.class);
+    if (annotation == null) {
+      return true;
+    }
+    return !annotation.deserialize();
   }
 }

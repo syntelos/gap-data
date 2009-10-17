@@ -54,8 +54,7 @@ import java.util.UUID;
  */
 final class DefaultTypeAdapters {
 
-  private static final DefaultDateTypeAdapter DATE_TYPE_ADAPTER =
-      new DefaultDateTypeAdapter(DateFormat.getDateTimeInstance());
+  private static final DefaultDateTypeAdapter DATE_TYPE_ADAPTER = new DefaultDateTypeAdapter();
 
   @SuppressWarnings("unchecked")
   private static final EnumTypeAdapter ENUM_TYPE_ADAPTER = new EnumTypeAdapter();
@@ -234,25 +233,29 @@ final class DefaultTypeAdapters {
   static class DefaultDateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<Date> {
     private final DateFormat format;
 
-    public DefaultDateTypeAdapter(String datePattern) {
+    DefaultDateTypeAdapter() {
+      this.format = DateFormat.getDateTimeInstance();
+    }
+
+    DefaultDateTypeAdapter(final String datePattern) {
       this.format = new SimpleDateFormat(datePattern);
     }
     
-    DefaultDateTypeAdapter(DateFormat format) {
-      this.format = format;
-    }
-
-    public DefaultDateTypeAdapter(int style) {
+    DefaultDateTypeAdapter(final int style) {
       this.format = DateFormat.getDateInstance(style);
     }
 
-    public DefaultDateTypeAdapter(int dateStyle, int timeStyle) {
+    public DefaultDateTypeAdapter(final int dateStyle, final int timeStyle) {
       this.format = DateFormat.getDateTimeInstance(dateStyle, timeStyle);
     }
 
+    // These methods need to be synchronized since JDK DateFormat classes are not thread-safe
+    // See issue 162
     public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
-      String dateFormatAsString = format.format(src);
-      return new JsonPrimitive(dateFormatAsString);
+      synchronized (format) {
+        String dateFormatAsString = format.format(src);
+        return new JsonPrimitive(dateFormatAsString);
+      }
     }
 
     public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -260,9 +263,10 @@ final class DefaultTypeAdapters {
       if (!(json instanceof JsonPrimitive)) {
         throw new JsonParseException("The date should be a string value");
       }
-
       try {
-        return format.parse(json.getAsString());
+        synchronized (format) {
+          return format.parse(json.getAsString());
+        }
       } catch (ParseException e) {
         throw new JsonParseException(e);
       }
@@ -440,10 +444,14 @@ final class DefaultTypeAdapters {
         childGenericType = new TypeInfoCollection(typeOfSrc).getElementType();        
       }
       for (Object child : src) {
-        Type childType = (childGenericType == null || childGenericType == Object.class)
-            ? child.getClass() : childGenericType;
-        JsonElement element = context.serialize(child, childType);
-        array.add(element);
+        if (child == null) {
+          array.add(JsonNull.createJsonNull());
+        } else {
+          Type childType = (childGenericType == null || childGenericType == Object.class)
+              ? child.getClass() : childGenericType;
+          JsonElement element = context.serialize(child, childType);
+          array.add(element);
+        }
       }
       return array;
     }

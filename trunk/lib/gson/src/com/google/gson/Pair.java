@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 Google Inc.
+ * Copyright (C) 2009 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.gson;
 
+final class Pair<FIRST, SECOND> {
 
-/**
- * This acts as a "Null Object" pattern for the {@link ExclusionStrategy}.
- * Passing an instance of this class into the {@link ObjectNavigator} will
- * make the {@link ObjectNavigator} parse/visit every field of the object
- * being navigated.
- *
- * @author Joel Leitch
- */
-final class NullExclusionStrategy implements ExclusionStrategy {
+  private final FIRST first;
+  private final SECOND second;
 
-  public boolean shouldSkipField(FieldAttributes f) {
-    return false;
+  Pair(FIRST first, SECOND second) {
+    this.first = first;
+    this.second = second;
   }
 
-  public boolean shouldSkipClass(Class<?> clazz) {
-    return false;
+  public FIRST getFirst() {
+    return first;
+  }
+
+  public SECOND getSecond() {
+    return second;
   }
 }

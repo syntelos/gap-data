@@ -16,22 +16,25 @@
 
 package com.google.gson;
 
+import com.google.gson.annotations.Expose;
 
 /**
- * This acts as a "Null Object" pattern for the {@link ExclusionStrategy}.
- * Passing an instance of this class into the {@link ObjectNavigator} will
- * make the {@link ObjectNavigator} parse/visit every field of the object
- * being navigated.
+ * Excludes fields that do not have the {@link Expose} annotation
  *
+ * @author Inderjeet Singh
  * @author Joel Leitch
  */
-final class NullExclusionStrategy implements ExclusionStrategy {
-
-  public boolean shouldSkipField(FieldAttributes f) {
-    return false;
-  }
+final class ExposeAnnotationSerializationExclusionStrategy implements ExclusionStrategy {
 
   public boolean shouldSkipClass(Class<?> clazz) {
     return false;
+  }
+
+  public boolean shouldSkipField(FieldAttributes f) {
+    Expose annotation = f.getAnnotation(Expose.class);
+    if (annotation == null) {
+      return true;
+    }
+    return !annotation.serialize();
   }
 }
