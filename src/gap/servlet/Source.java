@@ -23,7 +23,7 @@ import gap.*;
 import gap.service.*;
 
 import hapax.Template;
-import hapax.TemplateDictionary;
+import hapax.TemplateDataDictionary;
 import hapax.TemplateException;
 
 import javax.servlet.ServletException;
@@ -117,12 +117,12 @@ public class Source
 
 
     @Override
-    protected TemplateDictionary doGetDefine(Request req, Response rep){
+    protected TemplateDataDictionary doGetDefine(Request req, Response rep){
         String path = req.getPathFull();
         try {
             String content = Cache.getXml(path);
             if (null != content){
-                TemplateDictionary top = req.getTop();
+                TemplateDataDictionary top = req.getTop();
                 top.setVariable("file_name",path);
                 top.setVariable("file_class","lang-java");
                 top.setVariable("file_text",content);
@@ -141,7 +141,7 @@ public class Source
         throws ServletException, IOException
     {
         if (req.accept("text/html")){
-            TemplateDictionary top = this.doGetDefine(req,rep);
+            TemplateDataDictionary top = this.doGetDefine(req,rep);
             if (null != top){
                 try {
                     Template template = Templates.GetTemplate("src.html");

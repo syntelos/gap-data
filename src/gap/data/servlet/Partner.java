@@ -27,9 +27,6 @@ import gap.data.* ;
 import gap.service.* ;
 import gap.util.* ;
 
-import hapax.TemplateDictionary;
-import hapax.TemplateException;
-
 import com.google.appengine.api.datastore.*;
 
 import javax.servlet.ServletException;
@@ -49,7 +46,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-16T23:09:15.573Z")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-18T10:07:45.641Z")
 public class Partner
     extends gap.servlet.Site
 {
@@ -64,38 +61,4 @@ public class Partner
     protected Parameters createParameters(Request req){
         return new Parameters(req,20,BigTableClass);
     }
-    protected TemplateDictionary doGetDefine(Request req, Response rep){
-
-        TemplateDictionary top = req.getTop();
-
-
-        if (req.hasPath(1) && req.hasPath(2)){
-
-            Key parentKey = gap.data.Resource.KeyLongFor(req.getPath(1));
-
-            gap.data.Partner instance = gap.data.Partner.ForLongId(parentKey,req.getPath(2));
-
-            if (null != instance){
-
-                instance.dictionaryInto(top);
-
-                return top;
-            }
-        }
-        else {
-            req.parameters.dictionaryInto(top);
-
-            com.google.appengine.api.datastore.Query query = gap.data.Partner.CreateQueryFor();
-
-            BigTableIterator<gap.data.Partner> list = (BigTableIterator<gap.data.Partner>)gap.data.Partner.QueryN(query,req.parameters.page);
-
-            for (gap.data.Partner instance : list){
-
-                instance.dictionaryInto(top);
-            }
-            return top;
-        }
-        return null;
-    }
-
 }

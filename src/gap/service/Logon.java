@@ -21,7 +21,7 @@ package gap.service;
 
 import oso.data.Person;
 
-import hapax.TemplateDictionary;
+import hapax.TemplateDataDictionary;
 import hapax.TemplateException;
 
 import com.google.appengine.api.users.User;
@@ -115,13 +115,13 @@ public final class Logon
     public final User serviceUser;
     public final boolean serviceAdmin;
     public final String serviceLogon, requestUrl;
-    public final TemplateDictionary dict;
+    public final TemplateDataDictionary dict;
 
     private Person person;
     private String loginUrl, logoutUrl;
 
 
-    public Logon(Principal principal, String uri, TemplateDictionary dict, UserService service){
+    public Logon(Principal principal, String uri, TemplateDataDictionary dict, UserService service){
         super();
         this.principal = principal;
         this.requestUrl = uri;
@@ -138,10 +138,10 @@ public final class Logon
 
             dict.showSection("without_site_admin");
 
-            TemplateDictionary logon = dict.showSection("logon").get(0);
-            logon.putVariable("logon_url",loginUrl);
-            logon.putVariable("logon_url_text","Sign-in");
-            logon.putVariable("logon_class","logon off");
+            TemplateDataDictionary logon = dict.showSection("logon").get(0);
+            logon.setVariable("logon_url",loginUrl);
+            logon.setVariable("logon_url_text","Sign-in");
+            logon.setVariable("logon_class","logon off");
 
             logon.showSection("without_login");
         }
@@ -149,7 +149,7 @@ public final class Logon
             String logoutUrl = service.createLogoutURL(uri);
             this.logoutUrl = logoutUrl;
 
-            dict.putVariable("logon_url",logoutUrl);
+            dict.setVariable("logon_url",logoutUrl);
 
             User guser = service.getCurrentUser();
             this.serviceUser = guser;
@@ -159,8 +159,8 @@ public final class Logon
             String email = guser.getEmail();
             this.serviceLogon = email;
 
-            dict.putVariable("logon_url_text",email);
-            dict.putVariable("logon_identifier",email);
+            dict.setVariable("logon_url_text",email);
+            dict.setVariable("logon_identifier",email);
 
 
             if (this.serviceAdmin){
@@ -170,9 +170,9 @@ public final class Logon
                 dict.showSection("without_site_admin");
             }
 
-            TemplateDictionary logon = dict.showSection("logon").get(0);
+            TemplateDataDictionary logon = dict.showSection("logon").get(0);
 
-            logon.putVariable("logon_class","logon on");
+            logon.setVariable("logon_class","logon on");
 
             logon.showSection("with_login");
             try {

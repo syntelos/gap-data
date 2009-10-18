@@ -36,22 +36,4 @@ public class Site
     }
 
 
-    @Override
-    protected TemplateDictionary doGetDefine(Request req, Response rep){
-
-        TemplateDictionary top = super.doGetDefine(req,rep);
-
-        Resource resource = req.resource;
-        if (null != resource){
-
-            Map<String,Template> templates = resource.getTemplates(true);
-            templates.dictionaryInto("template",top,ToolingFilter.Templates.Instance);
-
-            Map<String,Tool> tools = resource.getTools(true);
-            ToolingFilter.Tools toolsFilter = new ToolingFilter.Tools(req);
-            tools.dictionaryInto("tool",top,toolsFilter);
-        }
-        return top;
-    }
-
 }

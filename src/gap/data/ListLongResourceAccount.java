@@ -21,9 +21,6 @@ package gap.data;
 
 
 import gap.data.*;
-import gap.service.Templates;
-
-import hapax.TemplateDictionary;
 
 import com.google.appengine.api.datastore.*;
 
@@ -34,7 +31,7 @@ import javax.annotation.Generated;
 /**
  * Generated long list.
  */
-@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-16T23:09:13.261Z")
+@Generated(value={"gap.service.OD","odl/list-long.xtm"},date="2009-10-18T10:07:44.273Z")
 public final class ListLongResourceAccount
     extends gap.util.AbstractList<Account>
     implements gap.data.List.Long<Account>
@@ -89,38 +86,6 @@ public final class ListLongResourceAccount
     }
     public void setValueClassAncestorKey(){
         this.ancestorKey = this.getParent().getClassFieldKeyValue();
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top){
-
-        for (Account value: this){
-
-            value.dictionaryInto(top);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top){
-
-        for (Account value: this){
-
-            value.dictionaryInto(section,top);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
-
-        for (Account value: this){
-
-            value.dictionaryInto(top,filter);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top, DictionaryInto.DataFilter filter){
-
-        for (Account value: this){
-
-            value.dictionaryInto(section,top,filter);
-        }
-        return top;
     }
     public Account fetch(Filter filter){
         Query query = Account.CreateQueryFor(filter);

@@ -22,9 +22,6 @@ package gap.data;
 
 import gap.*;
 import gap.data.*;
-import gap.service.Templates;
-
-import hapax.TemplateDictionary;
 
 import com.google.appengine.api.datastore.*;
 
@@ -35,7 +32,7 @@ import javax.annotation.Generated;
 /**
  * Generated long map.
  */
-@Generated(value={"gap.service.OD","odl/map-long.xtm"},date="2009-10-16T23:09:13.293Z")
+@Generated(value={"gap.service.OD","odl/map-long.xtm"},date="2009-10-18T10:07:44.294Z")
 public final class MapLongResourceStringPartner
     extends gap.util.AbstractMap<String,Partner>
     implements gap.data.Map.Long<String,Partner>
@@ -96,38 +93,6 @@ public final class MapLongResourceStringPartner
     }
     public void setValueClassAncestorKey(){
         this.ancestorKey = this.getParent().getClassFieldKeyValue();
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top){
-
-        for (Partner value: this){
-
-            value.dictionaryInto(top);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top){
-
-        for (Partner value: this){
-
-            value.dictionaryInto(section,top);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
-
-        for (Partner value: this){
-
-            value.dictionaryInto(top,filter);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top, DictionaryInto.DataFilter filter){
-
-        for (Partner value: this){
-
-            value.dictionaryInto(section,top,filter);
-        }
-        return top;
     }
     public Partner fetch(Filter filter){
         Query query = Partner.CreateQueryFor(filter);

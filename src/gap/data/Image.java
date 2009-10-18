@@ -24,8 +24,6 @@ import gap.*;
 import gap.data.*;
 import gap.util.*;
 
-import hapax.TemplateDictionary;
-
 import com.google.appengine.api.datastore.*;
 
 import java.io.Serializable;
@@ -35,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-16T23:09:14.709Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-18T10:07:45.143Z")
 public final class Image
     extends gap.data.BigTable
     implements DataInheritance<Image>,
@@ -771,58 +769,7 @@ public final class Image
     public void define(gap.data.Field field, java.io.Serializable value){
         Field.Set((Field)field,this,value);
     }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top){
-        return this.dictionaryInto(ClassName,top);
-    }
-    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top){
-        TemplateDictionary data;
-        if (null != section)
-            data = top.addSection(section);
-        else
-            data = top;
-        for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this,MayInherit);
-            if (null != value){
-                if (value instanceof DictionaryInto){
-                    DictionaryInto dvalue = (DictionaryInto)value;
-                    TemplateDictionary dsection = data.addSection(field.name());
-                    dvalue.dictionaryInto(dsection);
-                }
-                else
-                    data.putVariable(field.name(),gap.data.validate.Image.ToString(field,value));
-            }
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
-        return this.dictionaryInto(ClassName,top,filter);
-    }
-    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top, DictionaryInto.DataFilter filter){
-        TemplateDictionary data;
-        if (null != section)
-            data = top.addSection(section);
-        else
-            data = top;
-        for (Field field : Field.values()){
-            java.lang.Object value = Field.Get(field,this,MayInherit);
-            if (null != value){
-                if (value instanceof DictionaryInto){
-                    DictionaryInto dvalue = (DictionaryInto)value;
-                    String fieldName = filter.acceptAs(this,KIND,field);
-                    if (null != fieldName){
-                        dvalue.dictionaryInto(fieldName,data,filter);
-                    }
-                }
-                else {
-                    String fieldName = filter.acceptAs(this,KIND,field);
-                    if (null != fieldName){
-                        data.putVariable(fieldName,gap.data.validate.Image.ToString(field,value));
-                    }
-                }
-            }
-        }
-        return top;
-    }
+
     public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;
         return change;

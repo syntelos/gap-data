@@ -19,7 +19,7 @@
  */
 package gap.util;
 
-import hapax.TemplateDictionary;
+import hapax.TemplateDataDictionary;
 
 import com.google.gson.FieldAttributes;
 /**
@@ -46,7 +46,7 @@ public final class Gson
         }
     }
 
-    public final static String ToJson(TemplateDictionary object){
+    public final static String ToJson(TemplateDataDictionary object){
 
         com.google.gson.Gson gson = new com.google.gson.GsonBuilder()
             .setExclusionStrategies(new TemplateDictionaryExclude())

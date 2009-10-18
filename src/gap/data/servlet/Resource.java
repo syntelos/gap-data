@@ -27,9 +27,6 @@ import gap.data.* ;
 import gap.service.* ;
 import gap.util.* ;
 
-import hapax.TemplateDictionary;
-import hapax.TemplateException;
-
 import com.google.appengine.api.datastore.*;
 
 import javax.servlet.ServletException;
@@ -49,7 +46,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-16T23:09:13.196Z")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-18T10:07:44.239Z")
 public class Resource
     extends gap.servlet.Site
 {
@@ -64,36 +61,4 @@ public class Resource
     protected Parameters createParameters(Request req){
         return new Parameters(req,20,BigTableClass);
     }
-    protected TemplateDictionary doGetDefine(Request req, Response rep){
-
-        TemplateDictionary top = req.getTop();
-
-
-        if (req.hasPath(1)){
-
-            gap.data.Resource instance = gap.data.Resource.ForLongId(req.getPath(1));
-
-            if (null != instance){
-
-                instance.dictionaryInto(top);
-
-                return top;
-            }
-        }
-        else {
-            req.parameters.dictionaryInto(top);
-
-            com.google.appengine.api.datastore.Query query = gap.data.Resource.CreateQueryFor();
-
-            BigTableIterator<gap.data.Resource> list = (BigTableIterator<gap.data.Resource>)gap.data.Resource.QueryN(query,req.parameters.page);
-
-            for (gap.data.Resource instance : list){
-
-                instance.dictionaryInto(top);
-            }
-            return top;
-        }
-        return null;
-    }
-
 }

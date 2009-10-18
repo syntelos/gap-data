@@ -24,7 +24,7 @@ import gap.data.*;
 import gap.service.*;
 
 import hapax.Template;
-import hapax.TemplateDictionary;
+import hapax.TemplateDataDictionary;
 import hapax.TemplateException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -106,7 +106,7 @@ public class Request
     public final FileManager fileManager;
     public final Parameters parameters;
     public final String userReference;
-    public final TemplateDictionary top;
+    public final TemplateDataDictionary top;
     public final Logon logon;
     public final ContentType contentType;
     public final boolean isAdmin, isPartner, isMember;
@@ -115,7 +115,7 @@ public class Request
 
 
     public Request(HttpServletRequest req, Method method, Protocol protocol, Path path, 
-                   Accept accept, FileManager fm, Logon logon, String uri, TemplateDictionary top, 
+                   Accept accept, FileManager fm, Logon logon, String uri, TemplateDataDictionary top, 
                    Parameters parameters)
     {
         super(req);
@@ -176,7 +176,7 @@ public class Request
         else
             return null;
     }
-    public final hapax.TemplateDictionary getTop(){
+    public final TemplateDataDictionary getTop(){
         return logon.dict;
     }
     public final String getLogonId(){
@@ -211,7 +211,7 @@ public class Request
     public final boolean accept(String name){
         return this.accept.accept(name);
     }
-    public final hapax.Template getTemplate()
+    public final Template getTemplate()
         throws TemplateException
     {
         return Templates.GetTemplate(this.resource);

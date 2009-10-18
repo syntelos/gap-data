@@ -22,9 +22,6 @@ package gap.data;
 
 import gap.*;
 import gap.data.*;
-import gap.service.Templates;
-
-import hapax.TemplateDictionary;
 
 import com.google.appengine.api.datastore.*;
 
@@ -35,7 +32,7 @@ import javax.annotation.Generated;
 /**
  * Generated short map.
  */
-@Generated(value={"gap.service.OD","odl/map-short.xtm"},date="2009-10-16T23:09:13.424Z")
+@Generated(value={"gap.service.OD","odl/map-short.xtm"},date="2009-10-18T10:07:44.406Z")
 public final class MapShortResourceStringTemplate
     extends gap.util.AbstractMap<String,Template>
     implements gap.data.Map.Short<String,Template>
@@ -100,38 +97,6 @@ public final class MapShortResourceStringTemplate
             this.ancestorKey = key;
             this.query = Template.CreateQueryFor(this.ancestorKey);
         }
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top){
-
-        for (Template value: this){
-
-            value.dictionaryInto(top);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top){
-
-        for (Template value: this){
-
-            value.dictionaryInto(section,top);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
-
-        for (Template value: this){
-
-            value.dictionaryInto(top,filter);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top, DictionaryInto.DataFilter filter){
-
-        for (Template value: this){
-
-            value.dictionaryInto(section,top,filter);
-        }
-        return top;
     }
     public Template fetch(Filter filter){
         Key ancestor = this.ancestorKey;
