@@ -25,7 +25,7 @@ import gap.util.*;
 
 import hapax.Template;
 import hapax.TemplateException;
-import hapax.TemplateDictionary;
+import hapax.TemplateDataDictionary;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -149,7 +149,7 @@ public class Servlet
         }
         Request request = null;
         try {
-            TemplateDictionary top = Templates.CreateDictionary();
+            TemplateDataDictionary top = Templates.CreateDictionary();
             Logon logon = Logon.Enter(new Logon(req.getUserPrincipal(),uri,top,UserServiceFactory.getUserService()));
 
             request = this.createRequest(req,method,protocol,path,accept,fm,logon,uri,top);
@@ -295,7 +295,7 @@ public class Servlet
         }
     }
 
-    protected TemplateDictionary doGetDefine(Request req, Response rep){
+    protected TemplateDataDictionary doGetDefine(Request req, Response rep){
         return req.getTop();
     }
     protected void doGet(Request req, Response rep)
@@ -310,7 +310,7 @@ public class Servlet
                 this.error(req,rep,404,"Not found.");
         }
         else {
-            TemplateDictionary top = this.doGetDefine(req,rep);
+            TemplateDataDictionary top = this.doGetDefine(req,rep);
             if (null != top){
                 try {
                     Template template = req.getTemplate();
@@ -426,13 +426,13 @@ public class Servlet
     {
         if (req instanceof Request && rep instanceof Response){
             Request request = (Request)req;
-            TemplateDictionary top = ((Request)req).getTop();
+            TemplateDataDictionary top = ((Request)req).getTop();
 
             rep.resetBuffer();
 
             String from = "error";
 
-            TemplateDictionary error = top.addSection(from);
+            TemplateDataDictionary error = top.addSection(from);
 
             String errors_exception = Error.Attribute.ToString.Exception(req,any);
             String errors_status, errors_message;
@@ -448,12 +448,12 @@ public class Servlet
                 errors_status = Error.Attribute.ToString.Status(req,any);
                 errors_message = Error.Attribute.ToString.Message(req,any);
             }
-            error.putVariable("error_message",errors_message);
-            error.putVariable("error_exception",errors_exception);
-            error.putVariable("error_status",errors_status);
+            error.setVariable("error_message",errors_message);
+            error.setVariable("error_exception",errors_exception);
+            error.setVariable("error_status",errors_status);
 
-            error.putVariable("error_type",errors_type);
-            error.putVariable("error_uri",errors_uri);
+            error.setVariable("error_type",errors_type);
+            error.setVariable("error_uri",errors_uri);
 
             String templateName = null;
 
@@ -461,8 +461,8 @@ public class Servlet
                 templateName = "errors.html";
 
             else if (request.accept("application/json")){
-                error.putVariable("error_exception_json",QuoteJson(errors_exception));
-                error.putVariable("error_message_json",QuoteJson(errors_message));
+                error.setVariable("error_exception_json",QuoteJson(errors_exception));
+                error.setVariable("error_message_json",QuoteJson(errors_message));
                 templateName = "errors.json";
             }
             else if (request.accept("text/xml"))
@@ -492,7 +492,7 @@ public class Servlet
     {
         this.error(req,rep,HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+Method.Get()+"' not implemented");
     }
-    protected final void render(Request req, Response rep, Template template, TemplateDictionary top)
+    protected final void render(Request req, Response rep, Template template, TemplateDataDictionary top)
         throws IOException, ServletException, TemplateException
     {
         template.render(top,rep.getWriter());
@@ -549,7 +549,7 @@ public class Servlet
      * value -- otherwise -- must not return a null value.
      */
     protected Request createRequest(HttpServletRequest req, Method method, Protocol protocol, Path path, Accept accept,
-                                    FileManager fm, Logon logon, String uri, TemplateDictionary top)
+                                    FileManager fm, Logon logon, String uri, TemplateDataDictionary top)
     {
         Parameters parameters = this.createParameters(req);
         return new Request(req,method,protocol,path,accept,fm,logon,uri,top,parameters);

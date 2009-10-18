@@ -47,8 +47,8 @@ public final class Templates
      */
     private static hapax.TemplateDictionary TemplateDictionaryDefault = hapax.TemplateDictionary.create();
     static {
-        TemplateDictionaryDefault.putVariable("gap_version_short",gap.Version.Short);
-        TemplateDictionaryDefault.putVariable("gap_version_long",gap.Version.Long);
+        TemplateDictionaryDefault.setVariable("gap_version_short",gap.Version.Short);
+        TemplateDictionaryDefault.setVariable("gap_version_long",gap.Version.Long);
     }
     /**
      * Templates file cache location
@@ -61,7 +61,7 @@ public final class Templates
     private final static Templates Instance = new Templates();
 
 
-    public static hapax.TemplateDictionary CreateDictionary(){
+    public static hapax.TemplateDataDictionary CreateDictionary(){
         return TemplateDictionaryDefault.clone();
     }
     public final static hapax.Template GetTemplate(Resource resource)

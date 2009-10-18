@@ -1,3 +1,28 @@
+/*
+ * Hapax2
+ * Copyright (c) 2007 Doug Coker
+ * Copyright (c) 2009 John Pritchard
+ * 
+ * The MIT License
+ *  
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package hapax;
 
 import hapax.parser.CTemplateParser;
@@ -27,7 +52,7 @@ public final class Template
     /**
      * Parse and render a C template.
      */
-    public final static String Eval(TemplateLoader context, TemplateDictionary dict, String source)
+    public final static String Eval(TemplateLoader context, TemplateDataDictionary dict, String source)
         throws TemplateException
     {
         Template template = new Template(CTemplateParser.Instance,source,context);
@@ -75,17 +100,17 @@ public final class Template
         return this.lastModified;
     }
 
-    public void render(TemplateDictionary dict, PrintWriter writer)
+    public void render(TemplateDataDictionary dict, PrintWriter writer)
         throws TemplateException
     {
         try {
             this.render(Top, this.template, dict, writer);
         }
         finally {
-            dict.destroy();
+            dict.renderComplete();
         }
     }
-    public String renderToString(TemplateDictionary dict)
+    public String renderToString(TemplateDataDictionary dict)
         throws TemplateException
     {
         try {
@@ -96,11 +121,11 @@ public final class Template
             return buffer.toString();
         }
         finally {
-            dict.destroy();
+            dict.renderComplete();
         }
     }
 
-    private void render(int offset, List<TemplateNode> template, TemplateDictionary dict, PrintWriter writer)
+    private void render(int offset, List<TemplateNode> template, TemplateDataDictionary dict, PrintWriter writer)
         throws TemplateException
     {
         for (int position = 0, count = template.size(); position < count; position++) {
@@ -120,7 +145,7 @@ public final class Template
             }
         }
     }
-    private int renderSectionNode(int offset, List<TemplateNode> template, TemplateDictionary dict, int open,
+    private int renderSectionNode(int offset, List<TemplateNode> template, TemplateDataDictionary dict, int open,
                                   SectionNode section, PrintWriter writer)
         throws TemplateException
     {
@@ -131,7 +156,7 @@ public final class Template
 
             String sectionName = section.getSectionName();
 
-            List<TemplateDictionary> data = dict.getSection(sectionName);
+            List<TemplateDataDictionary> data = dict.getSection(sectionName);
 
             if (null != data){
 
@@ -149,7 +174,7 @@ public final class Template
                      */
                     for (int cc = 0, count = data.size(); cc < count; cc++){
 
-                        TemplateDictionary child = data.get(cc);
+                        TemplateDataDictionary child = data.get(cc);
 
                         Iterator.Define(child,sectionName,cc,count);
 

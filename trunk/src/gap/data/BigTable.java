@@ -21,8 +21,6 @@ package gap.data;
 
 import gap.service.Parameters;
 
-import hapax.TemplateDictionary;
-
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DataTypeUtils;
 import com.google.appengine.api.datastore.Entity;
@@ -62,7 +60,6 @@ import java.io.File;
 public abstract class BigTable
     extends java.lang.Object
     implements java.io.Serializable,
-               DictionaryInto,
                RequestCreateUpdate,
                DataInheritance.Notation
 {

@@ -21,8 +21,6 @@ package gap.util;
 
 import gap.data.*;
 
-import hapax.TemplateDictionary;
-
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
@@ -248,26 +246,6 @@ public abstract class AbstractListPrimitive<V>
             else
                 return Compares.NoIntersection;
         }
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top){
-        return this.dictionaryInto(this.getType().name(),top);
-    }
-    public TemplateDictionary dictionaryInto(String typeName, TemplateDictionary top){
-        gap.Primitive type = this.getType();
-        for (V value: this){
-            top.putVariable(typeName,gap.Strings.ToString(type,value));
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
-        return this.dictionaryInto(this.getType().name(),top,filter);
-    }
-    public TemplateDictionary dictionaryInto(String typeName, TemplateDictionary top, DictionaryInto.DataFilter filter){
-        gap.Primitive type = this.getType();
-        for (V value: this){
-            top.putVariable(typeName,gap.Strings.ToString(type,value));
-        }
-        return top;
     }
     protected final int indexOf(V instance){
         Object[] list = this.list;

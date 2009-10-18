@@ -22,9 +22,6 @@ package {{=parent_package_name}};
 import {{=import_spec}};{{/import}}
 
 import gap.data.*;
-import gap.service.Templates;
-
-import hapax.TemplateDictionary;
 
 import com.google.appengine.api.datastore.*;
 
@@ -90,38 +87,6 @@ public final class ListLong{{=parent_class_name}}{{=child_class_name}}
     }
     public void setValueClassAncestorKey(){
         this.ancestorKey = this.getParent().getClassFieldKeyValue();
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top){
-
-        for ({{=child_class_name}} value: this){
-
-            value.dictionaryInto(top);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top){
-
-        for ({{=child_class_name}} value: this){
-
-            value.dictionaryInto(section,top);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(TemplateDictionary top, DictionaryInto.DataFilter filter){
-
-        for ({{=child_class_name}} value: this){
-
-            value.dictionaryInto(top,filter);
-        }
-        return top;
-    }
-    public TemplateDictionary dictionaryInto(String section, TemplateDictionary top, DictionaryInto.DataFilter filter){
-
-        for ({{=child_class_name}} value: this){
-
-            value.dictionaryInto(section,top,filter);
-        }
-        return top;
     }
     public {{=child_class_name}} fetch(Filter filter){
         Query query = {{=child_class_name}}.CreateQueryFor(filter);

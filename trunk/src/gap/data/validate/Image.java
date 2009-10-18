@@ -30,8 +30,6 @@ import gap.service.Path;
 import gap.service.Parameters;
 import gap.service.Templates;
 
-import hapax.TemplateDictionary;
-
 import com.google.appengine.api.datastore.*;
 
 import javax.servlet.ServletException;
@@ -45,7 +43,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean string I/O functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-16T23:09:14.776Z")
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-18T10:07:45.170Z")
 public abstract class Image
     extends gap.Strings
 {

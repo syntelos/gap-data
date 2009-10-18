@@ -23,7 +23,7 @@ import gap.*;
 import gap.service.*;
 import gap.util.*;
 
-import hapax.TemplateDictionary;
+import hapax.TemplateDataDictionary;
 
 import javax.servlet.ServletException;
 
@@ -40,7 +40,7 @@ public class Inspect
     protected void doGet(Request req, Response rep)
         throws ServletException, IOException
     {
-        TemplateDictionary top = this.doGetDefine(req,rep);
+        TemplateDataDictionary top = this.doGetDefine(req,rep);
         if (null != top){
             String json = Gson.ToJson(top);
             rep.println(json);

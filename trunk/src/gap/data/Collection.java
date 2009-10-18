@@ -34,7 +34,6 @@ public interface Collection<V>
             java.lang.Comparable<Collection<V>>,
             java.io.Serializable,
             java.lang.Cloneable,
-            DictionaryInto,
             DataInheritance.Notation
 {
     /**

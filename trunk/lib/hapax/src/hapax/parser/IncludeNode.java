@@ -1,10 +1,35 @@
+/*
+ * Hapax2
+ * Copyright (c) 2007 Doug Coker
+ * Copyright (c) 2009 John Pritchard
+ * 
+ * The MIT License
+ *  
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package hapax.parser;
 
 import hapax.Iterator;
 import hapax.Modifiers;
 import hapax.Path;
 import hapax.Template;
-import hapax.TemplateDictionary;
+import hapax.TemplateDataDictionary;
 import hapax.TemplateException;
 import hapax.TemplateLoader;
 
@@ -41,12 +66,12 @@ public final class IncludeNode
         return this.name;
     }
     @Override
-    public final void evaluate(TemplateDictionary dict, TemplateLoader context, PrintWriter out)
+    public final void evaluate(TemplateDataDictionary dict, TemplateLoader context, PrintWriter out)
         throws TemplateException
     {
         String sectionName = this.name;
 
-        List<TemplateDictionary> section = dict.getSection(sectionName);
+        List<TemplateDataDictionary> section = dict.getSection(sectionName);
 
         if (null != section){
 
@@ -79,7 +104,7 @@ public final class IncludeNode
                      */
                     for (int cc = 0, count = section.size(); cc < count; cc++){
 
-                        TemplateDictionary child = section.get(cc);
+                        TemplateDataDictionary child = section.get(cc);
 
                         Iterator.Define(child,sectionName,cc,count);
 
@@ -98,7 +123,7 @@ public final class IncludeNode
         }
     }
 
-    private String resolveName(TemplateDictionary dict)
+    private String resolveName(TemplateDataDictionary dict)
         throws TemplateException
     {
         String name = this.name;

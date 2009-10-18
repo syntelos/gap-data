@@ -31,8 +31,6 @@ import gap.service.Path;
 import gap.service.Parameters;
 import gap.service.Templates;
 
-import hapax.TemplateDictionary;
-
 import com.google.appengine.api.datastore.*;
 
 import javax.servlet.ServletException;
