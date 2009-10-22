@@ -364,7 +364,7 @@ public final class Main
     public final static void main(String[] argv){
         if (0 == argv.length){
 
-            File odl = new File("odl");//(PathFromFile dependency in gap.service.Templates from these Files)
+            File odl = new File("odl");
             File src = new File("src");
             if (odl.isDirectory() && src.isDirectory()){
 
@@ -386,6 +386,8 @@ public final class Main
                     return;
                 }
 
+                gap.util.Main appenv = gap.util.Main.Install();
+                int rc = 0;
                 try {
                     System.out.println("Source: "+odl.getPath());
                     System.out.println("Target: "+src.getPath());
@@ -395,13 +397,14 @@ public final class Main
                     }
                     System.out.println("Product: "+servlets.getPath());
                     System.out.println("Product: "+beans.getPath());
-                    System.exit(0);
-                    return;
                 }
                 catch (Exception exc){
                     exc.printStackTrace();
-                    System.exit(1);
-                    return;
+                    rc = 1;
+                }
+                finally {
+                    appenv.destroy();
+                    System.exit(rc);
                 }
             }
             else {

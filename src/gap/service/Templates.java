@@ -47,11 +47,7 @@ public final class Templates
                TemplateLoader
 {
 
-    private final static File[] TemplatesLocation = {
-        new File("WEB-INF/templates"),
-        new File("odl")
-    };
-    private final static int TemplatesLocationCount = TemplatesLocation.length;
+    private final static File TemplatesLocation = new File("WEB-INF/templates");
 
     private final static String TemplatesFilenameSuffix = ".xtm";
     private final static int TemplatesFilenameSuffixLen = TemplatesFilenameSuffix.length();
@@ -73,18 +69,17 @@ public final class Templates
     {
         return Instance.getTemplate(new TemplateName(name));
     }
-    public static File TemplateFile(String name)
+    private static File TemplateFile(String name)
         throws TemplateException
     {
         if (!name.endsWith(TemplatesFilenameSuffix))
             name += TemplatesFilenameSuffix;
 
-        for (int cc = 0; cc < TemplatesLocationCount; cc++){
-            File file = new File(TemplatesLocation[cc],name);
-            if (file.isFile())
-                return file;
-        }
-        return null;
+        File file = new File(TemplatesLocation,name);
+        if (file.isFile())
+            return file;
+        else
+            return null;
     }
     public static void CreateTools(Resource resource){
         Key resourceKey = resource.getKey();
@@ -147,16 +142,11 @@ public final class Templates
                 }
             }
         }
-        return this.getTemplate(TemplateFile(name.getSource()));
-    }
-    private TemplateRenderer getTemplate(File templateFile)
-        throws TemplateException
-    {
+        File templateFile = TemplateFile(name.getSource());
         if (null != templateFile){
-            Path path = PathFromFile(templateFile);
-            Resource resource = Resource.GetCreateLong(path.getBase(),path.getName());
+            Resource resource = Resource.GetCreateLong(name.getBase(),name.getName());
             CreateTools(resource);
-            Template template = new Template(resource.getKey(),path.getName());
+            Template template = new Template(resource.getKey(),name.getName());
             try {
                 template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFile)));
                 template.setLastModified(templateFile.lastModified());
@@ -188,20 +178,4 @@ public final class Templates
         else
             return null;
     }
-    public static Path PathFromFile(File file){
-        String path = file.getPath();
-        if (!path.endsWith(TemplatesFilenameSuffix))
-            throw new IllegalArgumentException(path);
-        else {
-            path = path.substring(0,path.length()-TemplatesFilenameSuffixLen);
-
-            for (int cc = 0; cc < TemplatesLocationCount; cc++){
-                String prefix = TemplatesLocation[cc].getPath();
-                if (path.startsWith(prefix))
-                    return new Path(path.substring(prefix.length()));
-            }
-            throw new IllegalArgumentException(file.getPath());
-        }
-    }
-
 }
