@@ -102,7 +102,7 @@ public final class TemplateRenderer
                                      PrintWriter writer)
         throws TemplateException
     {
-        for (int position = start, count = (end+1); position < count; position++) {
+        for (int position = start; position < end; position++) {
 
             TemplateNode node = template.get(position);
 
