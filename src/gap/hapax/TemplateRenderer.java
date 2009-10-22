@@ -114,7 +114,7 @@ public final class TemplateRenderer
                 break;
 
             case SectionClose:
-                throw new IllegalStateException("Bug at section close for name '"+node.getNodeContent()+"' at line "+node.getLineNumber());
+                throw new IllegalStateException("Bug at section close for name '"+gap.Strings.TextToString(node.getNodeContent())+"' at line "+node.getLineNumber());
 
             case Variable:
                 position = RenderVariable(context, template, dict, position, node, writer);
