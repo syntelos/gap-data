@@ -52,9 +52,7 @@ public final class XMessaging
          */
     }
     static void Exit(){
-        XMPPService xms = XMS.get();
-        if (null != xms)
-            XMS.set(null);
+        XMS.remove();
     }
     public static XMPPService Get(){
         return XMS.get();

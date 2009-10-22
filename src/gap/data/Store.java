@@ -69,9 +69,7 @@ public final class Store
              */
         }
         protected static void Exit(){
-            DatastoreService ds = PTL.get();
-            if (null != ds)
-                PTL.set(null);
+            PTL.remove();
         }
         protected static DatastoreService Get(){
             return PTL.get();
@@ -297,9 +295,7 @@ public final class Store
              */
         }
         protected static void Exit(){
-            MemcacheService ds = PTL.get();
-            if (null != ds)
-                PTL.set(null);
+            PTL.remove();
         }
         protected static MemcacheService Get(){
             return PTL.get();

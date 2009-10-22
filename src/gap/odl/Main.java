@@ -398,8 +398,8 @@ public final class Main
                     System.out.println("Product: "+servlets.getPath());
                     System.out.println("Product: "+beans.getPath());
                 }
-                catch (Exception exc){
-                    exc.printStackTrace();
+                catch (Throwable thrown){
+                    thrown.printStackTrace();
                     rc = 1;
                 }
                 finally {

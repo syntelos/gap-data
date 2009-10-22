@@ -49,7 +49,7 @@ public class Response
         return RTL.get();
     }
     public final static void Exit(){
-        RTL.set(null);
+        RTL.remove();
     }
 
 
