@@ -57,17 +57,17 @@ public final class TemplateNode
 
 
 
-    public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer lineNumber, String nodeContent){
+    public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent){
         String id = IdFor(ancestor, nodeType,  lineNumber,  nodeContent);
         return KeyShortFor(ancestor,id);
     }
 
 
-    public final static String IdFor(Key ancestor, String nodeType, Integer lineNumber, String nodeContent){
+    public final static String IdFor(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent){
         if (ancestor.isComplete() && null != nodeType && null != lineNumber && null != nodeContent){
             String nodeTypeString = nodeType;
             String lineNumberString = gap.Strings.IntegerToString(lineNumber);
-            String nodeContentString = nodeContent;
+            String nodeContentString = gap.Strings.TextToString(nodeContent);
             return gap.data.Hash.For(ToString(ancestor)+'/'+nodeTypeString+'/'+lineNumberString+'/'+nodeContentString);
         }
         else
@@ -75,7 +75,7 @@ public final class TemplateNode
     }
 
 
-    public final static TemplateNode ForShortNodeTypeLineNumberNodeContent(Key ancestor, String nodeType, Integer lineNumber, String nodeContent){
+    public final static TemplateNode ForShortNodeTypeLineNumberNodeContent(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent){
         if (null != nodeType && null != lineNumber && null != nodeContent){
             Key key = KeyShortIdFor(ancestor, nodeType, lineNumber, nodeContent);
             TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
@@ -91,7 +91,7 @@ public final class TemplateNode
     }
 
 
-    public final static TemplateNode GetCreateShort(Key ancestor, String nodeType, Integer lineNumber, String nodeContent){
+    public final static TemplateNode GetCreateShort(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent){
         TemplateNode templateNode = ForShortNodeTypeLineNumberNodeContent(ancestor, nodeType, lineNumber, nodeContent);
         if (null == templateNode){
             templateNode = new TemplateNode(ancestor, nodeType, lineNumber, nodeContent);
@@ -326,7 +326,7 @@ public final class TemplateNode
             case LineNumber:
                 return instance.setLineNumber( (Integer)value);
             case NodeContent:
-                return instance.setNodeContent( (String)value);
+                return instance.setNodeContent( (Text)value);
             case Offset:
                 return instance.setOffset( (Integer)value);
             case OffsetCloseRelative:
@@ -360,7 +360,7 @@ public final class TemplateNode
     private volatile String id;    // *unique
     private volatile String nodeType;    // *hash-unique
     private volatile Integer lineNumber;    // *hash-unique
-    private volatile String nodeContent;    // *hash-unique
+    private volatile Text nodeContent;    // *hash-unique
     private volatile Integer offset;    
     private volatile Integer offsetCloseRelative;    
 
@@ -376,7 +376,7 @@ public final class TemplateNode
     public TemplateNode() {
         super();
     }
-    public TemplateNode(Key ancestor, String nodeType, Integer lineNumber, String nodeContent) {
+    public TemplateNode(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent) {
         super();
         this.setNodeType(nodeType);
         this.setLineNumber(lineNumber);
@@ -622,13 +622,13 @@ public final class TemplateNode
         else
             return false;
     }
-    public String getNodeContent(){
+    public Text getNodeContent(){
         return this.nodeContent;
     }
-    public String getNodeContent(boolean ignore){
+    public Text getNodeContent(boolean ignore){
         return this.nodeContent;
     }
-    public boolean setNodeContent(String nodeContent){
+    public boolean setNodeContent(Text nodeContent){
         if (IsNotEqual(this.nodeContent,nodeContent)){
             this.nodeContent = nodeContent;
             return true;

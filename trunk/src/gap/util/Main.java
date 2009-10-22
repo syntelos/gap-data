@@ -58,12 +58,16 @@ public class Main
         super();
         if (null != dir && dir.isDirectory()){
             this.dir = dir;
+            gap.service.Templates.SInit(dir);
+
             ApiProxy.setEnvironmentForCurrentThread(this);
             ApiProxyLocalImpl proxy = new ApiProxyLocalImpl(dir){};
 
             ApiProxy.setDelegate(proxy);
 
             proxy.setProperty(LocalDatastoreService.NO_STORAGE_PROPERTY, Boolean.TRUE.toString());
+
+            gap.service.Service.Routines.Enter();
         }
         else if (null == dir)
             throw new IllegalArgumentException();
@@ -76,6 +80,8 @@ public class Main
         ApiProxyLocalImpl proxy = (ApiProxyLocalImpl) ApiProxy.getDelegate();
         LocalDatastoreService datastoreService = (LocalDatastoreService) proxy.getService("datastore_v3");
         datastoreService.clearProfiles();
+
+        gap.service.Service.Routines.Exit();
     }
     public File getAppDirectory(){
         return this.dir;

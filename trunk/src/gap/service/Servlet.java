@@ -50,7 +50,8 @@ import java.util.logging.LogRecord;
  */
 public class Servlet
     extends javax.servlet.http.HttpServlet
-    implements gap.data.DataInheritance.Notation
+    implements Service,
+               gap.data.DataInheritance.Notation
 {
     public final static gap.util.Services Services = (new gap.util.Services(Servlet.class)).init();
     static {
@@ -123,7 +124,7 @@ public class Servlet
     protected final void service(HttpServletRequest req, HttpServletResponse rep)
         throws IOException, ServletException
     {
-        this.serviceEnter();
+        Service.Routines.Enter();
         Method method  = Method.Enter(req);
         Protocol protocol = Protocol.Enter(req);
         Path path = new Path(req);
@@ -153,7 +154,7 @@ public class Servlet
                 this.error(req,rep,500,"Internal error.",any);
         }
         finally {
-            this.serviceExit();
+            Service.Routines.Exit();
         }
     }
     /**
@@ -495,21 +496,6 @@ public class Servlet
         }
         else
             rep.sendRedirect(path);
-    }
-    protected void serviceEnter(){
-        Store.Enter();
-        Remote.Enter();
-        XMessaging.Enter();
-    }
-    protected void serviceExit(){
-        Store.Exit();
-        Remote.Exit();
-        Logon.Exit();
-        XMessaging.Exit();
-        Method.Exit();
-        FileManager.Exit();
-        Request.Exit();
-        Response.Exit();
     }
     protected Parameters createParameters(HttpServletRequest req){
         return new Parameters(req,Page.DefaultCount,null);
