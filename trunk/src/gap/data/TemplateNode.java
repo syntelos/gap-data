@@ -33,56 +33,57 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-19T18:15:37.002Z")
-public final class Account
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-19T18:15:37.189Z")
+public final class TemplateNode
     extends gap.data.BigTable
-    implements DataInheritance<Account>
+    implements DataInheritance<TemplateNode>
 {
 
     private final static long serialVersionUID = 1;
 
-    public final static Kind KIND = Kind.Create("Account","gap.data","Account");
+    public final static Kind KIND = Kind.Create("TemplateNode","gap.data","TemplateNode");
 
-    public final static String ClassName = "Account";
+    public final static String ClassName = "TemplateNode";
 
-    public final static String DefaultSortBy = "name";
+    public final static String DefaultSortBy = "nodeContent";
 
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
-        return ClassDescriptorFor(Account.class);
+        return ClassDescriptorFor(TemplateNode.class);
     }
     public final static gap.service.od.ClassDescriptor ClassDescriptorForParent(){
-        return ClassDescriptorFor(Resource.class);
+        return ClassDescriptorFor(Template.class);
     }
 
 
 
 
-    public final static Key KeyLongIdFor(Key ancestor, String base, String name){
-        String id = IdFor(ancestor, base,  name);
-        return KeyLongFor(ancestor,id);
+    public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer lineNumber, String nodeContent){
+        String id = IdFor(ancestor, nodeType,  lineNumber,  nodeContent);
+        return KeyShortFor(ancestor,id);
     }
 
 
-    public final static String IdFor(Key ancestor, String base, String name){
-        if (ancestor.isComplete() && null != base && null != name){
-            String baseString = base;
-            String nameString = name;
-            return gap.data.Hash.For(ToString(ancestor)+'/'+baseString+'/'+nameString);
+    public final static String IdFor(Key ancestor, String nodeType, Integer lineNumber, String nodeContent){
+        if (ancestor.isComplete() && null != nodeType && null != lineNumber && null != nodeContent){
+            String nodeTypeString = nodeType;
+            String lineNumberString = gap.Strings.IntegerToString(lineNumber);
+            String nodeContentString = nodeContent;
+            return gap.data.Hash.For(ToString(ancestor)+'/'+nodeTypeString+'/'+lineNumberString+'/'+nodeContentString);
         }
         else
             throw new IllegalArgumentException();
     }
 
 
-    public final static Account ForLongBaseName(Key ancestor, String base, String name){
-        if (null != base && null != name){
-            Key key = KeyLongIdFor(ancestor, base, name);
-            Account instance = (Account)gap.data.Store.Get(key);
+    public final static TemplateNode ForShortNodeTypeLineNumberNodeContent(Key ancestor, String nodeType, Integer lineNumber, String nodeContent){
+        if (null != nodeType && null != lineNumber && null != nodeContent){
+            Key key = KeyShortIdFor(ancestor, nodeType, lineNumber, nodeContent);
+            TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Account)gap.data.Store.Query1(q);
+                return (TemplateNode)gap.data.Store.Query1(q);
             }
         }
         else
@@ -90,31 +91,31 @@ public final class Account
     }
 
 
-    public final static Account GetCreateLong(Key ancestor, String base, String name){
-        Account account = ForLongBaseName(ancestor, base, name);
-        if (null == account){
-            account = new Account(ancestor, base, name);
-            account = (Account)gap.data.Store.Put(account);
+    public final static TemplateNode GetCreateShort(Key ancestor, String nodeType, Integer lineNumber, String nodeContent){
+        TemplateNode templateNode = ForShortNodeTypeLineNumberNodeContent(ancestor, nodeType, lineNumber, nodeContent);
+        if (null == templateNode){
+            templateNode = new TemplateNode(ancestor, nodeType, lineNumber, nodeContent);
+            templateNode = (TemplateNode)gap.data.Store.Put(templateNode);
         }
-        return account;
+        return templateNode;
     }
 
 
 
-    public final static Key KeyLongFor(Key ancestor, String id){
-        return KeyFactory.createKey(KIND.getName(),id);
+    public final static Key KeyShortFor(Key ancestor, String id){
+        return KeyFactory.createKey(ancestor,KIND.getName(),id);
     }
 
 
-    public final static Account ForLongId(Key ancestor, String id){
+    public final static TemplateNode ForShortId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyLongFor(ancestor,id);
-            Account instance = (Account)gap.data.Store.Get(key);
+            Key key = KeyShortFor(ancestor,id);
+            TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Account)gap.data.Store.Query1(q);
+                return (TemplateNode)gap.data.Store.Query1(q);
             }
         }
         else
@@ -122,14 +123,14 @@ public final class Account
     }
 
 
-    public final static Account Get(Key key){
+    public final static TemplateNode Get(Key key){
         if (null != key){
-            Account instance = (Account)gap.data.Store.Get(key);
+            TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Account)gap.data.Store.Query1(q);
+                return (TemplateNode)gap.data.Store.Query1(q);
             }
         }
         else
@@ -148,7 +149,7 @@ public final class Account
     /**
      * Test for uniqueness and iterate under collisions.
      */
-    public final static Key NewRandomKeyLong(Key ancestor){
+    public final static Key NewRandomKeyShort(Key ancestor){
         if (null != ancestor){
             /*
              * Source matter for data local uniqueness
@@ -162,7 +163,7 @@ public final class Account
             do {
                 matter ^= random.nextLong();
                 String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(KIND.getName(),idString);
+                Key key = KeyFactory.createKey(ancestor,KIND.getName(),idString);
                 if (null == GetKey(key))
                     return key;
             }
@@ -176,7 +177,7 @@ public final class Account
      * Drop the instance and any children of its key from the world,
      * memcache and store.
      */
-    public final static void Delete(Account instance){
+    public final static void Delete(TemplateNode instance){
         if (null != instance){
             Key key = instance.getKey();
             gap.data.Store.DeleteCollection(KIND,new Query(key));
@@ -186,7 +187,7 @@ public final class Account
     /**
      * Drop the instance from memcache, exclusively.
      */
-    public final static void Clean(Account instance){
+    public final static void Clean(TemplateNode instance){
         if (null != instance){
             Key key = instance.getKey();
             gap.data.Store.Clean(key);
@@ -195,7 +196,7 @@ public final class Account
     /**
      * Store the instance.
      */
-    public final static void Save(Account instance){
+    public final static void Save(TemplateNode instance){
         if (null != instance){
             gap.data.Store.Put(instance);
         }
@@ -203,7 +204,7 @@ public final class Account
     /**
      * Write the instance to store.
      */
-    public final static void Store(Account instance){
+    public final static void Store(TemplateNode instance){
         if (null != instance){
             gap.data.Store.Put(instance);
         }
@@ -215,14 +216,14 @@ public final class Account
         return new Query(KIND.getName(),key);
     }
     
-    public final static Query CreateQueryFor(Filter filter){
-        Query query = new Query(KIND.getName());
+    
+    public final static Query CreateQueryFor(Key ancestor, Filter filter){
+        Query query = new Query(KIND.getName(),ancestor);
         return filter.update(query);
     }
-    
-    public final static Account Query1(Query query){
+    public final static TemplateNode Query1(Query query){
         if (null != query)
-            return (Account)gap.data.Store.Query1(query);
+            return (TemplateNode)gap.data.Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
@@ -246,7 +247,7 @@ public final class Account
     }
 
     /**
-     * Persistent fields' binding for {@link Account}
+     * Persistent fields' binding for {@link TemplateNode}
      */
     public static enum Field
         implements gap.data.Field<Field>
@@ -255,8 +256,11 @@ public final class Account
         ParentKey("parentKey"),
         Key("key"),
         Id("id"),
-        Base("base"),
-        Name("name");
+        NodeType("nodeType"),
+        LineNumber("lineNumber"),
+        NodeContent("nodeContent"),
+        Offset("offset"),
+        OffsetCloseRelative("offsetCloseRelative");
 
 
         private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
@@ -283,7 +287,7 @@ public final class Account
             else
                 return field;
         }
-        public static Object Get(Field field, Account instance, boolean mayInherit){
+        public static Object Get(Field field, TemplateNode instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
                 return instance.getInheritFromKey();
@@ -293,15 +297,21 @@ public final class Account
                 return instance.getKey(mayInherit);
             case Id:
                 return instance.getId(mayInherit);
-            case Base:
-                return instance.getBase(mayInherit);
-            case Name:
-                return instance.getName(mayInherit);
+            case NodeType:
+                return instance.getNodeType(mayInherit);
+            case LineNumber:
+                return instance.getLineNumber(mayInherit);
+            case NodeContent:
+                return instance.getNodeContent(mayInherit);
+            case Offset:
+                return instance.getOffset(mayInherit);
+            case OffsetCloseRelative:
+                return instance.getOffsetCloseRelative(mayInherit);
             default:
-                throw new IllegalArgumentException(field.toString()+" in Account");
+                throw new IllegalArgumentException(field.toString()+" in TemplateNode");
             }
         }
-        public static boolean Set(Field field, Account instance, Object value){
+        public static boolean Set(Field field, TemplateNode instance, Object value){
             switch(field){
             case InheritFromKey:
                 return instance.setInheritFromKey( (Key)value);
@@ -311,12 +321,18 @@ public final class Account
                 return instance.setKey( (Key)value);
             case Id:
                 return instance.setId( (String)value);
-            case Base:
-                return instance.setBase( (String)value);
-            case Name:
-                return instance.setName( (String)value);
+            case NodeType:
+                return instance.setNodeType( (String)value);
+            case LineNumber:
+                return instance.setLineNumber( (Integer)value);
+            case NodeContent:
+                return instance.setNodeContent( (String)value);
+            case Offset:
+                return instance.setOffset( (Integer)value);
+            case OffsetCloseRelative:
+                return instance.setOffsetCloseRelative( (Integer)value);
             default:
-                throw new IllegalArgumentException(field.toString()+" in Account");
+                throw new IllegalArgumentException(field.toString()+" in TemplateNode");
             }
         }
 
@@ -337,13 +353,16 @@ public final class Account
         }
     }
 
-    private volatile transient Account inheritFrom;
+    private volatile transient TemplateNode inheritFrom;
 
 
     private volatile Key key;    
     private volatile String id;    // *unique
-    private volatile String base;    // *hash-unique
-    private volatile String name;    // *hash-unique
+    private volatile String nodeType;    // *hash-unique
+    private volatile Integer lineNumber;    // *hash-unique
+    private volatile String nodeContent;    // *hash-unique
+    private volatile Integer offset;    
+    private volatile Integer offsetCloseRelative;    
 
 
 
@@ -351,20 +370,21 @@ public final class Account
 
 
     private volatile Key parentKey;
-    private volatile transient Resource parent;
+    private volatile transient Template parent;
 
 
-    public Account() {
+    public TemplateNode() {
         super();
     }
-    public Account(Key ancestor, String base, String name) {
+    public TemplateNode(Key ancestor, String nodeType, Integer lineNumber, String nodeContent) {
         super();
-        this.setBase(base);
-        this.setName(name);
+        this.setNodeType(nodeType);
+        this.setLineNumber(lineNumber);
+        this.setNodeContent(nodeContent);
         this.parentKey = ancestor;
-        String id = IdFor(ancestor,  base, name);
+        String id = IdFor(ancestor,  nodeType, lineNumber, nodeContent);
         this.setId(id);
-        Key key = KeyLongFor(ancestor,id);
+        Key key = KeyShortFor(ancestor,id);
         this.setKey(key);
     }
 
@@ -381,8 +401,11 @@ public final class Account
         this.datastoreEntity = null;
         this.key = null;
         this.id = null;
-        this.base = null;
-        this.name = null;
+        this.nodeType = null;
+        this.lineNumber = null;
+        this.nodeContent = null;
+        this.offset = null;
+        this.offsetCloseRelative = null;
         this.parent = null;
     }
     public boolean hasInheritFrom(){
@@ -391,18 +414,18 @@ public final class Account
     public boolean hasNotInheritFrom(){
         return (null == this.inheritFrom && null == this.inheritFromKey);
     }
-    public Account getInheritFrom(){
-        Account inheritFrom = this.inheritFrom;
+    public TemplateNode getInheritFrom(){
+        TemplateNode inheritFrom = this.inheritFrom;
         if (null == inheritFrom){
             Key inheritFromKey = this.inheritFromKey;
             if (null != inheritFromKey){
-                inheritFrom = Account.Get(inheritFromKey);
+                inheritFrom = TemplateNode.Get(inheritFromKey);
                 this.inheritFrom = inheritFrom;
             }
         }
         return inheritFrom;
     }
-    public boolean setInheritFrom(Account ancestor){
+    public boolean setInheritFrom(TemplateNode ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
@@ -412,7 +435,7 @@ public final class Account
         else
             return false;
     }
-    public boolean inheritFrom(Account ancestor){
+    public boolean inheritFrom(TemplateNode ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
@@ -446,18 +469,18 @@ public final class Account
     public boolean hasNotParent(){
         return (null == this.parent && null == this.parentKey);
     }
-    public Resource getParent(){
-        Resource parent = this.parent;
+    public Template getParent(){
+        Template parent = this.parent;
         if (null == parent){
             Key parentKey = this.parentKey;
             if (null != parentKey){
-                parent = Resource.Get(parentKey);
+                parent = Template.Get(parentKey);
                 this.parent = parent;
             }
         }
         return parent;
     }
-    public boolean setParent(Resource ancestor){
+    public boolean setParent(Template ancestor){
         if (IsNotEqual(this.parent,ancestor)){
             this.parent = ancestor;
             if (null != ancestor)
@@ -527,58 +550,175 @@ public final class Account
             return false;
     }
 
-    public boolean hasBase(boolean mayInherit){
-        return (null != this.getBase(mayInherit));
+    public boolean hasNodeType(boolean mayInherit){
+        return (null != this.getNodeType(mayInherit));
     }
-    public boolean hasNotBase(boolean mayInherit){
-        return (null == this.getBase(mayInherit));
+    public boolean hasNotNodeType(boolean mayInherit){
+        return (null == this.getNodeType(mayInherit));
     }
-    public boolean dropBase(){
-        if (null != this.base){
-            this.base = null;
+    public boolean dropNodeType(){
+        if (null != this.nodeType){
+            this.nodeType = null;
             return true;
         }
         else
             return false;
     }
-    public String getBase(){
-        return this.base;
+    public String getNodeType(){
+        return this.nodeType;
     }
-    public String getBase(boolean ignore){
-        return this.base;
+    public String getNodeType(boolean ignore){
+        return this.nodeType;
     }
-    public boolean setBase(String base){
-        if (IsNotEqual(this.base,base)){
-            this.base = base;
+    public boolean setNodeType(String nodeType){
+        if (IsNotEqual(this.nodeType,nodeType)){
+            this.nodeType = nodeType;
             return true;
         }
         else
             return false;
     }
 
-    public boolean hasName(boolean mayInherit){
-        return (null != this.getName(mayInherit));
+    public boolean hasLineNumber(boolean mayInherit){
+        return (null != this.getLineNumber(mayInherit));
     }
-    public boolean hasNotName(boolean mayInherit){
-        return (null == this.getName(mayInherit));
+    public boolean hasNotLineNumber(boolean mayInherit){
+        return (null == this.getLineNumber(mayInherit));
     }
-    public boolean dropName(){
-        if (null != this.name){
-            this.name = null;
+    public boolean dropLineNumber(){
+        if (null != this.lineNumber){
+            this.lineNumber = null;
             return true;
         }
         else
             return false;
     }
-    public String getName(){
-        return this.name;
+    public Integer getLineNumber(){
+        return this.lineNumber;
     }
-    public String getName(boolean ignore){
-        return this.name;
+    public Integer getLineNumber(boolean ignore){
+        return this.lineNumber;
     }
-    public boolean setName(String name){
-        if (IsNotEqual(this.name,name)){
-            this.name = name;
+    public boolean setLineNumber(Integer lineNumber){
+        if (IsNotEqual(this.lineNumber,lineNumber)){
+            this.lineNumber = lineNumber;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public boolean hasNodeContent(boolean mayInherit){
+        return (null != this.getNodeContent(mayInherit));
+    }
+    public boolean hasNotNodeContent(boolean mayInherit){
+        return (null == this.getNodeContent(mayInherit));
+    }
+    public boolean dropNodeContent(){
+        if (null != this.nodeContent){
+            this.nodeContent = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public String getNodeContent(){
+        return this.nodeContent;
+    }
+    public String getNodeContent(boolean ignore){
+        return this.nodeContent;
+    }
+    public boolean setNodeContent(String nodeContent){
+        if (IsNotEqual(this.nodeContent,nodeContent)){
+            this.nodeContent = nodeContent;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public boolean hasOffset(boolean mayInherit){
+        return (null != this.getOffset(mayInherit));
+    }
+    public boolean hasNotOffset(boolean mayInherit){
+        return (null == this.getOffset(mayInherit));
+    }
+    public boolean dropOffset(){
+        if (null != this.offset){
+            this.offset = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public Integer getOffset(boolean mayInherit){
+        if (mayInherit){
+            Integer offset = this.offset;
+            if (null == offset && this.hasInheritFrom()){
+                TemplateNode inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getOffset(MayInherit);
+            }
+            return offset;
+        }
+        else
+            return this.offset;
+    }
+    public boolean setOffset(Integer offset, boolean withInheritance){
+        if (IsNotEqual(this.offset,this.getOffset(withInheritance))){
+            this.offset = offset;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setOffset(Integer offset){
+        if (IsNotEqual(this.offset,offset)){
+            this.offset = offset;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public boolean hasOffsetCloseRelative(boolean mayInherit){
+        return (null != this.getOffsetCloseRelative(mayInherit));
+    }
+    public boolean hasNotOffsetCloseRelative(boolean mayInherit){
+        return (null == this.getOffsetCloseRelative(mayInherit));
+    }
+    public boolean dropOffsetCloseRelative(){
+        if (null != this.offsetCloseRelative){
+            this.offsetCloseRelative = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public Integer getOffsetCloseRelative(boolean mayInherit){
+        if (mayInherit){
+            Integer offsetCloseRelative = this.offsetCloseRelative;
+            if (null == offsetCloseRelative && this.hasInheritFrom()){
+                TemplateNode inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getOffsetCloseRelative(MayInherit);
+            }
+            return offsetCloseRelative;
+        }
+        else
+            return this.offsetCloseRelative;
+    }
+    public boolean setOffsetCloseRelative(Integer offsetCloseRelative, boolean withInheritance){
+        if (IsNotEqual(this.offsetCloseRelative,this.getOffsetCloseRelative(withInheritance))){
+            this.offsetCloseRelative = offsetCloseRelative;
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setOffsetCloseRelative(Integer offsetCloseRelative){
+        if (IsNotEqual(this.offsetCloseRelative,offsetCloseRelative)){
+            this.offsetCloseRelative = offsetCloseRelative;
             return true;
         }
         else
@@ -620,9 +760,9 @@ public final class Account
         return change;
     }
     public boolean updateFrom(BigTable proto){
-        return this.updateFrom( (Account)proto);
+        return this.updateFrom( (TemplateNode)proto);
     }
-    public boolean updateFrom(Account proto){
+    public boolean updateFrom(TemplateNode proto){
         boolean change = false;
         return change;
     }

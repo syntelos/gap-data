@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-18T10:07:44.633Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-19T18:15:36.268Z")
 public final class Template
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -41,7 +41,7 @@ public final class Template
                HasName
 {
 
-    private final static long serialVersionUID = 1;
+    private final static long serialVersionUID = 2;
 
     public final static Kind KIND = Kind.Create("Template","gap.data","Template");
 
@@ -353,6 +353,7 @@ public final class Template
     private volatile Text templateSourceHapax;    
 
 
+    private volatile List.Short<TemplateNode> templateTargetHapax;
 
 
 
@@ -390,6 +391,11 @@ public final class Template
         this.name = null;
         this.lastModified = null;
         this.templateSourceHapax = null;
+        List.Short<TemplateNode> templateTargetHapax = this.templateTargetHapax;
+        if (null != templateTargetHapax){
+            this.templateTargetHapax = null;
+            templateTargetHapax.destroy();
+        }
         this.parent = null;
     }
     public boolean hasInheritFrom(){
@@ -649,6 +655,77 @@ public final class Template
         }
         else
             return false;
+    }
+
+    public boolean hasTemplateTargetHapax(boolean mayInherit){
+        return (this.getTemplateTargetHapax(mayInherit).isNotEmpty());
+    }
+    public boolean hasNotTemplateTargetHapax(boolean mayInherit){
+        return (this.getTemplateTargetHapax(mayInherit).isEmpty());
+    }
+    public boolean dropTemplateTargetHapax(){
+        List.Short<TemplateNode> templateTargetHapax = this.templateTargetHapax;
+        if (null != templateTargetHapax){
+            this.templateTargetHapax = null;
+            templateTargetHapax.destroy();
+            return true;
+        }
+        else
+            return false;
+    }
+    public List.Short<TemplateNode> getTemplateTargetHapax(boolean mayInherit){
+        List.Short<TemplateNode> templateTargetHapax = this.templateTargetHapax;
+        if (null == templateTargetHapax){
+            if (mayInherit && this.hasInheritFrom()){
+                Template inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom){
+                    templateTargetHapax = inheritFrom.getTemplateTargetHapax(MayInherit);
+                    if (null != templateTargetHapax)
+                        return templateTargetHapax;
+                }
+            }
+            templateTargetHapax = new ListShortTemplateTemplateNode(this);
+            this.templateTargetHapax = templateTargetHapax;
+            templateTargetHapax.init();
+        }
+        return templateTargetHapax;
+    }
+    public void setTemplateTargetHapax(List.Short<TemplateNode> templateTargetHapax){
+        this.templateTargetHapax = templateTargetHapax;
+    }
+    public boolean isEmptyTemplateTargetHapax(){
+        List.Short<TemplateNode> collection = this.templateTargetHapax;
+        if (null != collection)
+            return collection.isEmpty();
+        else
+            return true;
+    }
+    public boolean isNotEmptyTemplateTargetHapax(){
+        List.Short<TemplateNode> collection = this.templateTargetHapax;
+        if (null != collection)
+            return (!collection.isEmpty());
+        else
+            return false;
+    }
+    public TemplateNode fetchTemplateTargetHapax(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            List.Short<TemplateNode> collection = this.getTemplateTargetHapax(MayInherit);
+            return collection.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public TemplateNode getTemplateTargetHapax(gap.data.ListFilter<TemplateNode> filter){
+        if (null != filter){
+            List.Short<TemplateNode> list = this.getTemplateTargetHapax(MayInherit);
+            for (TemplateNode item : list){
+                if (filter.accept(item))
+                    return item;
+            }
+            return null;
+        }
+        else
+            throw new IllegalArgumentException();
     }
 
 

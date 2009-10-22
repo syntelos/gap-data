@@ -1,7 +1,7 @@
 package gap.data;
 path /templates;
 
-child Template version 1 
+child Template version 2
     parent Resource
     implements LastModified
     implements HasName
@@ -11,4 +11,5 @@ child Template version 1
     *hash-unique String name;
     Long lastModified;
     Text templateSourceHapax;
+    List.Short<TemplateNode> templateTargetHapax;
 }

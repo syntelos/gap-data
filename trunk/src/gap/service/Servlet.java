@@ -21,11 +21,8 @@ package gap.service;
 
 import gap.*;
 import gap.data.*;
+import gap.hapax.*;
 import gap.util.*;
-
-import hapax.Template;
-import hapax.TemplateException;
-import hapax.TemplateDataDictionary;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -71,31 +68,20 @@ public class Servlet
      */
     protected volatile static ServletConfig Config;
 
-    private final static String TemplateIndex = "index.html";
-
-    private final static String[] TemplateIndexFlist = {
-        TemplateIndex,
-        "div.logon.html",
-        "div.overlay.html",
-        "div.tool.html",
-        "div.tool.off.html",
-        "form.create.html",
-        "form.delete.html",
-        "form.export.html",
-        "form.goto.html",
-        "form.import.html",
-        "form.update.html",
-        "head.tool.html"
-    };
-
-    private final static String TemplateErrors = "errors.html";
-
-    private final static String[] TemplateErrorsFlist = {
-        TemplateErrors,
-        "div.logon.html"
-    };
 
     private volatile gap.jbx.Function.List functionList;
+
+    public final static class TemplateNames {
+        public final static TemplateName Error = new TemplateName("error");
+        public final static TemplateName ErrorException = new TemplateName("error_exception");
+        public final static TemplateName ErrorExceptionJson = new TemplateName("error_exception_json");
+        public final static TemplateName ErrorMessage = new TemplateName("error_message");
+        public final static TemplateName ErrorMessageJson = new TemplateName("error_message_json");
+        public final static TemplateName ErrorStatus = new TemplateName("error_status");
+        public final static TemplateName ErrorType = new TemplateName("error_type");
+        public final static TemplateName ErrorUri = new TemplateName("error_uri");
+    }
+
 
 
     public Servlet(){
@@ -149,10 +135,9 @@ public class Servlet
         }
         Request request = null;
         try {
-            TemplateDataDictionary top = Templates.CreateDictionary();
-            Logon logon = Logon.Enter(new Logon(req.getUserPrincipal(),uri,top,UserServiceFactory.getUserService()));
+            Logon logon = Logon.Enter(new Logon(req.getUserPrincipal(),uri,UserServiceFactory.getUserService()));
 
-            request = this.createRequest(req,method,protocol,path,accept,fm,logon,uri,top);
+            request = this.createRequest(req,method,protocol,path,accept,fm,logon,uri);
 
             Response response = this.createResponse(request,rep);
             if (null != response)
@@ -295,9 +280,6 @@ public class Servlet
         }
     }
 
-    protected TemplateDataDictionary doGetDefine(Request req, Response rep){
-        return req.getTop();
-    }
     protected void doGet(Request req, Response rep)
         throws ServletException, IOException
     {
@@ -310,28 +292,19 @@ public class Servlet
                 this.error(req,rep,404,"Not found.");
         }
         else {
-            TemplateDataDictionary top = this.doGetDefine(req,rep);
-            if (null != top){
-                try {
-                    Template template = req.getTemplate();
-                    if (null != template){
-                        this.render(req,rep,template,top);
-                        return ;
-                    }
-                    else if (req.acceptJson()){
-                        String json = Gson.ToJson(top);
-                        rep.println(json);
-                        rep.setContentTypeJson();
-                        return;
-                    }
+            try {
+                TemplateRenderer template = req.getTemplate();
+                if (null != template){
+                    this.render(req,rep,template);
+                    return ;
                 }
-                catch (TemplateException exc){
-                    LogRecord rec = new LogRecord(Level.SEVERE,req.userReference);
-                    rec.setThrown(exc);
-                    Servlet.Log.log(rec);
-                    this.error(req,rep,500,"Template error.",exc);
-                    return;
-                }
+            }
+            catch (TemplateException exc){
+                LogRecord rec = new LogRecord(Level.SEVERE,req.userReference);
+                rec.setThrown(exc);
+                Servlet.Log.log(rec);
+                this.error(req,rep,500,"Template error.",exc);
+                return;
             }
             this.error(req,rep,404,"Not found.");
         }
@@ -375,7 +348,7 @@ public class Servlet
                     if (resource.updateFrom(req))
                         resource.save();
 
-                    this.createTools(resource);
+                    Templates.CreateTools(resource);
 
                     this.redirectToItem(req,rep,resource.getId());
                 }
@@ -426,13 +399,11 @@ public class Servlet
     {
         if (req instanceof Request && rep instanceof Response){
             Request request = (Request)req;
-            TemplateDataDictionary top = ((Request)req).getTop();
+            TemplateDataDictionary top = request;
 
             rep.resetBuffer();
 
-            String from = "error";
-
-            TemplateDataDictionary error = top.addSection(from);
+            TemplateDataDictionary error = top.addSection(TemplateNames.Error);
 
             String errors_exception = Error.Attribute.ToString.Exception(req,any);
             String errors_status, errors_message;
@@ -448,12 +419,12 @@ public class Servlet
                 errors_status = Error.Attribute.ToString.Status(req,any);
                 errors_message = Error.Attribute.ToString.Message(req,any);
             }
-            error.setVariable("error_message",errors_message);
-            error.setVariable("error_exception",errors_exception);
-            error.setVariable("error_status",errors_status);
+            error.setVariable(TemplateNames.ErrorMessage,errors_message);
+            error.setVariable(TemplateNames.ErrorException,errors_exception);
+            error.setVariable(TemplateNames.ErrorStatus,errors_status);
 
-            error.setVariable("error_type",errors_type);
-            error.setVariable("error_uri",errors_uri);
+            error.setVariable(TemplateNames.ErrorType,errors_type);
+            error.setVariable(TemplateNames.ErrorUri,errors_uri);
 
             String templateName = null;
 
@@ -461,8 +432,8 @@ public class Servlet
                 templateName = "errors.html";
 
             else if (request.accept("application/json")){
-                error.setVariable("error_exception_json",QuoteJson(errors_exception));
-                error.setVariable("error_message_json",QuoteJson(errors_message));
+                error.setVariable(TemplateNames.ErrorExceptionJson,QuoteJson(errors_exception));
+                error.setVariable(TemplateNames.ErrorMessageJson,QuoteJson(errors_message));
                 templateName = "errors.json";
             }
             else if (request.accept("text/xml"))
@@ -473,9 +444,9 @@ public class Servlet
 
             if (null != templateName){
                 try {
-                    Template template = Templates.GetTemplate(templateName);
+                    TemplateRenderer template = Templates.GetTemplate(templateName);
                     if (null != template)
-                        this.render(request, ((Response)rep), template, error);
+                        this.render(request, ((Response)rep), template);
                 }
                 catch (TemplateException exc){
                     LogRecord rec = new LogRecord(Level.SEVERE,"error");
@@ -492,10 +463,10 @@ public class Servlet
     {
         this.error(req,rep,HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+Method.Get()+"' not implemented");
     }
-    protected final void render(Request req, Response rep, Template template, TemplateDataDictionary top)
+    protected final void render(Request req, Response rep, TemplateRenderer template)
         throws IOException, ServletException, TemplateException
     {
-        template.render(top,rep.getWriter());
+        template.render(req,rep.getWriter());
 
         if (req.accept("text/html"))
             rep.setContentType("text/html;charset=utf-8");
@@ -549,10 +520,10 @@ public class Servlet
      * value -- otherwise -- must not return a null value.
      */
     protected Request createRequest(HttpServletRequest req, Method method, Protocol protocol, Path path, Accept accept,
-                                    FileManager fm, Logon logon, String uri, TemplateDataDictionary top)
+                                    FileManager fm, Logon logon, String uri)
     {
         Parameters parameters = this.createParameters(req);
-        return new Request(req,method,protocol,path,accept,fm,logon,uri,top,parameters);
+        return new Request(req,method,protocol,path,accept,fm,logon,uri,parameters);
     }
     /**
      * May return null to halt further processing.
@@ -560,58 +531,7 @@ public class Servlet
     protected Response createResponse(Request req, HttpServletResponse rep){
         return new Response(rep);
     }
-    protected boolean installResourceIndex()
-        throws IOException, TemplateException
-    {
-        return this.installResource(TemplateIndex,TemplateIndexFlist);
-    }
-    protected boolean installResourceErrors()
-        throws IOException, TemplateException
-    {
-        return this.installResource(TemplateErrors,TemplateErrorsFlist);
-    }
-    protected boolean installResource(String name, String[] templates)
-        throws IOException, TemplateException
-    {
-        Resource resource = Resource.GetCreateLong("",name);
-        if (resource.hasNotTemplates(MayInherit)){
-            Key resourceKey = resource.getKey();
-            for (String templateName: templates){
-                File templateFile = Templates.TemplateFile(templateName);
-                if (null != templateFile && templateFile.isFile()){
-                    gap.data.Template template = new gap.data.Template(resourceKey,templateName);
-                    String templateSource = Templates.TemplateSource(templateFile);
-                    template.setLastModified(templateFile.lastModified());
-                    template.setTemplateSourceHapax(gap.Strings.TextFromString(templateSource));
-                    template.save();
-                }
-            }
-            this.createTools(resource);
-            return true;
-        }
-        else
-            return false;
-    }
-    protected void createTools(Resource resource){
-        Key resourceKey = resource.getKey();
-        Resource index_html = Resource.ForLongBaseName("","index.html");
-        if (null != index_html && index_html.hasTools(MayInherit)){
-            for (Tool indexTool: index_html.getTools(MayInherit)){
-                String name = indexTool.getName();
-                Tool resourceTool = new Tool(resourceKey,name);
-                resourceTool.inheritFrom(indexTool);
-                resourceTool.save();
-            }
-        }
-        else {
-            for (Tool indexTool: Tools.Default.getTools()){
-                String name = indexTool.getName();
-                Tool resourceTool = new Tool(resourceKey,name);
-                resourceTool.updateFrom(indexTool);
-                resourceTool.save();
-            }
-        }
-    }
+
     /*
      */
     protected final static String Safe(String string){

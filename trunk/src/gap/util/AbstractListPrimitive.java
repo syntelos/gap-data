@@ -191,6 +191,14 @@ public abstract class AbstractListPrimitive<V>
         }
         return this;
     }
+    public final boolean has(int index){
+        if (-1 < index){
+            Object[] list = this.list;
+            return (null != list && index < list.length);
+        }
+        else
+            return false;
+    }
     public final V get(int index){
         if (-1 < index){
             Object[] list = this.list;

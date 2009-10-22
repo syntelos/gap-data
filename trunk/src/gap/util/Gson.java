@@ -19,7 +19,7 @@
  */
 package gap.util;
 
-import hapax.TemplateDataDictionary;
+import gap.hapax.TemplateDataDictionary;
 
 import com.google.gson.FieldAttributes;
 /**

@@ -17,29 +17,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.servlet;
+package gap.util;
 
-import gap.*;
-import gap.util.*;
+import gap.data.*;
 
-import javax.servlet.ServletException;
-
-import java.io.IOException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Query;
 
 /**
- * Bound to path <code>'/inspect/*'</code> for syntax highlighted java code display.
+ * 
+ * 
+ * @author jdp
  */
-public class Inspect
-    extends Site
+public abstract class AbstractMapPrimitive<K,V>
+    extends AbstractListPrimitive<V>
+    implements Map.Primitive<K,V>
 {
 
-    @Override
-    protected void doGet(Request req, Response rep)
-        throws ServletException, IOException
-    {
-        String json = Gson.ToJson(req);
-        rep.println(json);
-        rep.setContentTypeJson();
-        return;
+    protected transient Index index = new Index(23);
+
+
+    protected AbstractMapPrimitive(){
+        super();
+    }
+
+
+    public AbstractMapPrimitive clone(){
+        AbstractMapPrimitive clone = (AbstractMapPrimitive)super.clone();
+        if (null != this.index)
+            clone.index = this.index.clone();
+        return clone;
     }
 }

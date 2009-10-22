@@ -46,14 +46,14 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-19T18:15:36.330Z")
-public class Template
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-19T18:15:37.377Z")
+public class TemplateNode
     extends gap.servlet.Site
 {
-    public final static Class<gap.data.Template> BigTableClass = gap.data.Template.class;
+    public final static Class<gap.data.TemplateNode> BigTableClass = gap.data.TemplateNode.class;
 
 
-    public Template(){
+    public TemplateNode(){
         super();
     }
 

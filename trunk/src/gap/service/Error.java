@@ -19,9 +19,6 @@
  */
 package gap.service;
 
-import hapax.TemplateDictionary;
-import hapax.TemplateException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

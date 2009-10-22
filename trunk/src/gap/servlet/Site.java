@@ -22,8 +22,6 @@ package gap.servlet;
 import gap.*;
 import gap.data.*;
 
-import hapax.TemplateDictionary;
-
 /**
  * Bound to path <code>'/*'</code>
  */

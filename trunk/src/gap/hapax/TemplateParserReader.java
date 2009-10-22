@@ -23,17 +23,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package hapax.parser;
+package gap.hapax;
+
+import gap.data.Template;
+import com.google.appengine.api.datastore.Key;
 
 /**
  * Line number string reader
  *
  * @author jdp
  */
-public final class ParserReader
+public final class TemplateParserReader
     extends java.lang.Object
     implements java.lang.CharSequence
 {
+
+    private Template source;
 
     private char[] buffer;
 
@@ -42,13 +47,24 @@ public final class ParserReader
     private int advance;
 
 
-    public ParserReader(String string){
+    public TemplateParserReader(Template source){
         super();
-        if (null != string && 0 != string.length())
-            this.buffer = string.toCharArray();
+        if (null != source){
+            this.source = source;
+            String string = gap.Strings.TextToString(source.getTemplateSourceHapax(true));
+            if (null != string && 0 != string.length())
+                this.buffer = string.toCharArray();
+        }
+        else
+            throw new IllegalArgumentException();
     }
 
-
+    public Template getSource(){
+        return this.source;
+    }
+    public Key getSourceKey(){
+        return this.source.getKey();
+    }
     public int lineNumber(){
         return this.lno;
     }

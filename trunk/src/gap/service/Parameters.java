@@ -19,7 +19,9 @@
  */
 package gap.service;
 
-import hapax.TemplateDictionary;
+import gap.data.List;
+import gap.hapax.TemplateDataDictionary;
+import gap.hapax.TemplateName;
 
 import com.google.appengine.api.datastore.Query;
 
@@ -34,7 +36,8 @@ import java.util.StringTokenizer;
  * @author jdp
  */
 public final class Parameters
-    extends java.lang.Object
+    extends gap.hapax.AbstractData
+    implements TemplateDataDictionary
 {
     public final static class Special {
         /**
@@ -293,6 +296,11 @@ public final class Parameters
             public final static String SortBy = "sortBy";
             public final static String SortOrder = "sortOrder";
 
+            public final static class TemplateNames {
+                public final static TemplateName SortBy = new TemplateName(Sort.SortBy);
+                public final static TemplateName SortOrder = new TemplateName(Sort.SortOrder);
+            }
+
 
             public final String sortBy;
 
@@ -323,12 +331,12 @@ public final class Parameters
             }
 
 
-            public void dictionaryInto(TemplateDictionary dict){
+            public void dictionaryInto(TemplateDataDictionary dict){
                 String sortBy = this.sortBy;
                 if (null != sortBy)
-                    dict.setVariable("sortBy",sortBy);
+                    dict.setVariable(TemplateNames.SortBy,sortBy);
 
-                dict.setVariable("sortOrder",this.sortOrder.name().toLowerCase());
+                dict.setVariable(TemplateNames.SortOrder,this.sortOrder.name().toLowerCase());
             }
         }
         /**
@@ -372,7 +380,7 @@ public final class Parameters
     }
 
 
-    public void dictionaryInto(TemplateDictionary dict){
+    public void dictionaryInto(TemplateDataDictionary dict){
 
         this.page.dictionaryInto(dict);
         this.sort.dictionaryInto(dict);

@@ -19,8 +19,6 @@
  */
 package gap.service;
 
-import hapax.TemplateDictionary;
-
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.StringTokenizer;
@@ -217,47 +215,31 @@ public final class Path
     public boolean hasNotItem(){
         return (3 > this.size);
     }
-    /**
-     * The "base" is the path components excepting an optional last
-     * component.  One path component is the "base".  Users can employ
-     * a base with no name as a name.
-     */
-    public boolean hasBase(){
-
-        return (0 < this.size);
-    }
     public boolean hasNotBase(){
-
-        return (1 > this.size);
-    }
-    public String getBase(){
-        if (2 < this.size){
-            StringBuilder strbuf = new StringBuilder();
-            for (String component : this.components){
-                if (0 != strbuf.length())
-                    strbuf.append('/');
-                strbuf.append(component);
-            }
-            return strbuf.toString();
-        }
-        else if (0 < this.size)
-            return this.components[0];
-        else
-            return null;
-    }
-    /**
-     * The "name" is the last path component after a "base".  
-     */
-    public boolean hasName(){
-
-        return (1 < this.size);
-    }
-    public boolean hasNotName(){
-
         return (2 > this.size);
     }
+    public boolean hasBase(){
+        return (1 < this.size);
+    }
+    public String getBase(){
+        StringBuilder strbuf = new StringBuilder();
+        String el, path[] = this.components;
+        for (int cc = 0, count = path.length, term = (count-1); cc < term; cc++){
+            el = path[cc];
+            if (0 != strbuf.length())
+                strbuf.append('/');
+            strbuf.append(el);
+        }
+        return strbuf.toString();
+    }
+    public boolean hasNotName(){
+        return (1 > this.size);
+    }
+    public boolean hasName(){
+        return (0 < this.size);
+    }
     public String getName(){
-        if (1 < this.size){
+        if (0 < this.size){
             String[] components = this.components;
             return components[components.length-1];
         }
@@ -276,9 +258,6 @@ public final class Path
     public boolean isFriends(){
         return (3 == this.size && Special.Friends.equals(this.getItem()));
     }
-    public void dictionaryInto(TemplateDictionary dict){
-    }
-
     public String toString(){
         return this.full;
     }

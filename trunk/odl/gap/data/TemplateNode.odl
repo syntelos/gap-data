@@ -1,0 +1,14 @@
+package gap.data;
+path /template-nodes;
+
+child TemplateNode version 1 
+    parent Template
+{
+    Key key;
+    *unique String id;
+    *hash-unique String nodeType;
+    *hash-unique Integer lineNumber;
+    *hash-unique String nodeContent;
+    Integer offset;
+    Integer offsetCloseRelative;
+}

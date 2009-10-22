@@ -23,9 +23,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package hapax;
+package gap.hapax;
 
-import java.util.List;
+import gap.data.List;
 
 /**
  * The implementation of {@link TemplateDictionary} as consumed by
@@ -55,26 +55,26 @@ public interface TemplateDataDictionary
     /**
      * @return Get variable would be not null
      */
-    public boolean hasVariable(String name);
+    public boolean hasVariable(TemplateName name);
     /**
      * @return Variable value from this or parent
      */
-    public String getVariable(String name);
+    public String getVariable(TemplateName name);
     /**
      * Define variable.
      */
-    public void setVariable(String name, String value);
+    public void setVariable(TemplateName name, String value);
     /**
      * @return Child, child from ancestry, or synthetic on variable.
      */
-    public List<TemplateDataDictionary> getSection(String sectionName);
+    public List<TemplateDataDictionary> getSection(TemplateName sectionName);
     /**
      * @return Existing section, or with no existing section create new.
      */
-    public List<TemplateDataDictionary> showSection(String sectionName);
+    public List<TemplateDataDictionary> showSection(TemplateName sectionName);
     /**
      * @return New section.
      */
-    public TemplateDataDictionary addSection(String sectionName);
+    public TemplateDataDictionary addSection(TemplateName sectionName);
 
 }

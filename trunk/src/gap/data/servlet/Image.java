@@ -46,7 +46,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-18T10:07:45.205Z")
+@Generated(value={"gap.service.OD","odl/bean-servlet.xtm"},date="2009-10-19T18:15:36.816Z")
 public class Image
     extends gap.servlet.Site
 {

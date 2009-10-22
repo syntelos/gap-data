@@ -23,35 +23,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package hapax.parser;
+package gap.hapax;
 
-import hapax.TemplateDataDictionary;
-import hapax.TemplateLoader;
-
-import java.io.PrintWriter;
+import gap.data.Template;
+import gap.data.TemplateNode;
 
 /**
- * Represents a literal string.
- *
+ * 
  * @author dcoker
+ * @author jdp
  */
-public final class TextNode
-    extends TemplateNode
-{
+public interface TemplateLoader {
 
-    private final String text;
+    public TemplateRenderer getTemplate(TemplateName name)
+        throws TemplateException;
 
-
-    TextNode(int lno, String text) {
-        super(lno);
-        this.text = text;
-    }
-
-
-    @Override
-    public void evaluate(TemplateDataDictionary dict, TemplateLoader context,
-                         PrintWriter collector)
-    {
-        collector.write(text);
-    }
 }

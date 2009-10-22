@@ -20,11 +20,8 @@
 package gap.servlet;
 
 import gap.*;
+import gap.hapax.*;
 import gap.service.*;
-
-import hapax.Template;
-import hapax.TemplateDataDictionary;
-import hapax.TemplateException;
 
 import javax.servlet.ServletException;
 
@@ -40,6 +37,11 @@ import java.util.logging.LogRecord;
 public class Source
     extends Site
 {
+    public final static class TemplateNames {
+        public final static TemplateName FileClass = new TemplateName("file_class");
+        public final static TemplateName FileName = new TemplateName("file_name");
+        public final static TemplateName FileText = new TemplateName("file_text");
+    }
 
     /**
      * Static content cache for input to hapax.
@@ -116,16 +118,15 @@ public class Source
     }
 
 
-    @Override
     protected TemplateDataDictionary doGetDefine(Request req, Response rep){
         String path = req.getPathFull();
         try {
             String content = Cache.getXml(path);
             if (null != content){
-                TemplateDataDictionary top = req.getTop();
-                top.setVariable("file_name",path);
-                top.setVariable("file_class","lang-java");
-                top.setVariable("file_text",content);
+                TemplateDataDictionary top = req;
+                top.setVariable(TemplateNames.FileName,path);
+                top.setVariable(TemplateNames.FileClass,"lang-java");
+                top.setVariable(TemplateNames.FileText,content);
                 return top;
             }
         }
@@ -144,9 +145,9 @@ public class Source
             TemplateDataDictionary top = this.doGetDefine(req,rep);
             if (null != top){
                 try {
-                    Template template = Templates.GetTemplate("src.html");
+                    TemplateRenderer template = Templates.GetTemplate("src.html");
                     if (null != template){
-                        this.render(req,rep,template,top);
+                        this.render(req,rep,template);
                         rep.setContentTypeHtml();
                         return ;
                     }

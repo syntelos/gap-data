@@ -21,8 +21,10 @@ package gap.service;
 
 import gap.*;
 import gap.data.*;
+import gap.hapax.*;
 import gap.jac.tools.JavaFileManager.Location;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Text;
 
 import javax.servlet.ServletResponse;
@@ -32,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
 
 /**
  * Used by {@link FileManager}.
@@ -39,162 +42,166 @@ import java.io.PrintWriter;
  * @author jdp
  */
 public final class Templates
-    extends hapax.TemplateCache
-    implements DataInheritance.Notation
+    extends Object
+    implements DataInheritance.Notation,
+               TemplateLoader
 {
-    /**
-     * Default data dictionary variables.
-     */
-    private static hapax.TemplateDictionary TemplateDictionaryDefault = hapax.TemplateDictionary.create();
-    static {
-        TemplateDictionaryDefault.setVariable("gap_version_short",gap.Version.Short);
-        TemplateDictionaryDefault.setVariable("gap_version_long",gap.Version.Long);
-    }
-    /**
-     * Templates file cache location
-     */
-    private final static String TemplatesLocation = "WEB-INF/templates";
-    private final static int TemplatesLocationLen = TemplatesLocation.length();
-    /**
-     * Shared templates file cache instance
-     */
+
+    private final static File[] TemplatesLocation = {
+        new File("WEB-INF/templates"),
+        new File("odl")
+    };
+    private final static int TemplatesLocationCount = TemplatesLocation.length;
+
+    private final static String TemplatesFilenameSuffix = ".xtm";
+    private final static int TemplatesFilenameSuffixLen = TemplatesFilenameSuffix.length();
+
     private final static Templates Instance = new Templates();
 
-
-    public static hapax.TemplateDataDictionary CreateDictionary(){
-        return TemplateDictionaryDefault.clone();
-    }
-    public final static hapax.Template GetTemplate(Resource resource)
-        throws hapax.TemplateException
+    public static TemplateRenderer GetTemplate(Resource resource)
+        throws TemplateException
     {
         return Instance.getTemplate(resource);
     }
-    public static hapax.Template GetTemplate(String name)
-        throws hapax.TemplateException
+    public static TemplateRenderer GetTemplate(TemplateName name)
+        throws TemplateException
     {
-        if (null != Instance)
-            return Instance.getTemplate(name);
-        else
-            throw new IllegalStateException();
+        return Instance.getTemplate(name);
+    }
+    public static TemplateRenderer GetTemplate(String name)
+        throws TemplateException
+    {
+        return Instance.getTemplate(new TemplateName(name));
     }
     public static File TemplateFile(String name)
-        throws hapax.TemplateException
+        throws TemplateException
     {
-        return Instance.templateFile(name);
+        if (!name.endsWith(TemplatesFilenameSuffix))
+            name += TemplatesFilenameSuffix;
+
+        for (int cc = 0; cc < TemplatesLocationCount; cc++){
+            File file = new File(TemplatesLocation[cc],name);
+            if (file.isFile())
+                return file;
+        }
+        return null;
     }
-    public static String TemplateSource(File file)
-        throws IOException
-    {
-        return Instance.readToString(file);
+    public static void CreateTools(Resource resource){
+        Key resourceKey = resource.getKey();
+        Resource index_html = Resource.ForLongBaseName("","index.html");
+        if (null != index_html && index_html.hasTools(MayInherit)){
+            for (Tool indexTool: index_html.getTools(MayInherit)){
+                String name = indexTool.getName();
+                Tool resourceTool = new Tool(resourceKey,name);
+                resourceTool.inheritFrom(indexTool);
+                resourceTool.save();
+            }
+        }
+        else {
+            for (Tool indexTool: Tools.Default.getTools()){
+                String name = indexTool.getName();
+                Tool resourceTool = new Tool(resourceKey,name);
+                resourceTool.updateFrom(indexTool);
+                resourceTool.save();
+            }
+        }
     }
     public static String ReadToString(File file)
         throws IOException
     {
-        return Instance.readToString(file);
-    }
-    public static String Clean(String path){
-
-        if (null != path){
-
-            int idx = path.indexOf(Templates.TemplatesLocation);
-            if (-1 != idx)
-                return path.substring(idx+Templates.TemplatesLocationLen+1);
-            else 
-                return path;
-        }
-        else
-            return null;
-    }
-
-
-
-    private Templates(){
-        super(TemplatesLocation);
-    }
-
-
-    public hapax.Template getTemplate(String name)
-        throws hapax.TemplateException
-    {
-        Request request = Request.Get();
-        if (null != request){
-            Resource resource = request.resource;
-            if (null != resource){
-                gap.data.Template templateData = resource.getTemplates(name);
-                if (null != templateData)
-                    return this.getTemplate(resource,templateData);
-                else {
-                    resource = Resource.ForLongBaseName(resource.getBase(),name);
-                    if (null != resource)
-                        return this.getTemplate(resource);
-                }
+        Reader reader = new FileReader(file);
+        try {
+            StringBuilder string = new StringBuilder();
+            char[] buf = new char[0x200];
+            int read;
+            while (0 < (read = reader.read(buf,0,0x200))){
+                string.append(buf,0,read);
             }
-        }
-        try {
-            return super.getTemplate(name);
-        }
-        catch (hapax.TemplateException exc){
-            return null;
-        }
-    }
-    public hapax.Template getTemplate(hapax.TemplateLoader context, String name)
-        throws hapax.TemplateException
-    {
-        return this.getTemplate(name);
-    }
-    protected File templateFile(String name)
-        throws hapax.TemplateException
-    {
-        return new File(hapax.Path.toFile(TemplatesLocation,name));
-    }
-    protected String readToString(File file)
-        throws IOException
-    {
-        FileReader reader = new FileReader(file);
-        try {
-            return this.readToString(reader);
+            return string.toString();
         }
         finally {
             reader.close();
         }
     }
-    protected hapax.Template getTemplate(Resource resource)
-        throws hapax.TemplateException
-    {
-        if (null == resource)
-            return null;
-        else {
-            gap.data.Template templateData = resource.getTemplates(resource.getName());
-            return this.getTemplate(resource,templateData);
-        }
+
+
+    private Templates(){
+        super();
     }
-    private hapax.Template getTemplate(Resource resource, gap.data.Template templateData)
-        throws hapax.TemplateException
+
+
+    public TemplateRenderer getTemplate(TemplateName name)
+        throws TemplateException
     {
-        if (null != templateData){
-            long last = 0;
-            if (templateData.hasLastModified(MayInherit))
-                last = resource.getLastModified(MayInherit);
-
-            String cachePath = hapax.Path.toFile(FileManager.GetPath(resource),templateData.getName());
-
-            hapax.Template template = this.hitCache(cachePath, last);
-            if (null != template)
-                return template;
-            else {
-                hapax.TemplateLoader context = new hapax.TemplateLoader.Context(this, resource.getBase());
-
-                String contents = Strings.TextToString(templateData.getTemplateSourceHapax(MayInherit));
-
-                template = new hapax.Template(last, contents, context);
-
-                synchronized(this.cache){
-                    this.cache.put(cachePath,template);
+        Request request = Request.Get();
+        if (null != request){
+            Resource resource = request.resource;
+            if (null != resource){
+                gap.data.Template template = resource.getTemplates(name.getName());
+                if (null != template)
+                    return this.getTemplate(template);
+                else {
+                    resource = Resource.ForLongBaseName(resource.getBase(),name.getName());
+                    if (null != resource)
+                        return this.getTemplate(resource);
                 }
-                return template;
+            }
+        }
+        return this.getTemplate(TemplateFile(name.getSource()));
+    }
+    private TemplateRenderer getTemplate(File templateFile)
+        throws TemplateException
+    {
+        if (null != templateFile){
+            Path path = PathFromFile(templateFile);
+            Resource resource = Resource.GetCreateLong(path.getBase(),path.getName());
+            CreateTools(resource);
+            Template template = new Template(resource.getKey(),path.getName());
+            try {
+                template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFile)));
+                template.setLastModified(templateFile.lastModified());
+                template.save();
+                return new TemplateRenderer(this,template);
+            }
+            catch (IOException exc){
+                throw new TemplateException(templateFile.getPath(),exc);
             }
         }
         else
             return null;
     }
+    private TemplateRenderer getTemplate(Resource resource)
+        throws TemplateException
+    {
+        if (null == resource)
+            return null;
+        else {
+            gap.data.Template template = resource.getTemplates(resource.getName());
+            return this.getTemplate(template);
+        }
+    }
+    private TemplateRenderer getTemplate(gap.data.Template template)
+        throws TemplateException
+    {
+        if (null != template)
+            return new TemplateRenderer(this,template);
+        else
+            return null;
+    }
+    public static Path PathFromFile(File file){
+        String path = file.getPath();
+        if (!path.endsWith(TemplatesFilenameSuffix))
+            throw new IllegalArgumentException(path);
+        else {
+            path = path.substring(0,path.length()-TemplatesFilenameSuffixLen);
+
+            for (int cc = 0; cc < TemplatesLocationCount; cc++){
+                String prefix = TemplatesLocation[cc].getPath();
+                if (path.startsWith(prefix))
+                    return new Path(path.substring(prefix.length()));
+            }
+            throw new IllegalArgumentException(file.getPath());
+        }
+    }
+
 }

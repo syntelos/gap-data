@@ -1,0 +1,6 @@
+
+A transformation of Hapax2 (http://code.google.com/p/hapax2) for Gap Data.
+
+Operates identically to Hapax2 in syntax and semantics, although
+specialized to the Gap Data codebase.
+

@@ -23,9 +23,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package hapax;
+package gap.hapax;
 
-import java.util.List;
+import gap.data.List;
+
 import java.util.StringTokenizer;
 
 /**
@@ -34,9 +35,9 @@ import java.util.StringTokenizer;
  * 
  * @author jdp
  */
-public class Name 
+public final class TemplateName 
     extends Object
-    implements Iterable<Name.Component>
+    implements Iterable<TemplateName.Component>
 {
 
     /**
@@ -50,35 +51,33 @@ public class Name
         implements Comparable<Component>
     {
 
-        public final String source, component, term;
+        public final String source, component;
 
         public final int index;
 
 
         public Component(String source){
             super();
-            StringTokenizer strtok = new StringTokenizer(source,":][");
+            StringTokenizer strtok = new StringTokenizer(source,"][");
             switch (strtok.countTokens()){
             case 1:
                 this.component = strtok.nextToken();
-                this.term = null;
                 this.index = 0;
                 this.source = component;
                 break;
             case 2:
                 this.component = strtok.nextToken();
-                this.term = strtok.nextToken();
+                String term = strtok.nextToken();
                 int index;
                 try {
-                    index = Integer.parseInt(this.term);
+                    index = Integer.parseInt(term);
                     if (0 > index)
                         throw new IllegalArgumentException(source);
                     else
                         source = component+'['+index+']';
                 }
                 catch (NumberFormatException exc){
-                    index = 0;
-                    source = component+'['+term+']';
+                    throw new IllegalArgumentException(source,exc);
                 }
                 this.index = index;
                 this.source = source;
@@ -108,7 +107,7 @@ public class Name
                 return 0;
             else if (null == that)
                 return 1;
-            else if (null != this.term && null != that.term){
+            else if (0 != this.index || 0 != that.index){
                 int comp = this.component.compareTo(that.component);
                 if (0 != comp)
                     return comp;
@@ -119,14 +118,14 @@ public class Name
                         return 1;
                 }
                 else
-                    return this.term.compareTo(that.term);
+                    return 0;
             }
             else
                 return this.component.compareTo(that.component);
         }
     }
     /**
-     * Name path iterator.
+     * TemplateName path iterator.
      * 
      * @author jdp
      */
@@ -164,6 +163,8 @@ public class Name
     }
 
 
+    public final TemplateName from;
+
     public final String source;
 
     public final Component path[];
@@ -171,8 +172,9 @@ public class Name
     public final int count;
 
 
-    public Name(String source){
+    public TemplateName(String source){
         super();
+        this.from = null;
         if (null != source){
             StringBuilder strbuf = new StringBuilder();
             StringTokenizer strtok = new StringTokenizer(source,"/");
@@ -192,60 +194,127 @@ public class Name
         else
             throw new IllegalArgumentException();
     }
+    public TemplateName(TemplateName prefix, String suffix){
+        this(Cat(prefix,suffix));
+    }
+    public TemplateName(TemplateName shift){
+        super();
+        if (null != shift){
+            this.from = shift;
+            this.source = shift.source;
+            int count = (shift.count-1);
+            if (0 < count){
+                this.count = count;
+                Component[] path = new Component[count];
+                System.arraycopy(shift.path,1,path,0,count);
+                this.path = path;
+            }
+            else {
+                this.count = 0;
+                this.path = new Component[0];
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
 
 
-    public final String getSource(){
+    public String getSource(){
         return this.source;
     }
-    public final boolean isIdentity(){
+    public boolean isIdentity(){
         return (1 == this.count);
     }
-    public final int size(){
+    public int size(){
         return this.count;
     }
-    public final Component get(int idx){
+    public boolean has(int idx){
+        return (-1 < idx && idx < this.count);
+    }
+    public boolean hasNot(int idx){
+        return (idx >= this.count);
+    }
+    public boolean is(int idx){
+        return (idx == (this.count-1));
+    }
+    public Component get(int idx){
         if (-1 < idx && idx < this.count)
             return this.path[idx];
         else
-            throw new ArrayIndexOutOfBoundsException(String.valueOf(idx));
+            return null;
     }
-    public String getVariable(TemplateDataDictionary map){
-        Component[] path = this.path;
-        for (int cc = 0, count = this.count, term = (count-1); null != map && cc < count; cc++){
-            Component c = path[cc];
-            if (cc < term)
-                map = this.getSection(c,map);
-            else
-                return this.getVariable(c,map);
+    public String getComponent(int idx){
+        if (-1 < idx && idx < this.count)
+            return this.path[idx].component;
+        else
+            return null;
+    }
+    /**
+     * @return Head
+     */
+    public Component first(){
+        return this.get(0);
+    }
+    /**
+     * @return Not first
+     */
+    public Component last(){
+        int idx = (this.count-1);
+        if (0 != idx)
+            return this.get(idx);
+        else
+            return null;
+    }
+    /**
+     * @return May be first
+     */
+    public Component tail(){
+        return this.get(this.count-1);
+    }
+    public int getIndex(int idx){
+        if (-1 < idx && idx < this.count)
+            return this.path[idx].index;
+        else
+            return -1;
+    }
+    public boolean hasNotBase(){
+        return (2 > this.count);
+    }
+    public boolean hasBase(){
+        return (1 < this.count);
+    }
+    public String getBase(){
+        StringBuilder strbuf = new StringBuilder();
+        Component el, path[] = this.path;
+        for (int cc = 0, count = path.length, term = (count-1); cc < term; cc++){
+            el = path[cc];
+            if (0 != strbuf.length())
+                strbuf.append('/');
+            strbuf.append(el.source);
         }
-        return null;
+        return strbuf.toString();
     }
-    public TemplateDataDictionary getSection(TemplateDataDictionary map){
-        Component[] path = this.path;
-        for (int cc = 0, count = this.count; null != map && cc < count; cc++){
-            Component c = path[cc];
-            map = this.getSection(c,getSection(map));
+    public boolean hasNotName(){
+        return (1 > this.count);
+    }
+    public boolean hasName(){
+        return (0 < this.count);
+    }
+    public String getName(){
+        if (0 < this.count){
+            Component[] components = this.path;
+            return components[components.length-1].source;
         }
-        return map;
+        else
+            return null;
     }
-    protected String getVariable(Component c, TemplateDataDictionary map){
-        return map.getVariable(c.component);
-    }
-    protected TemplateDataDictionary getSection(Component c, TemplateDataDictionary map){
-        List<TemplateDataDictionary> section = map.getSection(c.component);
-        if (null != section){
-            if (c.index < section.size())
-                return section.get(c.index);
-        }
-        return null;
-    }
-    public final int hashCode(){
+    public int hashCode(){
         return this.source.hashCode();
     }
-    public final String toString(){
+    public String toString(){
         return this.source;
     }
-    public final boolean equals(Object that){
+    public boolean equals(Object that){
         if (this == that)
             return true;
         else if (null == that)
@@ -253,7 +322,30 @@ public class Name
         else
             return this.source.equals(that.toString());
     }
-    public final java.util.Iterator<Component> iterator(){
+    public java.util.Iterator<Component> iterator(){
         return new Iterator(this.path);
+    }
+
+    public final static String Cat(TemplateName prefix, String suffix){
+        if (null == prefix)
+            return suffix;
+        else {
+            Component tail = prefix.tail();
+            if (0 != tail.index){
+                StringBuilder strbuf = new StringBuilder();
+                if (prefix.hasBase()){
+                    strbuf.append(prefix.getBase());
+                    strbuf.append('/');
+                }
+                strbuf.append(tail.component);
+                strbuf.append(suffix);
+                strbuf.append('[');
+                strbuf.append(tail.index);
+                strbuf.append(']');
+                return strbuf.toString();
+            }
+            else
+                return (prefix+suffix);
+        }
     }
 }

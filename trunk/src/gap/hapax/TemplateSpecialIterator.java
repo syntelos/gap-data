@@ -23,7 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package hapax;
+package gap.hapax;
 
 /**
  * Section and include iterations (one or many) are evaluated with
@@ -53,7 +53,7 @@ package hapax;
  * 
  * @author jdp
  */
-public class Iterator 
+public class TemplateSpecialIterator 
     extends Object
 {
     public final static class Suffix {
@@ -64,22 +64,22 @@ public class Iterator
         public final static String Exclusive = "_it_Exclusive";
     }
 
-    public final static void Define(TemplateDataDictionary dict, String sectionName, int cc, int count){
+    public final static void Define(TemplateDataDictionary dict, TemplateName sectionName, int cc, int count){
         if (0 == cc){
-            dict.showSection(sectionName+Suffix.First);
+            dict.showSection(new TemplateName(sectionName,Suffix.First));
             if (1 == count)
-                dict.showSection(sectionName+Suffix.Last);
+                dict.showSection(new TemplateName(sectionName,Suffix.Last));
             else
-                dict.showSection(sectionName+Suffix.NotLast);
+                dict.showSection(new TemplateName(sectionName,Suffix.NotLast));
         }
         else if (cc == (count-1)){
-            dict.showSection(sectionName+Suffix.NotFirst);
-            dict.showSection(sectionName+Suffix.Last);
+            dict.showSection(new TemplateName(sectionName,Suffix.NotFirst));
+            dict.showSection(new TemplateName(sectionName,Suffix.Last));
         }
         else {
-            dict.showSection(sectionName+Suffix.NotFirst);
-            dict.showSection(sectionName+Suffix.NotLast);
-            dict.showSection(sectionName+Suffix.Exclusive);
+            dict.showSection(new TemplateName(sectionName,Suffix.NotFirst));
+            dict.showSection(new TemplateName(sectionName,Suffix.NotLast));
+            dict.showSection(new TemplateName(sectionName,Suffix.Exclusive));
         }
     }
 

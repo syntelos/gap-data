@@ -23,20 +23,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package hapax.parser;
+package gap.hapax;
 
-import hapax.TemplateLoader;
+import gap.data.TemplateNode;
 
-import java.util.List;
+import java.io.PrintWriter;
 
 /**
- * Interface that must be implemented by any template parsers.
+ * Type of {@link TemplateNode}.
  *
  * @author dcoker
+ * @author jdp
  */
-public interface TemplateParser {
+public enum TemplateNodeType {
+ 
+    SectionOpen, SectionClose, Variable, Text, Include, Comment, EOF ;
 
-    public List<TemplateNode> parse(TemplateLoader context, String template) 
-        throws TemplateParserException;
 
+    public static TemplateNodeType For(TemplateNode node){
+        return valueOf(node.getNodeType());
+    }
 }

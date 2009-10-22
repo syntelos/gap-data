@@ -58,7 +58,7 @@ import java.io.File;
  * @author jdp
  */
 public abstract class BigTable
-    extends java.lang.Object
+    extends gap.hapax.AbstractData
     implements java.io.Serializable,
                RequestCreateUpdate,
                DataInheritance.Notation
