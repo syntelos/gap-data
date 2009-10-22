@@ -140,7 +140,7 @@ public final class TemplateRenderer
     {
         int next = (open + 1);
         int close = (open + node.getOffsetCloseRelative(false));
-        TemplateName sectionName = new TemplateName(node.getNodeContent());
+        TemplateName sectionName = new TemplateName(gap.Strings.TextToString(node.getNodeContent()));
 
         if (close >= next && close < template.size()){
 
@@ -180,7 +180,7 @@ public final class TemplateRenderer
                                             PrintWriter writer)
         throws TemplateException
     {
-        TemplateName variableName = new TemplateName(node.getNodeContent());
+        TemplateName variableName = new TemplateName(gap.Strings.TextToString(node.getNodeContent()));
         String variableValue = dict.getVariable(variableName);
 
         if (null != variableValue && 0 != variableValue.length())
@@ -193,7 +193,7 @@ public final class TemplateRenderer
                                         PrintWriter writer)
         throws TemplateException
     {
-        String text = node.getNodeContent();
+        String text = gap.Strings.TextToString(node.getNodeContent());
 
         if (null != text && 0 != text.length())
             writer.write(text);
@@ -205,7 +205,7 @@ public final class TemplateRenderer
                                            PrintWriter writer)
         throws TemplateException
     {
-        TemplateName sectionName = new TemplateName(node.getNodeContent());
+        TemplateName sectionName = new TemplateName(gap.Strings.TextToString(node.getNodeContent()));
 
         List<TemplateDataDictionary> section = dict.getSection(sectionName);
 
