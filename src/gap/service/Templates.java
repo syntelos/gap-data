@@ -47,7 +47,19 @@ public final class Templates
                TemplateLoader
 {
 
-    private final static File TemplatesLocation = new File("WEB-INF/templates");
+    private static File TemplatesLocation = new File("WEB-INF/templates");
+
+    public final static void SInit(File dir){
+        if (TemplatesLocation.isDirectory())
+            throw new IllegalStateException();
+        else {
+            File validate = new File(dir,"WEB-INF/templates");
+            if (validate.isDirectory())
+                TemplatesLocation = validate;
+            else
+                throw new IllegalArgumentException(dir.getPath());
+        }
+    }
 
     private final static String TemplatesFilenameSuffix = ".xtm";
     private final static int TemplatesFilenameSuffixLen = TemplatesFilenameSuffix.length();

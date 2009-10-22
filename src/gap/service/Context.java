@@ -30,12 +30,14 @@ import java.util.logging.Logger;
 import java.util.logging.LogRecord;
 
 /**
- * This core servlet is extended in {@link gap.servlet.Error} and
- * {@link gap.servlet.Site}.
+ * An integrated context listener for subclassing.
+ * 
+ * @author jdp
  */
 public class Context
     extends Object
-    implements javax.servlet.ServletContextListener
+    implements Service,
+               javax.servlet.ServletContextListener
 {
 
     protected final static Logger Log = Logger.getLogger(Context.class.getName());
@@ -72,15 +74,10 @@ public class Context
     protected void contextDestroyed(ServletContext servletContext){
     }
     protected FileManager serviceEnter(){
-        Store.Enter();
-        Remote.Enter();
-        XMessaging.Enter();
+        Service.Routines.Enter();
         return (new FileManager(""));
     }
     protected void serviceExit(){
-        Store.Exit();
-        Remote.Exit();
-        XMessaging.Exit();
-        FileManager.Exit();
+        Service.Routines.Exit();
     }
 }

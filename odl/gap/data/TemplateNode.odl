@@ -8,7 +8,7 @@ child TemplateNode version 1
     *unique String id;
     *hash-unique String nodeType;
     *hash-unique Integer lineNumber;
-    *hash-unique String nodeContent;
+    *hash-unique Text nodeContent;
     Integer offset;
     Integer offsetCloseRelative;
 }

@@ -19,9 +19,15 @@
  */
 package gap.service;
 
-public interface Service
-    extends javax.servlet.Servlet
-{
+import gap.*;
+import gap.data.*;
+
+/** 
+ * @see Context
+ * @see Servlet
+ * @see gap.util.Main
+ */
+public interface Service {
 
     public final static class Namespace {
         public final static String People = "http://ns.opensocial.org/2008/opensocial/people";
@@ -32,6 +38,25 @@ public interface Service
         public final static String Messages = "http://ns.opensocial.org/2008/opensocial/messages";
         public final static String Albums = "http://ns.opensocial.org/2008/opensocial/albums";
         public final static String MediaItems = "http://ns.opensocial.org/2008/opensocial/mediaItems";
+    }
+
+    public final static class Routines {
+
+        public final static void Enter(){
+            Store.Enter();
+            Remote.Enter();
+            XMessaging.Enter();
+        }
+        public final static void Exit(){
+            Store.Exit();
+            Remote.Exit();
+            Logon.Exit();
+            XMessaging.Exit();
+            Method.Exit();
+            FileManager.Exit();
+            Request.Exit();
+            Response.Exit();
+        }
     }
 
 }
