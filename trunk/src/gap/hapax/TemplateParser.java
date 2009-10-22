@@ -241,15 +241,17 @@ public final class TemplateParser
             case SectionClose:
                 if (DistanceToCloseStackInit == stack){
 
-                    if (tp.getNodeContent().equals(sectionName))
+                    String tpName = gap.Strings.TextToString(tp.getNodeContent());
+
+                    if (tpName.equals(sectionName))
 
                         return (ofs-node_ofs);
 
                     else {
 
                         String msg = MessageFormat.format("Mismatched close tag: expecting a close tag for \"{0}\", but got close tag for \"{1}\" at line {2}.", 
-                                                          node.getNodeContent(),
-                                                          tp.getNodeContent(),
+                                                          sectionName,
+                                                          tpName,
                                                           tp.getLineNumber());
                         throw new TemplateParserException(msg);
                     }
