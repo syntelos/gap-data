@@ -123,6 +123,6 @@ public final class Protocol
     }
     final static void Exit(){
 
-        MTL.set(null);
+        MTL.remove();
     }
 }

@@ -173,6 +173,6 @@ public final class Method
     }
     final static void Exit(){
 
-        MTL.set(null);
+        MTL.remove();
     }
 }

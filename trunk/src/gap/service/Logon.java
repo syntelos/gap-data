@@ -57,7 +57,7 @@ public final class Logon
         }
     }
     static void Exit(){
-        LTL.set(null);
+        LTL.remove();
     }
     /**
      * @return User of the current thread.

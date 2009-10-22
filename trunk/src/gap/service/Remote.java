@@ -51,9 +51,7 @@ public final class Remote
          */
     }
     static void Exit(){
-        URLFetchService ufs = UFS.get();
-        if (null != ufs)
-            UFS.set(null);
+        UFS.remove();
     }
     public static URLFetchService Get(){
         return UFS.get();
