@@ -20,12 +20,10 @@
 package gap;
 
 import oso.data.*;
-import gap.data.*;
-import gap.service.*;
 
-import hapax.Template;
-import hapax.TemplateDataDictionary;
-import hapax.TemplateException;
+import gap.data.*;
+import gap.hapax.*;
+import gap.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,7 +36,8 @@ import java.nio.charset.Charset;
  */
 public class Request 
     extends javax.servlet.http.HttpServletRequestWrapper
-    implements DataInheritance.Notation
+    implements DataInheritance.Notation,
+               TemplateDataDictionary
 {
     /**
      * Universal charset
@@ -97,6 +96,19 @@ public class Request
             }
         }
     }
+    public static enum Field {
+        method, protocol, path, accept, fileManager, parameters, userReference, 
+            logon, contentType, isAdmin, isPartner, isMember, resource, tool;
+
+        public static Field For(String name){
+            try {
+                return Field.valueOf(name);
+            }
+            catch (IllegalArgumentException exc){
+                return null;
+            }
+        }
+    }
 
 
     public final Method method;
@@ -106,17 +118,19 @@ public class Request
     public final FileManager fileManager;
     public final Parameters parameters;
     public final String userReference;
-    public final TemplateDataDictionary top;
     public final Logon logon;
     public final ContentType contentType;
     public final boolean isAdmin, isPartner, isMember;
     public Resource resource;
     public Tool tool;
 
+    private TemplateDataDictionary parent;
+    private java.util.Map<String,String> variables;
+    private java.util.Map<String,List<TemplateDataDictionary>> sections;
+
 
     public Request(HttpServletRequest req, Method method, Protocol protocol, Path path, 
-                   Accept accept, FileManager fm, Logon logon, String uri, TemplateDataDictionary top, 
-                   Parameters parameters)
+                   Accept accept, FileManager fm, Logon logon, String uri, Parameters parameters)
     {
         super(req);
         this.method = method;
@@ -126,7 +140,6 @@ public class Request
         this.fileManager = fm;
         this.parameters = parameters;
         this.userReference = uri;
-        this.top = top;
         this.logon = logon;
         this.contentType = ContentType.For(req);
         this.resource = FileManager.GetResource(path);
@@ -176,9 +189,6 @@ public class Request
         else
             return null;
     }
-    public final TemplateDataDictionary getTop(){
-        return logon.dict;
-    }
     public final String getLogonId(){
         return this.logon.serviceLogon;
     }
@@ -211,7 +221,7 @@ public class Request
     public final boolean accept(String name){
         return this.accept.accept(name);
     }
-    public final Template getTemplate()
+    public final TemplateRenderer getTemplate()
         throws TemplateException
     {
         return Templates.GetTemplate(this.resource);
@@ -291,5 +301,265 @@ public class Request
             return valueAry[0];
         else
             return null;
+    }
+
+    public void renderComplete(){
+
+    }
+    public TemplateDataDictionary clone(){
+        try {
+            return (TemplateDataDictionary)super.clone();
+        }
+        catch (java.lang.CloneNotSupportedException exc){
+            throw new java.lang.Error(exc);
+        }
+    }
+    public TemplateDataDictionary clone(TemplateDataDictionary parent){
+        try {
+            Request clone = (Request)super.clone();
+            clone.parent = parent;
+            return clone;
+        }
+        catch (java.lang.CloneNotSupportedException exc){
+            throw new java.lang.Error(exc);
+        }
+    }
+    public TemplateDataDictionary getParent(){
+        return this.parent;
+    }
+    public boolean hasVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case method:
+            case protocol:
+            case path:
+            case accept:
+            case fileManager:
+                return name.is(0);
+            case parameters:
+                if (name.has(1))
+                    return this.parameters.hasVariable(new TemplateName(name));
+                else
+                    return true;
+            case userReference:
+                return name.is(0);
+            case logon:
+                if (name.has(1))
+                    return this.logon.hasVariable(new TemplateName(name));
+                else
+                    return true;
+            case contentType:
+            case isAdmin:
+            case isPartner:
+            case isMember:
+                return name.is(0);
+            case resource:
+                if (name.has(1) && null != this.resource)
+                    return this.resource.hasVariable(new TemplateName(name));
+                else
+                    return name.is(0);
+            case tool:
+                if (name.has(1) && null != this.tool)
+                    return this.tool.hasVariable(new TemplateName(name));
+                else
+                    return name.is(0);
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            java.util.Map<String,String> variables = this.variables;
+            if (null != variables)
+                return variables.containsKey(name);
+            else
+                return false;
+        }
+    }
+    public String getVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case method:
+                if (name.is(0))
+                    return this.method.name;
+                else
+                    return "";
+            case protocol:
+                if (name.is(0))
+                    return this.protocol.name;
+                else
+                    return "";
+            case path:
+                if (name.is(0))
+                    return this.path.getFull();
+                else
+                    return "";
+            case accept:
+                if (name.is(0))
+                    return this.getHeader("Accept");
+                else
+                    return "";
+            case fileManager:
+                return "";
+            case parameters:
+                if (name.has(1))
+                    return this.parameters.getVariable(new TemplateName(name));
+                else
+                    return "";
+            case userReference:
+                return this.userReference;
+            case logon:
+                if (name.has(1))
+                    return this.logon.getVariable(new TemplateName(name));
+                else
+                    return "";
+            case contentType:
+                if (name.is(0) && null != this.contentType)
+                    return this.contentType.name();
+                else
+                    return "";
+            case isAdmin:
+                if (name.is(0) && this.isMember)
+                    return "Admin";
+                else
+                    return "";
+            case isPartner:
+                if (name.is(0) && this.isPartner)
+                    return "Partner";
+                else
+                    return "";
+            case isMember:
+                if (name.is(0) && this.isMember)
+                    return "Member";
+                else
+                    return "";
+            case resource:
+                if (name.has(1) && null != this.resource)
+                    return this.resource.getVariable(new TemplateName(name));
+                else
+                    return "";
+            case tool:
+                if (name.has(1) && null != this.tool)
+                    return this.tool.getVariable(new TemplateName(name));
+                else
+                    return "";
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            java.util.Map<String,String> variables = this.variables;
+            if (name.is(0) && null != variables)
+                return variables.get(name.getComponent(0));
+            else
+                return null;
+        }
+    }
+    public void setVariable(TemplateName name, String value){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case method:
+            case protocol:
+            case path:
+            case accept:
+            case fileManager:
+            case parameters:
+            case userReference:
+            case logon:
+            case contentType:
+            case isAdmin:
+            case isPartner:
+            case isMember:
+                throw new IllegalArgumentException(field.name());
+
+            case resource:{
+                Path resourceName = new Path(value);
+                Resource resource = Resource.ForLongBaseName(resourceName.getBase(),resourceName.getName());
+                if (null != resource)
+                    this.resource = resource;
+                return;
+            }
+            case tool:
+                if (null != this.resource){
+                    Path toolName = new Path(value);
+                    if (toolName.hasBase()){
+                        Path resourceName = new Path(toolName.getBase());
+                        Resource resource = Resource.ForLongBaseName(resourceName.getBase(),resourceName.getName());
+                        if (null != resource)
+                            this.resource = resource;
+                    }
+                    this.tool = this.resource.getTools(toolName.getName());
+                    return;
+                }
+                else
+                    throw new IllegalStateException(name.source);
+
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            java.util.Map<String,String> variables = this.variables;
+            if (null == variables){
+                variables = new java.util.HashMap<String,String>();
+                this.variables = variables;
+            }
+            variables.put(name.getName(),value);
+        }
+    }
+    public List<TemplateDataDictionary> getSection(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case method:
+            case protocol:
+            case path:
+            case accept:
+            case fileManager:
+                return null;
+            case parameters:
+                return this.parameters.getSection(new TemplateName(name));
+            case userReference:
+                return null;
+            case logon:
+                return this.logon.getSection(new TemplateName(name));
+            case contentType:
+            case isAdmin:
+            case isPartner:
+            case isMember:
+                return null;
+            case resource:
+                if (null != this.resource)
+                    return this.resource.getSection(new TemplateName(name));
+                else
+                    return null;
+            case tool:
+                if (null != this.tool)
+                    return this.tool.getSection(new TemplateName(name));
+                else
+                    return null;
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+
+            if (null != sections && sections.containsKey(name))
+                return sections.get(name);
+
+            if (this.hasVariable(name))
+                return this.showSection(name);
+            else
+                return null;
+        }
+    }
+    public List<TemplateDataDictionary> showSection(TemplateName name){
+        return null;
+    }
+    public TemplateDataDictionary addSection(TemplateName name){
+        return null;
     }
 }

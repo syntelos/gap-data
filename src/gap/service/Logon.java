@@ -21,9 +21,6 @@ package gap.service;
 
 import oso.data.Person;
 
-import hapax.TemplateDataDictionary;
-import hapax.TemplateException;
-
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 
@@ -40,32 +37,11 @@ import java.util.logging.Logger;
 import java.util.logging.LogRecord;
 
 /**
- * Using the term "logon" as generic of its states "logged- in" or
- * "logged- out".  When principal is null, the state is "logged- out".
- * 
- * <h3>Templates</h3>
- * 
- * Defines the following template dictionary properties
- * 
- * <pre>
- * logon_url
- * logon_class
- * logon_identifier
- * </pre>
- * 
- * Manages the visibility of the following template sections
- * 
- * <pre>
- * with_logon
- * without_logon
- * with_site_admin
- * without_site_admin
- * </pre>
  * 
  * @author jdp
  */
 public final class Logon
-    extends Object
+    extends gap.hapax.AbstractData
 {
     private final static ThreadLocal<Logon> LTL = new ThreadLocal<Logon>();
 
@@ -115,66 +91,32 @@ public final class Logon
     public final User serviceUser;
     public final boolean serviceAdmin;
     public final String serviceLogon, requestUrl;
-    public final TemplateDataDictionary dict;
 
     private Person person;
     private String loginUrl, logoutUrl;
 
 
-    public Logon(Principal principal, String uri, TemplateDataDictionary dict, UserService service){
+    public Logon(Principal principal, String uri, UserService service){
         super();
         this.principal = principal;
         this.requestUrl = uri;
-        this.dict = dict;
         this.service = service;
-
         if (null == principal){
-            String loginUrl = service.createLoginURL(uri);
-            this.loginUrl = loginUrl;
+            this.loginUrl = service.createLoginURL(uri);
             this.serviceUser = null;
             this.serviceAdmin = false;
             this.serviceLogon = null;
-
-
-            dict.showSection("without_site_admin");
-
-            TemplateDataDictionary logon = dict.showSection("logon").get(0);
-            logon.setVariable("logon_url",loginUrl);
-            logon.setVariable("logon_url_text","Sign-in");
-            logon.setVariable("logon_class","logon off");
-
-            logon.showSection("without_login");
         }
         else {
-            String logoutUrl = service.createLogoutURL(uri);
-            this.logoutUrl = logoutUrl;
-
-            dict.setVariable("logon_url",logoutUrl);
+            this.logoutUrl = service.createLogoutURL(uri);
+            this.serviceAdmin = service.isUserAdmin();
 
             User guser = service.getCurrentUser();
             this.serviceUser = guser;
 
-            this.serviceAdmin = service.isUserAdmin();
-
             String email = guser.getEmail();
             this.serviceLogon = email;
 
-            dict.setVariable("logon_url_text",email);
-            dict.setVariable("logon_identifier",email);
-
-
-            if (this.serviceAdmin){
-                dict.showSection("with_site_admin");
-            }
-            else {
-                dict.showSection("without_site_admin");
-            }
-
-            TemplateDataDictionary logon = dict.showSection("logon").get(0);
-
-            logon.setVariable("logon_class","logon on");
-
-            logon.showSection("with_login");
             try {
                 /*
                  * Ensure that every login enters the system, so that

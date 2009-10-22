@@ -19,6 +19,9 @@
  */
 package gap.util;
 
+import gap.hapax.TemplateDataDictionary;
+import gap.hapax.TemplateName;
+
 import com.google.appengine.api.datastore.FetchOptions;
 
 /**
@@ -32,6 +35,15 @@ public class Page
 
     public final static String Count = "count";
     public final static String StartIndex = "startIndex";
+    public final static String StartIndexPrev = "startIndexPrev";
+    public final static String StartIndexNext = "startIndexNext";
+
+    public final static class TemplateNames {
+        public final static TemplateName Count = new TemplateName(Page.Count);
+        public final static TemplateName StartIndex = new TemplateName(Page.StartIndex);
+        public final static TemplateName StartIndexPrev = new TemplateName(Page.StartIndexPrev);
+        public final static TemplateName StartIndexNext = new TemplateName(Page.StartIndexNext);
+    }
 
 
     public final int count, startIndex, nextIndex, prevIndex;
@@ -57,12 +69,12 @@ public class Page
     }
 
 
-    public final void dictionaryInto(hapax.TemplateDictionary dict){
+    public final void dictionaryInto(TemplateDataDictionary dict){
 
-        dict.setVariable("startIndex",this.startIndex);
-        dict.setVariable("startIndexPrev",this.prevIndex);
-        dict.setVariable("startIndexNext",this.nextIndex);
-        dict.setVariable("count",this.count);
+        dict.setVariable(TemplateNames.StartIndex,String.valueOf(this.startIndex));
+        dict.setVariable(TemplateNames.StartIndexPrev,String.valueOf(this.prevIndex));
+        dict.setVariable(TemplateNames.StartIndexNext,String.valueOf(this.nextIndex));
+        dict.setVariable(TemplateNames.Count,String.valueOf(this.count));
     }
     public final FetchOptions createFetchOptions(){
         return FetchOptions.Builder.withLimit(this.count).offset(this.startIndex);

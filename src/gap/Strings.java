@@ -41,6 +41,8 @@ public abstract class Strings {
                 return ByteFromString(string);
             case Short:
                 return ShortFromString(string);
+            case Integer:
+                return IntegerFromString(string);
             case Long:
                 return LongFromString(string);
             case Float:
@@ -85,6 +87,8 @@ public abstract class Strings {
                 return ByteToString((java.lang.Byte)instance);
             case Short:
                 return ShortToString((java.lang.Short)instance);
+            case Integer:
+                return IntegerToString((java.lang.Integer)instance);
             case Long:
                 return LongToString((java.lang.Long)instance);
             case Float:
@@ -160,6 +164,18 @@ public abstract class Strings {
             return null;
     }
     public final static java.lang.String ShortToString(java.lang.Short instance){
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
+    }
+    public final static java.lang.Integer IntegerFromString(java.lang.String string){
+        if (null != string)
+            return new java.lang.Integer(string);
+        else
+            return null;
+    }
+    public final static java.lang.String IntegerToString(java.lang.Integer instance){
         if (null != instance)
             return instance.toString();
         else

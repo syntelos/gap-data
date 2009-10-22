@@ -23,12 +23,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package hapax.parser;
-
-import hapax.TemplateException;
+package gap.hapax;
 
 /**
- * An exception thrown by a TemplateParser.
+ * An exception thrown by TemplateParser.
  *
  * @author dcoker
  */

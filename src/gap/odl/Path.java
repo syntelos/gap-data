@@ -32,7 +32,7 @@ public final class Path
     extends Object
     implements gap.data.HasName
 {
-    public final static Pattern Statement = Pattern.compile("^path [\\w\\./]+[;\\s]*");
+    public final static Pattern Statement = Pattern.compile("^path [\\w\\./-]+[;\\s]*");
 
 
     private Comment comment;

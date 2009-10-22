@@ -20,7 +20,6 @@
 package gap.data;
 
 
-import gap.*;
 import gap.data.*;
 
 import com.google.appengine.api.datastore.*;
@@ -30,33 +29,27 @@ import java.util.Date;
 import javax.annotation.Generated;
 
 /**
- * Generated short map.
+ * Generated short list.
  */
-@Generated(value={"gap.service.OD","odl/map-short.xtm"},date="2009-10-19T18:15:36.069Z")
-public final class MapShortResourceStringTemplate
-    extends gap.util.AbstractMap<String,Template>
-    implements gap.data.Map.Short<String,Template>
+@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-19T18:15:36.343Z")
+public final class ListShortTemplateTemplateNode
+    extends gap.util.AbstractList<TemplateNode>
+    implements gap.data.List.Short<TemplateNode>
 {
 
-    private final static long serialVersionUID = 1;
+    private final static long serialVersionUID = 2;
 
     public final static String AncestorKeyFieldName = "key";
 
-    public final static String ParentTypeName = "Resource";
+    public final static String ParentTypeName = "Template";
 
-    public final static String ChildTypeName = "Template";
-
-    public final static gap.Primitive MapKeyType = gap.Primitive.String;
-
-    public final static String MapKeyFieldName = "name";
-
-    public final static Template.Field MapKeyField = Template.Field.Name;
+    public final static String ChildTypeName = "TemplateNode";
 
 
-    protected transient Resource parent;
+    protected transient Template parent;
 
 
-    public MapShortResourceStringTemplate(Resource parent) {
+    public ListShortTemplateTemplateNode(Template parent) {
         super();
         if (null != parent){
             this.parent = parent;
@@ -66,7 +59,7 @@ public final class MapShortResourceStringTemplate
         else
             throw new IllegalArgumentException();
     }
-    public MapShortResourceStringTemplate(){
+    public ListShortTemplateTemplateNode(){
         super();
     }
 
@@ -75,12 +68,12 @@ public final class MapShortResourceStringTemplate
         this.parent = null;
         this.clearBuffer();
     }
-    public Resource getParent(){
-        Resource parent = this.parent;
+    public Template getParent(){
+        Template parent = this.parent;
         if (null == parent){
             Key parentKey = this.ancestorKey;
             if (null != parentKey){
-                parent = Resource.Get(parentKey);
+                parent = Template.Get(parentKey);
                 if (null != parent)
                     this.parent = parent;
                 else
@@ -95,33 +88,16 @@ public final class MapShortResourceStringTemplate
         Key key = this.getParent().getClassFieldKeyValue();
         if (key != this.ancestorKey){
             this.ancestorKey = key;
-            this.query = Template.CreateQueryFor(this.ancestorKey);
+            this.query = TemplateNode.CreateQueryFor(this.ancestorKey);
         }
     }
-    public Template fetch(Filter filter){
+    public TemplateNode fetch(Filter filter){
         Key ancestor = this.ancestorKey;
         if (null != ancestor){
-            Query query = Template.CreateQueryFor(ancestor,filter);
-            return Template.Query1(query);
+            Query query = TemplateNode.CreateQueryFor(ancestor,filter);
+            return TemplateNode.Query1(query);
         }
         else
             throw new IllegalStateException("Missing ancestor key.");
-    }
-    public gap.Primitive getMapKeyType(){
-        return MapKeyType;
-    }
-    public String getMapKeyFieldName(){
-        return MapKeyFieldName;
-    }
-    protected void buffered(BigTable instance, int index){
-        Comparable field = (Comparable)instance.valueOf(MapKeyField,MayNotInherit);
-        this.index.add(field,index);
-    }
-    public Template get(String mapKey){
-        int index = this.index.get(mapKey);
-        if (-1 != index)
-            return (Template)this.buffer[index];
-        else
-            return null;
     }
 }

@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-18T10:07:45.783Z")
+@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-19T18:15:37.718Z")
 public final class Person
     extends gap.data.BigTable
     implements DataInheritance<Person>

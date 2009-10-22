@@ -16,7 +16,7 @@
   <property name="out.bin" value="${out.webinf}/classes"/>
   <property name="out.lib" value="${out.webinf}/lib"/>
   <property name="out.src" value="${out.webinf}/src"/>
-  <property name="out.odl" value="${out.webinf}/odl"/>
+  <property name="out.odl" value="${out}/odl"/>
   <property name="lib" value="lib"/>
   <property name="doc" value="doc"/>
   <property name="odl" value="odl"/>
@@ -161,7 +161,7 @@
 
   <target name="odl" description="Generate 'src/pkg/*.java' files from 'odl/pkg/*.odl' files.  Requires prequisite plain 'ant' run.">
 
-    <odl-write src="odl" tgt="src" classpath.id="lib.path"/>
+    <odl-write classpath.id="lib.path"/>
 
   </target>
 

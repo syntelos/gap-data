@@ -99,6 +99,11 @@ public interface List<V>
     public interface Short<V>
         extends List<V>, Collection.ShortC<V>
     {
+        public void drop();
+
+        public List<V> add(V instance);
+
+        public void save();
     }
 
     public interface Long<V>
@@ -107,9 +112,14 @@ public interface List<V>
     }
 
     /**
+     * Size in memory
+     * @see Collection#hitEnd()
+     */
+    public int size();
+
+    /**
      * Index in memory 
      * @see Collection#hitEnd()
-     * @see Collection#size()
      */
     public V get(int index);
 }

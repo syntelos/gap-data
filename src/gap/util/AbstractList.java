@@ -305,4 +305,26 @@ public abstract class AbstractList<V extends BigTable>
         }
         return -1;
     }
+    public void drop(){
+        BigTable[] buffer = this.buffer;
+        if (null != buffer){
+            for (int cc = 0, count = buffer.length; cc < count; cc++){
+                BigTable instance = buffer[cc];
+                instance.drop();
+            }
+            this.buffer = null;
+        }
+    }
+    public void save(){
+        BigTable[] buffer = this.buffer;
+        if (null != buffer){
+            for (int cc = 0, count = buffer.length; cc < count; cc++){
+                BigTable instance = buffer[cc];
+                instance.save();
+            }
+        }
+    }
+    public List<V> add(V instance){
+        return this.addToBuffer(instance);
+    }
 }

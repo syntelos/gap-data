@@ -21,7 +21,7 @@ package gap.data.validate;
 
 
 import gap.data.*;
-import static gap.data.Partner.Field.*;
+import static gap.data.TemplateNode.Field.*;
 
 import gap.service.Accept;
 import gap.service.Error;
@@ -43,30 +43,46 @@ import javax.annotation.Generated;
 /**
  * Generated data bean string I/O functions.
  */
-@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-19T18:15:37.578Z")
-public abstract class Partner
+@Generated(value={"gap.service.OD","odl/bean-validate.xtm"},date="2009-10-19T18:15:37.223Z")
+public abstract class TemplateNode
     extends gap.Strings
 {
-    public final static Object FromString(gap.data.Partner.Field field, String string){
+    public final static Object FromString(gap.data.TemplateNode.Field field, String string){
         switch(field){
           case Key:
             return KeyFromString(string);
           case Id:
             return StringFromString(string);
-          case Name:
+          case NodeType:
             return StringFromString(string);
+          case LineNumber:
+            return IntegerFromString(string);
+          case NodeContent:
+            return StringFromString(string);
+          case Offset:
+            return IntegerFromString(string);
+          case OffsetCloseRelative:
+            return IntegerFromString(string);
         default:
             return null;
         }
     }
-    public final static String ToString(gap.data.Partner.Field field, Object value){
+    public final static String ToString(gap.data.TemplateNode.Field field, Object value){
         switch(field){
           case Key:
             return KeyToString( (Key)value);
           case Id:
             return StringToString( (String)value);
-          case Name:
+          case NodeType:
             return StringToString( (String)value);
+          case LineNumber:
+            return IntegerToString( (Integer)value);
+          case NodeContent:
+            return StringToString( (String)value);
+          case Offset:
+            return IntegerToString( (Integer)value);
+          case OffsetCloseRelative:
+            return IntegerToString( (Integer)value);
         default:
             return null;
         }

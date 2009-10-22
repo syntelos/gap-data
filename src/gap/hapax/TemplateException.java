@@ -23,56 +23,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package hapax.parser;
-
-import hapax.TemplateDataDictionary;
-import hapax.TemplateException;
-import hapax.TemplateLoader;
-
-import java.io.PrintWriter;
+package gap.hapax;
 
 /**
- * All tokens in the template language are represented by instances of a
- * TemplateNode.
+ * An Exception that is thrown by {@link Template} when something goes awry.
  *
  * @author dcoker
- * @author jdp
  */
-public abstract class TemplateNode {
+public class TemplateException
+    extends Exception
+{
 
-    public interface Section {
-
-        public String getSectionName();
+    public TemplateException(Throwable throwable) {
+        super(throwable);
     }
-
-    /**
-     * Primary rendering types.
-     * @see hapax.Template#render
-     */
-    public enum TemplateType {
-        TemplateTypeSection,
-        TemplateTypeNode
+    public TemplateException(String m, Throwable t) {
+        super(m,t);
     }
- 
-
-    public final int lineNumber;
-
-    volatile int ofs = -1;
-
-
-    TemplateNode(int lno){
-        super();
-        this.lineNumber = lno;
+    public TemplateException(String message) {
+        super(message);
     }
-
-
-    public TemplateType getTemplateType(){
-        return TemplateType.TemplateTypeNode;
-    }
-    public void evaluate(TemplateDataDictionary dict, TemplateLoader context,
-                         PrintWriter collector) 
-        throws TemplateException 
-    {
-    }
-
 }
