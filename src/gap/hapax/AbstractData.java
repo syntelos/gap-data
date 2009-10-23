@@ -125,14 +125,8 @@ public class AbstractData
             if (name.is(0))
                 return section;
             else {
-                int index = name.getIndex(0);
-                TemplateDataDictionary sectionData;
-                if (index < section.size()){
-                    sectionData = section.get(index);
-                    return sectionData.getSection(new TemplateName(name));
-                }
-                else
-                    return null;
+                TemplateDataDictionary sectionData = name.dereference(0,section);
+                return sectionData.getSection(new TemplateName(name));
             }
         }
         else {
@@ -175,13 +169,8 @@ public class AbstractData
                 if (name.is(0))
                     return section;
                 else {
-                    int index = name.getIndex(0);
-                    if (index < section.size()){
-                        TemplateDataDictionary sectionData = section.get(index);
-                        return sectionData.showSection(new TemplateName(name));
-                    }
-                    else
-                        throw new ArrayIndexOutOfBoundsException("In '"+name.source+"' at '"+name.getComponent(0)+'['+name.getIndex(0)+"]'.");
+                    TemplateDataDictionary sectionData = name.dereference(0,section);
+                    return sectionData.showSection(new TemplateName(name));
                 }
             }
             else {
