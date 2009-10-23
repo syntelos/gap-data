@@ -33,6 +33,16 @@ import java.util.StringTokenizer;
  * A section or variable name parsed into a list of components
  * delimited by solidus '/' (slash).
  * 
+ * The user implements path interpretation, as demonstrated in {@link
+ * AbstractData}.
+ * 
+ * A path component accepts an optional index suffix enclosed in
+ * square brackets for names identifying lists.  A negative list index
+ * is added to list size.  In this way, negative one refers to the
+ * last element of the list.  The component dereference method is
+ * provided to handle lists.
+ * 
+ * @see AbstractData
  * @author jdp
  */
 public final class TemplateName 
@@ -41,8 +51,11 @@ public final class TemplateName
 {
 
     /**
-     * A name component parsed a <code>'['</code> <i>term</i>
-     * <code>']'</code> or <code>':'</code> <i>term</i> suffix.
+     * A name component has name, and an optional index
+     * 
+     * <pre><i>name</i> '['</code> <i>index</i> <code>']'</pre>.
+     * 
+     * A negative list index is added to list size.
      * 
      * @author jdp
      */
@@ -71,10 +84,7 @@ public final class TemplateName
                 int index;
                 try {
                     index = Integer.parseInt(term);
-                    if (0 > index)
-                        throw new IllegalArgumentException(source);
-                    else
-                        source = component+'['+index+']';
+                    source = component+'['+index+']';
                 }
                 catch (NumberFormatException exc){
                     throw new IllegalArgumentException(source,exc);
@@ -88,6 +98,18 @@ public final class TemplateName
         }
 
 
+        public TemplateDataDictionary dereference(List<TemplateDataDictionary> list){
+            int idx = this.index;
+            if (-1 < idx)
+                return list.get(idx);
+            else {
+                idx += list.size();
+                if (-1 < idx)
+                    return list.get(idx);
+                else
+                    throw new ArrayIndexOutOfBoundsException("In '"+this.source+"' at list size '"+list.size()+"'.");
+            }
+        }
         public int hashCode(){
             return this.source.hashCode();
         }
@@ -249,6 +271,16 @@ public final class TemplateName
         else
             return null;
     }
+    public TemplateDataDictionary dereference(int idx, List<TemplateDataDictionary> list){
+        Component c = this.get(idx);
+        if (null != c)
+            return c.dereference(list);
+        else
+            throw new ArrayIndexOutOfBoundsException("In '"+this.source+"' at index '"+idx+"'.");
+    }
+    public TemplateDataDictionary dereference(List<TemplateDataDictionary> list){
+        return this.dereference(0,list);
+    }
     /**
      * @return Head
      */
@@ -271,6 +303,9 @@ public final class TemplateName
     public Component tail(){
         return this.get(this.count-1);
     }
+    /**
+     * A negative index is added to list size.
+     */
     public int getIndex(int idx){
         if (-1 < idx && idx < this.count)
             return this.path[idx].index;
