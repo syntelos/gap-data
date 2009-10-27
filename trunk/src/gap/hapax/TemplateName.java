@@ -64,7 +64,7 @@ public final class TemplateName
         implements Comparable<Component>
     {
 
-        public final String source, component;
+        public final String source, term;
 
         public final int index;
 
@@ -74,17 +74,17 @@ public final class TemplateName
             StringTokenizer strtok = new StringTokenizer(source,"][");
             switch (strtok.countTokens()){
             case 1:
-                this.component = strtok.nextToken();
+                this.term = strtok.nextToken();
                 this.index = 0;
-                this.source = component;
+                this.source = source;
                 break;
             case 2:
-                this.component = strtok.nextToken();
+                this.term = strtok.nextToken();
                 String term = strtok.nextToken();
                 int index;
                 try {
                     index = Integer.parseInt(term);
-                    source = component+'['+index+']';
+                    source = term+'['+index+']';
                 }
                 catch (NumberFormatException exc){
                     throw new IllegalArgumentException(source,exc);
@@ -130,7 +130,7 @@ public final class TemplateName
             else if (null == that)
                 return 1;
             else if (0 != this.index || 0 != that.index){
-                int comp = this.component.compareTo(that.component);
+                int comp = this.term.compareTo(that.term);
                 if (0 != comp)
                     return comp;
                 else if (this.index != that.index){
@@ -143,7 +143,7 @@ public final class TemplateName
                     return 0;
             }
             else
-                return this.component.compareTo(that.component);
+                return this.term.compareTo(that.term);
         }
     }
     /**
@@ -267,7 +267,7 @@ public final class TemplateName
     }
     public String getComponent(int idx){
         if (-1 < idx && idx < this.count)
-            return this.path[idx].component;
+            return this.path[idx].term;
         else
             return null;
     }
@@ -338,7 +338,7 @@ public final class TemplateName
     public String getName(){
         if (0 < this.count){
             Component[] components = this.path;
-            return components[components.length-1].source;
+            return components[components.length-1].term;
         }
         else
             return null;
@@ -372,7 +372,7 @@ public final class TemplateName
                     strbuf.append(prefix.getBase());
                     strbuf.append('/');
                 }
-                strbuf.append(tail.component);
+                strbuf.append(tail.term);
                 strbuf.append(suffix);
                 strbuf.append('[');
                 strbuf.append(tail.index);
