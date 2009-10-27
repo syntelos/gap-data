@@ -208,6 +208,16 @@ public abstract class AbstractListPrimitive<V>
         }
         throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
     }
+    public final void set(int index, V value){
+        if (-1 < index){
+            Object[] list = this.list;
+            if (null != list && index < list.length){
+                list[index] = value;
+                return;
+            }
+        }
+        throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
+    }
     public final java.util.Iterator<V> iterator(){
         return new ArrayIterator<V>(this.list);
     }

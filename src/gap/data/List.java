@@ -112,14 +112,21 @@ public interface List<V>
     }
 
     /**
-     * Size in memory
+     * Size in memory list buffer.
+     * 
      * @see Collection#hitEnd()
      */
     public int size();
-
     /**
-     * Index in memory 
+     * Index in memory list buffer.
+     * 
      * @see Collection#hitEnd()
      */
     public V get(int index);
+    /**
+     * For list buffer operations as in deep cloning.
+     */
+    public void set(int index, V value);
+
+    public List<V> clone();
 }

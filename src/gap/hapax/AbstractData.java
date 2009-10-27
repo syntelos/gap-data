@@ -115,33 +115,43 @@ public class AbstractData
     public List<TemplateDataDictionary> getSection(TemplateName name){
 
         java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        List<TemplateDataDictionary> section = null;
         if (null != sections){
-            List<TemplateDataDictionary> section = sections.get(name.getComponent(0));
-            if (null != section){
-                if (name.is(0))
-                    return section;
-                else {
-                    TemplateDataDictionary sectionData = name.dereference(0,section);
-                    return sectionData.getSection(new TemplateName(name));
+            section = sections.get(name.getComponent(0));
+        }
+        if (null == section){
+            /*
+             * Inherit
+             */
+            TemplateDataDictionary parent = this.parent;
+            if (null != parent){
+                section = parent.getSection(name);
+                if (null != section){
+
+                    section = SectionClone(this,section);
+
+                    sections.put(name.getComponent(0),section);
                 }
+            }
+            if (null == section){
+                /*
+                 * Synthetic
+                 */
+                if (this.hasVariable(name))
+                    section = this.showSection(name);
+                else
+                    return null;
             }
         }
         /*
-         * Inherit
+         * Section name resolution
          */
-        TemplateDataDictionary parent = this.parent;
-        if (null != parent){
-            List<TemplateDataDictionary> section = parent.getSection(name);
-            if (null != section)
-                return section;
+        if (name.is(0))
+            return section;
+        else {
+            TemplateDataDictionary sectionData = name.dereference(0,section);
+            return sectionData.getSection(new TemplateName(name));
         }
-        /*
-         * Synthetic
-         */
-        if (this.hasVariable(name))
-            return this.showSection(name);
-        else
-            return null;
     }
     public List<TemplateDataDictionary> showSection(TemplateName name){
 
@@ -224,4 +234,17 @@ public class AbstractData
         else
             return list;
     }
+    public final static List<TemplateDataDictionary> SectionClone(TemplateDataDictionary parent, List<TemplateDataDictionary> section){
+
+        List<TemplateDataDictionary> sectionClone = section.clone();
+
+        for (int sectionIndex = 0, sectionCount = sectionClone.size(); sectionIndex < sectionCount; sectionIndex++){
+            TemplateDataDictionary sectionItem = sectionClone.get(sectionIndex);
+            TemplateDataDictionary sectionItemClone = sectionItem.clone(parent);
+            sectionClone.set(sectionIndex,sectionItemClone);
+        }
+
+        return sectionClone;
+    }
+
 }
