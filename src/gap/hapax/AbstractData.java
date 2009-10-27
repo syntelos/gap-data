@@ -80,14 +80,12 @@ public class AbstractData
     public boolean hasVariable(TemplateName name){
 
         java.util.Map<String,String> variables = this.variables;
-        if (null != variables){
-            if (variables.containsKey(name.getName()))
-                return true;
-            else {
-                TemplateDataDictionary parent = this.parent;
-                if (null != parent)
-                    return parent.hasVariable(name);
-            }
+        if (null != variables && variables.containsKey(name.getName())){
+            return true;
+        }
+        TemplateDataDictionary parent = this.parent;
+        if (null != parent){
+            return parent.hasVariable(name);
         }
         return false;
     }
@@ -98,11 +96,10 @@ public class AbstractData
             String value = variables.get(name.getName());
             if (null != value)
                 return value;
-            else {
-                TemplateDataDictionary parent = this.parent;
-                if (null != parent)
-                    return parent.getVariable(name);
-            }
+        }
+        TemplateDataDictionary parent = this.parent;
+        if (null != parent){
+            return parent.getVariable(name);
         }
         return null;
     }
@@ -118,35 +115,33 @@ public class AbstractData
     public List<TemplateDataDictionary> getSection(TemplateName name){
 
         java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
-
-        if (null != sections && sections.containsKey(name.getComponent(0))){
-
+        if (null != sections){
             List<TemplateDataDictionary> section = sections.get(name.getComponent(0));
-            if (name.is(0))
-                return section;
-            else {
-                TemplateDataDictionary sectionData = name.dereference(0,section);
-                return sectionData.getSection(new TemplateName(name));
-            }
-        }
-        else {
-            /*
-             * Inherit
-             */
-            TemplateDataDictionary parent = this.parent;
-            if (null != parent){
-                List<TemplateDataDictionary> section = parent.getSection(name);
-                if (null != section)
+            if (null != section){
+                if (name.is(0))
                     return section;
+                else {
+                    TemplateDataDictionary sectionData = name.dereference(0,section);
+                    return sectionData.getSection(new TemplateName(name));
+                }
             }
-            /*
-             * Synthetic
-             */
-            if (this.hasVariable(name))
-                return this.showSection(name);
-            else
-                return null;
         }
+        /*
+         * Inherit
+         */
+        TemplateDataDictionary parent = this.parent;
+        if (null != parent){
+            List<TemplateDataDictionary> section = parent.getSection(name);
+            if (null != section)
+                return section;
+        }
+        /*
+         * Synthetic
+         */
+        if (this.hasVariable(name))
+            return this.showSection(name);
+        else
+            return null;
     }
     public List<TemplateDataDictionary> showSection(TemplateName name){
 
