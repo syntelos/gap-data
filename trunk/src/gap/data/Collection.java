@@ -124,4 +124,5 @@ public interface Collection<V>
 
     public void destroy();
 
+    public Collection<V> clone();
 }

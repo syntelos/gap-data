@@ -114,4 +114,6 @@ public interface Map<K,V>
     }
 
     public V get(K key);
+
+    public Map<K,V> clone();
 }

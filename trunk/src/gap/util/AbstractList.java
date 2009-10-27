@@ -220,6 +220,16 @@ public abstract class AbstractList<V extends BigTable>
         }
         throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
     }
+    public void set(int index, V value){
+        if (-1 < index){
+            BigTable[] buffer = this.buffer;
+            if (null != buffer && index < buffer.length){
+                buffer[index] = value;
+                return;
+            }
+        }
+        throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
+    }
     public AbstractList clone(){
         try {
             AbstractList clone = (AbstractList)super.clone();
