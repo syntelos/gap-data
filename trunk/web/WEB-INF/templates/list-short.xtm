@@ -21,7 +21,10 @@ package {{=parent_package_name}};
 {{#import}}
 import {{=import_spec}};{{/import}}
 
+import gap.*;
 import gap.data.*;
+import gap.service.*;
+import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
 
@@ -51,7 +54,7 @@ public final class ListShort{{=parent_class_name}}{{=child_class_name}}
 
 
     public ListShort{{=parent_class_name}}{{=child_class_name}}({{=parent_class_name}} parent) {
-        super();
+        this();
         if (null != parent){
             this.parent = parent;
             this.ancestorKeyFieldName = AncestorKeyFieldName;
@@ -62,6 +65,7 @@ public final class ListShort{{=parent_class_name}}{{=child_class_name}}
     }
     public ListShort{{=parent_class_name}}{{=child_class_name}}(){
         super();
+        this.page = Page.Short;
     }
 
 

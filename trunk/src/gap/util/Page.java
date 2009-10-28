@@ -32,6 +32,7 @@ public class Page
 {
     public final static Page Default = new Page();
     public final static int DefaultCount = 20;
+    public final static Page Short = new Page(0,java.lang.Short.MAX_VALUE);
 
     public final static String Count = "count";
     public final static String StartIndex = "startIndex";
