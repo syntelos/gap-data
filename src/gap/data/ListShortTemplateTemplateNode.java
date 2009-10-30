@@ -20,7 +20,10 @@
 package gap.data;
 
 
+import gap.*;
 import gap.data.*;
+import gap.service.*;
+import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
 
@@ -31,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","odl/list-short.xtm"},date="2009-10-19T18:15:36.343Z")
+@Generated(value={"gap.service.OD","list-short"},date="2009-10-30T07:25:09.428Z")
 public final class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>
@@ -50,7 +53,7 @@ public final class ListShortTemplateTemplateNode
 
 
     public ListShortTemplateTemplateNode(Template parent) {
-        super();
+        this();
         if (null != parent){
             this.parent = parent;
             this.ancestorKeyFieldName = AncestorKeyFieldName;
@@ -61,6 +64,7 @@ public final class ListShortTemplateTemplateNode
     }
     public ListShortTemplateTemplateNode(){
         super();
+        this.page = Page.Short;
     }
 
 

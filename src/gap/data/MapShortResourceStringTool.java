@@ -22,6 +22,8 @@ package gap.data;
 
 import gap.*;
 import gap.data.*;
+import gap.service.*;
+import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
 
@@ -32,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated short map.
  */
-@Generated(value={"gap.service.OD","odl/map-short.xtm"},date="2009-10-19T18:15:36.100Z")
+@Generated(value={"gap.service.OD","map-short"},date="2009-10-30T07:25:06.940Z")
 public final class MapShortResourceStringTool
     extends gap.util.AbstractMap<String,Tool>
     implements gap.data.Map.Short<String,Tool>
@@ -57,7 +59,7 @@ public final class MapShortResourceStringTool
 
 
     public MapShortResourceStringTool(Resource parent) {
-        super();
+        this();
         if (null != parent){
             this.parent = parent;
             this.ancestorKeyFieldName = AncestorKeyFieldName;
@@ -68,6 +70,7 @@ public final class MapShortResourceStringTool
     }
     public MapShortResourceStringTool(){
         super();
+        this.page = Page.Short;
     }
 
 
