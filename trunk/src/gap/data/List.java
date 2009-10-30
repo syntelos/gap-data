@@ -103,7 +103,11 @@ public interface List<V>
 
         public List<V> add(V instance);
 
-        public void save();
+        /**
+         * @return False on failure to lock collection parent.
+         */
+        public boolean save(long timeout)
+            throws java.lang.InterruptedException;
     }
 
     public interface Long<V>

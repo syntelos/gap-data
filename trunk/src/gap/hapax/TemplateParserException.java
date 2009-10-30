@@ -37,4 +37,7 @@ public class TemplateParserException
     public TemplateParserException(String details) {
         super(details);
     }
+    public TemplateParserException(String details, Throwable thrown) {
+        super(details,thrown);
+    }
 }
