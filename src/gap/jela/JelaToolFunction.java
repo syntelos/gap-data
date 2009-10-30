@@ -21,7 +21,7 @@ package gap.jela;
 
 import gap.data.*;
 import gap.service.FileManager;
-import gap.service.Function;
+import gap.service.ToolFunction;
 import gap.service.OD;
 import gap.service.od.*;
 
@@ -30,19 +30,19 @@ import gap.service.od.*;
  * 
  * @author J. Pritchard
  */
-public final class JelaFunction
+public final class JelaToolFunction
     extends JelaProgram
 {
 
     public final String packageName, className, fullClassName;
 
 
-    public JelaFunction(Resource resource, Tool tool){
+    public JelaToolFunction(Resource resource, Tool tool){
         super();
         String[] lines = Lines(tool);
         if (null != resource && null != lines){
             this.packageName = FileManager.DerivePackage(resource);
-            this.className = Function.DeriveName(tool);
+            this.className = ToolFunction.DeriveName(tool);
             this.fullClassName = (this.packageName+'.'+this.className);
 
             this.iprintln("package "+this.packageName+";");
@@ -52,7 +52,7 @@ public final class JelaFunction
             }
             this.iprintln();
             this.iprintln("public final class "+this.className);
-            this.iprintln("    extends Function");
+            this.iprintln("    extends gap.service.ToolFunction");
             this.iprintln("{");
             this.iprintln();
             this.iopen();

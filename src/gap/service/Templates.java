@@ -66,6 +66,11 @@ public final class Templates
 
     private final static Templates Instance = new Templates();
 
+    public static TemplateRenderer GetTemplate(Request request)
+        throws TemplateException
+    {
+        return Instance.getTemplate(request);
+    }
     public static TemplateRenderer GetTemplate(Resource resource)
         throws TemplateException
     {
@@ -166,6 +171,33 @@ public final class Templates
         }
         else
             return null;
+    }
+    private TemplateRenderer getTemplate(Request request)
+        throws TemplateException
+    {
+        Resource resource = request.resource;
+        if (null == resource){
+            Path path = request.path;
+            File templateFile = TemplateFile(path.getSub());
+            if (null != templateFile){
+                resource = Resource.GetCreateLong(path.getBase(),path.getName());
+                CreateTools(resource);
+                Template template = new Template(resource.getKey(),path.getName());
+                try {
+                    template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFile)));
+                    template.setLastModified(templateFile.lastModified());
+                    template.save();
+                    return new TemplateRenderer(this,template);
+                }
+                catch (IOException exc){
+                    throw new TemplateException(templateFile.getPath(),exc);
+                }
+            }
+            else
+                return null;
+        }
+        else
+            return this.getTemplate(resource);
     }
     private TemplateRenderer getTemplate(Resource resource)
         throws TemplateException

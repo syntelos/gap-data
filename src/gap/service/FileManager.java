@@ -21,7 +21,7 @@ package gap.service;
 
 import gap.*;
 import gap.data.*;
-import gap.jela.JelaFunction;
+import gap.jela.JelaToolFunction;
 import gap.util.*;
 import gap.service.jac.*;
 
@@ -285,7 +285,7 @@ public class FileManager
         return null;
     }
 
-    public Function getFunction(Servlet instance, Request request, Response response, Resource resource, Tool desc){
+    public ToolFunction getToolFunction(Servlet instance, Request request, Response response, Resource resource, Tool desc){
 
         String functionClassName = desc.getFunctionClassname(true);
         if (null != functionClassName){
@@ -299,7 +299,7 @@ public class FileManager
                     jclass = this.define(desc);
                 }
                 if (null != jclass){
-                    Function.Constructor ctor = new Function.Constructor(jclass);
+                    ToolFunction.Constructor ctor = new ToolFunction.Constructor(jclass);
 
                     return ctor.create(instance, request, response, resource, desc);
                 }
@@ -324,7 +324,7 @@ public class FileManager
         String className = desc.getFunctionClassname(true);
         String sourceText = gap.Strings.TextToString(desc.getFunctionSourceJava(true));
         if (null == sourceText){
-            JelaFunction prog = new JelaFunction(resource,desc);
+            JelaToolFunction prog = new JelaToolFunction(resource,desc);
             sourceText = prog.getSource();
             desc.setFunctionSourceJava(Strings.TextFromString(sourceText));
             desc.setFunctionClassname(prog.fullClassName);
@@ -366,12 +366,12 @@ public class FileManager
             return false;
     }
 
-    public Class<gap.service.Function> define(Tool desc){
+    public Class<gap.service.ToolFunction> define(Tool desc){
         String classname = desc.getFunctionClassname(true);
         if (null != classname){
             Blob classfile = desc.getFunctionClassfileJvm(true);
             if (null != classfile)
-                return (Class<gap.service.Function>)this.define(classname,classfile.getBytes());
+                return (Class<gap.service.ToolFunction>)this.define(classname,classfile.getBytes());
         }
         return null;
     }

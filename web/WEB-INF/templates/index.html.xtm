@@ -5,14 +5,14 @@
     <link rel="icon" href="/icons/favicon.ico" />
     <script src="/top.js" type="text/javascript"><!--  --></script>
     <script type="text/javascript"><!--
-      function toolCancel(){{{#tool}}
-        toolCancelByName("tool{{=tool_nameCamel}}");{{/tool}}
+      function toolCancel(){{{#resource/tools}}
+        toolCancelByName("tool{{=tool_nameCamel}}");{{/resource/tools}}
       }
       // --></script>
     {{>head}}
   </head>
   <body>
-    <div class="logon">{{>logon}}
+    <div class="logon">{{>div.logon.html}}
     </div>
     <div class="block">
       <div class="block inside">
@@ -46,10 +46,10 @@
       <p> <a href="http://gap-data.appspot.com/">Gap Data is a service from some folks around here</a>.</p>
     </div>
     <div class="tools">
-     {{>tool}}
+     {{>(DivToolHtml):resource/tools}}
     </div>
     <div class="logo rhs" onclick="javascript:document.location = 'http://gap-data.appspot.com/'; return true;">
     </div>
-    {{>overlay}}
+    {{>div.overlay.html:resource/tools}}
   </body>
 </html>

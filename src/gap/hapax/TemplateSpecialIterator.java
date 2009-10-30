@@ -1,5 +1,5 @@
 /*
- * Hapax2
+ * Hapax3
  * Copyright (c) 2007 Doug Coker
  * Copyright (c) 2009 John Pritchard
  * 

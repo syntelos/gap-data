@@ -142,7 +142,7 @@ public class Request
         this.userReference = uri;
         this.logon = logon;
         this.contentType = ContentType.For(req);
-        this.resource = FileManager.GetCreateResource(path);
+        this.resource = FileManager.GetResource(path);
         this.isAdmin = logon.serviceAdmin;
 
         String logonId = logon.serviceLogon;
@@ -221,7 +221,7 @@ public class Request
     public final TemplateRenderer getTemplate()
         throws TemplateException
     {
-        return Templates.GetTemplate(this.resource);
+        return Templates.GetTemplate(this);
     }
     public final Servlet getServlet(){
         return this.fileManager.getServlet(this.path);
@@ -229,8 +229,8 @@ public class Request
     public final Servlet getServlet(Path path){
         return this.fileManager.getServlet(path);
     }
-    public final Function getFunction(Servlet instance, Request request, Response response, Resource resource, Tool tool){
-        return this.fileManager.getFunction(instance, request, response, resource, tool);
+    public final ToolFunction getToolFunction(Servlet instance, Request request, Response response, Resource resource, Tool tool){
+        return this.fileManager.getToolFunction(instance, request, response, resource, tool);
     }
     public final boolean isPath(String string){
         return this.path.equals(string);

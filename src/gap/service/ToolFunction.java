@@ -23,6 +23,7 @@ import gap.*;
 import gap.data.*;
 import gap.util.*;
 
+import gap.jbx.Function;
 import gap.jbx.Registry;
 
 import java.io.BufferedReader;
@@ -32,25 +33,22 @@ import javax.script.Bindings;
 import javax.script.ScriptException;
 
 /**
- * A gap data function binds tool methods.
+ * Tool code function.
  * 
  * @author jdp
  */
-public final class Function
+public class ToolFunction
     extends gap.jbx.Function
     implements gap.data.DataInheritance.Notation
 {
 
     private final static java.util.List<String> JelaImports = new java.util.ArrayList<String>();
-    private final static java.util.List<String> JelaDeclarations = new java.util.ArrayList<String>();
+
     static {
         JelaImports.add("import gap.*;");
         JelaImports.add("import gap.data.*;");
         JelaImports.add("import gap.service.*;");
         JelaImports.add("import gap.util.*;");
-
-        JelaDeclarations.add("Request req = (Request)local.get(\"req\");");
-        JelaDeclarations.add("Response rep = (Response)local.get(\"rep\");");
     }
 
     public final static class Type 
@@ -79,7 +77,7 @@ public final class Function
         else if (tool.hasFunctionMethodname(true))
             return tool.getFunctionMethodname(true);
         else
-            return gap.service.Function.Type.Name(tool);
+            return gap.service.ToolFunction.Type.Name(tool);
     }
     public final static String DeriveName(Tool tool){
 
@@ -97,11 +95,11 @@ public final class Function
         };
         protected final static int ParametersLen = Parameters.length;
 
-        public final Class<gap.service.Function> target;
+        public final Class<gap.service.ToolFunction> target;
         public final java.lang.reflect.Constructor ctor;
         public final boolean isValid;
 
-        public Constructor(Class<gap.service.Function> target)
+        public Constructor(Class<gap.service.ToolFunction> target)
             throws ScriptException
         {
             super();
@@ -129,11 +127,11 @@ public final class Function
         public boolean isValid(){
             return this.isValid;
         }
-        public Function create(Servlet instance, Request request, Response response, Resource resource, Tool tool)
+        public ToolFunction create(Servlet instance, Request request, Response response, Resource resource, Tool tool)
             throws ScriptException
         {
             if (this.isValid){
-                java.lang.reflect.Constructor<gap.service.Function> ctor = this.ctor;
+                java.lang.reflect.Constructor<gap.service.ToolFunction> ctor = this.ctor;
                 if (null != ctor){
                     try {
                         return ctor.newInstance(instance, request, response, resource, tool);
@@ -168,7 +166,7 @@ public final class Function
     protected final PrintWriter out;
 
 
-    public Function(Servlet instance, Request request, Response response, Resource resource, Tool tool)
+    public ToolFunction(Servlet instance, Request request, Response response, Resource resource, Tool tool)
         throws java.io.IOException, gap.jbx.Function.MethodNotFound
     {
         super(new Type(tool), Target(tool));
