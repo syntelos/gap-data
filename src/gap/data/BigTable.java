@@ -246,6 +246,8 @@ public abstract class BigTable
 
     protected volatile Key inheritFromKey;
 
+    private transient volatile Lock lock;
+
 
     protected BigTable(){
         super();
@@ -329,6 +331,24 @@ public abstract class BigTable
     }
     public final Field getClassKeyField(){
         return (this.getClassFieldByName(this.getClassFieldKeyName()));
+    }
+    /**
+     * A key based shared system lock associated with this instance
+     * may be employed for any suitable purpose.
+     * 
+     * Operations over individual datastore entities have atomicity
+     * while operations over multiple datastore entities do not.  When
+     * atomicity is required over multiple entities for the coherency
+     * of the datastore, a shared system lock may be the correct
+     * solution.
+     */
+    public final Lock getLock(){
+        Lock lock = this.lock;
+        if (null == lock){
+            lock = new Lock(this.getClassFieldKeyValue());
+            this.lock = lock;
+        }
+        return lock;
     }
     /**
      * A static value enumerating the persistent (not transient)
@@ -425,22 +445,27 @@ public abstract class BigTable
 
     protected final Entity fillTo(Entity entity){
 
-        for (Field field: this.getClassFields()){
-            String fieldName = field.getFieldName();
-            java.io.Serializable value = this.valueOf(field,MayNotInherit);
-            if (null != value){
+        Field classKeyField = this.getClassKeyField();
 
-                if (IsIndexed(value))
-                    entity.setProperty(fieldName, value);
-                else 
-                    entity.setUnindexedProperty(fieldName, value);
+        for (Field field: this.getClassFields()){
+
+            if (field != classKeyField){
+
+                String fieldName = field.getFieldName();
+                java.io.Serializable value = this.valueOf(field,MayNotInherit);
+                if (null != value){
+
+                    if (IsIndexed(value))
+                        entity.setProperty(fieldName, value);
+                    else 
+                        entity.setUnindexedProperty(fieldName, value);
+                }
+                else if (null != entity.getProperty(fieldName))
+                    entity.removeProperty(fieldName);
             }
-            else if (null != entity.getProperty(fieldName))
-                entity.removeProperty(fieldName);
         }
         return entity;
     }
-
     protected final Entity fillFrom(Entity entity){
 
         for (Field field: this.getClassFields()){
@@ -452,15 +477,12 @@ public abstract class BigTable
         this.defineKeyFrom(entity);
         return entity;
     }
-
     protected final void defineKeyFrom(Entity entity){
         this.define(this.getClassKeyField(),entity.getKey());
     }
-
     protected final void defineKey(Key key){
         this.define(this.getClassKeyField(),key);
     }
-
 
     public final static boolean IsUnindexed(java.lang.Class jclass){
         if (null == jclass)
