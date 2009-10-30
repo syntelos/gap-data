@@ -23,16 +23,22 @@ package gap.util;
  * @author jdp
  */
 public class Printer
-    extends java.io.FilterWriter
+    extends Object
 {
     private int indent;
 
+    private final java.io.PrintStream out;
+
 
     public Printer(){
-        this(System.console().writer());
+        this(System.err);
     }
-    public Printer(java.io.Writer out){
-        super(out);
+    public Printer(java.io.PrintStream out){
+        super();
+        if (null != out)
+            this.out = out;
+        else
+            throw new IllegalArgumentException();
     }
 
 
@@ -47,22 +53,14 @@ public class Printer
             this.indent -= 1;
     }
     public void println(String string){
-        try {
-            super.append(I[this.indent % I.length]);
-            super.append(string);
-            super.append('\n');
-        }
-        catch (java.io.IOException exc){
-            throw new java.lang.RuntimeException(exc);
-        }
+        this.out.print(I[this.indent % I.length]);
+        this.out.println(string);
     }
     public void println(){
-        try {
-            super.append('\n');
-        }
-        catch (java.io.IOException exc){
-            throw new java.lang.RuntimeException(exc);
-        }
+        this.out.println();
+    }
+    public void close() throws java.io.IOException {
+        this.out.close();
     }
 
     private final static String[] I = {
