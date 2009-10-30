@@ -325,14 +325,29 @@ public abstract class AbstractList<V extends BigTable>
             this.buffer = null;
         }
     }
-    public void save(){
+    public boolean save(long timeout)
+        throws java.lang.InterruptedException
+    {
         BigTable[] buffer = this.buffer;
         if (null != buffer){
-            for (int cc = 0, count = buffer.length; cc < count; cc++){
-                BigTable instance = buffer[cc];
-                instance.save();
+            Lock lock = this.getParent().getLock();
+            if (lock.enter(timeout)){
+                try {
+                    for (int cc = 0, count = buffer.length; cc < count; cc++){
+                        BigTable instance = buffer[cc];
+                        instance.save();
+                    }
+                    return true;
+                }
+                finally {
+                    lock.exit();
+                }
             }
+            else
+                return false;
         }
+        else
+            return true;
     }
     public List<V> add(V instance){
         return this.addToBuffer(instance);

@@ -71,10 +71,17 @@ public final class TemplateParser
                     break;
                 case EOF:
                     ParserClose(list);
-                    list.save();
-                    return list;
+                    try {
+                        if (list.save(3000))
+                            return list;
+                        else
+                            throw new TemplateParserException("Unable to save template node list.");
+                    }
+                    catch (InterruptedException exc){
+                        throw new TemplateParserException("Unable to save template node list.",exc);
+                    }
                 default:
-                    throw new RuntimeException("Internal error parsing template.");
+                    throw new TemplateParserException("Internal error parsing template.");
                 }
                 if (null != node)
                     list.add(node);
