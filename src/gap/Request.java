@@ -304,7 +304,19 @@ public class Request
     }
 
     public void renderComplete(){
-
+        this.parent = null;
+        java.util.Map<String,String> variables = this.variables;
+        if (null != variables)
+            variables.clear();
+        java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        if (null != sections){
+            for (List<TemplateDataDictionary> list: sections.values()){
+                for (TemplateDataDictionary item: list){
+                    item.renderComplete();
+                }
+            }
+            sections.clear();
+        }
     }
     public TemplateDataDictionary clone(){
         try {
@@ -370,10 +382,14 @@ public class Request
         }
         else {
             java.util.Map<String,String> variables = this.variables;
-            if (null != variables)
-                return variables.containsKey(name);
-            else
-                return false;
+            if (null != variables && variables.containsKey(name.getName())){
+                return true;
+            }
+            TemplateDataDictionary parent = this.parent;
+            if (null != parent){
+                return parent.hasVariable(name);
+            }
+            return false;
         }
     }
     public String getVariable(TemplateName name){
@@ -450,10 +466,16 @@ public class Request
         }
         else {
             java.util.Map<String,String> variables = this.variables;
-            if (name.is(0) && null != variables)
-                return variables.get(name.getComponent(0));
-            else
-                return null;
+            if (null != variables){
+                String value = variables.get(name.getName());
+                if (null != value)
+                    return value;
+            }
+            TemplateDataDictionary parent = this.parent;
+            if (null != parent){
+                return parent.getVariable(name);
+            }
+            return null;
         }
     }
     public void setVariable(TemplateName name, String value){
@@ -546,20 +568,104 @@ public class Request
         }
         else {
             java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+            List<TemplateDataDictionary> section = null;
+            if (null != sections){
+                section = sections.get(name.getComponent(0));
+            }
+            if (null == section){
+                /*
+                 * Inherit
+                 */
+                TemplateDataDictionary parent = this.parent;
+                if (null != parent){
+                    section = parent.getSection(name);
+                    if (null != section){
 
-            if (null != sections && sections.containsKey(name))
-                return sections.get(name);
+                        section = AbstractData.SectionClone(this,section);
 
-            if (this.hasVariable(name))
-                return this.showSection(name);
-            else
-                return null;
+                        sections.put(name.getComponent(0),section);
+                    }
+                }
+                if (null == section){
+                    /*
+                     * Synthetic
+                     */
+                    if (this.hasVariable(name))
+                        section = this.showSection(name);
+                    else
+                        return null;
+                }
+            }
+            /*
+             * Section name resolution
+             */
+            if (name.is(0))
+                return section;
+            else {
+                TemplateDataDictionary sectionData = name.dereference(0,section);
+                return sectionData.getSection(new TemplateName(name));
+            }
         }
     }
     public List<TemplateDataDictionary> showSection(TemplateName name){
-        return null;
+
+        java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        if (null == sections){
+            sections = new java.util.HashMap<String,List<TemplateDataDictionary>>();
+            this.sections = sections;
+
+            TemplateDataDictionary newSection = new AbstractData(this);
+            List<TemplateDataDictionary> newSectionList = AbstractData.Add(null,newSection);
+            sections.put(name.getComponent(0),newSectionList);
+            if (name.is(0))
+                return newSectionList;
+            else
+                return newSection.showSection(new TemplateName(name));
+        }
+        else {
+            List<TemplateDataDictionary> section = sections.get(name.getComponent(0));
+            if (null != section){
+                if (name.is(0))
+                    return section;
+                else {
+                    TemplateDataDictionary sectionData = name.dereference(0,section);
+                    return sectionData.showSection(new TemplateName(name));
+                }
+            }
+            else {
+                TemplateDataDictionary newSection = new AbstractData(this);
+                section = AbstractData.Add(section,newSection);
+                this.sections.put(name.getComponent(0),section);
+                if (name.is(0))
+                    return section;
+                else
+                    return newSection.showSection(new TemplateName(name));
+            }
+        }
     }
     public TemplateDataDictionary addSection(TemplateName name){
-        return null;
+
+        TemplateDataDictionary newSection = new AbstractData(this);
+
+        java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        if (null == sections){
+            sections = new java.util.HashMap<String,List<TemplateDataDictionary>>();
+            this.sections = sections;
+            List<TemplateDataDictionary> section = AbstractData.Add(null,newSection);
+            sections.put(name.getComponent(0),section);
+        }
+        else {
+            List<TemplateDataDictionary> section = sections.get(name.getComponent(0));
+            if (null == section){
+                section = AbstractData.Add(section,newSection);
+                sections.put(name.getComponent(0),section);
+            }
+            else
+                section = AbstractData.Add(section,newSection);
+        }
+        if (name.is(0))
+            return newSection;
+        else
+            return newSection.addSection(new TemplateName(name));
     }
 }
