@@ -390,6 +390,9 @@ public final class OD
                 boolean isCollection = false;
                 boolean isTransient = false;
 
+                if (IsFieldDefaultSortBy(field))
+                    defaultSortBy = fieldName;
+
                 /*
                  * Create 'dataField' section
                  */
@@ -410,8 +413,6 @@ public final class OD
                         TemplateDataDictionary field_is = dataField.addSection(TemplateNames.FieldIsHashUnique);
 
                         field_is.setVariable(TemplateNames.DataModel,"*hash-unique");
-
-                        defaultSortBy = fieldName;
 
                         /*
                          * Global section 'field_hash_unique'
@@ -656,6 +657,9 @@ public final class OD
             }
         }
 
+
+        top.setVariable(new TemplateName(prefix,"class_defaultSortBy"), defaultSortBy);
+
         /*
          * Methods
          */
@@ -730,12 +734,8 @@ public final class OD
         /*
          * Current template model requires 'key'.
          */
-        if (null != key){
-
-            top.setVariable(new TemplateName(prefix,"class_defaultSortBy"), defaultSortBy);
-
+        if (null != key)
             return;
-        }
         else
             throw new ODStateException(cd,"Model requires a field having type 'com.google.appengine.api.datastore.Key'.");
 
@@ -1131,6 +1131,14 @@ public final class OD
             }
             else
                 return false;
+        }
+        else
+            return false;
+    }
+    public final static boolean IsFieldDefaultSortBy(FieldDescriptor field){
+        if (field instanceof FieldDescriptor.DefaultSortBy){
+            FieldDescriptor.DefaultSortBy sfield = (FieldDescriptor.DefaultSortBy)field;
+            return sfield.isDefaultSortBy();
         }
         else
             return false;
