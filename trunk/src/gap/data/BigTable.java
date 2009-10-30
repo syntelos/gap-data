@@ -448,10 +448,10 @@ public abstract class BigTable
         Field classKeyField = this.getClassKeyField();
 
         for (Field field: this.getClassFields()){
+            String fieldName = field.getFieldName();
 
             if (field != classKeyField){
 
-                String fieldName = field.getFieldName();
                 java.io.Serializable value = this.valueOf(field,MayNotInherit);
                 if (null != value){
 
@@ -460,9 +460,11 @@ public abstract class BigTable
                     else 
                         entity.setUnindexedProperty(fieldName, value);
                 }
-                else if (null != entity.getProperty(fieldName))
+                else //if (null != entity.getProperty(fieldName))//(redundant op)
                     entity.removeProperty(fieldName);
             }
+            else
+                entity.removeProperty(fieldName); //[TEMP propagate change not storing key onto itself]
         }
         return entity;
     }
