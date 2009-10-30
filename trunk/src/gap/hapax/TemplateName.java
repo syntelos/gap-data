@@ -194,6 +194,9 @@ public final class TemplateName
     public final int count;
 
 
+    public TemplateName(String base, String name){
+        this(Cat(base,name));
+    }
     public TemplateName(String source){
         super();
         this.from = null;
@@ -360,7 +363,16 @@ public final class TemplateName
     public java.util.Iterator<Component> iterator(){
         return new Iterator(this.path);
     }
-
+    public final static String Cat(String base, String name){
+        if (null == base || 0 == base.length())
+            return name;
+        else if (null == name || 0 == name.length())
+            return base;
+        else if ('/' == base.charAt(base.length()-1) || '/' == name.charAt(0))
+            return base+name;
+        else
+            return base+'/'+name;
+    }
     public final static String Cat(TemplateName prefix, String suffix){
         if (null == prefix)
             return suffix;

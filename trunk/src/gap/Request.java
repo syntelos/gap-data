@@ -142,7 +142,7 @@ public class Request
         this.userReference = uri;
         this.logon = logon;
         this.contentType = ContentType.For(req);
-        this.resource = FileManager.GetResource(path);
+        this.resource = FileManager.GetCreateResource(path);
         this.isAdmin = logon.serviceAdmin;
 
         String logonId = logon.serviceLogon;
@@ -170,9 +170,6 @@ public class Request
     }
 
 
-    public boolean hasResource(){
-        return (null != this.resource);
-    }
     public Resource getResource(){
         return this.resource;
     }

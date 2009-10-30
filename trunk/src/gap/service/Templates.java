@@ -146,12 +146,7 @@ public final class Templates
             if (null != resource){
                 gap.data.Template template = resource.getTemplates(name.getName());
                 if (null != template)
-                    return this.getTemplate(template);
-                else {
-                    resource = Resource.ForLongBaseName(resource.getBase(),name.getName());
-                    if (null != resource)
-                        return this.getTemplate(resource);
-                }
+                    return new TemplateRenderer(this,template);
             }
         }
         File templateFile = TemplateFile(name.getSource());
@@ -179,15 +174,25 @@ public final class Templates
             return null;
         else {
             gap.data.Template template = resource.getTemplates(resource.getName());
-            return this.getTemplate(template);
+            if (null != template)
+                return new TemplateRenderer(this,template);
+
+            File templateFile = TemplateFile(TemplateName.Cat(resource.getBase(),resource.getName()));
+            if (null != templateFile){
+                CreateTools(resource);
+                template = new Template(resource.getKey(),resource.getName());
+                try {
+                    template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFile)));
+                    template.setLastModified(templateFile.lastModified());
+                    template.save();
+                    return new TemplateRenderer(this,template);
+                }
+                catch (IOException exc){
+                    throw new TemplateException(templateFile.getPath(),exc);
+                }
+            }
+            else
+                return null;
         }
-    }
-    private TemplateRenderer getTemplate(gap.data.Template template)
-        throws TemplateException
-    {
-        if (null != template)
-            return new TemplateRenderer(this,template);
-        else
-            return null;
     }
 }

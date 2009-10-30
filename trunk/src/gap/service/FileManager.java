@@ -485,39 +485,11 @@ public class FileManager
 
     public final static Resource GetResource(Path path){
 
-        String base = "";
-        String name = null;
-        if (path.hasBase()){
-            if (path.hasName()){
-                base = path.getBase();
-                name = path.getName();
-            }
-            else {
-                name = path.getBase();
-            }
-        }
-        else {
-            name = "";
-        }
-        return Resource.ForLongBaseName(base,name);
+        return Resource.ForLongBaseName(path.getBase(),path.getName());
     }
     public final static Resource GetCreateResource(Path path){
 
-        String base = "";
-        String name = null;
-        if (path.hasBase()){
-            if (path.hasName()){
-                base = path.getBase();
-                name = path.getName();
-            }
-            else {
-                name = path.getBase();
-            }
-        }
-        else {
-            name = "";
-        }
-        return Resource.GetCreateLong(base,name);
+        return Resource.GetCreateLong(path.getBase(),path.getName());
     }
     public final static Tool GetTool(Resource resource, Method method, String name){
         if (null != resource){
