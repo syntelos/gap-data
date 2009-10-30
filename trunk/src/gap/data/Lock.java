@@ -24,30 +24,36 @@ import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.Expiration;
 
 /**
- * A memcache based shared system lock.  
+ * A memcache based shared system lock.  The lock may employ a
+ * datastore key for an association with an instance, or any string
+ * for a GUID.  The lock, like the GUID, is unique across all
+ * processes running the application within the global appengine
+ * network system.
  * 
  * Correct usage is to enter the lock immediately preceding the top of
  * a try block, and then to exit the lock in the finally clause at the
  * tail of the try block.  Of course, the try block contains the
  * critical (protected) region.
  * 
- * The lock expires in thirty seconds, because all appengine
- * procedures timeout in thirty seconds.
+ * The operation of this lock employs the declared atomicity of the
+ * increment API in the memcache service.
  * 
  * @author jdp
  */
 public final class Lock 
     extends Object
-    implements java.io.Serializable
+    implements java.io.Serializable,
+               gap.util.Millis
 {
     private final static long serialVersionUID = 1L;
 
-    private final static MemcacheService.SetPolicy CAS = MemcacheService.SetPolicy.ADD_ONLY_IF_NOT_PRESENT;
-    private final static Expiration EXP = Expiration.byDeltaSeconds(30);
-    private final static String ASSERT = "locked";
+    private final static MemcacheService.SetPolicy IFNOT = MemcacheService.SetPolicy.ADD_ONLY_IF_NOT_PRESENT;
+    private final static Expiration EXP = Expiration.byDeltaMillis( (int)(3*Hours));
+    private final static Long COND = 0L;
+    private final static Long INC = 1L;
+    private final static Long DEC = -1L;
 
 
-    public final Key key;
 
     public final String string;
 
@@ -57,10 +63,11 @@ public final class Lock
 
 
     public Lock(Key key){
-        super();
-        if (null != key){
-            this.key = key;
-            this.string = "lock:///"+gap.Strings.KeyToString(this.key);
+        this(gap.Strings.KeyToString(key));
+    }
+    public Lock(String guid){
+        if (null != guid){
+            this.string = "lock:///"+guid;
             this.hashCode = gap.data.Hash.Djb32(this.string);
         }
         else
@@ -68,15 +75,15 @@ public final class Lock
     }
 
 
-    public boolean enter(long expiration)
+    public boolean enter(long timeout)
         throws java.lang.InterruptedException
     {
-        long end = (System.currentTimeMillis()+expiration);
+        long end = (System.currentTimeMillis()+timeout);
         do {
             if (this.enter())
                 return true;
             else {
-                long waitfor = (expiration / 3);
+                long waitfor = (timeout / 3);
                 if (0 < waitfor)
                     Thread.sleep(waitfor);
                 else
@@ -88,8 +95,18 @@ public final class Lock
     }
     public boolean enter(){
         MemcacheService mc = Store.C.Get();
-        if (null != mc)
-            return (this.entered = mc.put(this.string,ASSERT,EXP,CAS));
+        if (null != mc){
+
+            Long entry = mc.increment(this.string,INC);
+
+            if (null == entry){
+
+                mc.put(this.string,COND,EXP,IFNOT);
+
+                entry = mc.increment(this.string,INC);
+            }
+            return (this.entered = (INC.longValue() == entry.longValue()));
+        }
         else
             throw new IllegalStateException("Memcache service not available.");
     }
@@ -97,7 +114,7 @@ public final class Lock
         MemcacheService mc = Store.C.Get();
         if (null != mc){
             if (this.entered)
-                mc.delete(this.string);
+                mc.increment(this.string,DEC);
             else
                 throw new IllegalStateException("Lock not entered.");
         }
