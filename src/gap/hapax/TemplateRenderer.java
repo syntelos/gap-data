@@ -43,8 +43,6 @@ import java.text.MessageFormat;
 public final class TemplateRenderer 
     extends Object
 {
-    private final static gap.util.Printer Debugger = new gap.util.Printer();
-
     private final List.Short<TemplateNode> template;
     private final TemplateLoader context;
 
@@ -72,12 +70,8 @@ public final class TemplateRenderer
     public void render(TemplateDataDictionary dict, PrintWriter writer)
         throws TemplateException
     {
-        Debugger.reset();
         try {
-            Debugger.println(">>");
-            Debugger.enter();
             Render(this.context, this.template, dict, writer);
-            Debugger.exit();
         }
         finally {
             dict.renderComplete();
@@ -108,7 +102,7 @@ public final class TemplateRenderer
                                      PrintWriter writer)
         throws TemplateException
     {
-        for (int position = start; position < end; position++) {
+        for (int position = start; position <= end; position++) {
 
             TemplateNode node = template.get(position);
 
@@ -120,7 +114,7 @@ public final class TemplateRenderer
                 break;
 
             case SectionClose:
-                throw new IllegalStateException("Bug at section close for name '"+gap.Strings.TextToString(node.getNodeContent())+"' at line "+node.getLineNumber());
+                break;
 
             case Variable:
                 position = RenderVariable(context, template, dict, position, node, writer);
@@ -135,7 +129,7 @@ public final class TemplateRenderer
                 break;
 
             default:
-                throw new IllegalStateException("Bug at node '"+gap.Strings.TextToString(node.getNodeContent())+"' at line "+node.getLineNumber());
+                throw new IllegalStateException("Bug at node "+node.getNodeType()+'['+node.getLineNumber()+",'"+gap.Strings.TextToString(node.getNodeContent())+"']");
             }
         }
     }
@@ -144,8 +138,6 @@ public final class TemplateRenderer
                                             PrintWriter writer)
         throws TemplateException
     {
-        Debugger.enter();
-
         int next = (open + 1);
         int close = (open + node.getOffsetCloseRelative(false));
         TemplateName sectionName = new TemplateName(gap.Strings.TextToString(node.getNodeContent()));
@@ -153,8 +145,6 @@ public final class TemplateRenderer
         if (close >= next && close < template.size()){
 
             List<TemplateDataDictionary> data = dict.getSection(sectionName);
-
-            Debugger.println(sectionName.toString()+'['+open+','+close+']');
 
             if (null != data){
 
@@ -180,7 +170,6 @@ public final class TemplateRenderer
                     }
                 }
             }
-            Debugger.exit();
             return close;
         }
         else
@@ -194,8 +183,6 @@ public final class TemplateRenderer
         TemplateName variableName = new TemplateName(gap.Strings.TextToString(node.getNodeContent()));
         String variableValue = dict.getVariable(variableName);
 
-        Debugger.println(variableName.toString()+"["+pos+",'"+variableValue+"']");
-
         if (null != variableValue && 0 != variableValue.length())
             writer.write(variableValue);
 
@@ -207,8 +194,6 @@ public final class TemplateRenderer
         throws TemplateException
     {
         String text = gap.Strings.TextToString(node.getNodeContent());
-
-        Debugger.println("text["+pos+']');
 
         if (null != text && 0 != text.length())
             writer.write(text);
