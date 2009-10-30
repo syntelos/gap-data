@@ -224,11 +224,13 @@ public final class Path
     public String getBase(){
         StringBuilder strbuf = new StringBuilder();
         String el, path[] = this.components;
-        for (int cc = 0, count = path.length, term = (count-1); cc < term; cc++){
-            el = path[cc];
-            if (0 != strbuf.length())
-                strbuf.append('/');
-            strbuf.append(el);
+        if (null != path){
+            for (int cc = 0, count = path.length, term = (count-1); cc < term; cc++){
+                el = path[cc];
+                if (0 != strbuf.length())
+                    strbuf.append('/');
+                strbuf.append(el);
+            }
         }
         return strbuf.toString();
     }
@@ -241,10 +243,10 @@ public final class Path
     public String getName(){
         if (0 < this.size){
             String[] components = this.components;
-            return components[components.length-1];
+            if (null != components)
+                return components[components.length-1];
         }
-        else
-            return null;
+        return "";
     }
     public boolean isMe(){
         return Special.Me.equals(this.getSource());

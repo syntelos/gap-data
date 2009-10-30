@@ -21,7 +21,7 @@ package gap.jela;
 
 import gap.data.*;
 import gap.service.FileManager;
-import gap.service.Function;
+import gap.service.ToolFunction;
 import gap.service.OD;
 import gap.service.od.*;
 
@@ -44,7 +44,7 @@ public final class JelaDataFilter
         String[] lines = Lines(tool);
         if (null != resource && null != lines){
             this.packageName = FileManager.DerivePackage(resource);
-            this.className = Function.DeriveName(tool);
+            this.className = ToolFunction.DeriveName(tool);
             this.fullClassName = (this.packageName+'.'+this.className);
 
             this.iprintln("package "+this.packageName+";");
@@ -54,7 +54,7 @@ public final class JelaDataFilter
             }
             this.iprintln();
             this.iprintln("public final class "+this.className);
-            this.iprintln("    extends Function");
+            this.iprintln("    extends ToolFunction");
             this.iprintln("{");
             this.iprintln();
             this.iopen();

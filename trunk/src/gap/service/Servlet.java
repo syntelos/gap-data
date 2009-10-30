@@ -326,7 +326,7 @@ public class Servlet
             else {
                 Tool tool = resource.getTools(op);
                 if (null != tool){
-                    Function function = req.getFunction(this,req,rep,resource,tool);
+                    ToolFunction function = req.getToolFunction(this,req,rep,resource,tool);
                     if (null != function)
                         function.invoke();
                     else

@@ -1,5 +1,5 @@
 /*
- * Hapax2
+ * Hapax3
  * Copyright (c) 2007 Doug Coker
  * Copyright (c) 2009 John Pritchard
  * 
@@ -344,7 +344,7 @@ public final class TemplateName
             return components[components.length-1].term;
         }
         else
-            return null;
+            return "";
     }
     public int hashCode(){
         return this.source.hashCode();
