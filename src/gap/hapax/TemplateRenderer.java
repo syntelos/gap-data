@@ -135,7 +135,7 @@ public final class TemplateRenderer
                 break;
 
             default:
-                break;
+                throw new IllegalStateException("Bug at node '"+gap.Strings.TextToString(node.getNodeContent())+"' at line "+node.getLineNumber());
             }
         }
     }
