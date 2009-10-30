@@ -43,6 +43,8 @@ import java.text.MessageFormat;
 public final class TemplateRenderer 
     extends Object
 {
+    private final static gap.util.Printer Debugger = new gap.util.Printer();
+
     private final List.Short<TemplateNode> template;
     private final TemplateLoader context;
 
@@ -70,6 +72,7 @@ public final class TemplateRenderer
     public void render(TemplateDataDictionary dict, PrintWriter writer)
         throws TemplateException
     {
+        Debugger.reset();
         try {
             Render(this.context, this.template, dict, writer);
         }
@@ -138,6 +141,8 @@ public final class TemplateRenderer
                                             PrintWriter writer)
         throws TemplateException
     {
+        Debugger.enter();
+
         int next = (open + 1);
         int close = (open + node.getOffsetCloseRelative(false));
         TemplateName sectionName = new TemplateName(gap.Strings.TextToString(node.getNodeContent()));
@@ -145,6 +150,8 @@ public final class TemplateRenderer
         if (close >= next && close < template.size()){
 
             List<TemplateDataDictionary> data = dict.getSection(sectionName);
+
+            Debugger.println(sectionName.toString()+'['+open+','+close+']');
 
             if (null != data){
 
@@ -170,6 +177,7 @@ public final class TemplateRenderer
                     }
                 }
             }
+            Debugger.exit();
             return close;
         }
         else
