@@ -9,6 +9,6 @@ child TemplateNode version 1
     *hash-unique String nodeType;
     *hash-unique Integer lineNumber;
     *hash-unique Text nodeContent;
-    Integer offset;
+    *sortby Integer offset;
     Integer offsetCloseRelative;
 }

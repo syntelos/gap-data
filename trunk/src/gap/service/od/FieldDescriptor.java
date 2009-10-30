@@ -28,6 +28,20 @@ package gap.service.od;
 public interface FieldDescriptor
     extends gap.data.HasName
 {
+    /**
+     * Default sort field.  Only one field in a class description may
+     * return true for the default sort-by field.  Naturally, the type
+     * of this field must be a {@link gap.Primitive primitive}.
+     */
+    public interface DefaultSortBy
+        extends FieldDescriptor
+    {
+        /**
+         * @return True for the default sort field, only one per
+         * class.
+         */
+        public boolean isDefaultSortBy();
+    }
 
     /**
      * Fields are persistent by default.

@@ -153,6 +153,29 @@ public final class Hash
             return 0L;
         else {
             long hash = 5381;
+            long c;
+            for (int cc = 0, count = b.length; cc < count; cc++){
+                c = b[cc] & 0xff;
+                hash = ((hash << 5) + hash) ^ c;
+            }
+            return hash;
+        }
+    }
+    public final static int Djb32 ( String string){
+        if (null != string)
+            return Djb32(string.getBytes(UTF8));
+        else
+            return 0;
+    }
+    /**
+     * Daniel Bernstein's later function.
+     * @see http://www.cse.yorku.ca/~oz/hash.html
+     */
+    public final static int Djb32 ( byte[] b){
+        if ( null == b)
+            return 0;
+        else {
+            int hash = 5381;
             int c;
             for (int cc = 0, count = b.length; cc < count; cc++){
                 c = b[cc] & 0xff;

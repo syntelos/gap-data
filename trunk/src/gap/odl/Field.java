@@ -43,10 +43,63 @@ public final class Field
     extends Object
     implements FieldDescriptor.Persistence,
                FieldDescriptor.Uniqueness,
-               FieldDescriptor.Relation
+               FieldDescriptor.Relation,
+               FieldDescriptor.DefaultSortBy
 {
     public final static Pattern Statement = Pattern.compile("\\s*[\\w\\.\\*\\-<:>,\\s]+\\s*[\\w]+\\s*[;\\s]*");
 
+    public enum Qualifier {
+        Child("*child"),
+        Unique("*unique"),
+        HashUnique("*hash-unique"),
+        Transient("*transient"),
+        DefaultSortBy("*sortby");
+
+
+        public final String syntax;
+
+        private Qualifier(String syntax){
+            this.syntax = syntax;
+        }
+
+
+        private final static java.util.Map<String,Qualifier> Syntax = new java.util.HashMap<String,Qualifier>();
+        static {
+            for (Qualifier qualifier: Qualifier.values()){
+                Syntax.put(qualifier.syntax,qualifier);
+            }
+        }
+        public static Qualifier For(String syntax){
+            if (null == syntax || 0 == syntax.length())
+                return null;
+            else {
+                Qualifier qualifier = Syntax.get(syntax);
+                if (null != qualifier)
+                    return qualifier;
+                else {
+                    try {
+                        return valueOf(syntax);
+                    }
+                    catch (IllegalArgumentException exc){
+                        return null;
+                    }
+                }
+            }
+        }
+        public static Qualifier[] Add(Qualifier[] list, Qualifier item){
+            if (null == item)
+                return list;
+            else if (null == list)
+                return new Qualifier[]{item};
+            else {
+                int len = list.length;
+                Qualifier[] copier = new Qualifier[len+1];
+                System.arraycopy(list,0,copier,0,len);
+                copier[len] = item;
+                return copier;
+            }
+        }
+    }
 
     private Comment comment;
 
@@ -58,6 +111,8 @@ public final class Field
 
     public final Relation.Type relational;
 
+    public final boolean isDefaultSortBy;
+
 
     public Field(Reader reader)
         throws IOException, Syntax
@@ -66,67 +121,76 @@ public final class Field
         this.comment = reader.comment();
         String line = reader.getNext(Statement);
         if (null != line){
+            boolean isDefaultSortBy = false;
+            String typeName = null, name = null;
+            Persistence.Type persistence = null;
+            Uniqueness.Type uniqueness = null;
+            Relation.Type relational = null;
             StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
-            switch (strtok.countTokens()){
-
-            case 2:
-
-                String s = strtok.nextToken();
-                if ("*child".equals(s)){
-
-                    this.uniqueness = Uniqueness.Type.Undefined;
-                    this.persistence = Persistence.Type.Transient;
-                    this.relational = Relation.Type.Child;
-
-                    this.typeName = strtok.nextToken();
-                    this.name = Class.Decamel(this.typeName);
+            while (strtok.hasMoreTokens()){
+                String token = strtok.nextToken();
+                Qualifier qualifier = Qualifier.For(token);
+                if (null != qualifier){
+                    switch (qualifier){
+                    case Child:
+                        if (null != uniqueness)
+                            throw new Syntax("Malformed ODL field statement '"+line+"'.");
+                        else {
+                            uniqueness = Uniqueness.Type.Undefined;
+                            persistence = Persistence.Type.Transient;
+                            relational = Relation.Type.Child;
+                        }
+                        break;
+                    case Unique:
+                        if (null != uniqueness)
+                            throw new Syntax("Malformed ODL field statement '"+line+"'.");
+                        else {
+                            uniqueness = Uniqueness.Type.Unique;
+                            persistence = Persistence.Type.Persistent;
+                            relational = Relation.Type.None;
+                        }
+                        break;
+                    case HashUnique:
+                        if (null != uniqueness)
+                            throw new Syntax("Malformed ODL field statement '"+line+"'.");
+                        else {
+                            uniqueness = Uniqueness.Type.HashUnique;
+                            persistence = Persistence.Type.Persistent;
+                            relational = Relation.Type.None;
+                        }
+                        break;
+                    case Transient:
+                        if (null != uniqueness)
+                            throw new Syntax("Malformed ODL field statement '"+line+"'.");
+                        else {
+                            uniqueness = Uniqueness.Type.Undefined;
+                            persistence = Persistence.Type.Transient;
+                            relational = Relation.Type.None;
+                        }
+                        break;
+                    case DefaultSortBy:
+                        isDefaultSortBy = true;
+                        break;
+                    }
                 }
-                else {
-                    this.typeName = s;
-                    this.name = strtok.nextToken();
-                    this.uniqueness = Uniqueness.Type.Undefined;
-                    this.persistence = Persistence.Type.Persistent;
-                    this.relational = Relation.Type.None;
-                }
-                return;
-
-            case 3:
-                String qualifier = strtok.nextToken();
-                this.typeName = strtok.nextToken();
-                this.name = strtok.nextToken();
-
-                if ("*unique".equalsIgnoreCase(qualifier)){
-
-                    this.uniqueness = Uniqueness.Type.Unique;
-                    this.persistence = Persistence.Type.Persistent;
-                    this.relational = Relation.Type.None;
-                }
-                else if ("*hash-unique".equalsIgnoreCase(qualifier)){
-
-                    this.uniqueness = Uniqueness.Type.HashUnique;
-                    this.persistence = Persistence.Type.Persistent;
-                    this.relational = Relation.Type.None;
-                }
-                else if ("*transient".equalsIgnoreCase(qualifier)){
-
-                    this.uniqueness = Uniqueness.Type.Undefined;
-                    this.persistence = Persistence.Type.Transient;
-                    this.relational = Relation.Type.None;
-                }
-                else if ("*child".equalsIgnoreCase(qualifier)){
-
-                    this.uniqueness = Uniqueness.Type.Undefined;
-                    this.persistence = Persistence.Type.Transient;
-                    this.relational = Relation.Type.Child;
-                }
-                else 
-                    throw new Syntax("Unrecognized field qualifier in '"+line+"'.");
-
-                return;
-
-            default:
-                throw new Syntax("Malformed ODL field statement '"+line+"'.");
+                else if (null == typeName)
+                    typeName = token;
+                else if (null == name)
+                    name = token;
+                else
+                    throw new Syntax("Malformed ODL field statement '"+line+"'.");
             }
+            if (null == typeName)
+                throw new Syntax("Malformed ODL field statement '"+line+"'.");
+            else if (null == name)
+                name = Class.Decamel(typeName);
+
+            this.typeName = typeName;
+            this.name = name;
+            this.uniqueness = uniqueness;
+            this.persistence = persistence;
+            this.relational = relational;
+            this.isDefaultSortBy = isDefaultSortBy;
         }
         else
             throw new Jump(this.comment);
@@ -163,5 +227,7 @@ public final class Field
     public Comment getComment(){
         return this.comment;
     }
-
+    public boolean isDefaultSortBy(){
+        return this.isDefaultSortBy;
+    }
 }
