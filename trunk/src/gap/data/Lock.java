@@ -53,6 +53,8 @@ public final class Lock
 
     public final int hashCode;
 
+    private transient boolean entered;
+
 
     public Lock(Key key){
         super();
@@ -87,14 +89,18 @@ public final class Lock
     public boolean enter(){
         MemcacheService mc = Store.C.Get();
         if (null != mc)
-            return mc.put(this.string,ASSERT,EXP,CAS);
+            return (this.entered = mc.put(this.string,ASSERT,EXP,CAS));
         else
             throw new IllegalStateException("Memcache service not available.");
     }
     public void exit(){
         MemcacheService mc = Store.C.Get();
-        if (null != mc)
-            mc.delete(this.string);
+        if (null != mc){
+            if (this.entered)
+                mc.delete(this.string);
+            else
+                throw new IllegalStateException("Lock not entered.");
+        }
         else
             throw new IllegalStateException("Memcache service not available.");
     }
