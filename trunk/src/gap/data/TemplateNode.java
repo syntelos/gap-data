@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","odl/bean.xtm"},date="2009-10-19T18:15:37.189Z")
+@Generated(value={"gap.service.OD","bean"},date="2009-10-30T07:25:16.477Z")
 public final class TemplateNode
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -45,7 +45,7 @@ public final class TemplateNode
 
     public final static String ClassName = "TemplateNode";
 
-    public final static String DefaultSortBy = "nodeContent";
+    public final static String DefaultSortBy = "offset";
 
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
         return ClassDescriptorFor(TemplateNode.class);

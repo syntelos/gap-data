@@ -274,7 +274,7 @@ public final class OD
         String classVersion = ClassVersion(cd);
         String classKind = ClassKind(cd);
         String classPath = ClassPath(cd);
-        String defaultSortBy = null;
+        String defaultSortBy = null, defaultSortByOpt = null;
 
         /*
          * Class globals
@@ -406,6 +406,8 @@ public final class OD
                      */
                     if (IsFieldHashUnique(field)){
                         isInheritable = false;
+
+                        defaultSortByOpt = fieldName;
 
                         dataField.addSection(TemplateNames.FieldIsNotUnique);
                         dataField.addSection(TemplateNames.FieldIsNotInheritable);
@@ -657,8 +659,10 @@ public final class OD
             }
         }
 
-
-        top.setVariable(new TemplateName(prefix,"class_defaultSortBy"), defaultSortBy);
+        if (null != defaultSortBy)
+            top.setVariable(new TemplateName(prefix,"class_defaultSortBy"), defaultSortBy);
+        else
+            top.setVariable(new TemplateName(prefix,"class_defaultSortBy"), defaultSortByOpt);
 
         /*
          * Methods
