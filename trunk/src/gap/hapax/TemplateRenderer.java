@@ -74,7 +74,10 @@ public final class TemplateRenderer
     {
         Debugger.reset();
         try {
+            Debugger.println(">>");
+            Debugger.enter();
             Render(this.context, this.template, dict, writer);
+            Debugger.exit();
         }
         finally {
             dict.renderComplete();
@@ -191,6 +194,8 @@ public final class TemplateRenderer
         TemplateName variableName = new TemplateName(gap.Strings.TextToString(node.getNodeContent()));
         String variableValue = dict.getVariable(variableName);
 
+        Debugger.println(variableName.toString()+"["+pos+",'"+variableValue+"']");
+
         if (null != variableValue && 0 != variableValue.length())
             writer.write(variableValue);
 
@@ -202,6 +207,8 @@ public final class TemplateRenderer
         throws TemplateException
     {
         String text = gap.Strings.TextToString(node.getNodeContent());
+
+        Debugger.println("text["+pos+']');
 
         if (null != text && 0 != text.length())
             writer.write(text);
