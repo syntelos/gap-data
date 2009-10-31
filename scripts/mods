@@ -1,3 +1,3 @@
 #!/bin/bash
 
-svn status | egrep '^[!AM] ' | awk '{print $2}'
+svn status | egrep '^[!AM] ' | sed 's/\+//' | awk '{print $2}'
