@@ -2,10 +2,10 @@
 #labels copy
 
  * [http://code.google.com/p/gap-data/source/checkout check out] from [http://subversion.tigris.org/ svn] to your computer
- * [http://code.google.com/p/gap-data/source/browse create] [http://code.google.com/p/hapax2/wiki/Language?tm=6 Hapax3] templates and [http://java.sun.com/ java programming] object classes 
+ * [AntBuild create] [http://code.google.com/p/hapax2/wiki/Language?tm=6 Hapax3] templates and [http://java.sun.com/ java] programming [[http://code.google.com/p/gap-data/source/browse object classes]
 
- * test your application at [http://localhost:8888/ localhost:8888]
+ * [AntBuild test] your application at [http://localhost:8888/ localhost:8888]
 
  * edit [http://code.google.com/p/gap-data/source/browse/trunk/project.application project.application] with the name of your [http://appengine.google.com/ appengine] service space.
 
- * upload your application codebase, as tested, into [http://appengine.google.com/ appengine] with AppCfg.
+ * [AntBuild upload] your application codebase, as tested, into [http://appengine.google.com/ appengine] with AppCfg.
