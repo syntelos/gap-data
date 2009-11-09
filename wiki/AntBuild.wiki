@@ -1,6 +1,13 @@
 #summary Compile, package, run and debug with ant
+#labels Copy
 
 The [http://ant.apache.org/ apache ant] tool uses [http://java.sun.com/ java] to package, test and debug [Application a codebase].
+
+ = IDE = 
+
+Ant is the point of integration with [http://www.netbeans.org/ NetBeans], [http://www.eclipse.org/ Eclipse] and other IDEs.
+
+ = Ant Commands = 
 
 Run
 
@@ -10,11 +17,15 @@ Run
 
 for a full list of options.
 
+ == Compile & Package ==
+
 To compile and package run
 
 {{{
  ant 
 }}}
+
+ == Upload ==
 
 To upload to appengine, run
 {{{
@@ -23,4 +34,31 @@ To upload to appengine, run
 
  * However, first time per session use AppCfg from the command line.
 
-Ant is the point of integration with [http://www.netbeans.org/ NetBeans], [http://www.eclipse.org/ Eclipse] and other IDEs.
+ == Debug ==
+
+To debug suspended, run ant debug for jpda on port 9999
+{{{
+ ant debug
+}}}
+
+ == Test ==
+
+To run with debugging port open, run 
+{{{
+ ant run
+}}}
+
+Ant will run a local test server with jpda debugging available to [http://code.google.com/p/jswat/ debuggers] and IDEs.
+
+
+ == Versioning ==
+
+ To see the current version, run `ant version`.
+
+ To increment your version number, run one of three routines
+ * `ant build`, or
+ * `ant minor`,  or
+ * `ant major`.
+
+
+
