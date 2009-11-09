@@ -53,12 +53,11 @@ Ant will run a local test server with jpda debugging available to [http://code.g
 
  == Versioning ==
 
- To see the current version, run `ant version`.
+ To see the current version, run
+ * `ant version`.
 
  To increment your version number, run one of three routines
  * `ant build`, or
  * `ant minor`,  or
  * `ant major`.
-
-
 
