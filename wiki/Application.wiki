@@ -2,6 +2,7 @@
 #labels copy
 
  * [http://code.google.com/p/gap-data/source/checkout check out] from [http://subversion.tigris.org/ svn] to your computer
+
  * [AntBuild create] [http://code.google.com/p/hapax2/wiki/Language?tm=6 Hapax3] templates and [http://java.sun.com/ java] programming [http://code.google.com/p/gap-data/source/browse objects].
 
  * [AntBuild test] your application at [http://localhost:8888/ localhost:8888]
