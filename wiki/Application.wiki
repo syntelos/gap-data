@@ -1,0 +1,11 @@
+#summary How to copy and build a gap-data application
+#labels copy
+
+ * [/p/gap-data/source/checkout check out] from [http://subversion.tigris.org/ svn] to your computer
+ * [/p/gap-data/source create] [/p/hapax2/wiki/Language?tm=6 Hapax3] templates and [http://java.sun.com/ java programming] object classes 
+
+ * test your application at [http://localhost:8888/ localhost:8888]
+
+ * edit [http://code.google.com/p/gap-data/source/browse/trunk/project.application project.application] with the name of your [http://appengine.google.com/ appengine] service space.
+
+ * upload your application codebase, as tested, into [http://appengine.google.com/ appengine] with AppCfg.
