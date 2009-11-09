@@ -1,6 +1,6 @@
 #labels Documentation
  * [Usage]
- ( [Application]
+ * [Application]
  * [AntBuild]
  * [AppCfg]
  * [Language Object Definition Language]
