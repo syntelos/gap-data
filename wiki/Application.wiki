@@ -8,4 +8,4 @@
 
  * edit [http://code.google.com/p/gap-data/source/browse/trunk/project.application project.application] with the name of your [http://appengine.google.com/ appengine] service space.
 
- * [AntBuild upload] your application codebase, as tested, into [http://appengine.google.com/ appengine] with AppCfg.
+ * [AppCfg upload] your application codebase, as tested, into [http://appengine.google.com/ appengine] with AppCfg.
