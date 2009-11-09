@@ -5,7 +5,6 @@
  To manage these few conflicts, it would be best to perform a backup, revert, update, and restore procedure.
 
  Copy the current conflict modified files out of their locations to short term storage, e.g.
-
 {{{
   tar cvf /tmp gap-data/trunk $(cat mods.flist)
 }}}
