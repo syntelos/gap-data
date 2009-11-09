@@ -22,3 +22,5 @@ To upload to appengine, run
 }}}
 
  * However, first time per session use AppCfg from the command line.
+
+Ant is the point of integration with NetBeans, Eclipse and other IDEs.
