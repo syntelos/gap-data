@@ -1,0 +1,24 @@
+#summary Compile, package, run and debug with ant
+
+The [http://ant.apache.org/ apache ant] tool uses [http://java.sun.com/ java] to package, test and debug a codebase.
+
+Run
+
+{{{
+ ant -p
+}}}
+
+for a full list of options.
+
+To compile and package run
+
+{{{
+ ant 
+}}}
+
+To upload to appengine, run
+{{{
+ ant update
+}}}
+
+ * However, first time per session use AppCfg from the command line.
