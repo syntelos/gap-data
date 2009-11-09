@@ -1,0 +1,39 @@
+#summary svn versioning
+
+ When the svn java sources are modified, a conflict is created within the subversion package maintenance downlink.
+
+ To manage these few conflicts, it would be best to perform a backup, revert, update, and restore procedure.
+
+ copy the current conflict modified files out of their locations to short term storage, e.g.
+
+{{{
+  tar cvf /tmp gap-data/trunk $(cat mods.flist)
+}}}
+
+ *revert* the files using 
+{{{
+  svn revert
+}}}
+
+ *update* the package at maintenance points, major or minor number changes, using
+{{{
+  svn update
+}}}
+ *restore* by writing the modified files from the short store over the package repository.
+{{{
+  tar xfp /tmp/tmp
+}}}
+
+
+ = Conflicting files =
+
+ The only conflicting files should be
+
+{{{
+  [Application]
+}}}
+
+ and 
+{{{
+ gap-data/trunk/web/WEB-INF/templates
+}}}
