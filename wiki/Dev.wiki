@@ -27,13 +27,9 @@
 
  = Conflicting files =
 
- The only conflicting files should be
+ The only conflicting files should be [Application] and
 
-{{{
-  [Application]
-}}}
-
- and 
 {{{
  gap-data/trunk/web/WEB-INF/templates
 }}}
+
