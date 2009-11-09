@@ -1,6 +1,6 @@
 #summary Compile, package, run and debug with ant
 
-The [http://ant.apache.org/ apache ant] tool uses [http://java.sun.com/ java] to package, test and debug a codebase.
+The [http://ant.apache.org/ apache ant] tool uses [http://java.sun.com/ java] to package, test and debug [Application a codebase].
 
 Run
 
