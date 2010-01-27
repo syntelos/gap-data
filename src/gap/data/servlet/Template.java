@@ -46,7 +46,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean service methods.
  */
-@Generated(value={"gap.service.OD","bean-servlet"},date="2009-10-30T07:25:09.257Z")
+@Generated(value={"gap.service.OD","bean-servlet"},date="2009-10-31T04:53:33.163Z")
 public class Template
     extends gap.servlet.Site
 {

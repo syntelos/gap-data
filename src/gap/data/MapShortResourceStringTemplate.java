@@ -34,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated short map.
  */
-@Generated(value={"gap.service.OD","map-short"},date="2009-10-30T07:25:06.758Z")
+@Generated(value={"gap.service.OD","map-short"},date="2009-10-31T04:53:30.659Z")
 public final class MapShortResourceStringTemplate
     extends gap.util.AbstractMap<String,Template>
     implements gap.data.Map.Short<String,Template>
@@ -93,6 +93,18 @@ public final class MapShortResourceStringTemplate
                 throw new IllegalStateException("Missing ancestor key.");
         }
         return parent;
+    }
+    public String getParentTypeName(){
+        return ParentTypeName;
+    }
+    public String getChildTypeName(){
+        return ChildTypeName;
+    }
+    public Class getParentTypeClass(){
+        return Resource.class;
+    }
+    public Class getChildTypeClass(){
+        return Template.class;
     }
     public void setValueClassAncestorKey(){
         Key key = this.getParent().getClassFieldKeyValue();

@@ -34,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","list-short"},date="2009-10-30T07:25:09.428Z")
+@Generated(value={"gap.service.OD","list-short"},date="2009-10-31T04:53:33.340Z")
 public final class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>
@@ -87,6 +87,18 @@ public final class ListShortTemplateTemplateNode
                 throw new IllegalStateException("Missing ancestor key.");
         }
         return parent;
+    }
+    public String getParentTypeName(){
+        return ParentTypeName;
+    }
+    public String getChildTypeName(){
+        return ChildTypeName;
+    }
+    public Class getParentTypeClass(){
+        return Template.class;
+    }
+    public Class getChildTypeClass(){
+        return TemplateNode.class;
     }
     public void setValueClassAncestorKey(){
         Key key = this.getParent().getClassFieldKeyValue();

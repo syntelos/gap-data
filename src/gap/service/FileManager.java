@@ -506,7 +506,7 @@ public class FileManager
         String name = resource.getName();
         if (null != base && 0 != base.length()){
             if (0 != name.length())
-                return (OD.Decamel(base)+'/'+OD.Decamel(name));
+                return (OD.Decamel(base)+'.'+OD.Decamel(name));
             else
                 throw new IllegalStateException();
         }
@@ -514,6 +514,9 @@ public class FileManager
             return OD.Decamel(name);
         else
             throw new IllegalStateException();
+    }
+    public final static String DerivePackage(AbstractList list){
+        return OD.Decamel(list.getChildTypeName());
     }
 
     public final static String GetPath(Resource desc){

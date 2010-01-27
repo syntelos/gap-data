@@ -132,6 +132,14 @@ public abstract class AbstractList<V extends BigTable>
 
     public abstract BigTable getParent();
 
+    public abstract String getParentTypeName();
+
+    public abstract String getChildTypeName();
+
+    public abstract Class getParentTypeClass();
+
+    public abstract Class getChildTypeClass();
+
     /**
      * Get value from datastore without adding into the list buffer,
      * and without disturbing the relationship between the page and

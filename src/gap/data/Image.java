@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","bean"},date="2009-10-30T07:25:13.274Z")
+@Generated(value={"gap.service.OD","bean"},date="2009-10-31T04:53:36.961Z")
 public final class Image
     extends gap.data.BigTable
     implements DataInheritance<Image>,
