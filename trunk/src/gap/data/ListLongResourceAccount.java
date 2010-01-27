@@ -31,7 +31,7 @@ import javax.annotation.Generated;
 /**
  * Generated long list.
  */
-@Generated(value={"gap.service.OD","list-long"},date="2009-10-30T07:25:05.693Z")
+@Generated(value={"gap.service.OD","list-long"},date="2009-10-31T04:53:29.428Z")
 public final class ListLongResourceAccount
     extends gap.util.AbstractList<Account>
     implements gap.data.List.Long<Account>
@@ -83,6 +83,18 @@ public final class ListLongResourceAccount
                 throw new IllegalStateException("Missing ancestor key.");
         }
         return parent;
+    }
+    public String getParentTypeName(){
+        return ParentTypeName;
+    }
+    public String getChildTypeName(){
+        return ChildTypeName;
+    }
+    public Class getParentTypeClass(){
+        return Resource.class;
+    }
+    public Class getChildTypeClass(){
+        return Account.class;
     }
     public void setValueClassAncestorKey(){
         this.ancestorKey = this.getParent().getClassFieldKeyValue();

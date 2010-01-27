@@ -32,7 +32,7 @@ import javax.annotation.Generated;
 /**
  * Generated long map.
  */
-@Generated(value={"gap.service.OD","map-long"},date="2009-10-30T07:25:06.111Z")
+@Generated(value={"gap.service.OD","map-long"},date="2009-10-31T04:53:30.065Z")
 public final class MapLongResourceStringPartner
     extends gap.util.AbstractMap<String,Partner>
     implements gap.data.Map.Long<String,Partner>
@@ -90,6 +90,18 @@ public final class MapLongResourceStringPartner
                 throw new IllegalStateException("Missing ancestor key.");
         }
         return parent;
+    }
+    public String getParentTypeName(){
+        return ParentTypeName;
+    }
+    public String getChildTypeName(){
+        return ChildTypeName;
+    }
+    public Class getParentTypeClass(){
+        return Resource.class;
+    }
+    public Class getChildTypeClass(){
+        return Partner.class;
     }
     public void setValueClassAncestorKey(){
         this.ancestorKey = this.getParent().getClassFieldKeyValue();
