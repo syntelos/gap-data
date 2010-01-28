@@ -32,7 +32,7 @@ import javax.annotation.Generated;
 /**
  * Generated long map.
  */
-@Generated(value={"gap.service.OD","map-long"},date="2010-01-28T13:44:16.524Z")
+@Generated(value={"gap.service.OD","MapLong.java"},date="2010-01-28T21:41:12.168Z")
 public final class MapLongResourceStringPartner
     extends gap.util.AbstractMap<String,Partner>
     implements gap.data.Map.Long<String,Partner>

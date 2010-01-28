@@ -34,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated short map.
  */
-@Generated(value={"gap.service.OD","map-short"},date="2010-01-28T13:44:16.918Z")
+@Generated(value={"gap.service.OD","MapShort.java"},date="2010-01-28T21:41:12.492Z")
 public final class MapShortResourceStringImage
     extends gap.util.AbstractMap<String,Image>
     implements gap.data.Map.Short<String,Image>
