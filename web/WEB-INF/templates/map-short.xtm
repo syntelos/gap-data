@@ -49,6 +49,10 @@ public final class MapShort{{=parent_class_name}}{{=map_key_type}}{{=child_class
 
     public final static String ChildTypeName = "{{=child_class_name}}";
 
+    public final static Class ParentTypeClass = {{=parent_class_name}}.class;
+
+    public final static Class ChildTypeClass = {{=child_class_name}}.class;
+
     public final static gap.Primitive MapKeyType = gap.Primitive.{{=map_key_type}};
 
     public final static String MapKeyFieldName = "{{=map_key_field_name}}";
@@ -94,6 +98,18 @@ public final class MapShort{{=parent_class_name}}{{=map_key_type}}{{=child_class
                 throw new IllegalStateException("Missing ancestor key.");
         }
         return parent;
+    }
+    public String getParentTypeName(){
+        return ParentTypeName;
+    }
+    public String getChildTypeName(){
+        return ChildTypeName;
+    }
+    public Class getParentTypeClass(){
+        return ParentTypeClass;
+    }
+    public Class getChildTypeClass(){
+        return ChildTypeClass;
     }
     public void setValueClassAncestorKey(){
         Key key = this.getParent().getClassFieldKeyValue();
