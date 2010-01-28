@@ -28,7 +28,7 @@ import gap.util.AbstractList;
  * 
  * @author J. Pritchard
  */
-public final class JelaListFilter
+public final class JelaListFilterProgram
     extends JelaProgram
 {
 
@@ -37,7 +37,7 @@ public final class JelaListFilter
     private LineNumbered lined;
 
 
-    public JelaListFilter(AbstractList list, String name){
+    public JelaListFilterProgram(AbstractList list, String name){
         super();
         String[] lines = Lines(tool);
         if (null != resource && null != lines){
