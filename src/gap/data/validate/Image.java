@@ -43,7 +43,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean string I/O functions.
  */
-@Generated(value={"gap.service.OD","bean-validate"},date="2009-10-31T04:53:37.094Z")
+@Generated(value={"gap.service.OD","bean-validate"},date="2010-01-28T13:44:24.766Z")
 public abstract class Image
     extends gap.Strings
 {

@@ -32,7 +32,7 @@ import javax.annotation.Generated;
 /**
  * Generated long map.
  */
-@Generated(value={"gap.service.OD","map-long"},date="2009-10-31T04:53:30.065Z")
+@Generated(value={"gap.service.OD","map-long"},date="2010-01-28T13:44:16.524Z")
 public final class MapLongResourceStringPartner
     extends gap.util.AbstractMap<String,Partner>
     implements gap.data.Map.Long<String,Partner>
@@ -45,6 +45,10 @@ public final class MapLongResourceStringPartner
     public final static String ParentTypeName = "Resource";
 
     public final static String ChildTypeName = "Partner";
+
+    public final static Class ParentTypeClass = Resource.class;
+
+    public final static Class ChildTypeClass = Partner.class;
 
     public final static gap.Primitive MapKeyType = gap.Primitive.String;
 
@@ -98,10 +102,10 @@ public final class MapLongResourceStringPartner
         return ChildTypeName;
     }
     public Class getParentTypeClass(){
-        return Resource.class;
+        return ParentTypeClass;
     }
     public Class getChildTypeClass(){
-        return Partner.class;
+        return ChildTypeClass;
     }
     public void setValueClassAncestorKey(){
         this.ancestorKey = this.getParent().getClassFieldKeyValue();

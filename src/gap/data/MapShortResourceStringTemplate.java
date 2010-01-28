@@ -34,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated short map.
  */
-@Generated(value={"gap.service.OD","map-short"},date="2009-10-31T04:53:30.659Z")
+@Generated(value={"gap.service.OD","map-short"},date="2010-01-28T13:44:17.174Z")
 public final class MapShortResourceStringTemplate
     extends gap.util.AbstractMap<String,Template>
     implements gap.data.Map.Short<String,Template>
@@ -47,6 +47,10 @@ public final class MapShortResourceStringTemplate
     public final static String ParentTypeName = "Resource";
 
     public final static String ChildTypeName = "Template";
+
+    public final static Class ParentTypeClass = Resource.class;
+
+    public final static Class ChildTypeClass = Template.class;
 
     public final static gap.Primitive MapKeyType = gap.Primitive.String;
 
@@ -101,10 +105,10 @@ public final class MapShortResourceStringTemplate
         return ChildTypeName;
     }
     public Class getParentTypeClass(){
-        return Resource.class;
+        return ParentTypeClass;
     }
     public Class getChildTypeClass(){
-        return Template.class;
+        return ChildTypeClass;
     }
     public void setValueClassAncestorKey(){
         Key key = this.getParent().getClassFieldKeyValue();

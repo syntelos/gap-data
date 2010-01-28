@@ -34,7 +34,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","list-short"},date="2009-10-31T04:53:33.340Z")
+@Generated(value={"gap.service.OD","list-short"},date="2010-01-28T13:44:20.319Z")
 public final class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>
@@ -47,6 +47,10 @@ public final class ListShortTemplateTemplateNode
     public final static String ParentTypeName = "Template";
 
     public final static String ChildTypeName = "TemplateNode";
+
+    public final static Class ParentTypeClass = Template.class;
+
+    public final static Class ChildTypeClass = TemplateNode.class;
 
 
     protected transient Template parent;
@@ -95,10 +99,10 @@ public final class ListShortTemplateTemplateNode
         return ChildTypeName;
     }
     public Class getParentTypeClass(){
-        return Template.class;
+        return ParentTypeClass;
     }
     public Class getChildTypeClass(){
-        return TemplateNode.class;
+        return ChildTypeClass;
     }
     public void setValueClassAncestorKey(){
         Key key = this.getParent().getClassFieldKeyValue();
