@@ -51,13 +51,13 @@ public final class Main
     extends java.lang.Object
 {
     public final static class TemplateNames {
-        public final static TemplateName Bean = new TemplateName("bean");
-        public final static TemplateName BeanServlet = new TemplateName("bean-servlet");
-        public final static TemplateName BeanValidate = new TemplateName("bean-validate");
-        public final static TemplateName ListLong = new TemplateName("list-long");
-        public final static TemplateName ListShort = new TemplateName("list-short");
-        public final static TemplateName MapLong = new TemplateName("map-long");
-        public final static TemplateName MapShort = new TemplateName("map-short");
+        public final static TemplateName Bean = new TemplateName("Bean.java");
+        public final static TemplateName BeanServlet = new TemplateName("BeanServlet.java");
+        public final static TemplateName BeanValidate = new TemplateName("BeanValidate.java");
+        public final static TemplateName ListLong = new TemplateName("ListLong.java");
+        public final static TemplateName ListShort = new TemplateName("ListShort.java");
+        public final static TemplateName MapLong = new TemplateName("MapLong.java");
+        public final static TemplateName MapShort = new TemplateName("MapShort.java");
     }
 
     private final static java.util.Map<String,Class> Classes = new java.util.HashMap<String,Class>();
