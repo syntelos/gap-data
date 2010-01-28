@@ -43,7 +43,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean string I/O functions.
  */
-@Generated(value={"gap.service.OD","bean-validate"},date="2009-10-31T04:53:29.109Z")
+@Generated(value={"gap.service.OD","bean-validate"},date="2010-01-28T13:44:15.195Z")
 public abstract class Resource
     extends gap.Strings
 {
