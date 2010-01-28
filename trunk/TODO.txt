@@ -1,0 +1,10 @@
+                                                -*-outline-*-
+
+* Objective
+** Define data structures on desktop
+** Generate data and service base classes
+*** POST (create)
+*** GET (read)
+** Extend data and service base classes in user code classes
+
+
