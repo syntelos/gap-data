@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-28T21:41:10.444Z")
+@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-29T01:25:16.020Z")
 public final class Resource
     extends gap.data.BigTable
     implements DataInheritance<Resource>,
@@ -289,25 +289,25 @@ public final class Resource
         public static boolean Set(Field field, Resource instance, Object value){
             switch(field){
             case InheritFromKey:
-                return instance.setInheritFromKey( (Key)value);
+                return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
             case Key:
-                return instance.setKey( (Key)value);
+                return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
-                return instance.setId( (String)value);
+                return instance.setId(gap.Objects.StringFromObject(value));
             case Base:
-                return instance.setBase( (String)value);
+                return instance.setBase(gap.Objects.StringFromObject(value));
             case Name:
-                return instance.setName( (String)value);
+                return instance.setName(gap.Objects.StringFromObject(value));
             case LastModified:
-                return instance.setLastModified( (Long)value);
+                return instance.setLastModified(gap.Objects.LongFromObject(value));
             case Tag:
-                return instance.setTag( (Category)value);
+                return instance.setTag(gap.Objects.CategoryFromObject(value));
             case ServletClassname:
-                return instance.setServletClassname( (String)value);
+                return instance.setServletClassname(gap.Objects.StringFromObject(value));
             case ServletSourceJava:
-                return instance.setServletSourceJava( (Text)value);
+                return instance.setServletSourceJava(gap.Objects.TextFromObject(value));
             case ServletClassfileJvm:
-                return instance.setServletClassfileJvm( (Blob)value);
+                return instance.setServletClassfileJvm(gap.Objects.BlobFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in Resource");
             }

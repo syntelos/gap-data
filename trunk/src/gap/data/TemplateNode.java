@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-28T21:41:22.462Z")
+@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-29T01:25:28.031Z")
 public final class TemplateNode
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -314,23 +314,23 @@ public final class TemplateNode
         public static boolean Set(Field field, TemplateNode instance, Object value){
             switch(field){
             case InheritFromKey:
-                return instance.setInheritFromKey( (Key)value);
+                return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
             case ParentKey:
-                return instance.setParentKey( (Key)value);
+                return instance.setParentKey(gap.Objects.KeyFromObject(value));
             case Key:
-                return instance.setKey( (Key)value);
+                return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
-                return instance.setId( (String)value);
+                return instance.setId(gap.Objects.StringFromObject(value));
             case NodeType:
-                return instance.setNodeType( (String)value);
+                return instance.setNodeType(gap.Objects.StringFromObject(value));
             case LineNumber:
-                return instance.setLineNumber( (Integer)value);
+                return instance.setLineNumber(gap.Objects.IntegerFromObject(value));
             case NodeContent:
-                return instance.setNodeContent( (Text)value);
+                return instance.setNodeContent(gap.Objects.TextFromObject(value));
             case Offset:
-                return instance.setOffset( (Integer)value);
+                return instance.setOffset(gap.Objects.IntegerFromObject(value));
             case OffsetCloseRelative:
-                return instance.setOffsetCloseRelative( (Integer)value);
+                return instance.setOffsetCloseRelative(gap.Objects.IntegerFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in TemplateNode");
             }
