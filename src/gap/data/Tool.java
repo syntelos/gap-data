@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-28T21:41:17.291Z")
+@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-29T01:25:22.622Z")
 public final class Tool
     extends gap.data.BigTable
     implements DataInheritance<Tool>,
@@ -344,43 +344,43 @@ public final class Tool
         public static boolean Set(Field field, Tool instance, Object value){
             switch(field){
             case InheritFromKey:
-                return instance.setInheritFromKey( (Key)value);
+                return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
             case ParentKey:
-                return instance.setParentKey( (Key)value);
+                return instance.setParentKey(gap.Objects.KeyFromObject(value));
             case Key:
-                return instance.setKey( (Key)value);
+                return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
-                return instance.setId( (String)value);
+                return instance.setId(gap.Objects.StringFromObject(value));
             case Name:
-                return instance.setName( (String)value);
+                return instance.setName(gap.Objects.StringFromObject(value));
             case LastModified:
-                return instance.setLastModified( (Long)value);
+                return instance.setLastModified(gap.Objects.LongFromObject(value));
             case HeadXtm:
-                return instance.setHeadXtm( (String)value);
+                return instance.setHeadXtm(gap.Objects.StringFromObject(value));
             case OverlayXtm:
-                return instance.setOverlayXtm( (String)value);
+                return instance.setOverlayXtm(gap.Objects.StringFromObject(value));
             case FormXtm:
-                return instance.setFormXtm( (String)value);
+                return instance.setFormXtm(gap.Objects.StringFromObject(value));
             case TitleHiGraphicUri:
-                return instance.setTitleHiGraphicUri( (String)value);
+                return instance.setTitleHiGraphicUri(gap.Objects.StringFromObject(value));
             case TitleLoGraphicUri:
-                return instance.setTitleLoGraphicUri( (String)value);
+                return instance.setTitleLoGraphicUri(gap.Objects.StringFromObject(value));
             case ButtonHiGraphicUri:
-                return instance.setButtonHiGraphicUri( (String)value);
+                return instance.setButtonHiGraphicUri(gap.Objects.StringFromObject(value));
             case ButtonLoGraphicUri:
-                return instance.setButtonLoGraphicUri( (String)value);
+                return instance.setButtonLoGraphicUri(gap.Objects.StringFromObject(value));
             case ButtonOffGraphicUri:
-                return instance.setButtonOffGraphicUri( (String)value);
+                return instance.setButtonOffGraphicUri(gap.Objects.StringFromObject(value));
             case FunctionMethodname:
-                return instance.setFunctionMethodname( (String)value);
+                return instance.setFunctionMethodname(gap.Objects.StringFromObject(value));
             case FunctionClassname:
-                return instance.setFunctionClassname( (String)value);
+                return instance.setFunctionClassname(gap.Objects.StringFromObject(value));
             case FunctionBody:
-                return instance.setFunctionBody( (Text)value);
+                return instance.setFunctionBody(gap.Objects.TextFromObject(value));
             case FunctionSourceJava:
-                return instance.setFunctionSourceJava( (Text)value);
+                return instance.setFunctionSourceJava(gap.Objects.TextFromObject(value));
             case FunctionClassfileJvm:
-                return instance.setFunctionClassfileJvm( (Blob)value);
+                return instance.setFunctionClassfileJvm(gap.Objects.BlobFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in Tool");
             }

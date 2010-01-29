@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-28T21:41:23.773Z")
+@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-29T01:25:29.350Z")
 public final class Partner
     extends gap.data.BigTable
     implements DataInheritance<Partner>,
@@ -301,15 +301,15 @@ public final class Partner
         public static boolean Set(Field field, Partner instance, Object value){
             switch(field){
             case InheritFromKey:
-                return instance.setInheritFromKey( (Key)value);
+                return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
             case ParentKey:
-                return instance.setParentKey( (Key)value);
+                return instance.setParentKey(gap.Objects.KeyFromObject(value));
             case Key:
-                return instance.setKey( (Key)value);
+                return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
-                return instance.setId( (String)value);
+                return instance.setId(gap.Objects.StringFromObject(value));
             case Name:
-                return instance.setName( (String)value);
+                return instance.setName(gap.Objects.StringFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in Partner");
             }
