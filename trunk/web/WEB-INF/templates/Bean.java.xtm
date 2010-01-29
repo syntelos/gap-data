@@ -424,11 +424,11 @@ public final class {{=class_name}}
         public static boolean Set(Field field, {{=class_name}} instance, Object value){
             switch(field){
             case InheritFromKey:
-                return instance.setInheritFromKey( (Key)value);{{#class_re_child_or_group}}
+                return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));{{#class_re_child_or_group}}
             case ParentKey:
-                return instance.setParentKey( (Key)value);{{/class_re_child_or_group}}{{#pfield}}
+                return instance.setParentKey(gap.Objects.KeyFromObject(value));{{/class_re_child_or_group}}{{#pfield}}
             case {{=field_nameCamel}}:
-                return instance.set{{=field_nameCamel}}( ({{=field_class}})value);{{/pfield}}
+                return instance.set{{=field_nameCamel}}({{=field_from_object_prefix}}value{{=field_from_object_suffix}});{{/pfield}}
             default:
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
