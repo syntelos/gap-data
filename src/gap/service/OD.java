@@ -107,6 +107,8 @@ public final class OD
         public final static TemplateName FieldNameCamel = new TemplateName("field_nameCamel");
         public final static TemplateName FieldToStringPrefix = new TemplateName("field_to_string_prefix");
         public final static TemplateName FieldToStringSuffix = new TemplateName("field_to_string_suffix");
+        public final static TemplateName FieldFromObjectPrefix = new TemplateName("field_from_object_prefix");
+        public final static TemplateName FieldFromObjectSuffix = new TemplateName("field_from_object_suffix");
         public final static TemplateName ImportSpec = new TemplateName("import_spec");
         public final static TemplateName InterfaceClass = new TemplateName("interface_class");
         public final static TemplateName ListClassName = new TemplateName("list_class_name");
@@ -382,6 +384,7 @@ public final class OD
                 String fieldTypeClean = CleanTypeName(fieldType);
                 String fieldTypeCleanClean = CleanCleanTypeName(fieldType);
                 Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
+                Primitive fieldTypePrimitive = Primitive.For(fieldTypeClass);
                 String[] fieldTypeParameters = FieldTypeParameters(ToString(field.getType()));
                 TemplateDataDictionary dataField = null;
                 boolean isPersistent = false;
@@ -525,6 +528,22 @@ public final class OD
                 dataField.setVariable(TemplateNames.FieldClass,fieldType);
                 dataField.setVariable(TemplateNames.FieldClassClean,fieldTypeClean);
                 dataField.setVariable(TemplateNames.FieldClassCleanClean,fieldTypeCleanClean);
+                if (IsTypeClassString(fieldTypeClass)){
+                    dataField.setVariable(TemplateNames.FieldToStringPrefix,"");
+                    dataField.setVariable(TemplateNames.FieldToStringSuffix,"");
+                }
+                else {
+                    dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
+                    dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+                }
+                if (null != fieldTypePrimitive){
+                    dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"gap.Objects."+fieldTypeCleanClean+"FromObject(");
+                    dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+                }
+                else {
+                    dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+')');
+                    dataField.setVariable(TemplateNames.FieldFromObjectSuffix,"");
+                }
 
                 if (IsTypeClassKey(fieldTypeClass)){
                     isInheritable = false;
