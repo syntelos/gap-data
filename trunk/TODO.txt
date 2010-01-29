@@ -2,8 +2,7 @@
 
 * Delete 'validate' segment
 * Review 'servlet' segment
-** How is gap/service/Servlet using these servlets?
-** If they're only used for 
+** Review Servlet functions, templates and servlet dynamic binding
 
 * Objective
 ** Define data structures on desktop
