@@ -193,7 +193,7 @@ public class Servlet
             }
             else if (req.isPath("/version.txt")){
                 PrintWriter out = rep.getWriter();
-                out.println(gap.Version.Name+' '+gap.Version.Target+' '+gap.Version.Long);
+                out.println(gap.Version.Target+' '+gap.Version.Name+' '+gap.Version.Long);
                 rep.setContentTypeText();
                 return;
             }

@@ -37,23 +37,27 @@ import javax.xml.stream.Location;
 
 /**
  * First class functions for java method and script bindings.  A
- * function is a bean and can be used in any way from jbxml that any
- * other bean can be used.
+ * function is a bean and can be used in any way that any other bean
+ * can be used.
  * 
  * <h3>Initialization</h3>
  * 
  * Functions must be initialized after the construction of the bean
- * graph by the Processor.  The initialization process requires the
- * Resolver / Processor "in scope".  See Resolver enter and exit.
+ * graph (as by the Processor).  
  * 
- * The function init method is signaled for static method "class
- * camel" naming with a null instance object argument, or an instance
- * method "field camel" naming with a non null instance object
- * argument.  In the static method case, the name of the function is
- * in "class camel" case.  In the instance method case, the name of
- * the method is in "field camel" case.  Otherwise an instance method
- * must have an instance object, but a static method called with an
- * instance object is harmless.
+ * The initialization process requires a Resolver or Processor "in
+ * scope".  See Resolver enter and exit.
+ * 
+ * The function init method is called for the static method case with
+ * a null instance object argument, or in the instance method case
+ * with a non null instance object argument.
+ * 
+ * In the static method case, the case of the name string for the
+ * function is in "class camel".  In the instance method case, the
+ * case of the method name string is "field camel".
+ * 
+ * An instance method must have an instance object, but a static
+ * method called with an instance object is harmless.
  * 
  * The function init method will throw a method not found exception
  * for any failure to correctly initialize.

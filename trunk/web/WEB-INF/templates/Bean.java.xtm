@@ -460,7 +460,7 @@ public final class {{=class_name}}
     private volatile {{=field_class}} {{=field_name}};{{/cfield}}
 
 {{#tfield}}
-    private volatile transient {{=field_class}} {{=field_name}};    {{#field_is_transient}}// {{=data_model}}{{/field_is_transient}}{{/tfield}}
+    private volatile transient {{=field_class}} {{=field_name}};{{/tfield}}
 
 {{#class_re_child_or_group}}
     private volatile Key parentKey;

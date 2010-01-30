@@ -1,8 +1,58 @@
 
-For Gap Data info, please see http://code.google.com/p/gap-data or peruse the codebase.
+   Gap Data is application framework for producing web information
+   systems on the Google Appengine (BigTable infinite Data Store).
 
-For Gap Data discussion, please refer to http://groups.google.com/group/gap-data
 
-For Google Appengine documentation, please refer to http://code.google.com/appengine/docs/java/overview.html
+Objective
 
-And of course, Gap Data is live at http://gap-data.appspot.com/
+   The first objective for this application framework is to
+   consolidate the use of the Appengine APIs into framework and
+   generated code for applications that are as simple and reliable as
+   possible.
+
+   Where some modest elections can benefit the objectives for the
+   framework, choices have been made in favor of an Atom Pub / GData /
+   Open Social model.  This is a performant and effective web
+   application style that serves any application well.
+
+   Gap Data applications are intended to scale over unbounded data
+   sets, including templates.
+
+
+Internal Architecture
+
+   Within this application framework layer I have elected to do work
+   on the web editing problem.
+
+   There is a slim solution set between HTTP and the Data Store that
+   does not breech the separation of concern between the framework and
+   application layers that this work targets.
+
+   That is when a generic POST create, GET read, PUT update, and
+   DELETE remove feature set is generic to any applicable Data Object
+   -- adopting as little as some key features of the HTTP REST web
+   architectural style in the context of developments in the Atom Pub,
+   GData, and Open Social fields.
+
+
+Application Architecture
+
+   Ideally, Gap Data applications are constructed in a combination of
+   static html from files and dynamic html generated server side by
+   the integrated hapax templates.  
+
+   As client side dynamic (AJAX) elements are resricted to login-
+   protected areas, then web crawlers (search engines) see the site as
+   its users do.
+
+
+For more info
+
+   * Architecture.txt 
+
+   * http://code.google.com/p/gap-data 
+
+   * http://groups.google.com/group/gap-data
+
+   * http://code.google.com/appengine/docs/java/overview.html
+
