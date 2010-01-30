@@ -114,6 +114,7 @@ public class Request
     public final Method method;
     public final Protocol protocol;
     public final Path path;
+    public final Kind kind;
     public final Accept accept;
     public final FileManager fileManager;
     public final Parameters parameters;
@@ -136,6 +137,7 @@ public class Request
         this.method = method;
         this.protocol = protocol;
         this.path = path;
+        this.kind = Kind.For(path);
         this.accept = accept;
         this.fileManager = fm;
         this.parameters = parameters;

@@ -68,14 +68,8 @@ public abstract class BigTable
     public static Class<? extends BigTable> Find(Kind kind)
         throws ClassNotFoundException
     {
-        if (null != kind){
-            try {
-                return (Class<? extends BigTable>)Class.forName(kind.fullClassName);
-            }
-            catch (ClassNotFoundException exc){
-                throw new ClassNotFoundException(kind.name,exc);
-            }
-        }
+        if (null != kind)
+            return kind.getTableClass();
         else
             throw new IllegalArgumentException();
     }
@@ -316,6 +310,10 @@ public abstract class BigTable
      * @return The class static unqualified class name.
      */
     public abstract String getClassName();
+
+    public final String getClassKindPath(){
+        return this.getClassKind().path;
+    }
     /**
      * A static value naming the field employed for instance lookups,
      * as from web interfaces.

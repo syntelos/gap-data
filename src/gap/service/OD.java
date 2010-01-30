@@ -849,10 +849,15 @@ public final class OD
         return cd.getName();
     }
     public final static String ClassPath(ClassDescriptor cd){
-        if (cd.hasPath())
-            return cd.getPath();
+        if (cd instanceof ClassDescriptor.Path){
+            ClassDescriptor.Path cdp = (ClassDescriptor.Path)cd;
+            if (cdp.hasPath())
+                return cdp.getPath();
+            else
+                throw new ODStateException(cd,"OD Model requires 'path' field of class.");
+        }
         else
-            throw new ODStateException(cd,"OD Model requires 'path' field of class.");
+            return null;
     }
     public final static String ClassSortBy(ClassDescriptor cd){
         if (cd instanceof ClassDescriptor.SortBy){

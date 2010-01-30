@@ -497,8 +497,17 @@ public class Servlet
         else
             rep.sendRedirect(path);
     }
-    protected Parameters createParameters(HttpServletRequest req){
-        return new Parameters(req,Page.DefaultCount,null);
+    protected Parameters createParameters(HttpServletRequest req, Path path){
+        Class<? extends gap.data.BigTable> table = null;
+        Kind kind = Kind.For(path);
+        if (null != kind){
+            try {
+                table = kind.getTableClass();
+            }
+            catch (ClassNotFoundException exc){
+            }
+        }
+        return new Parameters(req,Page.DefaultCount,table);
     }
     /**
      * Must not throw an exception.  May only return a null value when
@@ -508,7 +517,7 @@ public class Servlet
     protected Request createRequest(HttpServletRequest req, Method method, Protocol protocol, Path path, Accept accept,
                                     FileManager fm, Logon logon, String uri)
     {
-        Parameters parameters = this.createParameters(req);
+        Parameters parameters = this.createParameters(req,path);
         return new Request(req,method,protocol,path,accept,fm,logon,uri,parameters);
     }
     /**

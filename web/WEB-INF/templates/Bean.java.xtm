@@ -43,7 +43,7 @@ public final class {{=class_name}}
 
     private final static long serialVersionUID = {{=class_version}};
 
-    public final static Kind KIND = Kind.Create("{{=class_kind}}","{{=package_name}}","{{=class_name}}");
+    public final static Kind KIND = Kind.Create("{{=class_kind}}","{{=package_name}}","{{=class_name}}","{{=class_path}}");
 
     public final static String ClassName = "{{=class_name}}";
 

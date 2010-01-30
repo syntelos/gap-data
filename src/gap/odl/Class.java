@@ -135,6 +135,7 @@ public final class Class
     extends Object
     implements ClassDescriptor.Version,
                ClassDescriptor.Implements,
+               ClassDescriptor.Path,
                ClassDescriptor.Relation,
                ClassDescriptor.WithPackage,
                ClassDescriptor.WithImports
@@ -143,11 +144,11 @@ public final class Class
     public final static Pattern Open2 = Pattern.compile("\\s*\\{",Pattern.MULTILINE);
 
 
-    public final Package pack;
+    public final gap.odl.Package pack;
 
-    public final Path path;
+    public final gap.odl.Path path;
 
-    public final Parent parent;
+    public final gap.odl.Parent parent;
 
     public final String name, nameDecamel;
 
@@ -157,7 +158,7 @@ public final class Class
 
     public final List<ImportDescriptor> imports = new java.util.ArrayList<ImportDescriptor>();
 
-    private Comment comment;
+    private gap.odl.Comment comment;
 
     public final List<Object> interfaces = new java.util.ArrayList<Object>();
 
@@ -172,24 +173,24 @@ public final class Class
         throws IOException, Syntax
     {
         super();
-        Package pack = null;
-        Path path = null;
+        gap.odl.Package pack = null;
+        gap.odl.Path path = null;
         String spec = null, name = null;
-        Import imp = null;
-        Field field = null;
-        Method method = null;
+        gap.odl.Import imp = null;
+        gap.odl.Field field = null;
+        gap.odl.Method method = null;
         long version = 1L;
-        Parent parent = null;
+        gap.odl.Parent parent = null;
 
         while (true){
             try {
                 if (null == pack)
-                    pack = new Package(reader);
+                    pack = new gap.odl.Package(reader);
                 else if (null == path)
-                    path = new Path(reader);
+                    path = new gap.odl.Path(reader);
                 else if (null == name){
                     try {
-                        imp = new Import(reader);
+                        imp = new gap.odl.Import(reader);
                         this.imports.add(imp);
                     }
                     catch (Jump local){
@@ -216,14 +217,14 @@ public final class Class
                             }
                             if (!line.endsWith("{")){
                                 try {
-                                    parent = new Parent(reader);
+                                    parent = new gap.odl.Parent(reader);
                                 }
                                 catch (Jump to){
                                     reader.comment(to);
                                 }
                                 try {
                                     while (true){
-                                        Interface inf = new Interface(reader, pack, this.imports);
+                                        Interface inf = new gap.odl.Interface(reader, pack, this.imports);
                                         this.interfaces.add(inf);
                                     }
                                 }
@@ -239,13 +240,13 @@ public final class Class
                 }
                 else {
                     try {
-                        method = new Method(reader);
+                        method = new gap.odl.Method(reader);
                         this.methods.add(method);
                     }
                     catch (Jump to){
                         reader.comment(to);
 
-                        field = new Field(reader);
+                        field = new gap.odl.Field(reader);
                         this.fields.add(field);
                     }
                 }

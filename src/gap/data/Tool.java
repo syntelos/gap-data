@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-29T01:25:22.622Z")
+@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-30T19:07:56.990Z")
 public final class Tool
     extends gap.data.BigTable
     implements DataInheritance<Tool>,
@@ -43,7 +43,7 @@ public final class Tool
 
     private final static long serialVersionUID = 1;
 
-    public final static Kind KIND = Kind.Create("Tool","gap.data","Tool");
+    public final static Kind KIND = Kind.Create("Tool","gap.data","Tool","/tools");
 
     public final static String ClassName = "Tool";
 
