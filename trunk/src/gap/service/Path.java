@@ -38,9 +38,9 @@ public final class Path
         public final static String SupportedFields = "@supportedFields";
     }
 
-    private final String servlet, full, sub;
-    private final String[] components;
-    private final int size;
+    public final String servlet, full, sub;
+    public final String[] components;
+    public final int size;
 
 
     public Path(HttpServletRequest req){

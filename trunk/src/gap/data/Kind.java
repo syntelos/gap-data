@@ -35,48 +35,88 @@ public final class Kind
                HasName
 {
 
-    private final static java.util.Map<String,Kind> ByKind = new java.util.HashMap<String,Kind>();
+    private final static lxl.Map<String,Kind> ByKind = new lxl.Map<String,Kind>(64);
 
-    public static Kind Create(String kindName, String pkg, String clan){
-        Kind kind = ByKind.get(kindName);
+    private final static lxl.Index<String> ByPath = new lxl.Index<String>(64);
+
+
+    public static Kind Create(String name, String pkg, String clan){
+        return Create(name,pkg,clan,"/anon");
+    }
+    public static Kind Create(String name, String pkg, String clan, String path){
+        Kind kind = ByKind.get(name);
         if (null == kind){
-            kind = new Kind(kindName,pkg,clan);
-            ByKind.put(kindName,kind);
+            kind = new Kind(name,pkg,clan,path);
+            int idx = ByKind.put2(name,kind);
+            ByPath.put(kind.path,idx);
         }
         else if ((!kind.className.equals(clan))||(!kind.packageName.equals(pkg))){
 
-            throw new IllegalArgumentException("Kind name conflict in '"+kindName+"' from '"+pkg+'.'+clan+"' with '"+kind.fullClassName+"'.");
+            throw new IllegalArgumentException("Kind name conflict in '"+name+"' from '"+pkg+'.'+clan+"' with '"+kind.fullClassName+"'.");
         }
         return kind;
     }
-    //  public static Kind Rename(String name, String pkg, String clan){
-    //      throw new java.lang.UnsupportedOperationException();
-    //  }
-    public static boolean Has(String kindName){
-        return ByKind.containsKey(kindName);
+    public static boolean Has(String name){
+        return ByKind.containsKey(name);
     }
-    public static Kind For(String kindName){
-        return ByKind.get(kindName);
+    public static Kind For(String name){
+        return ByKind.get(name);
+    }
+    public static Kind For(gap.service.Path path){
+        String string = path.full;
+        int kind = ByPath.get(string);
+        if (-1 == kind){
+            do {
+                int idx = string.lastIndexOf('/');
+                string = string.substring(0,idx);
+                if (0 < string.length()){
+                    kind = ByPath.get(string);
+                    if (-1 != kind)
+                        return ByKind.get(kind);
+                }
+                else
+                    return null;
+            }
+            while (true);
+        }
+        return ByKind.get(kind);
+    }
+    /** 
+     * @param path Relative path expression (as in the HTTP request
+     * line) having only path component.
+     * @return Leading path separator, no trailing path separator ('/')
+     */
+    public static String PathNormal(String path){
+        if (null == path || 0 == path.length())
+            return null;
+        else {
+            if ('/' != path.charAt(0))
+                path = "/"+path;
+
+            int term = (path.length()-1);
+
+            if (0 < term && '/' == path.charAt(term))
+                path = path.substring(0,term);
+
+            return path;
+        }
     }
 
-    public static java.util.Collection<Kind> Iterable(){
-        return ByKind.values();
-    }
 
-
-    public final String name, packageName, className, fullClassName;
+    public final String name, packageName, className, fullClassName, path;
 
     public final int hashCode;
 
 
-    private Kind(String name, String packageName, String className){
+    private Kind(String name, String packageName, String className, String path){
         super();
-        if (null != name && null != packageName && null != className){
+        if (null != name && null != packageName && null != className && null != path){
             this.name = name;
             this.hashCode = name.hashCode();
             this.packageName = packageName;
             this.className = className;
             this.fullClassName = packageName+'.'+className;
+            this.path = PathNormal(path);
         }
         else
             throw new IllegalArgumentException();
@@ -85,6 +125,16 @@ public final class Kind
 
     public String getName(){
         return this.name;
+    }
+    public Class<? extends BigTable> getTableClass()
+        throws java.lang.ClassNotFoundException
+    {
+        try {
+            return (Class<? extends BigTable>)Class.forName(this.fullClassName);
+        }
+        catch (ClassNotFoundException exc){
+            throw new ClassNotFoundException(this.name,exc);
+        }
     }
     public String toString(){
         return this.name;

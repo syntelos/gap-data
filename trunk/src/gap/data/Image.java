@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-29T01:25:24.851Z")
+@Generated(value={"gap.service.OD","Bean.java"},date="2010-01-30T19:07:58.792Z")
 public final class Image
     extends gap.data.BigTable
     implements DataInheritance<Image>,
@@ -43,7 +43,7 @@ public final class Image
 
     private final static long serialVersionUID = 1;
 
-    public final static Kind KIND = Kind.Create("Image","gap.data","Image");
+    public final static Kind KIND = Kind.Create("Image","gap.data","Image","/images");
 
     public final static String ClassName = "Image";
 

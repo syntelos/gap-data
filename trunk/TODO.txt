@@ -1,17 +1,15 @@
                                                 -*-outline-*-
 
-* Delete 'validate' segment
-* Review 'servlet' segment
-** Review Servlet functions, templates and servlet dynamic binding
+* Delete Bean Validate and Servlet templates and products
+** edit odl/Main
 
-* Servlet create request
-** Data type from path
+* Review dynamic servlet lookup 
+
+* Extend data and service base classes in user code classes
 
 * Objective
 ** Define data structures on desktop
 ** Generate data and service base classes
 *** POST (create)
 *** GET (read)
-** Extend data and service base classes in user code classes
-
 

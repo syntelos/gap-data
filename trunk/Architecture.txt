@@ -20,3 +20,8 @@ Templates
    Template sources found in web/WEB-INF/templates include HTML and
    JAVA generators.
 
+
+System
+
+   The term "system" is employed relative to memcache.  It applies to
+   the instances of an application sharing a single memcache space.

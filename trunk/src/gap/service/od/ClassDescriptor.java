@@ -69,6 +69,19 @@ public interface ClassDescriptor
     }
 
     /**
+     * Optional field 'path' is the collection path root, e.g.,
+     * "/people".  It should have a leading slash but no trailing
+     * slash, or will be normalized to this form.
+     */
+    public interface Path
+        extends ClassDescriptor
+    {
+        public boolean hasPath();
+
+        public String getPath();
+    }
+
+    /**
      * Optional field 'sortBy' for the class default sort ordering
      * field name.
      */
@@ -138,12 +151,6 @@ public interface ClassDescriptor
      * Class name (not qualified with {@link Package} name).
      */
     public String getName();
-
-    /**
-     * The collection path root, e.g., "/people".
-     */
-    public boolean hasPath();
-    public String getPath();
 
     /**
      * Instance fields of the data bean class.

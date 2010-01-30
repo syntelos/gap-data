@@ -19,6 +19,7 @@
  */
 package gap.service;
 
+import gap.data.Kind;
 import gap.data.List;
 import gap.hapax.TemplateDataDictionary;
 import gap.hapax.TemplateName;
@@ -365,6 +366,11 @@ public final class Parameters
     public final Special.Since since;
 
 
+    public Parameters(HttpServletRequest req, int page, Kind kind)
+        throws ClassNotFoundException
+    {
+        this(req,page,kind.getTableClass());
+    }
     public Parameters(HttpServletRequest req, int page, Class<? extends gap.data.BigTable> table){
         super();
         Map<String,String[]> parameters = (Map<String,String[]>)req.getParameterMap();
