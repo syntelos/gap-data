@@ -1,0 +1,22 @@
+
+   Some notes to be expanded
+
+
+Servlet 
+
+   The centerpiece is gap/service/Servlet which is called on each HTTP
+   request through a subclass.
+
+   
+Data
+
+   The gap/data package includes the BigTable class which is inherited
+   by data beans generated from the gap/odl package.
+
+
+Templates
+
+   The gap/hapax package integrates a fast template processor.
+   Template sources found in web/WEB-INF/templates include HTML and
+   JAVA generators.
+
