@@ -149,9 +149,9 @@ public class Servlet
             rec.setThrown(any);
             Log.log(rec);
             if (null != request)
-                this.error(request,rep,500,"Internal error.",any);
+                this.error(request,rep,500,"Internal error",any);
             else
-                this.error(req,rep,500,"Internal error.",any);
+                this.error(req,rep,500,"Internal error",any);
         }
         finally {
             Service.Routines.Exit();
@@ -290,7 +290,7 @@ public class Servlet
                 return;
             }
             else
-                this.error(req,rep,404,"Not found.");
+                this.error(req,rep,404,"Not found");
         }
         else {
             try {
@@ -304,10 +304,10 @@ public class Servlet
                 LogRecord rec = new LogRecord(Level.SEVERE,req.userReference);
                 rec.setThrown(exc);
                 Servlet.Log.log(rec);
-                this.error(req,rep,500,"Template error.",exc);
+                this.error(req,rep,500,"Template error",exc);
                 return;
             }
-            this.error(req,rep,404,"Not found.");
+            this.error(req,rep,404,"Not found");
         }
     }
     protected void doPost(Request req, Response rep)
@@ -317,11 +317,11 @@ public class Servlet
         if (null != resource){
             String op = req.getParameter("op");
             if (null == op)
-                this.error(req,rep,400,"Missing request parameter 'op'.");
+                this.error(req,rep,400,"Missing request parameter 'op'");
 
             else if ("create".equals(op)){
 
-                this.error(req,rep,400,"Not available to create.");
+                this.error(req,rep,400,"Not available to create");
             }
             else {
                 Tool tool = resource.getTools(op);
@@ -330,16 +330,16 @@ public class Servlet
                     if (null != function)
                         function.invoke();
                     else
-                        this.error(req,rep,400,"Operator function not found.");
+                        this.error(req,rep,400,"Operator function not found");
                 }
                 else
-                    this.error(req,rep,400,"Unrecognized request parameter 'op'.");
+                    this.error(req,rep,400,"Unrecognized request parameter 'op'");
             }
         }
         else {
             String op = req.getParameter("op");
             if (null == op)
-                this.error(req,rep,400,"Missing request parameter 'op'.");
+                this.error(req,rep,400,"Missing request parameter 'op'");
 
             else if ("create".equals(op)){
                 if (req.isMember){
@@ -354,10 +354,10 @@ public class Servlet
                     this.redirectToItem(req,rep,resource.getId());
                 }
                 else
-                    this.error(req,rep,403,"Access not granted.");
+                    this.error(req,rep,403,"Access not granted");
             }
             else
-                this.error(req,rep,400,"Unrecognized request parameter 'op' not 'create'.");
+                this.error(req,rep,400,"Unrecognized request parameter 'op' not 'create'");
         }
     }
     protected void doPut(Request req, Response rep)
