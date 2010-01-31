@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-01-31T10:17:08.738Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-01-31T13:10:16.653Z")
 public abstract class ResourceData
     extends gap.data.BigTable
     implements DataInheritance<Resource>,
@@ -181,12 +181,21 @@ public abstract class ResourceData
             gap.data.Store.Put(instance);
         }
     }
+    /**
+     * Default sort
+     */
     public final static Query CreateQueryFor(){
-        return new Query(KIND.getName());
+        return new Query(KIND.getName()).addSort(DefaultSortBy);
     }
+    /**
+     * Default sort
+     */
     public final static Query CreateQueryFor(Key key){
-        return new Query(KIND.getName(),key);
+        return new Query(KIND.getName(),key).addSort(DefaultSortBy);
     }
+    /**
+     * Filter ops
+     */
     public final static Query CreateQueryFor(Filter filter){
         Query query = new Query(KIND.getName());
         return filter.update(query);
