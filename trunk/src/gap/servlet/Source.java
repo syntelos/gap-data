@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 import java.util.logging.LogRecord;
 
 /**
- * Bound to path <code>'/src/*'</code> for syntax highlighted java code display.
+ * Bound to path <code>'/src/*'</code> 
  */
 public class Source
     extends Site
@@ -66,7 +66,7 @@ public class Source
             super();
             this.dir = new File(dir);
             if (!this.dir.isDirectory())
-                throw new IllegalStateException("Directory not found '"+dir+"'.");
+                throw new IllegalStateException("Directory not found '"+dir+"'");
         }
 
         public String getXml(String name)
@@ -152,7 +152,7 @@ public class Source
                         return ;
                     }
                     else {
-                        this.error(req,rep,500,"Missing source template.");
+                        this.error(req,rep,500,"Missing source template");
                         return;
                     }
                 }
@@ -160,7 +160,7 @@ public class Source
                     LogRecord rec = new LogRecord(Level.SEVERE,req.userReference);
                     rec.setThrown(exc);
                     Servlet.Log.log(rec);
-                    this.error(req,rep,500,"Template error.",exc);
+                    this.error(req,rep,500,"Template error",exc);
                     return;
                 }
             }
@@ -183,7 +183,7 @@ public class Source
                 LogRecord rec = new LogRecord(Level.SEVERE,req.userReference);
                 rec.setThrown(exc);
                 Servlet.Log.log(rec);
-                this.error(req,rep,500,"File error.",exc);
+                this.error(req,rep,500,"File error",exc);
                 return;
             }
         }

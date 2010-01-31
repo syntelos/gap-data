@@ -27,7 +27,7 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 
 /**
- * Bound to path <code>'/inspect/*'</code> for syntax highlighted java code display.
+ * Bound to path <code>'/inspect/*'</code> 
  */
 public class Inspect
     extends Site
