@@ -51,9 +51,8 @@ public final class Main
     extends java.lang.Object
 {
     public final static class TemplateNames {
-        public final static TemplateName Bean = new TemplateName("Bean.java");
-        public final static TemplateName BeanServlet = new TemplateName("BeanServlet.java");
-        public final static TemplateName BeanValidate = new TemplateName("BeanValidate.java");
+        public final static TemplateName BeanUser = new TemplateName("BeanUser.java");
+        public final static TemplateName BeanData = new TemplateName("BeanData.java");
         public final static TemplateName ListLong = new TemplateName("ListLong.java");
         public final static TemplateName ListShort = new TemplateName("ListShort.java");
         public final static TemplateName MapLong = new TemplateName("MapLong.java");
@@ -134,7 +133,7 @@ public final class Main
     /**
      * Generate bean, validate, servlet and list classes.
      */
-    public final static List<File> ProcessFiles(File odl, File src, File beans, File servlets)
+    public final static List<File> ProcessFiles(File odl, File src, File beans)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         try {
@@ -147,13 +146,13 @@ public final class Main
             String packageName = OD.PackageName(pack);
             File packagePath = new File(src,packageName.replace('.','/'));
             /*
-             * Bean
+             * Bean Data
              */
             {
-                File beanJava = new File(packagePath,parentClassName+".java");
+                File beanJava = new File(packagePath,parentClassName+"Data.java");
                 PrintWriter out = new PrintWriter(new FileWriter(beanJava));
                 try {
-                    OD.GenerateBeanSource(TemplateNames.Bean, pack, imports, clas, out);
+                    OD.GenerateBeanSource(TemplateNames.BeanData, pack, imports, clas, out);
                     products.add(beanJava);
                 }
                 finally {
@@ -162,7 +161,7 @@ public final class Main
                 if (null != beans){
                     out = new PrintWriter(new FileWriter(beans,true));
                     try {
-                        out.println(pack.getName()+'.'+parentClassName);
+                        out.println(pack.getName()+'.'+parentClassName+"Data");
                     }
                     finally {
                         out.close();
@@ -170,39 +169,27 @@ public final class Main
                 }
             }
             /*
-             * Validate
+             * Bean User
              */
             {
-                File validateFile = new File(packagePath,"validate/"+parentClassName+".java");
-                PrintWriter out = new PrintWriter(new FileWriter(validateFile));
-                try {
-                    OD.GenerateBeanSource(TemplateNames.BeanValidate, pack, imports, clas, out);
-                    products.add(validateFile);
-                }
-                finally {
-                    out.close();
-                }
-            }
-            /*
-             * Servlet
-             */
-            {
-                File servletFile = new File(packagePath,"servlet/"+parentClassName+".java");
-                PrintWriter out = new PrintWriter(new FileWriter(servletFile));
-                try {
-                    OD.GenerateBeanSource(TemplateNames.BeanServlet, pack, imports, clas, out);
-                    products.add(servletFile);
-                }
-                finally {
-                    out.close();
-                }
-                if (null != servlets){
-                    out = new PrintWriter(new FileWriter(servlets,true));
+                File beanJava = new File(packagePath,parentClassName+".java");
+                if (!beanJava.exists()){
+                    PrintWriter out = new PrintWriter(new FileWriter(beanJava));
                     try {
-                        out.println(pack.getName()+".servlet."+parentClassName);
+                        OD.GenerateBeanSource(TemplateNames.BeanUser, pack, imports, clas, out);
+                        products.add(beanJava);
                     }
                     finally {
                         out.close();
+                    }
+                    if (null != beans){
+                        out = new PrintWriter(new FileWriter(beans,true));
+                        try {
+                            out.println(pack.getName()+'.'+parentClassName);
+                        }
+                        finally {
+                            out.close();
+                        }
                     }
                 }
             }
@@ -328,7 +315,7 @@ public final class Main
      * Run on directories
      * @return List of target products
      */
-    public final static List<File> ProcessDirectories(File odlDir, File src, File beans, File servlets)
+    public final static List<File> ProcessDirectories(File odlDir, File src, File beans)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         List<File> products = new java.util.ArrayList<File>();
@@ -337,7 +324,7 @@ public final class Main
 
         for (File odlFile: Files.values()){
             try {
-                List<File> files = Main.ProcessFiles(odlFile,src,beans,servlets);
+                List<File> files = Main.ProcessFiles(odlFile,src,beans);
 
                 products.addAll(files);
             }
@@ -368,15 +355,6 @@ public final class Main
             File src = new File("src");
             if (odl.isDirectory() && src.isDirectory()){
 
-                File servlets = new File(src,"META-INF/services/gap.service.Servlet");
-                if (servlets.isFile())
-                    servlets.delete();
-                else if (!servlets.getParentFile().isDirectory()){
-                    System.err.println("Error, parent directory not found: '"+servlets.getPath()+"'.");
-                    System.exit(1);
-                    return;
-                }
-
                 File beans = new File(src,"META-INF/services/gap.data.BigTable");
                 if (beans.isFile())
                     beans.delete();
@@ -391,11 +369,10 @@ public final class Main
                 try {
                     System.out.println("Source: "+odl.getPath());
                     System.out.println("Target: "+src.getPath());
-                    List<File> products = Main.ProcessDirectories(odl,src,beans,servlets);
+                    List<File> products = Main.ProcessDirectories(odl,src,beans);
                     for (File product : products){
                         System.out.println("Product: "+product.getPath());
                     }
-                    System.out.println("Product: "+servlets.getPath());
                     System.out.println("Product: "+beans.getPath());
                 }
                 catch (Throwable thrown){
