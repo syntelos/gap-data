@@ -158,22 +158,13 @@ public final class Main
                 finally {
                     out.close();
                 }
-                if (null != beans){
-                    out = new PrintWriter(new FileWriter(beans,true));
-                    try {
-                        out.println(pack.getName()+'.'+parentClassName+"Data");
-                    }
-                    finally {
-                        out.close();
-                    }
-                }
             }
             /*
              * Bean User
              */
             {
                 File beanJava = new File(packagePath,parentClassName+".java");
-                if (!beanJava.exists()){
+                //if (!beanJava.exists()){
                     PrintWriter out = new PrintWriter(new FileWriter(beanJava));
                     try {
                         OD.GenerateBeanSource(TemplateNames.BeanUser, pack, imports, clas, out);
@@ -182,15 +173,18 @@ public final class Main
                     finally {
                         out.close();
                     }
-                    if (null != beans){
-                        out = new PrintWriter(new FileWriter(beans,true));
-                        try {
-                            out.println(pack.getName()+'.'+parentClassName);
-                        }
-                        finally {
-                            out.close();
-                        }
-                    }
+                //}
+            }
+            /*
+             * Services Record
+             */
+            if (null != beans){
+                PrintWriter out = new PrintWriter(new FileWriter(beans,true));
+                try {
+                    out.println(pack.getName()+'.'+parentClassName);
+                }
+                finally {
+                    out.close();
                 }
             }
             /*
