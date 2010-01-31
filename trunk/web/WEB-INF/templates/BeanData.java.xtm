@@ -482,10 +482,10 @@ public abstract class {{=class_name}}Data
     private volatile transient {{=parent_class_name}} parent;{{/class_re_child_or_group}}
 
 
-    public {{=class_name}}Data() {
+    protected {{=class_name}}Data() {
         super();
     }{{#field_hash_unique}}{{#class_re_not_child_or_group}}
-    public {{=class_name}}Data({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
+    protected {{=class_name}}Data({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
         String {{=field_unique_name}} = {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
@@ -493,7 +493,7 @@ public abstract class {{=class_name}}Data
         Key key = KeyLongFor({{=field_unique_name}});
         this.set{{=field_key_nameCamel}}(key);
     }{{/class_re_not_child_or_group}}{{#class_re_child_or_group}}
-    public {{=class_name}}Data(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
+    protected {{=class_name}}Data(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
         this.parentKey = ancestor;

@@ -5,25 +5,74 @@
 Servlet 
 
    The centerpiece is gap/service/Servlet which is called on each HTTP
-   request through a subclass.
+   request through a subclass.  The main servlet is an empty subclass
+   located at gap/servlet/Site.
 
    
-Data
+Data Bean
 
    The gap/data package includes the BigTable class which is inherited
    by data beans generated from the gap/odl package.
 
+   Data bean classes are generated from "Object Definition Language"
+   (ODL).  Examples of ODL can be found in the "odl" directory.  The
+   parser is in the gap/odl package and the generator is
+   gap/service/OD (using templates Bean*.java.xtm, see Templates,
+   below).
+
+   Each data bean class has an abstract super class named
+   "<ClassName>Data" that can be regenerated liberally for changes to
+   the source BeanData.java.xtm template.
+
+   A data bean (user) class is generated once and not overwritten,
+   according to the definitions found in the "odl" directory.  The
+   data bean class is intended as editable for application code (or
+   not) as desired -- it will not be overwritten by running "ant odl".
+
+   The data bean data class includes static functions for reading,
+   writing, and listing one or a collection of its instances.  These
+   functions have been designed for an efficient and effective
+   application layer.  
+
+   Their reference is intended from via the data bean user class, for
+   example
+
+     Person joe = Person.GetCreateLong("joe@smith.com");
+   or
+     Person joe = Person.ForLongLogonId("joe@smith.com").
+
+   On the topic, 
+
+     Person me = request.getViewer().
+
+   For more info, the source code is intended as the best documentation.
+
 
 Templates
 
-   The gap/hapax package integrates a fast template processor.
-   Template sources found in web/WEB-INF/templates include HTML and
-   JAVA generators.  These are copied into the respective product
-   target directory from where they are used at build (design) time
-   and run time.
+   The gap/hapax package integrates a fast template processor in the
+   C/Template family.  Template sources found in web/WEB-INF/templates
+   include HTML and JAVA generators.  These are copied into the
+   respective product target directory from where they are used at
+   build (design) time and run time.
 
 
 System
 
    The term "system" is employed relative to memcache.  It applies to
-   the instances of an application sharing a single memcache space.
+   the instances of an application sharing a single memcache space
+   (all the instances of a single appengine application).
+
+
+Request
+
+   The gap/Request class accumulates state determined in class
+   Servlet, and employed in every request.
+
+   An instance of the Request class is the root of the Servlet
+   Template Data Dictionary tree.  Fields defined in the request class
+   are variables that can be pulled into templates evaluated by the
+   Servlet.
+
+
+Data Query Filter
