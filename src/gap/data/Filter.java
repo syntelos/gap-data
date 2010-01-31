@@ -21,6 +21,15 @@ package gap.data;
 
 import com.google.appengine.api.datastore.Query;
 
+/**
+ * A serializable set of data query operations, including relations
+ * and sorting.
+ * 
+ * 
+ * A filter is constructed for a data type.  A set of terms is added
+ * to the filter, each identifying a field and operator and value.
+ * 
+ */
 public final class Filter
     extends Object
     implements java.io.Serializable,
@@ -28,23 +37,46 @@ public final class Filter
                java.lang.Iterable<Filter.Term>
 {
     private final static long serialVersionUID = 1;
-
+    /**
+     * Data query operators include relational and sorting operations.
+     */
     public static enum Op {
+        /**
+         * Relate by term field and value
+         */
         lt(Query.FilterOperator.LESS_THAN),
         le(Query.FilterOperator.LESS_THAN_OR_EQUAL),
         eq(Query.FilterOperator.EQUAL),
         ge(Query.FilterOperator.GREATER_THAN_OR_EQUAL),
-        gt(Query.FilterOperator.GREATER_THAN);
+        gt(Query.FilterOperator.GREATER_THAN),
+        /**
+         * Sort ascending on term field
+         */
+        asc(null),
+        /**
+         * Sort descending in term field
+         */
+        dsc(null);
 
 
         private final static long serialVersionUID = 1;
 
+
+        /**
+         * Null for 'asc' and 'dsc' sorting.
+         */
         public final Query.FilterOperator operator;
+
 
         private Op(Query.FilterOperator op){
             this.operator = op;
         }
     }
+    /**
+     * A data query term includes a data type field, operator and
+     * optional value.  The relational operators employ a value, while
+     * the sort operators do not employ a term value.
+     */
     public final static class Term 
         extends Object
         implements java.io.Serializable, 
@@ -91,12 +123,28 @@ public final class Filter
         public final Object value;
 
 
+        /**
+         * Convenient for relational operators
+         */
         public Term(Field field, Op op, Object value){
             super();
             if (null != field && null != op){
                 this.field = field;
                 this.op = op;
                 this.value = value;
+            }
+            else
+                throw new IllegalArgumentException();
+        }
+        /**
+         * Convenient for sort ('asc' and 'dsc') operators
+         */
+        public Term(Field field, Op op){
+            super();
+            if (null != field && null != op){
+                this.field = field;
+                this.op = op;
+                this.value = null;
             }
             else
                 throw new IllegalArgumentException();
@@ -200,7 +248,17 @@ public final class Filter
         Filter.Term[] list = this.list;
         if (null != list){
             for (Filter.Term term : list){
-                query.addFilter(term.field.name(),term.op.operator,term.value);
+                switch (term.op){
+                case asc:
+                    query.addSort(term.field.name(),Query.SortDirection.ASCENDING);
+                    break;
+                case dsc:
+                    query.addSort(term.field.name(),Query.SortDirection.DESCENDING);
+                    break;
+                default:
+                    query.addFilter(term.field.name(),term.op.operator,term.value);
+                    break;
+                }
             }
         }
         return query;

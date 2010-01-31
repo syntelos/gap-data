@@ -209,13 +209,14 @@ public final class TemplateRenderer
 
         List<TemplateDataDictionary> section = dict.getSection(sectionName);
 
-        if (null != section){
+        TemplateName filename = ResolveName(dict,sectionName);
 
-            TemplateName filename = ResolveName(dict,sectionName);
-
-            TemplateRenderer renderer = context.getTemplate(filename);
-            if (null != renderer){
-
+        TemplateRenderer renderer = context.getTemplate(filename);
+        if (null != renderer){
+            if (null != section){
+                /*
+                 * Render include for section
+                 */
                 if (section.size() == 0) {
 
                     TemplateSpecialIterator.Define(dict,sectionName,0,1);
@@ -237,6 +238,16 @@ public final class TemplateRenderer
                         renderer.render(child, writer);
                     }
                 }
+            }
+            else {
+                /*
+                 * Render include for file
+                 */
+                TemplateSpecialIterator.Define(dict,sectionName,0,1);
+                /*
+                 * Once
+                 */
+                renderer.render(dict, writer);
             }
         }
         return pos;

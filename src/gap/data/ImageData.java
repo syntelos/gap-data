@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-01-31T10:17:17.006Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-01-31T13:10:24.725Z")
 public abstract class ImageData
     extends gap.data.BigTable
     implements DataInheritance<Image>,
@@ -210,14 +210,23 @@ public abstract class ImageData
             gap.data.Store.Put(instance);
         }
     }
+    /**
+     * Default sort
+     */
     public final static Query CreateQueryFor(){
-        return new Query(KIND.getName());
+        return new Query(KIND.getName()).addSort(DefaultSortBy);
     }
+    /**
+     * Default sort
+     */
     public final static Query CreateQueryFor(Key key){
-        return new Query(KIND.getName(),key);
+        return new Query(KIND.getName(),key).addSort(DefaultSortBy);
     }
     
     
+    /**
+     * Filter ops
+     */
     public final static Query CreateQueryFor(Key ancestor, Filter filter){
         Query query = new Query(KIND.getName(),ancestor);
         return filter.update(query);
