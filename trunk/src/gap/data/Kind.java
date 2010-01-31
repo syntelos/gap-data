@@ -40,9 +40,6 @@ public final class Kind
     private final static lxl.Index<String> ByPath = new lxl.Index<String>(64);
 
 
-    public static Kind Create(String name, String pkg, String clan){
-        return Create(name,pkg,clan,"/anon");
-    }
     public static Kind Create(String name, String pkg, String clan, String path){
         Kind kind = ByKind.get(name);
         if (null == kind){
