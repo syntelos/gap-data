@@ -98,7 +98,7 @@ public class Request
     }
     public static enum Field {
         method, protocol, path, accept, fileManager, parameters, userReference, 
-            logon, contentType, isAdmin, isPartner, isMember, resource, tool;
+            logon, logonUrl, logonText, contentType, isAdmin, isPartner, isMember, resource, tool;
 
         public static Field For(String name){
             try {
@@ -120,6 +120,7 @@ public class Request
     public final Parameters parameters;
     public final String userReference;
     public final Logon logon;
+    public final String logonUrl, logonText;
     public final ContentType contentType;
     public final boolean isAdmin, isPartner, isMember;
     public Resource resource;
@@ -168,6 +169,15 @@ public class Request
             this.isPartner = false;
         }
 
+        if (logon.isLoggedIn()){
+            this.logonUrl = logon.getLogoutURL();
+            this.logonText = logon.serviceLogon;
+        }
+        else {
+            this.logonUrl = logon.getLoginURL();
+            this.logonText = "Sign-in";
+        }
+
         RTL.set(this);
     }
 
@@ -188,9 +198,15 @@ public class Request
         else
             return null;
     }
+    /**
+     * @return May be null
+     */
     public final String getLogonId(){
         return this.logon.serviceLogon;
     }
+    /**
+     * @return May be null
+     */
     public final String getUserId(){
         return this.logon.getUserId();
     }
@@ -199,6 +215,20 @@ public class Request
     }
     public final boolean isLoggedOut(){
         return this.logon.isLoggedOut();
+    }
+    /**
+     * @return Never null, one of the login or logout url for current
+     * action link href.
+     */
+    public final String getLogonUrl(){
+        return this.logonUrl;
+    }
+    /**
+     * @return Never null, one of the login ID or text "Sign-in" for
+     * current action link text.
+     */
+    public final String getLogonText(){
+        return this.logonText;
     }
     public final boolean hasViewer(){
         return this.logon.hasPerson();
@@ -360,6 +390,10 @@ public class Request
                     return this.logon.hasVariable(new TemplateName(name));
                 else
                     return true;
+            case logonUrl:
+                return true;
+            case logonText:
+                return true;
             case contentType:
             case isAdmin:
             case isPartner:
@@ -429,6 +463,10 @@ public class Request
                     return this.logon.getVariable(new TemplateName(name));
                 else
                     return "";
+            case logonUrl:
+                return this.logonUrl;
+            case logonText:
+                return this.logonText;
             case contentType:
                 if (name.is(0) && null != this.contentType)
                     return this.contentType.name();
@@ -489,6 +527,8 @@ public class Request
             case parameters:
             case userReference:
             case logon:
+            case logonUrl:
+            case logonText:
             case contentType:
             case isAdmin:
             case isPartner:
@@ -546,6 +586,8 @@ public class Request
                 return null;
             case logon:
                 return this.logon.getSection(new TemplateName(name));
+            case logonUrl:
+            case logonText:
             case contentType:
             case isAdmin:
             case isPartner:
