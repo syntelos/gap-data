@@ -18,7 +18,9 @@ Templates
 
    The gap/hapax package integrates a fast template processor.
    Template sources found in web/WEB-INF/templates include HTML and
-   JAVA generators.
+   JAVA generators.  These are copied into the respective product
+   target directory from where they are used at build (design) time
+   and run time.
 
 
 System

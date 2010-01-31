@@ -164,7 +164,7 @@ public final class Main
              */
             {
                 File beanJava = new File(packagePath,parentClassName+".java");
-                //if (!beanJava.exists()){
+                if (!beanJava.exists()){
                     PrintWriter out = new PrintWriter(new FileWriter(beanJava));
                     try {
                         OD.GenerateBeanSource(TemplateNames.BeanUser, pack, imports, clas, out);
@@ -173,7 +173,7 @@ public final class Main
                     finally {
                         out.close();
                     }
-                //}
+                }
             }
             /*
              * Services Record
