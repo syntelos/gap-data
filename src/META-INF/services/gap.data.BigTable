@@ -1,8 +1,8 @@
-gap.data.ResourceData
-gap.data.TemplateData
-gap.data.ToolData
-gap.data.ImageData
-gap.data.AccountData
-gap.data.TemplateNodeData
-gap.data.PartnerData
-oso.data.PersonData
+gap.data.Resource
+gap.data.Template
+gap.data.Tool
+gap.data.Image
+gap.data.Account
+gap.data.TemplateNode
+gap.data.Partner
+oso.data.Person
