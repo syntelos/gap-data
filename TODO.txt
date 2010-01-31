@@ -1,5 +1,13 @@
                                                 -*-outline-*-
 
-* POST (create)
-* GET (read)
+* Edit
+** POST
+*** Collection Create
+*** Item Update
+** GET 
+*** Collection List
+*** Item Read
 
+* Relation Data Structure
+** Compound paths 
+*** name/id/name/(id)
