@@ -65,11 +65,25 @@ public final class Filter
         /**
          * Null for 'asc' and 'dsc' sorting.
          */
-        public final Query.FilterOperator operator;
+        public final Query.FilterOperator rel;
 
 
         private Op(Query.FilterOperator op){
-            this.operator = op;
+            this.rel = op;
+        }
+
+
+        public boolean isRelation(){
+            return (null != this.rel);
+        }
+        public boolean isNotRelation(){
+            return (null == this.rel);
+        }
+        public boolean isSort(){
+            return (null == this.rel);
+        }
+        public boolean isNotSort(){
+            return (null != this.rel);
         }
     }
     /**
@@ -256,7 +270,7 @@ public final class Filter
                     query.addSort(term.field.name(),Query.SortDirection.DESCENDING);
                     break;
                 default:
-                    query.addFilter(term.field.name(),term.op.operator,term.value);
+                    query.addFilter(term.field.name(),term.op.rel,term.value);
                     break;
                 }
             }
