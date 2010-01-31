@@ -1,3 +1,4 @@
+   Requires Java 1.6, and Ant 1.6.5 or later.
 
    Gap Data is application framework for producing web information
    systems on the Google Appengine (BigTable infinite Data Store).
