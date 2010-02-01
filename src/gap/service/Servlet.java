@@ -53,6 +53,9 @@ public class Servlet
     implements Service,
                gap.data.DataInheritance.Notation
 {
+    /**
+     * Initialize configured servlet classes.
+     */
     public final static gap.util.Services Services = (new gap.util.Services(Servlet.class)).init();
     static {
         gap.data.BigTable.Services.init();

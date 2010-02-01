@@ -26,19 +26,19 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.LogRecord;
 
 /**
- * A services file reader that only instantiates classes.
+ * A services file reader that intializes classes.
  * 
+ * @see gap.data.BigTable
+ * @see gap.service.Servlet
  * @author jdp
  */
 public class Services
-    extends java.util.ArrayList<Class>
+    extends lxl.ArrayList<Class>
     implements gap.data.HasName
 {
     public final static String NamePrefix = "META-INF/services/";
@@ -68,6 +68,7 @@ public class Services
         else
             throw new IllegalArgumentException();
     }
+
 
     public final Class getService(){
         return this.service;

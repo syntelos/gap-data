@@ -29,8 +29,8 @@ public class AbstractData
     implements TemplateDataDictionary
 {
     protected transient TemplateDataDictionary parent;
-    protected transient java.util.Map<String,String> variables;
-    protected transient java.util.Map<String,List<TemplateDataDictionary>> sections;
+    protected transient lxl.Map<String,String> variables;
+    protected transient lxl.Map<String,List<TemplateDataDictionary>> sections;
 
 
     public AbstractData(){
@@ -43,10 +43,10 @@ public class AbstractData
 
     public void renderComplete(){
         this.parent = null;
-        java.util.Map<String,String> variables = this.variables;
+        lxl.Map<String,String> variables = this.variables;
         if (null != variables)
             variables.clear();
-        java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        lxl.Map<String,List<TemplateDataDictionary>> sections = this.sections;
         if (null != sections){
             for (List<TemplateDataDictionary> list: sections.values()){
                 for (TemplateDataDictionary item: list){
@@ -79,7 +79,7 @@ public class AbstractData
     }
     public boolean hasVariable(TemplateName name){
 
-        java.util.Map<String,String> variables = this.variables;
+        lxl.Map<String,String> variables = this.variables;
         if (null != variables && variables.containsKey(name.getName())){
             return true;
         }
@@ -91,7 +91,7 @@ public class AbstractData
     }
     public String getVariable(TemplateName name){
 
-        java.util.Map<String,String> variables = this.variables;
+        lxl.Map<String,String> variables = this.variables;
         if (null != variables){
             String value = variables.get(name.getName());
             if (null != value)
@@ -105,16 +105,16 @@ public class AbstractData
     }
     public void setVariable(TemplateName name, String value){
 
-        java.util.Map<String,String> variables = this.variables;
+        lxl.Map<String,String> variables = this.variables;
         if (null == variables){
-            variables = new java.util.HashMap<String,String>();
+            variables = new lxl.Map<String,String>();
             this.variables = variables;
         }
         variables.put(name.getName(),value);
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){
 
-        java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        lxl.Map<String,List<TemplateDataDictionary>> sections = this.sections;
         List<TemplateDataDictionary> section = null;
         if (null != sections){
             section = sections.get(name.getComponent(0));
@@ -155,9 +155,9 @@ public class AbstractData
     }
     public List<TemplateDataDictionary> showSection(TemplateName name){
 
-        java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        lxl.Map<String,List<TemplateDataDictionary>> sections = this.sections;
         if (null == sections){
-            sections = new java.util.HashMap<String,List<TemplateDataDictionary>>();
+            sections = new lxl.Map<String,List<TemplateDataDictionary>>();
             this.sections = sections;
 
             TemplateDataDictionary newSection = new AbstractData(this);
@@ -193,9 +193,9 @@ public class AbstractData
 
         TemplateDataDictionary newSection = new AbstractData(this);
 
-        java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        lxl.Map<String,List<TemplateDataDictionary>> sections = this.sections;
         if (null == sections){
-            sections = new java.util.HashMap<String,List<TemplateDataDictionary>>();
+            sections = new lxl.Map<String,List<TemplateDataDictionary>>();
             this.sections = sections;
             List<TemplateDataDictionary> section = Add(null,newSection);
             sections.put(name.getComponent(0),section);

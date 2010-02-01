@@ -7,7 +7,14 @@
 ** GET 
 *** Collection List
 *** Item Read
+** Relation Data Structure
+*** Compound paths 
+**** name/id/name/(id)
 
-* Relation Data Structure
-** Compound paths 
-*** name/id/name/(id)
+* Key (self) fields should not go into the datastore
+** But they are needed in memcache
+
+* For Request
+** name/id (and compounds)
+*** implement caching and binding for direct access into store from template names
+**** name/id/name/(id)

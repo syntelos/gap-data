@@ -25,9 +25,9 @@ import gap.data.*;
 import gap.hapax.*;
 import gap.service.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 import java.nio.charset.Charset;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by {@link gap.service.Servlet}.
@@ -35,8 +35,9 @@ import java.nio.charset.Charset;
  * @author jdp
  */
 public class Request 
-    extends javax.servlet.http.HttpServletRequestWrapper
-    implements DataInheritance.Notation,
+    extends gap.hapax.AbstractData
+    implements HttpServletRequest,
+               DataInheritance.Notation,
                TemplateDataDictionary
 {
     /**
@@ -111,6 +112,7 @@ public class Request
     }
 
 
+    public final HttpServletRequest request;
     public final Method method;
     public final Protocol protocol;
     public final Path path;
@@ -126,15 +128,12 @@ public class Request
     public Resource resource;
     public Tool tool;
 
-    private TemplateDataDictionary parent;
-    private java.util.Map<String,String> variables;
-    private java.util.Map<String,List<TemplateDataDictionary>> sections;
-
 
     public Request(HttpServletRequest req, Method method, Protocol protocol, Path path, 
                    Accept accept, FileManager fm, Logon logon, String uri, Parameters parameters)
     {
-        super(req);
+        super();
+        this.request = req;
         this.method = method;
         this.protocol = protocol;
         this.path = path;
@@ -331,43 +330,10 @@ public class Request
         else
             return null;
     }
-
-    public void renderComplete(){
-        this.parent = null;
-        java.util.Map<String,String> variables = this.variables;
-        if (null != variables)
-            variables.clear();
-        java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
-        if (null != sections){
-            for (List<TemplateDataDictionary> list: sections.values()){
-                for (TemplateDataDictionary item: list){
-                    item.renderComplete();
-                }
-            }
-            sections.clear();
-        }
-    }
-    public TemplateDataDictionary clone(){
-        try {
-            return (TemplateDataDictionary)super.clone();
-        }
-        catch (java.lang.CloneNotSupportedException exc){
-            throw new java.lang.Error(exc);
-        }
-    }
-    public TemplateDataDictionary clone(TemplateDataDictionary parent){
-        try {
-            Request clone = (Request)super.clone();
-            clone.parent = parent;
-            return clone;
-        }
-        catch (java.lang.CloneNotSupportedException exc){
-            throw new java.lang.Error(exc);
-        }
-    }
-    public TemplateDataDictionary getParent(){
-        return this.parent;
-    }
+
+    /*
+     * Template Data Dictionary
+     */
     public boolean hasVariable(TemplateName name){
         Field field = Field.For(name.getComponent(0));
         if (null != field){
@@ -414,15 +380,7 @@ public class Request
             }
         }
         else {
-            java.util.Map<String,String> variables = this.variables;
-            if (null != variables && variables.containsKey(name.getName())){
-                return true;
-            }
-            TemplateDataDictionary parent = this.parent;
-            if (null != parent){
-                return parent.hasVariable(name);
-            }
-            return false;
+            return super.hasVariable(name);
         }
     }
     public String getVariable(TemplateName name){
@@ -502,72 +460,7 @@ public class Request
             }
         }
         else {
-            java.util.Map<String,String> variables = this.variables;
-            if (null != variables){
-                String value = variables.get(name.getName());
-                if (null != value)
-                    return value;
-            }
-            TemplateDataDictionary parent = this.parent;
-            if (null != parent){
-                return parent.getVariable(name);
-            }
-            return null;
-        }
-    }
-    public void setVariable(TemplateName name, String value){
-        Field field = Field.For(name.getComponent(0));
-        if (null != field){
-            switch (field){
-            case method:
-            case protocol:
-            case path:
-            case accept:
-            case fileManager:
-            case parameters:
-            case userReference:
-            case logon:
-            case logonUrl:
-            case logonText:
-            case contentType:
-            case isAdmin:
-            case isPartner:
-            case isMember:
-                throw new IllegalArgumentException(field.name());
-
-            case resource:{
-                Path resourceName = new Path(value);
-                Resource resource = Resource.ForLongBaseName(resourceName.getBase(),resourceName.getName());
-                if (null != resource)
-                    this.resource = resource;
-                return;
-            }
-            case tool:
-                if (null != this.resource){
-                    Path toolName = new Path(value);
-                    if (toolName.hasBase()){
-                        Path resourceName = new Path(toolName.getBase());
-                        Resource resource = Resource.ForLongBaseName(resourceName.getBase(),resourceName.getName());
-                        if (null != resource)
-                            this.resource = resource;
-                    }
-                    this.tool = this.resource.getTools(toolName.getName());
-                    return;
-                }
-                else
-                    throw new IllegalStateException(name.source);
-
-            default:
-                throw new IllegalStateException(field.name());
-            }
-        }
-        else {
-            java.util.Map<String,String> variables = this.variables;
-            if (null == variables){
-                variables = new java.util.HashMap<String,String>();
-                this.variables = variables;
-            }
-            variables.put(name.getName(),value);
+            return super.getVariable(name);
         }
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){
@@ -608,105 +501,174 @@ public class Request
             }
         }
         else {
-            java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
-            List<TemplateDataDictionary> section = null;
-            if (null != sections){
-                section = sections.get(name.getComponent(0));
-            }
-            if (null == section){
-                /*
-                 * Inherit
-                 */
-                TemplateDataDictionary parent = this.parent;
-                if (null != parent){
-                    section = parent.getSection(name);
-                    if (null != section){
-
-                        section = AbstractData.SectionClone(this,section);
-
-                        sections.put(name.getComponent(0),section);
-                    }
-                }
-                if (null == section){
-                    /*
-                     * Synthetic
-                     */
-                    if (this.hasVariable(name))
-                        section = this.showSection(name);
-                    else
-                        return null;
-                }
-            }
-            /*
-             * Section name resolution
-             */
-            if (name.is(0))
-                return section;
-            else {
-                TemplateDataDictionary sectionData = name.dereference(0,section);
-                return sectionData.getSection(new TemplateName(name));
-            }
+            return super.getSection(name);
         }
     }
-    public List<TemplateDataDictionary> showSection(TemplateName name){
-
-        java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
-        if (null == sections){
-            sections = new java.util.HashMap<String,List<TemplateDataDictionary>>();
-            this.sections = sections;
-
-            TemplateDataDictionary newSection = new AbstractData(this);
-            List<TemplateDataDictionary> newSectionList = AbstractData.Add(null,newSection);
-            sections.put(name.getComponent(0),newSectionList);
-            if (name.is(0))
-                return newSectionList;
-            else
-                return newSection.showSection(new TemplateName(name));
-        }
-        else {
-            List<TemplateDataDictionary> section = sections.get(name.getComponent(0));
-            if (null != section){
-                if (name.is(0))
-                    return section;
-                else {
-                    TemplateDataDictionary sectionData = name.dereference(0,section);
-                    return sectionData.showSection(new TemplateName(name));
-                }
-            }
-            else {
-                TemplateDataDictionary newSection = new AbstractData(this);
-                section = AbstractData.Add(section,newSection);
-                this.sections.put(name.getComponent(0),section);
-                if (name.is(0))
-                    return section;
-                else
-                    return newSection.showSection(new TemplateName(name));
-            }
-        }
+
+    /*
+     * Servlet Request
+     */
+    public Object getAttribute(String name) {
+        return this.request.getAttribute(name);
+	}
+    public java.util.Enumeration getAttributeNames() {
+        return this.request.getAttributeNames();
+	}    
+    public String getCharacterEncoding() {
+        return this.request.getCharacterEncoding();
+	}
+    public void setCharacterEncoding(String enc) throws java.io.UnsupportedEncodingException {
+        this.request.setCharacterEncoding(enc);
+	}
+    public int getContentLength() {
+        return this.request.getContentLength();
     }
-    public TemplateDataDictionary addSection(TemplateName name){
-
-        TemplateDataDictionary newSection = new AbstractData(this);
-
-        java.util.Map<String,List<TemplateDataDictionary>> sections = this.sections;
-        if (null == sections){
-            sections = new java.util.HashMap<String,List<TemplateDataDictionary>>();
-            this.sections = sections;
-            List<TemplateDataDictionary> section = AbstractData.Add(null,newSection);
-            sections.put(name.getComponent(0),section);
-        }
-        else {
-            List<TemplateDataDictionary> section = sections.get(name.getComponent(0));
-            if (null == section){
-                section = AbstractData.Add(section,newSection);
-                sections.put(name.getComponent(0),section);
-            }
-            else
-                section = AbstractData.Add(section,newSection);
-        }
-        if (name.is(0))
-            return newSection;
-        else
-            return newSection.addSection(new TemplateName(name));
+    public String getContentType() {
+        return this.request.getContentType();
+    }
+    public javax.servlet.ServletInputStream getInputStream() throws java.io.IOException {
+        return this.request.getInputStream();
+	}
+    public java.util.Map getParameterMap() {
+        return this.request.getParameterMap();
+    }
+    public java.util.Enumeration getParameterNames() {
+        return this.request.getParameterNames();
+    }
+    public String[] getParameterValues(String name) {
+        return this.request.getParameterValues(name);
+	}
+    public String getProtocol() {
+        return this.request.getProtocol();
+	}
+    public String getScheme() {
+        return this.request.getScheme();
+	}
+    public String getServerName() {
+        return this.request.getServerName();
+	}
+    public int getServerPort() {
+        return this.request.getServerPort();
+	}
+    public java.io.BufferedReader getReader() throws java.io.IOException {
+        return this.request.getReader();
+	}
+    public String getRemoteAddr() {
+        return this.request.getRemoteAddr();
+    }
+    public String getRemoteHost() {
+        return this.request.getRemoteHost();
+    }
+    public void setAttribute(String name, Object o) {
+        this.request.setAttribute(name, o);
+    }
+    public void removeAttribute(String name) {
+        this.request.removeAttribute(name);
+    }
+    public java.util.Locale getLocale() {
+        return this.request.getLocale();
+    }
+    public java.util.Enumeration getLocales() {
+        return this.request.getLocales();
+    }
+    public boolean isSecure() {
+        return this.request.isSecure();
+    }
+    public javax.servlet.RequestDispatcher getRequestDispatcher(String path) {
+        return this.request.getRequestDispatcher(path);
+    }
+    public String getRealPath(String path) {
+        return this.request.getRealPath(path);
+    }
+    public int getRemotePort(){
+        return this.request.getRemotePort();
+    }
+    public String getLocalName(){
+        return this.request.getLocalName();
+    }
+    public String getLocalAddr(){
+        return this.request.getLocalAddr();
+    }
+    public int getLocalPort(){
+        return this.request.getLocalPort();
+    }
+
+    /*
+     * HTTP Servlet Request
+     */
+    public String getAuthType() {
+        return this.request.getAuthType();
+    }
+    public javax.servlet.http.Cookie[] getCookies() {
+        return this.request.getCookies();
+    }
+    public long getDateHeader(String name) {
+        return this.request.getDateHeader(name);
+    }
+    public String getHeader(String name) {
+        return this.request.getHeader(name);
+    }
+    public java.util.Enumeration getHeaders(String name) {
+        return this.request.getHeaders(name);
+    }
+    public java.util.Enumeration getHeaderNames() {
+        return this.request.getHeaderNames();
+    }
+    public int getIntHeader(String name) {
+        return this.request.getIntHeader(name);
+    }
+    public String getMethod() {
+        return this.request.getMethod();
+    }
+    public String getPathInfo() {
+        return this.request.getPathInfo();
+    }
+    public String getPathTranslated() {
+        return this.request.getPathTranslated();
+    }
+    public String getContextPath() {
+        return this.request.getContextPath();
+    }
+    public String getQueryString() {
+        return this.request.getQueryString();
+    }
+    public String getRemoteUser() {
+        return this.request.getRemoteUser();
+    }
+    public boolean isUserInRole(String role) {
+        return this.request.isUserInRole(role);
+    }
+    public java.security.Principal getUserPrincipal() {
+        return this.request.getUserPrincipal();
+    }
+    public String getRequestedSessionId() {
+        return this.request.getRequestedSessionId();
+    }
+    public String getRequestURI() {
+        return this.request.getRequestURI();
+    }
+    public StringBuffer getRequestURL() {
+        return this.request.getRequestURL();
+    }
+    public String getServletPath() {
+        return this.request.getServletPath();
+    }
+    public javax.servlet.http.HttpSession getSession(boolean create) {
+        return this.request.getSession(create);
+    }
+    public javax.servlet.http.HttpSession getSession() {
+        return this.request.getSession();
+    }
+    public boolean isRequestedSessionIdValid() {
+        return this.request.isRequestedSessionIdValid();
+    }
+    public boolean isRequestedSessionIdFromCookie() {
+        return this.request.isRequestedSessionIdFromCookie();
+    }
+    public boolean isRequestedSessionIdFromURL() {
+        return this.request.isRequestedSessionIdFromURL();
+    }
+    public boolean isRequestedSessionIdFromUrl() {
+        return this.request.isRequestedSessionIdFromUrl();
     }
 }

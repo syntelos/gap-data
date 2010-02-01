@@ -63,8 +63,15 @@ public abstract class BigTable
                RequestCreateUpdate,
                DataInheritance.Notation
 {
+    /**
+     * Initialize data bean classes, called in the class
+     * initialization of {@link gap.service.Servlet}.  Causes the
+     * population of {@link Kind}.
+     */
     public final static gap.util.Services Services = (new gap.util.Services(BigTable.class)).init();
-
+    /**
+     * 
+     */
     public static Class<? extends BigTable> Find(Kind kind)
         throws ClassNotFoundException
     {
@@ -312,7 +319,7 @@ public abstract class BigTable
     public abstract String getClassName();
 
     public final String getClassKindPath(){
-        return this.getClassKind().path;
+        return this.getClassKind().pathName;
     }
     /**
      * A static value naming the field employed for instance lookups,
