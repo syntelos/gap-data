@@ -67,6 +67,10 @@ public final class OD
         public final static TemplateName FieldIsInheritable = new TemplateName("field_is_inheritable");
         public final static TemplateName FieldIsKey = new TemplateName("field_is_key");
         public final static TemplateName FieldIsList = new TemplateName("field_is_list");
+        public final static TemplateName FieldIsPrimitive = new TemplateName("field_is_primitive");
+        public final static TemplateName FieldIsNotPrimitive = new TemplateName("field_is_not_primitive");
+        public final static TemplateName FieldIsBigTable = new TemplateName("field_is_bigTable");
+        public final static TemplateName FieldIsNotBigTable = new TemplateName("field_is_not_bigTable");
         public final static TemplateName FieldIsListLong = new TemplateName("field_is_list_long");
         public final static TemplateName FieldIsListLongOrShort = new TemplateName("field_is_list_long_or_short");
         public final static TemplateName FieldIsListPrimitive = new TemplateName("field_is_list_primitive");
@@ -539,10 +543,17 @@ public final class OD
                 if (null != fieldTypePrimitive){
                     dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"gap.Objects."+fieldTypeCleanClean+"FromObject(");
                     dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+                    dataField.addSection(TemplateNames.FieldIsPrimitive);
+                    dataField.addSection(TemplateNames.FieldIsNotBigTable);
                 }
                 else {
                     dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+')');
                     dataField.setVariable(TemplateNames.FieldFromObjectSuffix,"");
+                    dataField.addSection(TemplateNames.FieldIsNotPrimitive);
+                    if (IsTypeClassBigTable(fieldTypeClass))
+                        dataField.addSection(TemplateNames.FieldIsBigTable);
+                    else
+                        dataField.addSection(TemplateNames.FieldIsNotBigTable);
                 }
 
                 if (IsTypeClassKey(fieldTypeClass)){

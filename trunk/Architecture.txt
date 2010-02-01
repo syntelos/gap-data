@@ -2,11 +2,39 @@
    Some notes to be expanded
 
 
+Introduction
+
+   Gap Data implements a traditional Memcache over Data Store
+   framework for Data Beans on Appengine.  Unlike most data stores, of
+   course the Google Appengine Data Store is designed for as infinite.
+
+   Gap Data follows a REST architectural style in the Atom Pub / GData
+   / Open Social family, while first watching closely the separation
+   between the framework and application layers.  Applications
+   implement details relevant to Atom Pub, GData or Open Social, etc.,
+   as desired.  
+
+   The framework endeavors to present a good balance between features
+   and freedom.  On the features list is an integrated template
+   engine, and a java compiler.  On the freedom list is the open
+   definition of data bean structures, and network and code templates
+   via ODL and Hapax.
+
+   These features are presented in the following sections.
+
+
 Servlet 
 
-   The centerpiece is gap/service/Servlet which is called on each HTTP
-   request through a subclass.  The main servlet is an empty subclass
-   located at gap/servlet/Site.
+   The network request- response centerpiece is gap/service/Servlet
+   which is called on each HTTP request.  
+
+   The configured Servlet class is an empty subclass located at
+   gap/servlet/Site.
+
+   The Servlet class collects and organizes the information in the
+   Request, as it is used in all cases.  It implements as many
+   features as possible without impeding application freedom or
+   performance unduly.
 
    
 Data Bean
@@ -37,13 +65,14 @@ Data Bean
    Their reference is intended from via the data bean user class, for
    example
 
-     Person joe = Person.GetCreateLong("joe@smith.com");
+     Person joe = Person.GetCreateLong("joe@smith.com"); //(long ref)
    or
-     Person joe = Person.ForLongLogonId("joe@smith.com").
+     Person joe = Person.ForLongLogonId("joe@smith.com");
 
-   On the topic, 
+   A saved reference to a retrieved data object within the request-
+   response cycle is the logon Person.
 
-     Person me = request.getViewer().
+     Person me = request.getViewer();  //(null with no logon)
 
    For more info, the source code is intended as the best documentation.
 
@@ -64,6 +93,17 @@ System
    (all the instances of a single appengine application).
 
 
+Application Initialization
+
+   Each application instance in the application system is initialized
+   when the first instance of gap/servlet/Servlet is intialized.  This
+   initialization process is light as possible, because initialization
+   occurs on a user request.
+
+   The gap/util/Services class drives this work through class
+   initialization.
+
+
 Request
 
    The gap/Request class accumulates state determined in class
@@ -76,3 +116,67 @@ Request
 
 
 Data Query Filter
+
+   The gap/data/Filter class is employed by generated Data Bean class
+   functions to list collections with other than the default sort
+   order, or with relational operators.  Instances of this class are
+   serializable, so they're intended as valid data bean field types
+   (stored as blobs).
+
+
+References: Long and Short
+
+   References are instances of the Appengine Data Store API Key class.
+
+   Gap Data provides a model for working with references from the
+   application layer in its own terms.  This model includes integrated
+   list and map structures.
+
+   The Data Bean ODL defines one '*unique' and one or more
+   '*hash-unique' fields for the natural identity of instances of the
+   class.  These parameters (the natural identity) are employed in the
+   creation of long and short references.
+
+   Long references are for collections that are not short.  A parent
+   key is not required for long references.
+
+   Short references are into collections that are necessarily small or
+   have a dominant need to not be distributed within the appengine
+   datastore backend.  Short references are implemented via nested
+   appengine datastore keys.  
+
+   The nested appengine keys employed in short references force the
+   appengine datastore to maintain the data on both sides of the
+   nesting association within one physical location.  As the size of
+   this data set grows, performance will suffer.  Google documentation
+   has not been explicit about with numbers, but are clear that this
+   facility should be used for instances of an enumerated set of
+   constants or where atomic data coherency within a short set is
+   required.
+
+   A parent key is required to create short references.
+
+   For example,
+
+     Key ref = Person.KeyLongIdFor("joe@smith.com");
+     Person joe = Person.Get(ref);
+
+   or, via the string identifier
+
+     String id = Person.IdFor("joe@smith.com");
+     Key ref = Person.KeyLongFor(id);
+     Person joe = Person.Get(ref);
+
+   The unique alphanumeric identifier string derived from the natural
+   identity of the object is employed in web URLs for the item.  It is
+   not the same as "ref.toString()".  
+
+   For example,
+
+     if ("people".equals(req.getPath(0))){
+       String id = request.getPath(1);
+       if (null != id){
+         Person person = Person.ForLongId(id);
+
+       }
+     }

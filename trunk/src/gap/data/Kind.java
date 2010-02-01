@@ -45,7 +45,7 @@ public final class Kind
         if (null == kind){
             kind = new Kind(name,pkg,clan,path);
             int idx = ByKind.put2(name,kind);
-            ByPath.put(kind.path,idx);
+            ByPath.put(kind.pathName,idx);
         }
         else if ((!kind.className.equals(clan))||(!kind.packageName.equals(pkg))){
 
@@ -60,47 +60,29 @@ public final class Kind
         return ByKind.get(name);
     }
     public static Kind For(gap.service.Path path){
-        String string = path.full;
-        int kind = ByPath.get(string);
-        if (-1 == kind){
-            do {
-                int idx = string.lastIndexOf('/');
-                string = string.substring(0,idx);
-                if (0 < string.length()){
-                    kind = ByPath.get(string);
-                    if (-1 != kind)
-                        return ByKind.get(kind);
-                }
-                else
-                    return null;
-            }
-            while (true);
-        }
-        return ByKind.get(kind);
+        String pathName = PathName(path.full);
+        int kind = ByPath.get(pathName);
+        if (-1 == kind)
+            return null;
+        else
+            return ByKind.get(kind);
     }
     /** 
      * @param path Relative path expression (as in the HTTP request
      * line) having only path component.
-     * @return Leading path separator, no trailing path separator ('/')
+     * @return No leading or trailing path separator ('/'), first
+     * token from path delimited sequence.
      */
-    public static String PathNormal(String path){
+    public static String PathName(String path){
         if (null == path || 0 == path.length())
             return null;
         else {
-            if ('/' != path.charAt(0))
-                path = "/"+path;
-
-            int term = (path.length()-1);
-
-            if (0 < term && '/' == path.charAt(term))
-                path = path.substring(0,term);
-
-            return path;
+            return (new java.util.StringTokenizer(path,"/")).nextToken();
         }
     }
 
 
-    public final String name, packageName, className, fullClassName, path;
+    public final String name, packageName, className, fullClassName, pathName;
 
     public final int hashCode;
 
@@ -113,7 +95,7 @@ public final class Kind
             this.packageName = packageName;
             this.className = className;
             this.fullClassName = packageName+'.'+className;
-            this.path = PathNormal(path);
+            this.pathName = PathName(path);
         }
         else
             throw new IllegalArgumentException();

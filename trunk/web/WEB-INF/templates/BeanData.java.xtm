@@ -23,6 +23,8 @@ import {{=import_spec}};{{/import}}
 
 import gap.*;
 import gap.data.*;
+import gap.hapax.TemplateDataDictionary;
+import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
@@ -553,8 +555,8 @@ public abstract class {{=class_name}}Data
         }
         else
             return false;
-    }
-{{#class_re_child_or_group}}
+    }{{!
+}}{{#class_re_child_or_group}}
     public final boolean hasParentKey(){
         return (null != this.parentKey);
     }
@@ -599,8 +601,8 @@ public abstract class {{=class_name}}Data
         else
             return false;
     }
-{{/class_re_child_or_group}}
-{{#pfield}}
+{{/class_re_child_or_group}}{{!
+}}{{#pfield}}
     public final boolean has{{=field_nameCamel}}(boolean mayInherit){
         return (null != this.get{{=field_nameCamel}}(mayInherit));
     }
@@ -649,8 +651,8 @@ public abstract class {{=class_name}}Data
         }
         else
             return false;
-    }
-{{/pfield}}{{#cfield}}
+    }{{/pfield}}{{!
+ }}{{#cfield}}
     public final boolean has{{=field_nameCamel}}(boolean mayInherit){
         return (this.get{{=field_nameCamel}}(mayInherit).isNotEmpty());
     }
@@ -757,9 +759,8 @@ public abstract class {{=class_name}}Data
         }
         else
             throw new IllegalArgumentException();
-    }{{/field_is_map}}
-{{/cfield}}
-{{#tfield}}
+    }{{/field_is_map}}{{/cfield}}{{!
+}}{{#tfield}}
     public final boolean has{{=field_nameCamel}}(){
         return (null != this.{{=field_name}});
     }
@@ -771,9 +772,7 @@ public abstract class {{=class_name}}Data
     }
     public final void set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         this.{{=field_name}} = {{=field_name}};
-    }
-{{/tfield}}
-
+    }{{/tfield}}
     /*
      * Data binding supports
      */
@@ -826,4 +825,100 @@ public abstract class {{=class_name}}Data
     public final gap.service.od.ClassDescriptor getClassDescriptorForParent(){
         return ClassDescriptorForParent();
     }{{/class_re_child_or_group}}
+    /*
+     * Template Data Dictionary
+     */
+    public boolean hasVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){{{#pfield}}
+            case {{=field_nameCamel}}:{{#field_is_bigTable}}
+                if (name.has(1)){
+                    {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}(true);
+                    if (null != {{=field_name}})
+                        return {{=field_name}}.hasVariable(new TemplateName(name));
+                    else
+                        return false;
+                }
+                else
+                    return this.has{{=field_nameCamel}}(true);{{/field_is_bigTable}{{#field_is_not_bigTable}}
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.has{{=field_nameCamel}}(true);{{/field_is_not_bigTable}}}{{/pfield}}
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.hasVariable(name);
+        }
+    }
+    public String getVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){{{#pfield}}
+            case {{=field_nameCamel}}:{{#field_is_bigTable}}
+                if (name.has(1)){
+                    {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}(true);
+                    if (null != {{=field_name}})
+                        return {{=field_name}}.hasVariable(new TemplateName(name));
+                    else
+                        return false;
+                }
+                else
+                    return this.has{{=field_nameCamel}}(true);{{/field_is_bigTable}{{#field_is_not_bigTable}}
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.has{{=field_nameCamel}}(true);{{/field_is_not_bigTable}}}{{/pfield}}
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.getVariable(name);
+        }
+    }
+    public List<TemplateDataDictionary> getSection(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case method:
+            case protocol:
+            case path:
+            case accept:
+            case fileManager:
+                return null;
+            case parameters:
+                return this.parameters.getSection(new TemplateName(name));
+            case userReference:
+                return null;
+            case logon:
+                return this.logon.getSection(new TemplateName(name));
+            case logonUrl:
+            case logonText:
+            case contentType:
+            case isAdmin:
+            case isPartner:
+            case isMember:
+                return null;
+            case resource:
+                if (null != this.resource)
+                    return this.resource.getSection(new TemplateName(name));
+                else
+                    return null;
+            case tool:
+                if (null != this.tool)
+                    return this.tool.getSection(new TemplateName(name));
+                else
+                    return null;
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.getSection(name);
+        }
+    }
 }
