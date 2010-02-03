@@ -22,6 +22,8 @@ package gap.data;
 
 import gap.*;
 import gap.data.*;
+import gap.hapax.TemplateDataDictionary;
+import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
@@ -33,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-01-31T14:18:05.380Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-03T12:48:18.117Z")
 public abstract class ToolData
     extends gap.data.BigTable
     implements DataInheritance<Tool>,
@@ -282,7 +284,7 @@ public abstract class ToolData
         FunctionClassfileJvm("functionClassfileJvm");
 
 
-        private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
+        private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
         static {
             Field[] allFields = Field.values();
@@ -442,10 +444,10 @@ public abstract class ToolData
     private volatile transient Resource parent;
 
 
-    public ToolData() {
+    protected ToolData() {
         super();
     }
-    public ToolData(Key ancestor, String name) {
+    protected ToolData(Key ancestor, String name) {
         super();
         this.setName(name);
         this.parentKey = ancestor;
@@ -516,7 +518,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasParentKey(){
         return (null != this.parentKey);
     }
@@ -562,7 +563,6 @@ public abstract class ToolData
             return false;
     }
 
-
     public final boolean hasKey(boolean mayInherit){
         return (null != this.getKey(mayInherit));
     }
@@ -591,7 +591,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasId(boolean mayInherit){
         return (null != this.getId(mayInherit));
     }
@@ -620,7 +619,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasName(boolean mayInherit){
         return (null != this.getName(mayInherit));
     }
@@ -649,7 +647,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasLastModified(boolean mayInherit){
         return (null != this.getLastModified(mayInherit));
     }
@@ -693,7 +690,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasHeadXtm(boolean mayInherit){
         return (null != this.getHeadXtm(mayInherit));
     }
@@ -737,7 +733,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasOverlayXtm(boolean mayInherit){
         return (null != this.getOverlayXtm(mayInherit));
     }
@@ -781,7 +776,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasFormXtm(boolean mayInherit){
         return (null != this.getFormXtm(mayInherit));
     }
@@ -825,7 +819,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasTitleHiGraphicUri(boolean mayInherit){
         return (null != this.getTitleHiGraphicUri(mayInherit));
     }
@@ -869,7 +862,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasTitleLoGraphicUri(boolean mayInherit){
         return (null != this.getTitleLoGraphicUri(mayInherit));
     }
@@ -913,7 +905,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasButtonHiGraphicUri(boolean mayInherit){
         return (null != this.getButtonHiGraphicUri(mayInherit));
     }
@@ -957,7 +948,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasButtonLoGraphicUri(boolean mayInherit){
         return (null != this.getButtonLoGraphicUri(mayInherit));
     }
@@ -1001,7 +991,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasButtonOffGraphicUri(boolean mayInherit){
         return (null != this.getButtonOffGraphicUri(mayInherit));
     }
@@ -1045,7 +1034,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasFunctionMethodname(boolean mayInherit){
         return (null != this.getFunctionMethodname(mayInherit));
     }
@@ -1089,7 +1077,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasFunctionClassname(boolean mayInherit){
         return (null != this.getFunctionClassname(mayInherit));
     }
@@ -1133,7 +1120,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasFunctionBody(boolean mayInherit){
         return (null != this.getFunctionBody(mayInherit));
     }
@@ -1177,7 +1163,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasFunctionSourceJava(boolean mayInherit){
         return (null != this.getFunctionSourceJava(mayInherit));
     }
@@ -1221,7 +1206,6 @@ public abstract class ToolData
         else
             return false;
     }
-
     public final boolean hasFunctionClassfileJvm(boolean mayInherit){
         return (null != this.getFunctionClassfileJvm(mayInherit));
     }
@@ -1265,9 +1249,6 @@ public abstract class ToolData
         else
             return false;
     }
-
-
-
     /*
      * Data binding supports
      */
@@ -1305,5 +1286,248 @@ public abstract class ToolData
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorForParent(){
         return ClassDescriptorForParent();
+    }
+    /*
+     * Template Data Dictionary
+     */
+    public boolean hasVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasKey(true);
+            case Id:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasId(true);
+            case Name:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasName(true);
+            case LastModified:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasLastModified(true);
+            case HeadXtm:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasHeadXtm(true);
+            case OverlayXtm:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasOverlayXtm(true);
+            case FormXtm:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasFormXtm(true);
+            case TitleHiGraphicUri:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasTitleHiGraphicUri(true);
+            case TitleLoGraphicUri:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasTitleLoGraphicUri(true);
+            case ButtonHiGraphicUri:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasButtonHiGraphicUri(true);
+            case ButtonLoGraphicUri:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasButtonLoGraphicUri(true);
+            case ButtonOffGraphicUri:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasButtonOffGraphicUri(true);
+            case FunctionMethodname:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasFunctionMethodname(true);
+            case FunctionClassname:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasFunctionClassname(true);
+            case FunctionBody:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasFunctionBody(true);
+            case FunctionSourceJava:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasFunctionSourceJava(true);
+            case FunctionClassfileJvm:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasFunctionClassfileJvm(true);
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.hasVariable(name);
+        }
+    }
+    public String getVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.KeyToString(this.getKey(true));
+            case Id:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getId(true);
+            case Name:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getName(true);
+            case LastModified:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.LongToString(this.getLastModified(true));
+            case HeadXtm:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getHeadXtm(true);
+            case OverlayXtm:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getOverlayXtm(true);
+            case FormXtm:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getFormXtm(true);
+            case TitleHiGraphicUri:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getTitleHiGraphicUri(true);
+            case TitleLoGraphicUri:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getTitleLoGraphicUri(true);
+            case ButtonHiGraphicUri:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getButtonHiGraphicUri(true);
+            case ButtonLoGraphicUri:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getButtonLoGraphicUri(true);
+            case ButtonOffGraphicUri:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getButtonOffGraphicUri(true);
+            case FunctionMethodname:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getFunctionMethodname(true);
+            case FunctionClassname:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getFunctionClassname(true);
+            case FunctionBody:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.TextToString(this.getFunctionBody(true));
+            case FunctionSourceJava:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.TextToString(this.getFunctionSourceJava(true));
+            case FunctionClassfileJvm:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.BlobToString(this.getFunctionClassfileJvm(true));
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.getVariable(name);
+        }
+    }
+    public List<TemplateDataDictionary> getSection(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                return null;
+            case Id:
+                return null;
+            case Name:
+                return null;
+            case LastModified:
+                return null;
+            case HeadXtm:
+                return null;
+            case OverlayXtm:
+                return null;
+            case FormXtm:
+                return null;
+            case TitleHiGraphicUri:
+                return null;
+            case TitleLoGraphicUri:
+                return null;
+            case ButtonHiGraphicUri:
+                return null;
+            case ButtonLoGraphicUri:
+                return null;
+            case ButtonOffGraphicUri:
+                return null;
+            case FunctionMethodname:
+                return null;
+            case FunctionClassname:
+                return null;
+            case FunctionBody:
+                return null;
+            case FunctionSourceJava:
+                return null;
+            case FunctionClassfileJvm:
+                return null;
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.getSection(name);
+        }
     }
 }
