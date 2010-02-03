@@ -22,6 +22,8 @@ package gap.data;
 
 import gap.*;
 import gap.data.*;
+import gap.hapax.TemplateDataDictionary;
+import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
@@ -33,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-01-31T14:18:11.254Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-03T12:48:24.507Z")
 public abstract class PartnerData
     extends gap.data.BigTable
     implements DataInheritance<Partner>,
@@ -267,7 +269,7 @@ public abstract class PartnerData
         Name("name");
 
 
-        private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
+        private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
         static {
             Field[] allFields = Field.values();
@@ -357,10 +359,10 @@ public abstract class PartnerData
     private volatile transient Resource parent;
 
 
-    public PartnerData() {
+    protected PartnerData() {
         super();
     }
-    public PartnerData(Key ancestor, String name) {
+    protected PartnerData(Key ancestor, String name) {
         super();
         this.setName(name);
         this.parentKey = ancestor;
@@ -417,7 +419,6 @@ public abstract class PartnerData
         else
             return false;
     }
-
     public final boolean hasParentKey(){
         return (null != this.parentKey);
     }
@@ -463,7 +464,6 @@ public abstract class PartnerData
             return false;
     }
 
-
     public final boolean hasKey(boolean mayInherit){
         return (null != this.getKey(mayInherit));
     }
@@ -492,7 +492,6 @@ public abstract class PartnerData
         else
             return false;
     }
-
     public final boolean hasId(boolean mayInherit){
         return (null != this.getId(mayInherit));
     }
@@ -521,7 +520,6 @@ public abstract class PartnerData
         else
             return false;
     }
-
     public final boolean hasName(boolean mayInherit){
         return (null != this.getName(mayInherit));
     }
@@ -550,9 +548,6 @@ public abstract class PartnerData
         else
             return false;
     }
-
-
-
     /*
      * Data binding supports
      */
@@ -590,5 +585,80 @@ public abstract class PartnerData
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorForParent(){
         return ClassDescriptorForParent();
+    }
+    /*
+     * Template Data Dictionary
+     */
+    public boolean hasVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasKey(true);
+            case Id:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasId(true);
+            case Name:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasName(true);
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.hasVariable(name);
+        }
+    }
+    public String getVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.KeyToString(this.getKey(true));
+            case Id:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getId(true);
+            case Name:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getName(true);
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.getVariable(name);
+        }
+    }
+    public List<TemplateDataDictionary> getSection(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                return null;
+            case Id:
+                return null;
+            case Name:
+                return null;
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.getSection(name);
+        }
     }
 }

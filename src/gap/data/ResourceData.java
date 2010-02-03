@@ -22,6 +22,8 @@ package gap.data;
 
 import gap.*;
 import gap.data.*;
+import gap.hapax.TemplateDataDictionary;
+import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
@@ -33,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-01-31T14:17:59.017Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-03T12:48:11.751Z")
 public abstract class ResourceData
     extends gap.data.BigTable
     implements DataInheritance<Resource>,
@@ -245,7 +247,7 @@ public abstract class ResourceData
         ServletClassfileJvm("servletClassfileJvm");
 
 
-        private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
+        private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
         static {
             Field[] allFields = Field.values();
@@ -364,10 +366,10 @@ public abstract class ResourceData
 
 
 
-    public ResourceData() {
+    protected ResourceData() {
         super();
     }
-    public ResourceData(String base, String name) {
+    protected ResourceData(String base, String name) {
         super();
         this.setBase(base);
         this.setName(name);
@@ -454,8 +456,6 @@ public abstract class ResourceData
         else
             return false;
     }
-
-
     public final boolean hasKey(boolean mayInherit){
         return (null != this.getKey(mayInherit));
     }
@@ -484,7 +484,6 @@ public abstract class ResourceData
         else
             return false;
     }
-
     public final boolean hasId(boolean mayInherit){
         return (null != this.getId(mayInherit));
     }
@@ -513,7 +512,6 @@ public abstract class ResourceData
         else
             return false;
     }
-
     public final boolean hasBase(boolean mayInherit){
         return (null != this.getBase(mayInherit));
     }
@@ -542,7 +540,6 @@ public abstract class ResourceData
         else
             return false;
     }
-
     public final boolean hasName(boolean mayInherit){
         return (null != this.getName(mayInherit));
     }
@@ -571,7 +568,6 @@ public abstract class ResourceData
         else
             return false;
     }
-
     public final boolean hasLastModified(boolean mayInherit){
         return (null != this.getLastModified(mayInherit));
     }
@@ -615,7 +611,6 @@ public abstract class ResourceData
         else
             return false;
     }
-
     public final boolean hasTag(boolean mayInherit){
         return (null != this.getTag(mayInherit));
     }
@@ -659,7 +654,6 @@ public abstract class ResourceData
         else
             return false;
     }
-
     public final boolean hasServletClassname(boolean mayInherit){
         return (null != this.getServletClassname(mayInherit));
     }
@@ -703,7 +697,6 @@ public abstract class ResourceData
         else
             return false;
     }
-
     public final boolean hasServletSourceJava(boolean mayInherit){
         return (null != this.getServletSourceJava(mayInherit));
     }
@@ -747,7 +740,6 @@ public abstract class ResourceData
         else
             return false;
     }
-
     public final boolean hasServletClassfileJvm(boolean mayInherit){
         return (null != this.getServletClassfileJvm(mayInherit));
     }
@@ -791,7 +783,6 @@ public abstract class ResourceData
         else
             return false;
     }
-
     public final boolean hasPartners(boolean mayInherit){
         return (this.getPartners(mayInherit).isNotEmpty());
     }
@@ -867,7 +858,6 @@ public abstract class ResourceData
         else
             throw new IllegalArgumentException();
     }
-
     public final boolean hasAccounts(boolean mayInherit){
         return (this.getAccounts(mayInherit).isNotEmpty());
     }
@@ -938,7 +928,6 @@ public abstract class ResourceData
         else
             throw new IllegalArgumentException();
     }
-
     public final boolean hasImages(boolean mayInherit){
         return (this.getImages(mayInherit).isNotEmpty());
     }
@@ -1014,7 +1003,6 @@ public abstract class ResourceData
         else
             throw new IllegalArgumentException();
     }
-
     public final boolean hasTemplates(boolean mayInherit){
         return (this.getTemplates(mayInherit).isNotEmpty());
     }
@@ -1090,7 +1078,6 @@ public abstract class ResourceData
         else
             throw new IllegalArgumentException();
     }
-
     public final boolean hasTools(boolean mayInherit){
         return (this.getTools(mayInherit).isNotEmpty());
     }
@@ -1166,9 +1153,6 @@ public abstract class ResourceData
         else
             throw new IllegalArgumentException();
     }
-
-
-
     /*
      * Data binding supports
      */
@@ -1203,5 +1187,152 @@ public abstract class ResourceData
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor(this.getClass());
+    }
+    /*
+     * Template Data Dictionary
+     */
+    public boolean hasVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasKey(true);
+            case Id:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasId(true);
+            case Base:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasBase(true);
+            case Name:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasName(true);
+            case LastModified:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasLastModified(true);
+            case Tag:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasTag(true);
+            case ServletClassname:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasServletClassname(true);
+            case ServletSourceJava:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasServletSourceJava(true);
+            case ServletClassfileJvm:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasServletClassfileJvm(true);
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.hasVariable(name);
+        }
+    }
+    public String getVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.KeyToString(this.getKey(true));
+            case Id:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getId(true);
+            case Base:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getBase(true);
+            case Name:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getName(true);
+            case LastModified:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.LongToString(this.getLastModified(true));
+            case Tag:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.CategoryToString(this.getTag(true));
+            case ServletClassname:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getServletClassname(true);
+            case ServletSourceJava:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.TextToString(this.getServletSourceJava(true));
+            case ServletClassfileJvm:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.BlobToString(this.getServletClassfileJvm(true));
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.getVariable(name);
+        }
+    }
+    public List<TemplateDataDictionary> getSection(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                return null;
+            case Id:
+                return null;
+            case Base:
+                return null;
+            case Name:
+                return null;
+            case LastModified:
+                return null;
+            case Tag:
+                return null;
+            case ServletClassname:
+                return null;
+            case ServletSourceJava:
+                return null;
+            case ServletClassfileJvm:
+                return null;
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.getSection(name);
+        }
     }
 }

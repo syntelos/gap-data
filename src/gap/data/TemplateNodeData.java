@@ -22,6 +22,8 @@ package gap.data;
 
 import gap.*;
 import gap.data.*;
+import gap.hapax.TemplateDataDictionary;
+import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
@@ -33,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-01-31T14:18:10.122Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-03T12:48:23.334Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -272,7 +274,7 @@ public abstract class TemplateNodeData
         OffsetCloseRelative("offsetCloseRelative");
 
 
-        private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
+        private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
         static {
             Field[] allFields = Field.values();
@@ -382,10 +384,10 @@ public abstract class TemplateNodeData
     private volatile transient Template parent;
 
 
-    public TemplateNodeData() {
+    protected TemplateNodeData() {
         super();
     }
-    public TemplateNodeData(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent) {
+    protected TemplateNodeData(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent) {
         super();
         this.setNodeType(nodeType);
         this.setLineNumber(lineNumber);
@@ -448,7 +450,6 @@ public abstract class TemplateNodeData
         else
             return false;
     }
-
     public final boolean hasParentKey(){
         return (null != this.parentKey);
     }
@@ -494,7 +495,6 @@ public abstract class TemplateNodeData
             return false;
     }
 
-
     public final boolean hasKey(boolean mayInherit){
         return (null != this.getKey(mayInherit));
     }
@@ -523,7 +523,6 @@ public abstract class TemplateNodeData
         else
             return false;
     }
-
     public final boolean hasId(boolean mayInherit){
         return (null != this.getId(mayInherit));
     }
@@ -552,7 +551,6 @@ public abstract class TemplateNodeData
         else
             return false;
     }
-
     public final boolean hasNodeType(boolean mayInherit){
         return (null != this.getNodeType(mayInherit));
     }
@@ -581,7 +579,6 @@ public abstract class TemplateNodeData
         else
             return false;
     }
-
     public final boolean hasLineNumber(boolean mayInherit){
         return (null != this.getLineNumber(mayInherit));
     }
@@ -610,7 +607,6 @@ public abstract class TemplateNodeData
         else
             return false;
     }
-
     public final boolean hasNodeContent(boolean mayInherit){
         return (null != this.getNodeContent(mayInherit));
     }
@@ -639,7 +635,6 @@ public abstract class TemplateNodeData
         else
             return false;
     }
-
     public final boolean hasOffset(boolean mayInherit){
         return (null != this.getOffset(mayInherit));
     }
@@ -683,7 +678,6 @@ public abstract class TemplateNodeData
         else
             return false;
     }
-
     public final boolean hasOffsetCloseRelative(boolean mayInherit){
         return (null != this.getOffsetCloseRelative(mayInherit));
     }
@@ -727,9 +721,6 @@ public abstract class TemplateNodeData
         else
             return false;
     }
-
-
-
     /*
      * Data binding supports
      */
@@ -767,5 +758,128 @@ public abstract class TemplateNodeData
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorForParent(){
         return ClassDescriptorForParent();
+    }
+    /*
+     * Template Data Dictionary
+     */
+    public boolean hasVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasKey(true);
+            case Id:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasId(true);
+            case NodeType:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasNodeType(true);
+            case LineNumber:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasLineNumber(true);
+            case NodeContent:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasNodeContent(true);
+            case Offset:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasOffset(true);
+            case OffsetCloseRelative:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasOffsetCloseRelative(true);
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.hasVariable(name);
+        }
+    }
+    public String getVariable(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.KeyToString(this.getKey(true));
+            case Id:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getId(true);
+            case NodeType:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getNodeType(true);
+            case LineNumber:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.IntegerToString(this.getLineNumber(true));
+            case NodeContent:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.TextToString(this.getNodeContent(true));
+            case Offset:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.IntegerToString(this.getOffset(true));
+            case OffsetCloseRelative:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.IntegerToString(this.getOffsetCloseRelative(true));
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.getVariable(name);
+        }
+    }
+    public List<TemplateDataDictionary> getSection(TemplateName name){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            switch (field){
+            case Key:
+                return null;
+            case Id:
+                return null;
+            case NodeType:
+                return null;
+            case LineNumber:
+                return null;
+            case NodeContent:
+                return null;
+            case Offset:
+                return null;
+            case OffsetCloseRelative:
+                return null;
+            default:
+                throw new IllegalStateException(field.name());
+            }
+        }
+        else {
+            return super.getSection(name);
+        }
     }
 }

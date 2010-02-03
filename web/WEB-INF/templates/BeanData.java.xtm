@@ -845,7 +845,7 @@ public abstract class {{=class_name}}Data
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
-                    return this.has{{=field_nameCamel}}(true);{{/field_is_not_bigTable}}}{{/pfield}}
+                    return this.has{{=field_nameCamel}}(true);{{/field_is_not_bigTable}}{{/pfield}}
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -862,16 +862,16 @@ public abstract class {{=class_name}}Data
                 if (name.has(1)){
                     {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}(true);
                     if (null != {{=field_name}})
-                        return {{=field_name}}.hasVariable(new TemplateName(name));
+                        return {{=field_name}}.getVariable(new TemplateName(name));
                     else
-                        return false;
+                        return null;
                 }
                 else
-                    return this.has{{=field_nameCamel}}(true);{{/field_is_bigTable}}{{#field_is_not_bigTable}}
+                    return {{=field_to_string_prefix}}this.get{{=field_nameCamel}}(true){{=field_to_string_suffix}};{{/field_is_bigTable}}{{#field_is_not_bigTable}}
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
-                    return this.has{{=field_nameCamel}}(true);{{/field_is_not_bigTable}}}{{/pfield}}
+                    return {{=field_to_string_prefix}}this.get{{=field_nameCamel}}(true){{=field_to_string_suffix}};{{/field_is_not_bigTable}}{{/pfield}}
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -890,7 +890,7 @@ public abstract class {{=class_name}}Data
                     return {{=field_name}}.getSection(new TemplateName(name));
                 else
                     return null;{{/field_is_bigTable}}{{#field_is_not_bigTable}}
-                return null;{{/field_is_not_bigTable}}}{{/pfield}}
+                return null;{{/field_is_not_bigTable}}{{/pfield}}
             default:
                 throw new IllegalStateException(field.name());
             }

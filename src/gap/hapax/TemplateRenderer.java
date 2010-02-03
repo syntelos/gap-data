@@ -128,6 +128,9 @@ public final class TemplateRenderer
                 position = RenderInclude(context, template, dict, position, node, writer);
                 break;
 
+            case Comment:
+                break;
+
             default:
                 throw new IllegalStateException("Bug at node "+node.getNodeType()+'['+node.getLineNumber()+",'"+gap.Strings.TextToString(node.getNodeContent())+"']");
             }
