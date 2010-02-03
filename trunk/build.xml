@@ -165,6 +165,12 @@
 
   <target name="odl" description="Generate 'src/pkg/*.java' files from 'odl/pkg/*.odl' files.  Requires prequisite plain 'ant' run.">
 
+    <copy todir="${out}">
+
+      <fileset dir="${web}">
+        <include name="**/*.xtm" />
+      </fileset>
+    </copy>
     <odl-write classpath.id="lib.path"/>
 
   </target>

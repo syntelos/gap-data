@@ -402,7 +402,7 @@ public abstract class {{=class_name}}Data
         {{=field_nameCamel}}("{{=field_name}}"){{#pfield_it_NotLast}},{{/pfield_it_NotLast}}{{#pfield_it_Last}};{{/pfield_it_Last}}{{/pfield}}
 
 
-        private final static java.util.Map<String,Field> FieldName = new java.util.HashMap<String,Field>();
+        private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
         static {
             Field[] allFields = Field.values();
@@ -841,7 +841,7 @@ public abstract class {{=class_name}}Data
                         return false;
                 }
                 else
-                    return this.has{{=field_nameCamel}}(true);{{/field_is_bigTable}{{#field_is_not_bigTable}}
+                    return this.has{{=field_nameCamel}}(true);{{/field_is_bigTable}}{{#field_is_not_bigTable}}
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
@@ -867,7 +867,7 @@ public abstract class {{=class_name}}Data
                         return false;
                 }
                 else
-                    return this.has{{=field_nameCamel}}(true);{{/field_is_bigTable}{{#field_is_not_bigTable}}
+                    return this.has{{=field_nameCamel}}(true);{{/field_is_bigTable}}{{#field_is_not_bigTable}}
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
@@ -883,36 +883,14 @@ public abstract class {{=class_name}}Data
     public List<TemplateDataDictionary> getSection(TemplateName name){
         Field field = Field.For(name.getComponent(0));
         if (null != field){
-            switch (field){
-            case method:
-            case protocol:
-            case path:
-            case accept:
-            case fileManager:
-                return null;
-            case parameters:
-                return this.parameters.getSection(new TemplateName(name));
-            case userReference:
-                return null;
-            case logon:
-                return this.logon.getSection(new TemplateName(name));
-            case logonUrl:
-            case logonText:
-            case contentType:
-            case isAdmin:
-            case isPartner:
-            case isMember:
-                return null;
-            case resource:
-                if (null != this.resource)
-                    return this.resource.getSection(new TemplateName(name));
+            switch (field){{{#pfield}}
+            case {{=field_nameCamel}}:{{#field_is_bigTable}}
+                {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}(true);
+                if (null != {{=field_name}})
+                    return {{=field_name}}.getSection(new TemplateName(name));
                 else
-                    return null;
-            case tool:
-                if (null != this.tool)
-                    return this.tool.getSection(new TemplateName(name));
-                else
-                    return null;
+                    return null;{{/field_is_bigTable}}{{#field_is_not_bigTable}}
+                return null;{{/field_is_not_bigTable}}}{{/pfield}}
             default:
                 throw new IllegalStateException(field.name());
             }
