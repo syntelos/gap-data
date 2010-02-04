@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-03T12:48:23.334Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-04T15:42:56.042Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -145,6 +145,23 @@ public abstract class TemplateNodeData
         }
         else
             throw new IllegalArgumentException();
+    }
+    public final static TemplateNode FromObject(Object value){
+        if (null == value)
+            return null;
+        else if (value instanceof TemplateNode)
+            return (TemplateNode)value;
+        else if (value instanceof Key)
+            return Get( (Key)value);
+        else if (value instanceof String){
+            /*
+             * TODO: ilarg: not key.enc; Key For ID.
+             */
+            Key key = gap.Strings.KeyFromString( (String)value);
+            return Get(key);
+        }
+        else
+            throw new IllegalArgumentException(value.getClass().getName());
     }
 
 
@@ -854,6 +871,36 @@ public abstract class TemplateNodeData
         }
         else {
             return super.getVariable(name);
+        }
+    }
+    public void setVariable(TemplateName name, String value){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            if (name.has(1)){
+                switch (field){
+                case Key:
+                    throw new IllegalStateException(field.name());
+                case Id:
+                    throw new IllegalStateException(field.name());
+                case NodeType:
+                    throw new IllegalStateException(field.name());
+                case LineNumber:
+                    throw new IllegalStateException(field.name());
+                case NodeContent:
+                    throw new IllegalStateException(field.name());
+                case Offset:
+                    throw new IllegalStateException(field.name());
+                case OffsetCloseRelative:
+                    throw new IllegalStateException(field.name());
+                default:
+                    throw new IllegalStateException(field.name());
+                }
+            }
+            else
+                Field.Set(field,((TemplateNode)this),value);
+        }
+        else {
+            super.setVariable(name,value);
         }
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){

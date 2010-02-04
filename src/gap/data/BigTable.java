@@ -72,24 +72,20 @@ public abstract class BigTable
     /**
      * 
      */
-    public static Class<? extends BigTable> Find(Kind kind)
-        throws ClassNotFoundException
-    {
+    public static Class<? extends BigTable> Find(Kind kind){
         if (null != kind)
             return kind.getTableClass();
         else
             throw new IllegalArgumentException();
     }
-    public static Class<? extends BigTable> Find(String kindName)
-        throws ClassNotFoundException
-    {
+    public static Class<? extends BigTable> Find(String kindName){
         return Find(Kind.For(kindName));
     }
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(String kind){
         try {
             return ClassDescriptorFor(Find(kind));
         }
-        catch (ClassNotFoundException exc){
+        catch (IllegalStateException exc){
             return null;
         }
     }
@@ -116,7 +112,7 @@ public abstract class BigTable
             try {
                 return IsAdmin(Find(kind));
             }
-            catch (ClassNotFoundException exc){
+            catch (IllegalStateException exc){
                 return false;
             }
         }
@@ -128,7 +124,7 @@ public abstract class BigTable
             try {
                 return IsAdmin(Find(kind));
             }
-            catch (ClassNotFoundException exc){
+            catch (IllegalStateException exc){
                 return false;
             }
         }
@@ -146,7 +142,7 @@ public abstract class BigTable
             try {
                 return IsPartner(Find(kind));
             }
-            catch (ClassNotFoundException exc){
+            catch (IllegalStateException exc){
                 return false;
             }
         }
@@ -158,7 +154,7 @@ public abstract class BigTable
             try {
                 return IsPartner(Find(kind));
             }
-            catch (ClassNotFoundException exc){
+            catch (IllegalStateException exc){
                 return false;
             }
         }
@@ -213,13 +209,8 @@ public abstract class BigTable
         if (null != entity){
             String kind = entity.getKind();
             if (null != kind){
-                try {
-                    Class table = Find(kind);
-                    return From(table,entity);
-                }
-                catch (java.lang.ClassNotFoundException exc){
-                    throw new java.lang.RuntimeException(kind,exc);
-                }
+                Class table = Find(kind);
+                return From(table,entity);
             }
             else
                 throw new java.lang.IllegalArgumentException("Entity missing kind for key '"+entity.getKey()+"'");

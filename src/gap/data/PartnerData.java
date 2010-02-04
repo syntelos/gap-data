@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-03T12:48:24.507Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-04T15:42:57.320Z")
 public abstract class PartnerData
     extends gap.data.BigTable
     implements DataInheritance<Partner>,
@@ -144,6 +144,23 @@ public abstract class PartnerData
         }
         else
             throw new IllegalArgumentException();
+    }
+    public final static Partner FromObject(Object value){
+        if (null == value)
+            return null;
+        else if (value instanceof Partner)
+            return (Partner)value;
+        else if (value instanceof Key)
+            return Get( (Key)value);
+        else if (value instanceof String){
+            /*
+             * TODO: ilarg: not key.enc; Key For ID.
+             */
+            Key key = gap.Strings.KeyFromString( (String)value);
+            return Get(key);
+        }
+        else
+            throw new IllegalArgumentException(value.getClass().getName());
     }
 
 
@@ -641,6 +658,28 @@ public abstract class PartnerData
         }
         else {
             return super.getVariable(name);
+        }
+    }
+    public void setVariable(TemplateName name, String value){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            if (name.has(1)){
+                switch (field){
+                case Key:
+                    throw new IllegalStateException(field.name());
+                case Id:
+                    throw new IllegalStateException(field.name());
+                case Name:
+                    throw new IllegalStateException(field.name());
+                default:
+                    throw new IllegalStateException(field.name());
+                }
+            }
+            else
+                Field.Set(field,((Partner)this),value);
+        }
+        else {
+            super.setVariable(name,value);
         }
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){

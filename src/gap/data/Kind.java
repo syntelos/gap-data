@@ -19,6 +19,10 @@
  */
 package gap.data;
 
+import com.google.appengine.api.datastore.Key;
+
+import java.lang.reflect.Method;
+
 /**
  * Dynamic set of data types according to "kind" name.
  * 
@@ -105,14 +109,30 @@ public final class Kind
     public String getName(){
         return this.name;
     }
-    public Class<? extends BigTable> getTableClass()
-        throws java.lang.ClassNotFoundException
-    {
+    public Class<? extends BigTable> getTableClass(){
         try {
             return (Class<? extends BigTable>)Class.forName(this.fullClassName);
         }
         catch (ClassNotFoundException exc){
-            throw new ClassNotFoundException(this.name,exc);
+            throw new IllegalStateException(this.name,exc);
+        }
+    }
+    public Method getTableGetter(){
+        Class<? extends BigTable> table = this.getTableClass();
+        try {
+            return table.getMethod("Get",Key.class);
+        }
+        catch (Exception any){
+            throw new IllegalStateException(this.fullClassName,any);
+        }
+    }
+    public BigTable get(Key key){
+        Method getter = this.getTableGetter();
+        try {
+            return (BigTable)getter.invoke(null,key);
+        }
+        catch (Exception any){
+            throw new IllegalStateException(this.fullClassName,any);
         }
     }
     public String toString(){

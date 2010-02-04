@@ -240,6 +240,23 @@ public abstract class {{=class_name}}Data
         else
             throw new IllegalArgumentException();
     }
+    public final static {{=class_name}} FromObject(Object value){
+        if (null == value)
+            return null;
+        else if (value instanceof {{=class_name}})
+            return ({{=class_name}})value;
+        else if (value instanceof Key)
+            return Get( (Key)value);
+        else if (value instanceof String){
+            /*
+             * TODO: ilarg: not key.enc; Key For ID.
+             */
+            Key key = gap.Strings.KeyFromString( (String)value);
+            return Get(key);
+        }
+        else
+            throw new IllegalArgumentException(value.getClass().getName());
+    }
 
 {{#class_re_child}}
     /**
@@ -878,6 +895,30 @@ public abstract class {{=class_name}}Data
         }
         else {
             return super.getVariable(name);
+        }
+    }
+    public void setVariable(TemplateName name, String value){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            if (name.has(1)){
+                switch (field){{{#pfield}}
+                case {{=field_nameCamel}}:{{#field_is_bigTable}}
+
+                    {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}(true);
+                    if (null != {{=field_name}})
+                        {{=field_name}}.setVariable(new TemplateName(name),value);
+
+                    return ;{{/field_is_bigTable}}{{#field_is_not_bigTable}}
+                    throw new IllegalStateException(field.name());{{/field_is_not_bigTable}}{{/pfield}}
+                default:
+                    throw new IllegalStateException(field.name());
+                }
+            }
+            else
+                Field.Set(field,(({{=class_name}})this),value);
+        }
+        else {
+            super.setVariable(name,value);
         }
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){

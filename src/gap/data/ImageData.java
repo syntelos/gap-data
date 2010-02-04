@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-03T12:48:20.181Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-04T15:42:52.700Z")
 public abstract class ImageData
     extends gap.data.BigTable
     implements DataInheritance<Image>,
@@ -146,6 +146,23 @@ public abstract class ImageData
         }
         else
             throw new IllegalArgumentException();
+    }
+    public final static Image FromObject(Object value){
+        if (null == value)
+            return null;
+        else if (value instanceof Image)
+            return (Image)value;
+        else if (value instanceof Key)
+            return Get( (Key)value);
+        else if (value instanceof String){
+            /*
+             * TODO: ilarg: not key.enc; Key For ID.
+             */
+            Key key = gap.Strings.KeyFromString( (String)value);
+            return Get(key);
+        }
+        else
+            throw new IllegalArgumentException(value.getClass().getName());
     }
 
 
@@ -869,6 +886,36 @@ public abstract class ImageData
         }
         else {
             return super.getVariable(name);
+        }
+    }
+    public void setVariable(TemplateName name, String value){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            if (name.has(1)){
+                switch (field){
+                case Key:
+                    throw new IllegalStateException(field.name());
+                case Id:
+                    throw new IllegalStateException(field.name());
+                case Base:
+                    throw new IllegalStateException(field.name());
+                case Name:
+                    throw new IllegalStateException(field.name());
+                case LastModified:
+                    throw new IllegalStateException(field.name());
+                case ContentType:
+                    throw new IllegalStateException(field.name());
+                case Bytes:
+                    throw new IllegalStateException(field.name());
+                default:
+                    throw new IllegalStateException(field.name());
+                }
+            }
+            else
+                Field.Set(field,((Image)this),value);
+        }
+        else {
+            super.setVariable(name,value);
         }
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){

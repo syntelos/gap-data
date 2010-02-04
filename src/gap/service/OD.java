@@ -547,13 +547,17 @@ public final class OD
                     dataField.addSection(TemplateNames.FieldIsNotBigTable);
                 }
                 else {
-                    dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+')');
-                    dataField.setVariable(TemplateNames.FieldFromObjectSuffix,"");
                     dataField.addSection(TemplateNames.FieldIsNotPrimitive);
-                    if (IsTypeClassBigTable(fieldTypeClass))
+                    if (IsTypeClassBigTable(fieldTypeClass)){
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,fieldType+".FromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
                         dataField.addSection(TemplateNames.FieldIsBigTable);
-                    else
+                    }
+                    else {
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+')');
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,"");
                         dataField.addSection(TemplateNames.FieldIsNotBigTable);
+                    }
                 }
 
                 if (IsTypeClassKey(fieldTypeClass)){

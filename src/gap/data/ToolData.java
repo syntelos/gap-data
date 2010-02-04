@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-03T12:48:18.117Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-04T15:42:50.838Z")
 public abstract class ToolData
     extends gap.data.BigTable
     implements DataInheritance<Tool>,
@@ -145,6 +145,23 @@ public abstract class ToolData
         }
         else
             throw new IllegalArgumentException();
+    }
+    public final static Tool FromObject(Object value){
+        if (null == value)
+            return null;
+        else if (value instanceof Tool)
+            return (Tool)value;
+        else if (value instanceof Key)
+            return Get( (Key)value);
+        else if (value instanceof String){
+            /*
+             * TODO: ilarg: not key.enc; Key For ID.
+             */
+            Key key = gap.Strings.KeyFromString( (String)value);
+            return Get(key);
+        }
+        else
+            throw new IllegalArgumentException(value.getClass().getName());
     }
 
 
@@ -1482,6 +1499,56 @@ public abstract class ToolData
         }
         else {
             return super.getVariable(name);
+        }
+    }
+    public void setVariable(TemplateName name, String value){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            if (name.has(1)){
+                switch (field){
+                case Key:
+                    throw new IllegalStateException(field.name());
+                case Id:
+                    throw new IllegalStateException(field.name());
+                case Name:
+                    throw new IllegalStateException(field.name());
+                case LastModified:
+                    throw new IllegalStateException(field.name());
+                case HeadXtm:
+                    throw new IllegalStateException(field.name());
+                case OverlayXtm:
+                    throw new IllegalStateException(field.name());
+                case FormXtm:
+                    throw new IllegalStateException(field.name());
+                case TitleHiGraphicUri:
+                    throw new IllegalStateException(field.name());
+                case TitleLoGraphicUri:
+                    throw new IllegalStateException(field.name());
+                case ButtonHiGraphicUri:
+                    throw new IllegalStateException(field.name());
+                case ButtonLoGraphicUri:
+                    throw new IllegalStateException(field.name());
+                case ButtonOffGraphicUri:
+                    throw new IllegalStateException(field.name());
+                case FunctionMethodname:
+                    throw new IllegalStateException(field.name());
+                case FunctionClassname:
+                    throw new IllegalStateException(field.name());
+                case FunctionBody:
+                    throw new IllegalStateException(field.name());
+                case FunctionSourceJava:
+                    throw new IllegalStateException(field.name());
+                case FunctionClassfileJvm:
+                    throw new IllegalStateException(field.name());
+                default:
+                    throw new IllegalStateException(field.name());
+                }
+            }
+            else
+                Field.Set(field,((Tool)this),value);
+        }
+        else {
+            super.setVariable(name,value);
         }
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){

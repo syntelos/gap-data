@@ -366,9 +366,7 @@ public final class Parameters
     public final Special.Since since;
 
 
-    public Parameters(HttpServletRequest req, int page, Kind kind)
-        throws ClassNotFoundException
-    {
+    public Parameters(HttpServletRequest req, int page, Kind kind){
         this(req,page,kind.getTableClass());
     }
     public Parameters(HttpServletRequest req, int page, Class<? extends gap.data.BigTable> table){
