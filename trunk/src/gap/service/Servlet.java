@@ -503,13 +503,9 @@ public class Servlet
     protected Parameters createParameters(HttpServletRequest req, Path path){
         Class<? extends gap.data.BigTable> table = null;
         Kind kind = Kind.For(path);
-        if (null != kind){
-            try {
-                table = kind.getTableClass();
-            }
-            catch (ClassNotFoundException exc){
-            }
-        }
+        if (null != kind)
+            table = kind.getTableClass();
+
         return new Parameters(req,Page.DefaultCount,table);
     }
     /**

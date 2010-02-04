@@ -463,6 +463,8 @@ public class Request
             return super.getVariable(name);
         }
     }
+    public void setVariable(TemplateName name, String value){
+    }
     public List<TemplateDataDictionary> getSection(TemplateName name){
         Field field = Field.For(name.getComponent(0));
         if (null != field){

@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-03T12:48:11.751Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-04T15:42:44.083Z")
 public abstract class ResourceData
     extends gap.data.BigTable
     implements DataInheritance<Resource>,
@@ -143,6 +143,23 @@ public abstract class ResourceData
         }
         else
             throw new IllegalArgumentException();
+    }
+    public final static Resource FromObject(Object value){
+        if (null == value)
+            return null;
+        else if (value instanceof Resource)
+            return (Resource)value;
+        else if (value instanceof Key)
+            return Get( (Key)value);
+        else if (value instanceof String){
+            /*
+             * TODO: ilarg: not key.enc; Key For ID.
+             */
+            Key key = gap.Strings.KeyFromString( (String)value);
+            return Get(key);
+        }
+        else
+            throw new IllegalArgumentException(value.getClass().getName());
     }
 
 
@@ -1303,6 +1320,40 @@ public abstract class ResourceData
         }
         else {
             return super.getVariable(name);
+        }
+    }
+    public void setVariable(TemplateName name, String value){
+        Field field = Field.For(name.getComponent(0));
+        if (null != field){
+            if (name.has(1)){
+                switch (field){
+                case Key:
+                    throw new IllegalStateException(field.name());
+                case Id:
+                    throw new IllegalStateException(field.name());
+                case Base:
+                    throw new IllegalStateException(field.name());
+                case Name:
+                    throw new IllegalStateException(field.name());
+                case LastModified:
+                    throw new IllegalStateException(field.name());
+                case Tag:
+                    throw new IllegalStateException(field.name());
+                case ServletClassname:
+                    throw new IllegalStateException(field.name());
+                case ServletSourceJava:
+                    throw new IllegalStateException(field.name());
+                case ServletClassfileJvm:
+                    throw new IllegalStateException(field.name());
+                default:
+                    throw new IllegalStateException(field.name());
+                }
+            }
+            else
+                Field.Set(field,((Resource)this),value);
+        }
+        else {
+            super.setVariable(name,value);
         }
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){

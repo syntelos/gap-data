@@ -27,7 +27,16 @@ package gap;
 public abstract class Objects {
 
     public final static java.lang.Object ObjectFromObject(java.lang.Object object){
-
+        if (object instanceof java.lang.String){
+            String string = (String)object;
+            try {
+                com.google.appengine.api.datastore.Key key = Strings.KeyFromString(string);
+                gap.data.Kind kind = gap.data.Kind.For(key.getKind());
+                return kind.get(key);
+            }
+            catch (Exception any){
+            }
+        }
         return object;
     }
     public final static java.lang.String StringFromObject(java.lang.Object object){
