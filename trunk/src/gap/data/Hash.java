@@ -236,26 +236,33 @@ public final class Hash
                 return new java.lang.String(cary);
         }
     }
+    /**
+     * @param string Hexadecimal representation of a 64 bit integer.
+     */
     public final static long Hex(String string){
         if (null == string)
             return 0L;
         else {
-            long num = 0L, r = 0L;
             char[] cary = string.toCharArray();
-            for (int cc = 0, cz = cary.length; cc < cz; cc++){
+            int count = cary.length;
+            if (0 == count)
+                return 0L;
+            else if (count <= 16){
+                long num = 0L, r = 0L;
+                for (int cc = 0, cz = cary.length; cc < cz; cc++){
 
-                if (0 == (cc & 1)){
-                    r = (HexValueOf(cary[cc])<<4);
+                    if (0 == (cc & 1))
+                        r = (HexValueOf(cary[cc])<<4);
+                    else 
+                        r = HexValueOf(cary[cc]);
+
                     r <<= 56-(8*(cc>>>1));
                     num |= r;
                 }
-                else {
-                    r = HexValueOf(cary[cc]);
-                    r <<= 56-(8*(cc>>>1));
-                    num |= r;
-                }
+                return num;
             }
-            return num;
+            else
+                throw new IllegalArgumentException(string);
         }
     }
     public final static int HexValueOf(char ch){
