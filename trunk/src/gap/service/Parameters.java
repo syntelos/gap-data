@@ -280,9 +280,35 @@ public final class Parameters
             public final static String NetworkDistance = "networkDistance";
 
 
+            public final int hops;
+            public final String term;
+
 
             public NetworkDistance(Map<String,String[]> parameters){
                 super();
+                String[] networkDistance = parameters.get(NetworkDistance);
+                if (null != networkDistance && 0 != networkDistance.length){
+                    this.term = networkDistance[0];
+                    int hops = Integer.MAX_VALUE;
+                    try {
+                        hops = Integer.parseInt(this.term);
+                    }
+                    catch (NumberFormatException nan){
+                    }
+                    this.hops = hops;
+                }
+                else {
+                    this.hops = Integer.MAX_VALUE;
+                    this.term = null;
+                }
+            }
+
+
+            public boolean hasHops(){
+                return (Integer.MAX_VALUE != this.hops);
+            }
+            public boolean hasTerm(){
+                return (null != this.term);
             }
         }
         /**
