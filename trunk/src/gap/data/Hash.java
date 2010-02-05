@@ -248,15 +248,19 @@ public final class Hash
             if (0 == count)
                 return 0L;
             else if (count <= 16){
+                int ofs = (56-((16 - count)<<2));
+                int sh;
                 long num = 0L, r = 0L;
-                for (int cc = 0, cz = cary.length; cc < cz; cc++){
+                for (int cc = (count-1); -1 < cc; cc--){
 
-                    if (0 == (cc & 1))
-                        r = (HexValueOf(cary[cc])<<4);
-                    else 
-                        r = HexValueOf(cary[cc]);
+                    r = HexValueOf(cary[cc]);
 
-                    r <<= 56-(8*(cc>>>1));
+                    sh = (ofs-(8*(cc>>>1)));
+                    {
+                        if (0 == (cc & 1))
+                            sh += 4;
+                    }
+                    r <<= sh;
                     num |= r;
                 }
                 return num;
@@ -316,24 +320,38 @@ public final class Hash
         }
     }
 
+    private final static class Test {
+        final static String[] List = {
+            "ffbbba1289e2e529",
+            "85e06420a0e7",
+            "dcf4e32ab6978d3",
+            "8a625f6322fa473e",
+            "d66dabd5d4a746cb",
+            "12ae5663d1b6251",
+            "54392f45e5ab704",
+            "cb972b9932f3bdc0"
+        };
+    }
+
     public static void main(String[] argv){
         int failures = 0;
-        java.util.Random prng = new java.util.Random();
-        final int count = 10;
-        for (int test = 1; test <= count; test++){
-            long input = prng.nextLong();
-            String hex = Hex(Long(input));
-            long output = Hex(hex);
-            if (input != output){
+        for (String test : Hash.Test.List){
+            long decode = Hex(test);
+            String encode = Hex(Long(decode));
+            if (!encode.endsWith(test)){
                 failures += 1;
-                System.err.printf("Failed test %2d/%2d with input: %16x, hex: %16s, output: %16x\n",test,count,input,hex,output);
+                System.err.printf("*Failed test: %16s with decode: %16x, encode: %16s\n",test,decode,encode);
             }
             else
-                System.err.printf("Passed test %2d/%2d with input: %16x, hex: %16s, output: %16x\n",test,count,input,hex,output);
+                System.err.printf(" Passed test: %16s with decode: %16x, encode: %16s\n",test,decode,encode);
         }
-        if (0 != failures)
+        if (0 != failures){
+            System.err.println("ER");
             System.exit(1);
-        else
+        }
+        else {
+            System.err.println("OK");
             System.exit(0);
+        }
     }
 }
