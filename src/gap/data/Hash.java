@@ -236,5 +236,94 @@ public final class Hash
                 return new java.lang.String(cary);
         }
     }
+    public final static long Hex(String string){
+        if (null == string)
+            return 0L;
+        else {
+            long num = 0L, r = 0L;
+            char[] cary = string.toCharArray();
+            for (int cc = (cary.length-1); -1 < cc; cc--){
 
+                if (0 == (cc & 1)){
+                    r = HexValueOf(cary[cc]);
+                    r <<= (8*(cc>>>1));
+                    num |= r;
+                }
+                else {
+                    r = (HexValueOf(cary[cc])<<4);
+                    r <<= (8*(cc>>>1));
+                    num |= r;
+                }
+            }
+            return num;
+        }
+    }
+    public final static int HexValueOf(char ch){
+        switch (ch){
+        case '0':
+            return 0;
+        case '1':
+            return 1;
+        case '2':
+            return 2;
+        case '3':
+            return 3;
+        case '4':
+            return 4;
+        case '5':
+            return 5;
+        case '6':
+            return 6;
+        case '7':
+            return 7;
+        case '8':
+            return 8;
+        case '9':
+            return 9;
+        case 'A':
+            return 10;
+        case 'B':
+            return 11;
+        case 'C':
+            return 12;
+        case 'D':
+            return 13;
+        case 'E':
+            return 14;
+        case 'F':
+            return 15;
+        case 'a':
+            return 10;
+        case 'b':
+            return 11;
+        case 'c':
+            return 12;
+        case 'd':
+            return 13;
+        case 'e':
+            return 14;
+        case 'f':
+            return 15;
+        default:
+            throw new IllegalArgumentException(String.valueOf(ch));
+        }
+    }
+
+    public static void main(String[] argv){
+        int failures = 0;
+        java.util.Random prng = new java.util.Random();
+        for (int test = 1; test <= 10; test++){
+            long input = prng.nextLong();
+            String hex = Hex(Long(input));
+            long output = Hex(hex);
+            if (input != output){
+                failures += 1;
+                System.err.printf("Input %x, Hex %s, Output %x\n",input,hex,output);
+            }
+        }
+        if (0 != failures)
+            System.exit(1);
+        else
+            System.exit(0);
+    }
 }

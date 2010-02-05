@@ -132,7 +132,7 @@ public class Servlet
         Protocol protocol = Protocol.Enter(req);
         Path path = new Path(req);
         Accept accept = new Accept(req);
-        FileManager fm = new FileManager(path.get(0));
+        FileManager fm = new FileManager(path.getComponent(0));
         String uri = req.getParameter("uri");
         if (null == uri){
             uri = req.getRequestURI();
@@ -502,10 +502,10 @@ public class Servlet
     }
     protected Parameters createParameters(HttpServletRequest req, Path path){
         Class<? extends gap.data.BigTable> table = null;
-        Kind kind = Kind.For(path);
-        if (null != kind)
-            table = kind.getTableClass();
-
+        {
+            if (path.hasKind(0))
+                table = path.getKind(0).getTableClass();
+        }
         return new Parameters(req,Page.DefaultCount,table);
     }
     /**

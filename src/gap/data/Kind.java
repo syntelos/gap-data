@@ -63,13 +63,13 @@ public final class Kind
     public static Kind For(String name){
         return ByKind.get(name);
     }
-    public static Kind For(gap.service.Path path){
-        String pathName = PathName(path.full);
-        int kind = ByPath.get(pathName);
-        if (-1 == kind)
-            return null;
-        else
-            return ByKind.get(kind);
+    public static Kind ForPath(String path){
+        if (null != path){
+            int kind = ByPath.get(path);
+            if (-1 != kind)
+                return ByKind.get(kind);
+        }
+        return null;
     }
     /** 
      * @param path Relative path expression (as in the HTTP request

@@ -116,7 +116,6 @@ public class Request
     public final Method method;
     public final Protocol protocol;
     public final Path path;
-    public final Kind kind;
     public final Accept accept;
     public final FileManager fileManager;
     public final Parameters parameters;
@@ -137,7 +136,6 @@ public class Request
         this.method = method;
         this.protocol = protocol;
         this.path = path;
-        this.kind = Kind.For(path);
         this.accept = accept;
         this.fileManager = fm;
         this.parameters = parameters;
@@ -273,10 +271,10 @@ public class Request
         return Path.Clean(this.path.getFull());
     }
     public final boolean hasPath(int idx){
-        return this.path.has(idx);
+        return this.path.hasComponent(idx);
     }
     public final String getPath(int idx){
-        return this.path.get(idx);
+        return this.path.getComponent(idx);
     }
     public final boolean hasSource(){
         return this.path.hasSource();
