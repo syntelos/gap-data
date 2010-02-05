@@ -242,16 +242,16 @@ public final class Hash
         else {
             long num = 0L, r = 0L;
             char[] cary = string.toCharArray();
-            for (int cc = (cary.length-1); -1 < cc; cc--){
+            for (int cc = 0, cz = cary.length; cc < cz; cc++){
 
                 if (0 == (cc & 1)){
-                    r = HexValueOf(cary[cc]);
-                    r <<= (8*(cc>>>1));
+                    r = (HexValueOf(cary[cc])<<4);
+                    r <<= 56-(8*(cc>>>1));
                     num |= r;
                 }
                 else {
-                    r = (HexValueOf(cary[cc])<<4);
-                    r <<= (8*(cc>>>1));
+                    r = HexValueOf(cary[cc]);
+                    r <<= 56-(8*(cc>>>1));
                     num |= r;
                 }
             }
@@ -312,14 +312,17 @@ public final class Hash
     public static void main(String[] argv){
         int failures = 0;
         java.util.Random prng = new java.util.Random();
-        for (int test = 1; test <= 10; test++){
+        final int count = 10;
+        for (int test = 1; test <= count; test++){
             long input = prng.nextLong();
             String hex = Hex(Long(input));
             long output = Hex(hex);
             if (input != output){
                 failures += 1;
-                System.err.printf("Input %x, Hex %s, Output %x\n",input,hex,output);
+                System.err.printf("Failed test %2d/%2d with input: %16x, hex: %16s, output: %16x\n",test,count,input,hex,output);
             }
+            else
+                System.err.printf("Passed test %2d/%2d with input: %16x, hex: %16s, output: %16x\n",test,count,input,hex,output);
         }
         if (0 != failures)
             System.exit(1);
