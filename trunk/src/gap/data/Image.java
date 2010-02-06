@@ -38,8 +38,8 @@ public final class Image
     public Image() {
         super();
     }
-    public Image(Key ancestor, String base, String name) {
-        super(ancestor,  base,  name);
+    public Image(Key ancestor, String name) {
+        super(ancestor, name);
     }
 
 

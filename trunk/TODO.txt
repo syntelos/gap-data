@@ -11,6 +11,8 @@
 *** Compound paths 
 **** name/id/name/(id)
 
+* Integrate collection type fields with get section in BeanData.java.xtm 
+
 * Key (self) fields should not go into the datastore
 ** But they are needed in memcache
 

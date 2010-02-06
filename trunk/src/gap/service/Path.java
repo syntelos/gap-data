@@ -80,7 +80,7 @@ public final class Path
                 boolean identifier = false;
                 try {
                     long id = gap.data.Hash.Hex(term);
-                    identifier = true;
+                    identifier = (0L != id);
                 }
                 catch (Exception exc){
                 }
@@ -120,7 +120,7 @@ public final class Path
     }
 
 
-    public final String servlet, full, sub;
+    public final String servlet, full, sub, base, name;
     public final Component[] components;
     public final int size;
 
@@ -136,22 +136,56 @@ public final class Path
             if ("/".equals(path)){
                 this.components = null;
                 this.size = 0;
+                this.base = "";
+                this.name = "";
             }
             else {
-                StringTokenizer strtok = new StringTokenizer(path,"/");
+                StringTokenizer strtok = new StringTokenizer(this.sub,"/");
                 int len = strtok.countTokens();
-                Component[] components = new Component[len];
+                Component component, components[] = new Component[len];
+                String[] names = null;
                 for (int cc = 0; cc < len; cc++){
-                    components[cc] = new Component(strtok.nextToken());
+                    component = new Component(strtok.nextToken());
+                    components[cc] = component;
+                    if (!component.identifier){
+                        if (null == names)
+                            names = new String[]{component.term};
+                        else {
+                            int nlen = names.length;
+                            String[] copier = new String[nlen+1];
+                            System.arraycopy(names,0,copier,0,nlen);
+                            copier[nlen] = component.term;
+                            names = copier;
+                        }
+                    }
                 }
                 this.components = components;
                 this.size = len;
+                {
+                    StringBuilder base = new StringBuilder();
+                    len = ((null != names)?(names.length):(0));
+                    if (0 < len){
+                        for (int cc = 0, count = (len-1); cc < count; cc++){
+                            if (0 != base.length())
+                                base.append('/');
+                            base.append(names[cc]);
+                        }
+                        this.base = base.toString();
+                        this.name = names[len-1];
+                    }
+                    else {
+                        this.base = "";
+                        this.name = "";
+                    }
+                }
             }
         }
         else {
             this.full = servlet;
             this.components = null;
             this.size = 0;
+            this.base = "";
+            this.name = "";
         }
     }
 
@@ -291,38 +325,41 @@ public final class Path
     public boolean hasNotItem(){
         return (3 > this.size);
     }
+    /**
+     * @see gap.data.Resource
+     */
     public boolean hasNotBase(){
         return (2 > this.size);
     }
+    /**
+     * @see gap.data.Resource
+     */
     public boolean hasBase(){
-        return (1 < this.size);
+        return (0 != this.base.length());
     }
+    /**
+     * @see gap.data.Resource
+     */
     public String getBase(){
-        StringBuilder strbuf = new StringBuilder();
-        Component components[] = this.components;
-        String el;
-        if (null != components){
-            for (int cc = 0, count = components.length, term = (count-1); cc < term; cc++){
-                el = components[cc].term;
-                if (0 != strbuf.length())
-                    strbuf.append('/');
-                strbuf.append(el);
-            }
-        }
-        return strbuf.toString();
+        return this.base;
     }
+    /**
+     * @see gap.data.Resource
+     */
     public boolean hasNotName(){
-        return (1 > this.size);
+        return (0 == this.name.length());
     }
+    /**
+     * @see gap.data.Resource
+     */
     public boolean hasName(){
-        return (0 < this.size);
+        return (0 != this.name.length());
     }
+    /**
+     * @see gap.data.Resource
+     */
     public String getName(){
-        String name = this.getComponent(this.size-1);
-        if (null != name)
-            return name;
-        else
-            return "";
+        return this.name;
     }
     public boolean isMe(){
         return Special.Me.equals(this.getSource());

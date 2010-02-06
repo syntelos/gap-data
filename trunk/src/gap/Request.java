@@ -462,6 +462,8 @@ public class Request
         }
     }
     public void setVariable(TemplateName name, String value){
+
+        super.setVariable(name,value);
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){
         Field field = Field.For(name.getComponent(0));

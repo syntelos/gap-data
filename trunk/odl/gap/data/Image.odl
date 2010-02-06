@@ -1,14 +1,13 @@
 package gap.data;
 path /images;
 
-child Image version 1 
+child Image version 2 
     parent Resource
     implements LastModified
     implements HasName
 {
     Key key;
     *unique String id;
-    *hash-unique String base;
     *hash-unique String name;
     Long lastModified;
     String contentType;
