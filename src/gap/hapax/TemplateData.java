@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.data;
+package gap.hapax;
 
 
 import gap.*;
@@ -35,56 +35,54 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-06T00:27:46.600Z")
-public abstract class AccountData
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-06T18:59:35.304Z")
+public abstract class TemplateData
     extends gap.data.BigTable
-    implements DataInheritance<Account>
+    implements DataInheritance<Template>,
+               gap.data.LastModified,
+               gap.data.HasName
 {
 
-    private final static long serialVersionUID = 1;
+    private final static long serialVersionUID = 2;
 
-    public final static Kind KIND = Kind.Create("Account","gap.data","Account","/accounts");
+    public final static Kind KIND = Kind.Create("Template","gap.hapax","Template","/templates");
 
-    public final static String ClassName = "Account";
+    public final static String ClassName = "Template";
 
     public final static String DefaultSortBy = "name";
 
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
-        return ClassDescriptorFor(Account.class);
-    }
-    public final static gap.service.od.ClassDescriptor ClassDescriptorForParent(){
-        return ClassDescriptorFor(Resource.class);
+        return ClassDescriptorFor(Template.class);
     }
 
 
 
 
-    public final static Key KeyLongIdFor(Key ancestor, String base, String name){
-        String id = IdFor(ancestor, base,  name);
-        return KeyLongFor(ancestor,id);
+    public final static Key KeyLongIdFor(String name){
+        String id = IdFor( name);
+        return KeyLongFor(id);
     }
 
 
-    public final static String IdFor(Key ancestor, String base, String name){
-        if (ancestor.isComplete() && null != base && null != name){
-            String baseString = base;
+    public final static String IdFor(String name){
+        if (null != name){
             String nameString = name;
-            return gap.data.Hash.For(ToString(ancestor)+'/'+baseString+'/'+nameString);
+            return gap.data.Hash.For(nameString);
         }
         else
             throw new IllegalArgumentException();
     }
 
 
-    public final static Account ForLongBaseName(Key ancestor, String base, String name){
-        if (null != base && null != name){
-            Key key = KeyLongIdFor(ancestor, base, name);
-            Account instance = (Account)gap.data.Store.Get(key);
+    public final static Template ForLongName(String name){
+        if (null != name){
+            Key key = KeyLongIdFor( name);
+            Template instance = (Template)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Account)gap.data.Store.Query1(q);
+                return (Template)gap.data.Store.Query1(q);
             }
         }
         else
@@ -92,31 +90,31 @@ public abstract class AccountData
     }
 
 
-    public final static Account GetCreateLong(Key ancestor, String base, String name){
-        Account account = ForLongBaseName(ancestor, base, name);
-        if (null == account){
-            account = new Account(ancestor, base, name);
-            account = (Account)gap.data.Store.Put(account);
+    public final static Template GetCreateLong(String name){
+        Template template = ForLongName( name);
+        if (null == template){
+            template = new Template( name);
+            template = (Template)gap.data.Store.Put(template);
         }
-        return account;
+        return template;
     }
 
 
 
-    public final static Key KeyLongFor(Key ancestor, String id){
+    public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND.getName(),id);
     }
 
 
-    public final static Account ForLongId(Key ancestor, String id){
-        if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyLongFor(ancestor,id);
-            Account instance = (Account)gap.data.Store.Get(key);
+    public final static Template ForLongId(String id){
+        if (null != id){
+            Key key = KeyLongFor(id);
+            Template instance = (Template)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Account)gap.data.Store.Query1(q);
+                return (Template)gap.data.Store.Query1(q);
             }
         }
         else
@@ -124,14 +122,14 @@ public abstract class AccountData
     }
 
 
-    public final static Account Get(Key key){
+    public final static Template Get(Key key){
         if (null != key){
-            Account instance = (Account)gap.data.Store.Get(key);
+            Template instance = (Template)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Account)gap.data.Store.Query1(q);
+                return (Template)gap.data.Store.Query1(q);
             }
         }
         else
@@ -145,11 +143,11 @@ public abstract class AccountData
         else
             throw new IllegalArgumentException();
     }
-    public final static Account FromObject(Object value){
+    public final static Template FromObject(Object value){
         if (null == value)
             return null;
-        else if (value instanceof Account)
-            return (Account)value;
+        else if (value instanceof Template)
+            return (Template)value;
         else if (value instanceof Key)
             return Get( (Key)value);
         else if (value instanceof String){
@@ -164,38 +162,12 @@ public abstract class AccountData
     }
 
 
-    /**
-     * Test for uniqueness and iterate under collisions.
-     */
-    public final static Key NewRandomKeyLong(Key ancestor){
-        if (null != ancestor){
-            /*
-             * Source matter for data local uniqueness
-             */
-            String source = gap.data.BigTable.ToString(ancestor);
-            long matter = gap.data.Hash.Djb64(source);
-            /*
-             * Random matter for network global uniqueness
-             */
-            java.util.Random random = new java.util.Random();
-            do {
-                matter ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(KIND.getName(),idString);
-                if (null == GetKey(key))
-                    return key;
-            }
-            while (true);
-        }
-        else
-            throw new IllegalArgumentException();
-    }
 
     /**
      * Drop the instance and any children of its key from the world,
      * memcache and store.
      */
-    public final static void Delete(Account instance){
+    public final static void Delete(Template instance){
         if (null != instance){
             Key key = instance.getKey();
             gap.data.Store.DeleteCollection(KIND,new Query(key));
@@ -205,7 +177,7 @@ public abstract class AccountData
     /**
      * Drop the instance from memcache, exclusively.
      */
-    public final static void Clean(Account instance){
+    public final static void Clean(Template instance){
         if (null != instance){
             Key key = instance.getKey();
             gap.data.Store.Clean(key);
@@ -214,7 +186,7 @@ public abstract class AccountData
     /**
      * Store the instance.
      */
-    public final static void Save(Account instance){
+    public final static void Save(Template instance){
         if (null != instance){
             gap.data.Store.Put(instance);
         }
@@ -222,7 +194,7 @@ public abstract class AccountData
     /**
      * Write the instance to store.
      */
-    public final static void Store(Account instance){
+    public final static void Store(Template instance){
         if (null != instance){
             gap.data.Store.Put(instance);
         }
@@ -239,7 +211,6 @@ public abstract class AccountData
     public final static Query CreateQueryFor(Key key){
         return new Query(KIND.getName(),key).addSort(DefaultSortBy);
     }
-    
     /**
      * Filter ops
      */
@@ -248,9 +219,10 @@ public abstract class AccountData
         return filter.update(query);
     }
     
-    public final static Account Query1(Query query){
+    
+    public final static Template Query1(Query query){
         if (null != query)
-            return (Account)gap.data.Store.Query1(query);
+            return (Template)gap.data.Store.Query1(query);
         else
             throw new IllegalArgumentException();
     }
@@ -274,17 +246,17 @@ public abstract class AccountData
     }
 
     /**
-     * Persistent fields' binding for {@link Account}
+     * Persistent fields' binding for {@link Template}
      */
     public static enum Field
         implements gap.data.Field<Field>
     {
         InheritFromKey("inheritFromKey"),
-        ParentKey("parentKey"),
         Key("key"),
         Id("id"),
-        Base("base"),
-        Name("name");
+        Name("name"),
+        LastModified("lastModified"),
+        TemplateSourceHapax("templateSourceHapax");
 
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -311,40 +283,40 @@ public abstract class AccountData
             else
                 return field;
         }
-        public static Object Get(Field field, Account instance, boolean mayInherit){
+        public static Object Get(Field field, Template instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
                 return instance.getInheritFromKey();
-            case ParentKey:
-                return instance.getParentKey();
             case Key:
                 return instance.getKey(mayInherit);
             case Id:
                 return instance.getId(mayInherit);
-            case Base:
-                return instance.getBase(mayInherit);
             case Name:
                 return instance.getName(mayInherit);
+            case LastModified:
+                return instance.getLastModified(mayInherit);
+            case TemplateSourceHapax:
+                return instance.getTemplateSourceHapax(mayInherit);
             default:
-                throw new IllegalArgumentException(field.toString()+" in Account");
+                throw new IllegalArgumentException(field.toString()+" in Template");
             }
         }
-        public static boolean Set(Field field, Account instance, Object value){
+        public static boolean Set(Field field, Template instance, Object value){
             switch(field){
             case InheritFromKey:
                 return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
-            case ParentKey:
-                return instance.setParentKey(gap.Objects.KeyFromObject(value));
             case Key:
                 return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
                 return instance.setId(gap.Objects.StringFromObject(value));
-            case Base:
-                return instance.setBase(gap.Objects.StringFromObject(value));
             case Name:
                 return instance.setName(gap.Objects.StringFromObject(value));
+            case LastModified:
+                return instance.setLastModified(gap.Objects.LongFromObject(value));
+            case TemplateSourceHapax:
+                return instance.setTemplateSourceHapax(gap.Objects.TextFromObject(value));
             default:
-                throw new IllegalArgumentException(field.toString()+" in Account");
+                throw new IllegalArgumentException(field.toString()+" in Template");
             }
         }
 
@@ -365,34 +337,32 @@ public abstract class AccountData
         }
     }
 
-    private volatile transient Account inheritFrom;
+    private volatile transient Template inheritFrom;
 
 
     private volatile Key key;    
     private volatile String id;    // *unique
-    private volatile String base;    // *hash-unique
     private volatile String name;    // *hash-unique
+    private volatile Long lastModified;    
+    private volatile Text templateSourceHapax;    
+
+
+    private volatile List.Short<TemplateNode> templateTargetHapax;
 
 
 
 
 
 
-    private volatile Key parentKey;
-    private volatile transient Resource parent;
-
-
-    protected AccountData() {
+    protected TemplateData() {
         super();
     }
-    protected AccountData(Key ancestor, String base, String name) {
+    protected TemplateData(String name) {
         super();
-        this.setBase(base);
         this.setName(name);
-        this.parentKey = ancestor;
-        String id = IdFor(ancestor,  base, name);
+        String id = IdFor( name);
         this.setId(id);
-        Key key = KeyLongFor(ancestor,id);
+        Key key = KeyLongFor(id);
         this.setKey(key);
     }
 
@@ -403,9 +373,14 @@ public abstract class AccountData
         this.datastoreEntity = null;
         this.key = null;
         this.id = null;
-        this.base = null;
         this.name = null;
-        this.parent = null;
+        this.lastModified = null;
+        this.templateSourceHapax = null;
+        List.Short<TemplateNode> templateTargetHapax = this.templateTargetHapax;
+        if (null != templateTargetHapax){
+            this.templateTargetHapax = null;
+            templateTargetHapax.destroy();
+        }
     }
     public final boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -413,18 +388,18 @@ public abstract class AccountData
     public final boolean hasNotInheritFrom(){
         return (null == this.inheritFrom && null == this.inheritFromKey);
     }
-    public final Account getInheritFrom(){
-        Account inheritFrom = this.inheritFrom;
+    public final Template getInheritFrom(){
+        Template inheritFrom = this.inheritFrom;
         if (null == inheritFrom){
             Key inheritFromKey = this.inheritFromKey;
             if (null != inheritFromKey){
-                inheritFrom = Account.Get(inheritFromKey);
+                inheritFrom = Template.Get(inheritFromKey);
                 this.inheritFrom = inheritFrom;
             }
         }
         return inheritFrom;
     }
-    public final boolean setInheritFrom(Account ancestor){
+    public final boolean setInheritFrom(Template ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
@@ -434,7 +409,7 @@ public abstract class AccountData
         else
             return false;
     }
-    public final boolean inheritFrom(Account ancestor){
+    public final boolean inheritFrom(Template ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
@@ -444,51 +419,6 @@ public abstract class AccountData
         else
             return false;
     }
-    public final boolean hasParentKey(){
-        return (null != this.parentKey);
-    }
-    public final boolean hasNotParentKey(){
-        return (null == this.parentKey);
-    }
-    public final Key getParentKey(){
-        return this.parentKey;
-    }
-    public final boolean setParentKey(Key ancestor){
-        if (IsNotEqual(this.parentKey,ancestor)){
-            this.parentKey = ancestor;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final boolean hasParent(){
-        return (null != this.parent || null != this.parentKey);
-    }
-    public final boolean hasNotParent(){
-        return (null == this.parent && null == this.parentKey);
-    }
-    public final Resource getParent(){
-        Resource parent = this.parent;
-        if (null == parent){
-            Key parentKey = this.parentKey;
-            if (null != parentKey){
-                parent = Resource.Get(parentKey);
-                this.parent = parent;
-            }
-        }
-        return parent;
-    }
-    public final boolean setParent(Resource ancestor){
-        if (IsNotEqual(this.parent,ancestor)){
-            this.parent = ancestor;
-            if (null != ancestor)
-                this.parentKey = ancestor.getClassFieldKeyValue();
-            return true;
-        }
-        else
-            return false;
-    }
-
     public final boolean hasKey(boolean mayInherit){
         return (null != this.getKey(mayInherit));
     }
@@ -545,34 +475,6 @@ public abstract class AccountData
         else
             return false;
     }
-    public final boolean hasBase(boolean mayInherit){
-        return (null != this.getBase(mayInherit));
-    }
-    public final boolean hasNotBase(boolean mayInherit){
-        return (null == this.getBase(mayInherit));
-    }
-    public final boolean dropBase(){
-        if (null != this.base){
-            this.base = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final String getBase(){
-        return this.base;
-    }
-    public final String getBase(boolean ignore){
-        return this.base;
-    }
-    public final boolean setBase(String base){
-        if (IsNotEqual(this.base,base)){
-            this.base = base;
-            return true;
-        }
-        else
-            return false;
-    }
     public final boolean hasName(boolean mayInherit){
         return (null != this.getName(mayInherit));
     }
@@ -601,6 +503,162 @@ public abstract class AccountData
         else
             return false;
     }
+    public final boolean hasLastModified(boolean mayInherit){
+        return (null != this.getLastModified(mayInherit));
+    }
+    public final boolean hasNotLastModified(boolean mayInherit){
+        return (null == this.getLastModified(mayInherit));
+    }
+    public final boolean dropLastModified(){
+        if (null != this.lastModified){
+            this.lastModified = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final Long getLastModified(boolean mayInherit){
+        if (mayInherit){
+            Long lastModified = this.lastModified;
+            if (null == lastModified && this.hasInheritFrom()){
+                Template inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getLastModified(MayInherit);
+            }
+            return lastModified;
+        }
+        else
+            return this.lastModified;
+    }
+    public final boolean setLastModified(Long lastModified, boolean withInheritance){
+        if (IsNotEqual(this.lastModified,this.getLastModified(withInheritance))){
+            this.lastModified = lastModified;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean setLastModified(Long lastModified){
+        if (IsNotEqual(this.lastModified,lastModified)){
+            this.lastModified = lastModified;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean hasTemplateSourceHapax(boolean mayInherit){
+        return (null != this.getTemplateSourceHapax(mayInherit));
+    }
+    public final boolean hasNotTemplateSourceHapax(boolean mayInherit){
+        return (null == this.getTemplateSourceHapax(mayInherit));
+    }
+    public final boolean dropTemplateSourceHapax(){
+        if (null != this.templateSourceHapax){
+            this.templateSourceHapax = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final Text getTemplateSourceHapax(boolean mayInherit){
+        if (mayInherit){
+            Text templateSourceHapax = this.templateSourceHapax;
+            if (null == templateSourceHapax && this.hasInheritFrom()){
+                Template inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom)
+                    return inheritFrom.getTemplateSourceHapax(MayInherit);
+            }
+            return templateSourceHapax;
+        }
+        else
+            return this.templateSourceHapax;
+    }
+    public final boolean setTemplateSourceHapax(Text templateSourceHapax, boolean withInheritance){
+        if (IsNotEqual(this.templateSourceHapax,this.getTemplateSourceHapax(withInheritance))){
+            this.templateSourceHapax = templateSourceHapax;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean setTemplateSourceHapax(Text templateSourceHapax){
+        if (IsNotEqual(this.templateSourceHapax,templateSourceHapax)){
+            this.templateSourceHapax = templateSourceHapax;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean hasTemplateTargetHapax(boolean mayInherit){
+        return (this.getTemplateTargetHapax(mayInherit).isNotEmpty());
+    }
+    public final boolean hasNotTemplateTargetHapax(boolean mayInherit){
+        return (this.getTemplateTargetHapax(mayInherit).isEmpty());
+    }
+    public final boolean dropTemplateTargetHapax(){
+        List.Short<TemplateNode> templateTargetHapax = this.templateTargetHapax;
+        if (null != templateTargetHapax){
+            this.templateTargetHapax = null;
+            templateTargetHapax.destroy();
+            return true;
+        }
+        else
+            return false;
+    }
+    public final List.Short<TemplateNode> getTemplateTargetHapax(boolean mayInherit){
+        List.Short<TemplateNode> templateTargetHapax = this.templateTargetHapax;
+        if (null == templateTargetHapax){
+            if (mayInherit && this.hasInheritFrom()){
+                Template inheritFrom = this.getInheritFrom();
+                if (null != inheritFrom){
+                    templateTargetHapax = inheritFrom.getTemplateTargetHapax(MayInherit);
+                    if (null != templateTargetHapax)
+                        return templateTargetHapax;
+                }
+            }
+            templateTargetHapax = new ListShortTemplateTemplateNode((Template)this);
+            this.templateTargetHapax = templateTargetHapax;
+            templateTargetHapax.init();
+        }
+        return templateTargetHapax;
+    }
+    public final void setTemplateTargetHapax(List.Short<TemplateNode> templateTargetHapax){
+        this.templateTargetHapax = templateTargetHapax;
+    }
+    public final boolean isEmptyTemplateTargetHapax(){
+        List.Short<TemplateNode> collection = this.templateTargetHapax;
+        if (null != collection)
+            return collection.isEmpty();
+        else
+            return true;
+    }
+    public final boolean isNotEmptyTemplateTargetHapax(){
+        List.Short<TemplateNode> collection = this.templateTargetHapax;
+        if (null != collection)
+            return (!collection.isEmpty());
+        else
+            return false;
+    }
+    public final TemplateNode fetchTemplateTargetHapax(Filter filter){
+        if (null != filter && KIND == filter.kind){
+            List.Short<TemplateNode> collection = this.getTemplateTargetHapax(MayInherit);
+            return collection.fetch(filter);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final TemplateNode getTemplateTargetHapax(gap.data.ListFilter<TemplateNode> filter){
+        if (null != filter){
+            List.Short<TemplateNode> list = this.getTemplateTargetHapax(MayInherit);
+            for (TemplateNode item : list){
+                if (filter.accept(item))
+                    return item;
+            }
+            return null;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     /*
      * Data binding supports
      */
@@ -627,17 +685,14 @@ public abstract class AccountData
         return change;
     }
     public final boolean updateFrom(BigTable proto){
-        return this.updateFrom( (Account)proto);
+        return this.updateFrom( (Template)proto);
     }
-    public final boolean updateFrom(Account proto){
+    public final boolean updateFrom(Template proto){
         boolean change = false;
         return change;
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor(this.getClass());
-    }
-    public final gap.service.od.ClassDescriptor getClassDescriptorForParent(){
-        return ClassDescriptorForParent();
     }
     /*
      * Template Data Dictionary
@@ -656,16 +711,21 @@ public abstract class AccountData
                     throw new IllegalStateException(field.name());
                 else
                     return this.hasId(true);
-            case Base:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.hasBase(true);
             case Name:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
                     return this.hasName(true);
+            case LastModified:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasLastModified(true);
+            case TemplateSourceHapax:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasTemplateSourceHapax(true);
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -688,16 +748,21 @@ public abstract class AccountData
                     throw new IllegalStateException(field.name());
                 else
                     return this.getId(true);
-            case Base:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.getBase(true);
             case Name:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
                     return this.getName(true);
+            case LastModified:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.LongToString(this.getLastModified(true));
+            case TemplateSourceHapax:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.TextToString(this.getTemplateSourceHapax(true));
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -715,16 +780,18 @@ public abstract class AccountData
                     throw new IllegalStateException(field.name());
                 case Id:
                     throw new IllegalStateException(field.name());
-                case Base:
-                    throw new IllegalStateException(field.name());
                 case Name:
+                    throw new IllegalStateException(field.name());
+                case LastModified:
+                    throw new IllegalStateException(field.name());
+                case TemplateSourceHapax:
                     throw new IllegalStateException(field.name());
                 default:
                     throw new IllegalStateException(field.name());
                 }
             }
             else
-                Field.Set(field,((Account)this),value);
+                Field.Set(field,((Template)this),value);
         }
         else {
             super.setVariable(name,value);
@@ -738,9 +805,11 @@ public abstract class AccountData
                 return null;
             case Id:
                 return null;
-            case Base:
-                return null;
             case Name:
+                return null;
+            case LastModified:
+                return null;
+            case TemplateSourceHapax:
                 return null;
             default:
                 throw new IllegalStateException(field.name());

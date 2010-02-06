@@ -22,7 +22,6 @@ package gap.odl;
 import gap.service.od.ImportDescriptor;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**

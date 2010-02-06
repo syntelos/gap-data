@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.data;
+package gap.hapax;
 
 
 import gap.*;
@@ -31,15 +31,15 @@ import java.util.Date;
 /**
  * Generated once bean data user.
  */
-public final class Image
-    extends ImageData
+public final class Template
+    extends TemplateData
 {
 
-    public Image() {
+    public Template() {
         super();
     }
-    public Image(Key ancestor, String name) {
-        super(ancestor, name);
+    public Template(String name) {
+        super( name);
     }
 
 

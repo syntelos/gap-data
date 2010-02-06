@@ -22,7 +22,7 @@ package gap.odl;
 import gap.service.od.ImportDescriptor;
 
 import java.io.IOException;
-import java.util.List;
+
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
@@ -38,7 +38,7 @@ public final class Import
     public final static Pattern Statement = Pattern.compile("^import [\\w\\.\\*]+[;\\s]*");
 
 
-    public final static java.lang.Class Find(Package pkg, List<ImportDescriptor> imports, String type){
+    public final static java.lang.Class Find(Package pkg, lxl.List<ImportDescriptor> imports, String type){
         type = Clean(type);
         try {
             return java.lang.Class.forName(type);

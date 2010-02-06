@@ -26,7 +26,6 @@ import gap.service.od.MethodDescriptor;
 import gap.service.od.PackageDescriptor;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
@@ -156,15 +155,15 @@ public final class Class
 
     public final String version;
 
-    public final List<ImportDescriptor> imports = new java.util.ArrayList<ImportDescriptor>();
+    public final lxl.List<ImportDescriptor> imports = new lxl.ArrayList<ImportDescriptor>();
 
     private gap.odl.Comment comment;
 
-    public final List<Object> interfaces = new java.util.ArrayList<Object>();
+    public final lxl.List<Object> interfaces = new lxl.ArrayList<Object>();
 
-    public final List<FieldDescriptor> fields = new java.util.ArrayList<FieldDescriptor>();
+    public final lxl.List<FieldDescriptor> fields = new lxl.ArrayList<FieldDescriptor>();
 
-    public final List<MethodDescriptor> methods = new java.util.ArrayList<MethodDescriptor>();
+    public final lxl.List<MethodDescriptor> methods = new lxl.ArrayList<MethodDescriptor>();
 
     private String definitionClassName;
 
@@ -324,13 +323,13 @@ public final class Class
     public boolean hasFields(){
         return (!this.fields.isEmpty());
     }
-    public List<FieldDescriptor> getFields(){
+    public lxl.List<FieldDescriptor> getFields(){
         return this.fields;
     }
     public boolean hasMethods(){
         return (!this.methods.isEmpty());
     }
-    public List<MethodDescriptor> getMethods(){
+    public lxl.List<MethodDescriptor> getMethods(){
         return this.methods;
     }
 
@@ -347,7 +346,7 @@ public final class Class
     public boolean hasInterfaces(){
         return (!this.interfaces.isEmpty());
     }
-    public List<Object> getInterfaces(){
+    public lxl.List<Object> getInterfaces(){
         return this.interfaces;
     }
     public boolean hasParent(){
@@ -368,7 +367,7 @@ public final class Class
     public boolean hasImports(){
         return (!this.imports.isEmpty());
     }
-    public List<ImportDescriptor> getImports(){
+    public lxl.List<ImportDescriptor> getImports(){
         return this.imports;
     }
 

@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.data;
+package gap.hapax;
 
 
 import gap.*;
@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-06T00:27:48.398Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-06T18:59:37.826Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -43,7 +43,7 @@ public abstract class TemplateNodeData
 
     private final static long serialVersionUID = 1;
 
-    public final static Kind KIND = Kind.Create("TemplateNode","gap.data","TemplateNode","/template-nodes");
+    public final static Kind KIND = Kind.Create("TemplateNode","gap.hapax","TemplateNode","/template-nodes");
 
     public final static String ClassName = "TemplateNode";
 

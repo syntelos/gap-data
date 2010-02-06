@@ -19,8 +19,6 @@
  */
 package gap.service.od;
 
-import java.util.List;
-
 /**
  * 
  * 
@@ -52,7 +50,7 @@ public interface ClassDescriptor
          * @return List of objects for toString
          * @see HasName
          */
-        public List<Object> getInterfaces();
+        public lxl.List<Object> getInterfaces();
     }
 
     /**
@@ -144,7 +142,7 @@ public interface ClassDescriptor
     {
         public boolean hasImports();
 
-        public List<ImportDescriptor> getImports();
+        public lxl.List<ImportDescriptor> getImports();
     }
 
     /**
@@ -157,7 +155,7 @@ public interface ClassDescriptor
      */
     public boolean hasFields();
 
-    public List<FieldDescriptor> getFields();
+    public lxl.List<FieldDescriptor> getFields();
 
     /**
      * Methods of the data bean class bind into a template (bean, bean
@@ -165,7 +163,7 @@ public interface ClassDescriptor
      */
     public boolean hasMethods();
 
-    public List<MethodDescriptor> getMethods();
+    public lxl.List<MethodDescriptor> getMethods();
 
     /**
      * field 'definitionClassName' is employed by the OD service.
