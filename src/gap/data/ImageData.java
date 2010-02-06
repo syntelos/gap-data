@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated data bean
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-04T15:42:52.700Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-06T00:27:45.206Z")
 public abstract class ImageData
     extends gap.data.BigTable
     implements DataInheritance<Image>,
@@ -43,7 +43,7 @@ public abstract class ImageData
                HasName
 {
 
-    private final static long serialVersionUID = 1;
+    private final static long serialVersionUID = 2;
 
     public final static Kind KIND = Kind.Create("Image","gap.data","Image","/images");
 
@@ -61,26 +61,25 @@ public abstract class ImageData
 
 
 
-    public final static Key KeyShortIdFor(Key ancestor, String base, String name){
-        String id = IdFor(ancestor, base,  name);
+    public final static Key KeyShortIdFor(Key ancestor, String name){
+        String id = IdFor(ancestor, name);
         return KeyShortFor(ancestor,id);
     }
 
 
-    public final static String IdFor(Key ancestor, String base, String name){
-        if (ancestor.isComplete() && null != base && null != name){
-            String baseString = base;
+    public final static String IdFor(Key ancestor, String name){
+        if (ancestor.isComplete() && null != name){
             String nameString = name;
-            return gap.data.Hash.For(ToString(ancestor)+'/'+baseString+'/'+nameString);
+            return gap.data.Hash.For(ToString(ancestor)+'/'+nameString);
         }
         else
             throw new IllegalArgumentException();
     }
 
 
-    public final static Image ForShortBaseName(Key ancestor, String base, String name){
-        if (null != base && null != name){
-            Key key = KeyShortIdFor(ancestor, base, name);
+    public final static Image ForShortName(Key ancestor, String name){
+        if (null != name){
+            Key key = KeyShortIdFor(ancestor, name);
             Image instance = (Image)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -94,10 +93,10 @@ public abstract class ImageData
     }
 
 
-    public final static Image GetCreateShort(Key ancestor, String base, String name){
-        Image image = ForShortBaseName(ancestor, base, name);
+    public final static Image GetCreateShort(Key ancestor, String name){
+        Image image = ForShortName(ancestor, name);
         if (null == image){
-            image = new Image(ancestor, base, name);
+            image = new Image(ancestor, name);
             image = (Image)gap.data.Store.Put(image);
         }
         return image;
@@ -285,7 +284,6 @@ public abstract class ImageData
         ParentKey("parentKey"),
         Key("key"),
         Id("id"),
-        Base("base"),
         Name("name"),
         LastModified("lastModified"),
         ContentType("contentType"),
@@ -326,8 +324,6 @@ public abstract class ImageData
                 return instance.getKey(mayInherit);
             case Id:
                 return instance.getId(mayInherit);
-            case Base:
-                return instance.getBase(mayInherit);
             case Name:
                 return instance.getName(mayInherit);
             case LastModified:
@@ -350,8 +346,6 @@ public abstract class ImageData
                 return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
                 return instance.setId(gap.Objects.StringFromObject(value));
-            case Base:
-                return instance.setBase(gap.Objects.StringFromObject(value));
             case Name:
                 return instance.setName(gap.Objects.StringFromObject(value));
             case LastModified:
@@ -387,7 +381,6 @@ public abstract class ImageData
 
     private volatile Key key;    
     private volatile String id;    // *unique
-    private volatile String base;    // *hash-unique
     private volatile String name;    // *hash-unique
     private volatile Long lastModified;    
     private volatile String contentType;    
@@ -405,12 +398,11 @@ public abstract class ImageData
     protected ImageData() {
         super();
     }
-    protected ImageData(Key ancestor, String base, String name) {
+    protected ImageData(Key ancestor, String name) {
         super();
-        this.setBase(base);
         this.setName(name);
         this.parentKey = ancestor;
-        String id = IdFor(ancestor,  base, name);
+        String id = IdFor(ancestor,  name);
         this.setId(id);
         Key key = KeyShortFor(ancestor,id);
         this.setKey(key);
@@ -423,7 +415,6 @@ public abstract class ImageData
         this.datastoreEntity = null;
         this.key = null;
         this.id = null;
-        this.base = null;
         this.name = null;
         this.lastModified = null;
         this.contentType = null;
@@ -563,34 +554,6 @@ public abstract class ImageData
     public final boolean setId(String id){
         if (IsNotEqual(this.id,id)){
             this.id = id;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final boolean hasBase(boolean mayInherit){
-        return (null != this.getBase(mayInherit));
-    }
-    public final boolean hasNotBase(boolean mayInherit){
-        return (null == this.getBase(mayInherit));
-    }
-    public final boolean dropBase(){
-        if (null != this.base){
-            this.base = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final String getBase(){
-        return this.base;
-    }
-    public final String getBase(boolean ignore){
-        return this.base;
-    }
-    public final boolean setBase(String base){
-        if (IsNotEqual(this.base,base)){
-            this.base = base;
             return true;
         }
         else
@@ -808,11 +771,6 @@ public abstract class ImageData
                     throw new IllegalStateException(field.name());
                 else
                     return this.hasId(true);
-            case Base:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.hasBase(true);
             case Name:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -855,11 +813,6 @@ public abstract class ImageData
                     throw new IllegalStateException(field.name());
                 else
                     return this.getId(true);
-            case Base:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.getBase(true);
             case Name:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -897,8 +850,6 @@ public abstract class ImageData
                     throw new IllegalStateException(field.name());
                 case Id:
                     throw new IllegalStateException(field.name());
-                case Base:
-                    throw new IllegalStateException(field.name());
                 case Name:
                     throw new IllegalStateException(field.name());
                 case LastModified:
@@ -925,8 +876,6 @@ public abstract class ImageData
             case Key:
                 return null;
             case Id:
-                return null;
-            case Base:
                 return null;
             case Name:
                 return null;

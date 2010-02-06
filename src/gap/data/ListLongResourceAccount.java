@@ -31,7 +31,7 @@ import javax.annotation.Generated;
 /**
  * Generated long list.
  */
-@Generated(value={"gap.service.OD","ListLong.java"},date="2010-02-04T15:42:44.920Z")
+@Generated(value={"gap.service.OD","ListLong.java"},date="2010-02-06T00:27:37.523Z")
 public final class ListLongResourceAccount
     extends gap.util.AbstractList<Account>
     implements gap.data.List.Long<Account>
