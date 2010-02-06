@@ -26,7 +26,6 @@ import com.google.appengine.api.datastore.Text;
 
 import java.lang.reflect.TypeVariable;
 import java.io.IOException;
-import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 

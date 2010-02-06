@@ -1,4 +1,4 @@
-package gap.data;
+package gap.hapax;
 path /template-nodes;
 
 child TemplateNode version 1 

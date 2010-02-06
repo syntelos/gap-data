@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.data;
+package gap.hapax;
 
 
 import gap.*;
@@ -32,37 +32,31 @@ import java.util.Date;
 import javax.annotation.Generated;
 
 /**
- * Generated short map.
+ * Generated short list.
  */
-@Generated(value={"gap.service.OD","MapShort.java"},date="2010-02-06T00:27:38.441Z")
-public final class MapShortResourceStringTemplate
-    extends gap.util.AbstractMap<String,Template>
-    implements gap.data.Map.Short<String,Template>
+@Generated(value={"gap.service.OD","ListShort.java"},date="2010-02-06T18:59:35.838Z")
+public final class ListShortTemplateTemplateNode
+    extends gap.util.AbstractList<TemplateNode>
+    implements gap.data.List.Short<TemplateNode>
 {
 
-    private final static long serialVersionUID = 1;
+    private final static long serialVersionUID = 2;
 
     public final static String AncestorKeyFieldName = "key";
 
-    public final static String ParentTypeName = "Resource";
+    public final static String ParentTypeName = "Template";
 
-    public final static String ChildTypeName = "Template";
+    public final static String ChildTypeName = "TemplateNode";
 
-    public final static Class ParentTypeClass = Resource.class;
+    public final static Class ParentTypeClass = Template.class;
 
-    public final static Class ChildTypeClass = Template.class;
-
-    public final static gap.Primitive MapKeyType = gap.Primitive.String;
-
-    public final static String MapKeyFieldName = "name";
-
-    public final static Template.Field MapKeyField = Template.Field.Name;
+    public final static Class ChildTypeClass = TemplateNode.class;
 
 
-    protected transient Resource parent;
+    protected transient Template parent;
 
 
-    public MapShortResourceStringTemplate(Resource parent) {
+    public ListShortTemplateTemplateNode(Template parent) {
         this();
         if (null != parent){
             this.parent = parent;
@@ -72,7 +66,7 @@ public final class MapShortResourceStringTemplate
         else
             throw new IllegalArgumentException();
     }
-    public MapShortResourceStringTemplate(){
+    public ListShortTemplateTemplateNode(){
         super();
         this.page = Page.Short;
     }
@@ -82,12 +76,12 @@ public final class MapShortResourceStringTemplate
         this.parent = null;
         this.clearBuffer();
     }
-    public Resource getParent(){
-        Resource parent = this.parent;
+    public Template getParent(){
+        Template parent = this.parent;
         if (null == parent){
             Key parentKey = this.ancestorKey;
             if (null != parentKey){
-                parent = Resource.Get(parentKey);
+                parent = Template.Get(parentKey);
                 if (null != parent)
                     this.parent = parent;
                 else
@@ -114,33 +108,16 @@ public final class MapShortResourceStringTemplate
         Key key = this.getParent().getClassFieldKeyValue();
         if (key != this.ancestorKey){
             this.ancestorKey = key;
-            this.query = Template.CreateQueryFor(this.ancestorKey);
+            this.query = TemplateNode.CreateQueryFor(this.ancestorKey);
         }
     }
-    public Template fetch(Filter filter){
+    public TemplateNode fetch(Filter filter){
         Key ancestor = this.ancestorKey;
         if (null != ancestor){
-            Query query = Template.CreateQueryFor(ancestor,filter);
-            return Template.Query1(query);
+            Query query = TemplateNode.CreateQueryFor(ancestor,filter);
+            return TemplateNode.Query1(query);
         }
         else
             throw new IllegalStateException("Missing ancestor key.");
-    }
-    public gap.Primitive getMapKeyType(){
-        return MapKeyType;
-    }
-    public String getMapKeyFieldName(){
-        return MapKeyFieldName;
-    }
-    protected void buffered(BigTable instance, int index){
-        Comparable field = (Comparable)instance.valueOf(MapKeyField,MayNotInherit);
-        this.index.add(field,index);
-    }
-    public Template get(String mapKey){
-        int index = this.index.get(mapKey);
-        if (-1 != index)
-            return (Template)this.buffer[index];
-        else
-            return null;
     }
 }

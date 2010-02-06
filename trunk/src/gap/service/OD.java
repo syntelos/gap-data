@@ -40,7 +40,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import java.util.List;
+import lxl.List;
 import java.util.StringTokenizer;
 
 
@@ -137,7 +137,7 @@ public final class OD
 
     }
 
-    public final static void GenerateBeanSource(TemplateName xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
+    public final static void GenerateBeanSource(TemplateName xtm, PackageDescriptor pkg, lxl.List<ImportDescriptor> imports,
                                                 ClassDescriptor cd, PrintWriter out)
         throws ODStateException, IOException, TemplateException
     {
@@ -163,7 +163,7 @@ public final class OD
             throw new IllegalArgumentException();
     }
 
-    public final static void GenerateListSource(TemplateName xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
+    public final static void GenerateListSource(TemplateName xtm, PackageDescriptor pkg, lxl.List<ImportDescriptor> imports,
                                                 ClassDescriptor parent, FieldDescriptor field, 
                                                 String parentClassName, String childClassName, 
                                                 String listClassName, gap.data.List.Type listType, 
@@ -204,7 +204,7 @@ public final class OD
             throw new IllegalArgumentException();
     }
 
-    public final static void GenerateMapSource(TemplateName xtm, PackageDescriptor pkg, List<ImportDescriptor> imports,
+    public final static void GenerateMapSource(TemplateName xtm, PackageDescriptor pkg, lxl.List<ImportDescriptor> imports,
                                                ClassDescriptor parent, FieldDescriptor field, 
                                                String parentClassName, String mapClassName, 
                                                gap.data.Map.Type mapType, OD.MapChild mapChild,
@@ -266,12 +266,12 @@ public final class OD
             primitive.addSection(new TemplateName(type_name));
         }
     }
-    public final static void DefineClass(PackageDescriptor pkg, ClassDescriptor cd, List<ImportDescriptor> imports, TemplateDataDictionary top)
+    public final static void DefineClass(PackageDescriptor pkg, ClassDescriptor cd, lxl.List<ImportDescriptor> imports, TemplateDataDictionary top)
         throws ODStateException, IOException
     {
         DefineClass(pkg,cd,imports,top,null);
     }
-    public final static void DefineClass(PackageDescriptor pkg, ClassDescriptor cd, List<ImportDescriptor> imports, TemplateDataDictionary top, TemplateName prefix)
+    public final static void DefineClass(PackageDescriptor pkg, ClassDescriptor cd, lxl.List<ImportDescriptor> imports, TemplateDataDictionary top, TemplateName prefix)
         throws ODStateException, IOException
     {
         String packageName = PackageName(pkg);
@@ -779,8 +779,8 @@ public final class OD
 
     }
 
-    public final static List<FieldDescriptor> FieldsOfTypeList(PackageDescriptor pkg, ClassDescriptor cd, List<ImportDescriptor> imports){
-        List<FieldDescriptor> re = new java.util.ArrayList<FieldDescriptor>();
+    public final static lxl.List<FieldDescriptor> FieldsOfTypeList(PackageDescriptor pkg, ClassDescriptor cd, lxl.List<ImportDescriptor> imports){
+        lxl.List<FieldDescriptor> re = new lxl.ArrayList<FieldDescriptor>();
         if (cd.hasFields()){
             String packageName = OD.PackageName(pkg);
             for (FieldDescriptor field : cd.getFields()){
@@ -794,8 +794,8 @@ public final class OD
         return re;
     }
 
-    public final static List<FieldDescriptor> FieldsOfTypeMap(PackageDescriptor pkg, ClassDescriptor cd, List<ImportDescriptor> imports){
-        List<FieldDescriptor> re = new java.util.ArrayList<FieldDescriptor>();
+    public final static lxl.List<FieldDescriptor> FieldsOfTypeMap(PackageDescriptor pkg, ClassDescriptor cd, lxl.List<ImportDescriptor> imports){
+        lxl.List<FieldDescriptor> re = new lxl.ArrayList<FieldDescriptor>();
         if (cd.hasFields()){
             String packageName = OD.PackageName(pkg);
             for (FieldDescriptor field : cd.getFields()){
@@ -912,7 +912,7 @@ public final class OD
         if (cd instanceof ClassDescriptor.Implements){
             ClassDescriptor.Implements cim = (ClassDescriptor.Implements)cd;
             if (cim.hasInterfaces()){
-                List<Object> ili = cim.getInterfaces();
+                lxl.List<Object> ili = cim.getInterfaces();
                 int count = ili.size();
                 if (0 != count){
                     String[] re = new String[count];
@@ -925,12 +925,12 @@ public final class OD
         }
         return new String[0];
     }
-    public final static Class FieldClass(PackageDescriptor pkg, FieldDescriptor field, List<ImportDescriptor> imports){
+    public final static Class FieldClass(PackageDescriptor pkg, FieldDescriptor field, lxl.List<ImportDescriptor> imports){
         String packageName = OD.PackageName(pkg);
         String typeName = OD.ToString(field.getType());
         return OD.FieldClass(packageName,typeName,imports);
     }
-    public final static Class FieldClass(String pkg, String fieldType, List<ImportDescriptor> imports){
+    public final static Class FieldClass(String pkg, String fieldType, lxl.List<ImportDescriptor> imports){
         String cleanTypeName = CleanTypeName(fieldType);
         Primitive primitive = Primitive.For(cleanTypeName);
         if (null != primitive)
@@ -1399,7 +1399,7 @@ public final class OD
         else
             return null;
     }
-    public final static FieldDescriptor KeyField(String packageName, ClassDescriptor cd, List<ImportDescriptor> imports){
+    public final static FieldDescriptor KeyField(String packageName, ClassDescriptor cd, lxl.List<ImportDescriptor> imports){
         if (cd.hasFields()){
             for (FieldDescriptor field : cd.getFields()){
                 String fieldType = ToString(field.getType());

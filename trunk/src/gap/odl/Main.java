@@ -34,8 +34,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import java.util.List;
-
 /**
  * This package will generate the Java source code for a class modeled
  * in {@link Class ODL}.
@@ -59,8 +57,8 @@ public final class Main
         public final static TemplateName MapShort = new TemplateName("MapShort.java");
     }
 
-    private final static java.util.Map<String,Class> Classes = new java.util.HashMap<String,Class>();
-    private final static java.util.Map<String,File> Files = new java.util.HashMap<String,File>();
+    private final static lxl.Map<String,Class> Classes = new lxl.Map<String,Class>();
+    private final static lxl.Map<String,File> Files = new lxl.Map<String,File>();
 
     public final static String ClassName(File odl){
         String name = odl.getName();
@@ -133,14 +131,14 @@ public final class Main
     /**
      * Generate bean, validate, servlet and list classes.
      */
-    public final static List<File> ProcessFiles(File odl, File src, File beans)
+    public final static lxl.List<File> ProcessFiles(File odl, File src, File beans)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         try {
-            List<File> products = new java.util.ArrayList<File>();
+            lxl.List<File> products = new lxl.ArrayList<File>();
             Class clas = ClassDescriptorFor(odl);
             Package pack = clas.pack;
-            List<ImportDescriptor> imports = clas.imports;
+            lxl.List<ImportDescriptor> imports = clas.imports;
 
             String parentClassName = OD.ClassName(clas);
             String packageName = OD.PackageName(pack);
@@ -190,7 +188,7 @@ public final class Main
             /*
              * Lists
              */
-            List<FieldDescriptor> fieldsOfList = OD.FieldsOfTypeList(pack, clas, imports);
+            lxl.List<FieldDescriptor> fieldsOfList = OD.FieldsOfTypeList(pack, clas, imports);
 
             if (!fieldsOfList.isEmpty()){
 
@@ -246,7 +244,7 @@ public final class Main
             /*
              * Maps
              */
-            List<FieldDescriptor> fieldsOfMap = OD.FieldsOfTypeMap(pack, clas, imports);
+            lxl.List<FieldDescriptor> fieldsOfMap = OD.FieldsOfTypeMap(pack, clas, imports);
             if (!fieldsOfMap.isEmpty()){
 
                 for (FieldDescriptor field: fieldsOfMap){
@@ -309,16 +307,16 @@ public final class Main
      * Run on directories
      * @return List of target products
      */
-    public final static List<File> ProcessDirectories(File odlDir, File src, File beans)
+    public final static lxl.List<File> ProcessDirectories(File odlDir, File src, File beans)
         throws IOException, TemplateException, Syntax, ODStateException
     {
-        List<File> products = new java.util.ArrayList<File>();
+        lxl.List<File> products = new lxl.ArrayList<File>();
 
         SInit();
 
         for (File odlFile: Files.values()){
             try {
-                List<File> files = Main.ProcessFiles(odlFile,src,beans);
+                lxl.List<File> files = Main.ProcessFiles(odlFile,src,beans);
 
                 products.addAll(files);
             }
@@ -363,7 +361,7 @@ public final class Main
                 try {
                     System.out.println("Source: "+odl.getPath());
                     System.out.println("Target: "+src.getPath());
-                    List<File> products = Main.ProcessDirectories(odl,src,beans);
+                    lxl.List<File> products = Main.ProcessDirectories(odl,src,beans);
                     for (File product : products){
                         System.out.println("Product: "+product.getPath());
                     }

@@ -26,7 +26,6 @@ import com.google.appengine.api.datastore.Key;
 
 import java.lang.reflect.TypeVariable;
 import java.io.IOException;
-import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
@@ -48,7 +47,7 @@ public final class Interface
     public final java.lang.Class typeClass;
 
 
-    public Interface(Reader reader, Package pkg, List<ImportDescriptor> imports)
+    public Interface(Reader reader, Package pkg, lxl.List<ImportDescriptor> imports)
         throws IOException, Syntax
     {
         super();
