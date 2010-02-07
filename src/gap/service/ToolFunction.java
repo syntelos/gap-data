@@ -74,14 +74,17 @@ public class ToolFunction
         if (null == tool)
             throw new IllegalArgumentException();
 
-        else if (tool.hasFunctionMethodname(true))
-            return tool.getFunctionMethodname(true);
+        else if (tool.hasJavaMethodName(true))
+            return tool.getJavaMethodName(true);
         else
             return gap.service.ToolFunction.Type.Name(tool);
     }
     public final static String DeriveName(Tool tool){
-
-        return OD.Camel(Target(tool));
+        String name = FileManager.DeriveName(tool);
+        if (null == name)
+            return OD.Camel(Target(tool));
+        else
+            return name;
     }
 
     /**
@@ -178,7 +181,7 @@ public class ToolFunction
         this.out = response.getWriter();
 
         this.setLanguage("jela");
-        this.setScript(gap.Strings.TextToString(tool.getFunctionBody(true)));
+        this.setScript(gap.Strings.TextToString(tool.getJavaMethodSource(true)));
         this.init(instance,instance.getFunctionList());
     }
 

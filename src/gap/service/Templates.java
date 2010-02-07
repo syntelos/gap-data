@@ -31,10 +31,9 @@ import javax.servlet.ServletResponse;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Reader;
+import java.nio.charset.Charset;
 
 /**
  * Used by {@link FileManager}.
@@ -48,7 +47,9 @@ public final class Templates
 {
 
     private static File TemplatesLocation = new File("WEB-INF/templates");
-
+    /**
+     * Called from main programs with working directory
+     */
     public final static void SInit(File dir){
         if (TemplatesLocation.isDirectory())
             throw new IllegalStateException();
@@ -60,31 +61,36 @@ public final class Templates
                 throw new IllegalArgumentException(dir.getPath());
         }
     }
+    /**
+     * Tempaltes are read from disk in the ASCII transparent UTF-8
+     * character encoding.
+     */
+    public final static Charset UTF8 = Charset.forName("UTF-8");
 
     private final static String TemplatesFilenameSuffix = ".xtm";
     private final static int TemplatesFilenameSuffixLen = TemplatesFilenameSuffix.length();
 
     private final static Templates Instance = new Templates();
 
+    /**
+     * Template for servlet path info (path not including servlet
+     * mapping), placing servlets in the role of alternative views on
+     * one space of data and templates.
+     */
     public static TemplateRenderer GetTemplate(Request request)
         throws TemplateException
     {
         return Instance.getTemplate(request);
-    }
-    public static TemplateRenderer GetTemplate(Resource resource)
-        throws TemplateException
-    {
-        return Instance.getTemplate(resource);
     }
     public static TemplateRenderer GetTemplate(TemplateName name)
         throws TemplateException
     {
         return Instance.getTemplate(name);
     }
-    public static TemplateRenderer GetTemplate(String name)
+    public static TemplateRenderer GetTemplate(String pathname)
         throws TemplateException
     {
-        return Instance.getTemplate(new TemplateName(name));
+        return Instance.getTemplate(pathname);
     }
     private static File TemplateFile(String name)
         throws TemplateException
@@ -98,30 +104,10 @@ public final class Templates
         else
             return null;
     }
-    public static void CreateTools(Resource resource){
-        Key resourceKey = resource.getKey();
-        Resource index_html = Resource.ForLongBaseName("","index.html");
-        if (null != index_html && index_html.hasTools(MayInherit)){
-            for (Tool indexTool: index_html.getTools(MayInherit)){
-                String name = indexTool.getName();
-                Tool resourceTool = new Tool(resourceKey,name);
-                resourceTool.inheritFrom(indexTool);
-                resourceTool.save();
-            }
-        }
-        else {
-            for (Tool indexTool: Tools.Default.getTools()){
-                String name = indexTool.getName();
-                Tool resourceTool = new Tool(resourceKey,name);
-                resourceTool.updateFrom(indexTool);
-                resourceTool.save();
-            }
-        }
-    }
     public static String ReadToString(File file)
         throws IOException
     {
-        Reader reader = new FileReader(file);
+        Reader reader = new java.io.InputStreamReader(new java.io.FileInputStream(file),UTF8);
         try {
             StringBuilder string = new StringBuilder();
             char[] buf = new char[0x200];
@@ -145,74 +131,23 @@ public final class Templates
     public TemplateRenderer getTemplate(TemplateName name)
         throws TemplateException
     {
-        Request request = Request.Get();
-        if (null != request){
-            Resource resource = request.resource;
-            if (null != resource){
-                gap.data.Template template = resource.getTemplates(name.getName());
-                if (null != template)
-                    return new TemplateRenderer(this,template);
-            }
-        }
-        File templateFile = TemplateFile(name.getSource());
-        if (null != templateFile){
-            Resource resource = Resource.GetCreateLong(name.getBase(),name.getName());
-            CreateTools(resource);
-            Template template = new Template(resource.getKey(),name.getName());
-            try {
-                template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFile)));
-                template.setLastModified(templateFile.lastModified());
-                template.save();
-                return new TemplateRenderer(this,template);
-            }
-            catch (IOException exc){
-                throw new TemplateException(templateFile.getPath(),exc);
-            }
-        }
-        else
-            return null;
+        return this.getTemplate(name.getSource());
     }
     private TemplateRenderer getTemplate(Request request)
         throws TemplateException
     {
-        Resource resource = request.resource;
-        if (null == resource){
-            Path path = request.path;
-            File templateFile = TemplateFile(path.getSub());
-            if (null != templateFile){
-                resource = Resource.GetCreateLong(path.getBase(),path.getName());
-                CreateTools(resource);
-                Template template = new Template(resource.getKey(),path.getName());
-                try {
-                    template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFile)));
-                    template.setLastModified(templateFile.lastModified());
-                    template.save();
-                    return new TemplateRenderer(this,template);
-                }
-                catch (IOException exc){
-                    throw new TemplateException(templateFile.getPath(),exc);
-                }
-            }
-            else
-                return null;
-        }
-        else
-            return this.getTemplate(resource);
+        return this.getTemplate(request.path.getSub());
     }
-    private TemplateRenderer getTemplate(Resource resource)
+    private TemplateRenderer getTemplate(String path)
         throws TemplateException
     {
-        if (null == resource)
-            return null;
+        Template template = Template.ForLongName(path);
+        if (null != template)
+            return new TemplateRenderer(this,template);
         else {
-            gap.data.Template template = resource.getTemplates(resource.getName());
-            if (null != template)
-                return new TemplateRenderer(this,template);
-
-            File templateFile = TemplateFile(TemplateName.Cat(resource.getBase(),resource.getName()));
+            File templateFile = TemplateFile(path);
             if (null != templateFile){
-                CreateTools(resource);
-                template = new Template(resource.getKey(),resource.getName());
+                template = new Template(path);
                 try {
                     template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFile)));
                     template.setLastModified(templateFile.lastModified());

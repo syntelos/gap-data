@@ -137,36 +137,6 @@ public abstract class BigTable
         else
             throw new IllegalArgumentException();
     }
-    public final static boolean IsPartner(Kind kind){        
-        if (null != kind){
-            try {
-                return IsPartner(Find(kind));
-            }
-            catch (IllegalStateException exc){
-                return false;
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static boolean IsPartner(String kind){
-        if (null != kind){
-            try {
-                return IsPartner(Find(kind));
-            }
-            catch (IllegalStateException exc){
-                return false;
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
-    public final static boolean IsPartner(Class kind){
-        if (null != kind)
-            return (PartnerReadWrite.class.isAssignableFrom(kind));
-        else
-            throw new IllegalArgumentException();
-    }
 
     /**
      * An independent "key to string" ensures that any upstream code

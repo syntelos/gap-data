@@ -25,8 +25,6 @@
  */
 package gap.hapax;
 
-import gap.data.TemplateNode;
-
 import java.io.PrintWriter;
 
 /**

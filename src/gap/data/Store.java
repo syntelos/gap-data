@@ -84,11 +84,6 @@ public final class Store
                         if (!Logon.IsAdmin())
                             throw new AdminAccessException(gdo.getClassKind());
                     }
-                    else if (gdo instanceof PartnerReadWrite.ReadRestricted){
-
-                        if (!Logon.IsPartner())
-                            throw new PartnerAccessException(gdo.getClassKind());
-                    }
                     gdo.setFromDatastore();
                     gdo.onread();
                     return gdo;
@@ -110,11 +105,6 @@ public final class Store
                     if (!Logon.IsAdmin())
                         throw new AdminAccessException(gdo.getClassKind());
                 }
-                else if (gdo instanceof PartnerReadWrite.ReadRestricted){
-
-                    if (!Logon.IsPartner())
-                        throw new PartnerAccessException(gdo.getClassKind());
-                }
                 gdo.setFromDatastore();
                 gdo.onread();
                 list.add(gdo);
@@ -127,11 +117,6 @@ public final class Store
                 if (!Logon.IsAdmin())
                     throw new AdminAccessException(table.getClassKind());
             }
-            else if (table instanceof PartnerReadWrite){
-
-                if (!Logon.IsPartner())
-                    throw new PartnerAccessException(table.getClassKind());
-            }
             Entity entity = table.fillToDatastoreEntity();
             Key key = Get().put(entity);
             return table.setFromDatastore(key);
@@ -142,11 +127,6 @@ public final class Store
 
                     if (!Logon.IsAdmin())
                         throw new AdminAccessException(key.getKind());
-                }
-                else if (BigTable.IsPartner(key.getKind())){
-
-                    if (!Logon.IsPartner())
-                        throw new PartnerAccessException(key.getKind());
                 }
                 Get().delete(new Key[]{key});
             }
@@ -164,11 +144,6 @@ public final class Store
 
                         if (!Logon.IsAdmin())
                             throw new AdminAccessException(gdo.getClassKind());
-                    }
-                    else if (gdo instanceof PartnerReadWrite.ReadRestricted){
-
-                        if (!Logon.IsPartner())
-                            throw new PartnerAccessException(gdo.getClassKind());
                     }
                     gdo.setFromDatastore();
                     gdo.onread();
@@ -198,11 +173,6 @@ public final class Store
 
                             if (!Logon.IsAdmin())
                                 throw new AdminAccessException(gdo.getClassKind());
-                        }
-                        else if (gdo instanceof PartnerReadWrite.ReadRestricted){
-
-                            if (!Logon.IsPartner())
-                                throw new PartnerAccessException(gdo.getClassKind());
                         }
                         gdo.setFromDatastore();
                         gdo.onread();
@@ -311,11 +281,6 @@ public final class Store
                         if (!Logon.IsAdmin())
                             throw new AdminAccessException(gdo.getClassKind());
                     }
-                    else if (gdo instanceof PartnerReadWrite.ReadRestricted){
-
-                        if (!Logon.IsPartner())
-                            throw new PartnerAccessException(gdo.getClassKind());
-                    }
                     gdo.setFromMemcache();
                     gdo.onread();
                     return gdo;
@@ -351,11 +316,6 @@ public final class Store
                         if (!Logon.IsAdmin())
                             throw new AdminAccessException(gdo.getClassKind());
                     }
-                    else if (gdo instanceof PartnerReadWrite.ReadRestricted){
-
-                        if (!Logon.IsPartner())
-                            throw new PartnerAccessException(gdo.getClassKind());
-                    }
                     gdo.setFromMemcache();
                     gdo.onread();
                     list.add(gdo);
@@ -368,11 +328,6 @@ public final class Store
 
                                 if (!Logon.IsAdmin())
                                     throw new AdminAccessException(gdo.getClassKind());
-                            }
-                            else if (gdo instanceof PartnerReadWrite.ReadRestricted){
-
-                                if (!Logon.IsPartner())
-                                    throw new PartnerAccessException(gdo.getClassKind());
                             }
                             gdo.setFromDatastore();
                             gdo.onread();
@@ -393,11 +348,6 @@ public final class Store
                 if (!Logon.IsAdmin())
                     throw new AdminAccessException(table.getClassKind());
             }
-            else if (table instanceof PartnerReadWrite){
-
-                if (!Logon.IsPartner())
-                    throw new PartnerAccessException(table.getClassKind());
-            }
             String ck = BigTable.ToString(key);
 
             Get().put(ck,table);
@@ -410,11 +360,6 @@ public final class Store
 
                     if (!Logon.IsAdmin())
                         throw new AdminAccessException(key.getKind());
-                }
-                else if (BigTable.IsPartner(key.getKind())){
-
-                    if (!Logon.IsPartner())
-                        throw new PartnerAccessException(key.getKind());
                 }
 
                 String ck = BigTable.ToString(key);
@@ -494,11 +439,6 @@ public final class Store
 
             if (!Logon.IsAdmin())
                 throw new AdminAccessException(access);
-        }
-        else if (BigTable.IsPartner(access)){
-
-            if (!Logon.IsPartner())
-                throw new PartnerAccessException(access);
         }
         query.setKeysOnly();
 
