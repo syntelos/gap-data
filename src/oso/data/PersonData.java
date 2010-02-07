@@ -33,15 +33,17 @@ import java.util.Date;
 import javax.annotation.Generated;
 
 /**
- * Generated data bean
+ * Generated bean data binding.
+ * 
+ * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-07T15:13:45.186Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-07T17:49:17.363Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
 {
 
-    private final static long serialVersionUID = 2;
+    private final static long serialVersionUID = 3;
 
     public final static Kind KIND = Kind.Create("Person","oso.data","Person","/people");
 
@@ -284,7 +286,7 @@ public abstract class PersonData
             case InheritFromKey:
                 return instance.getInheritFromKey();
             case Key:
-                return instance.getKey(mayInherit);
+                return instance.getKey();
             case Id:
                 return instance.getId(mayInherit);
             case LogonId:
@@ -328,13 +330,8 @@ public abstract class PersonData
     private volatile transient Person inheritFrom;
 
 
-    private volatile Key key;    
     private volatile String id;    // *unique
     private volatile String logonId;    // *hash-unique
-
-
-
-
 
 
 
@@ -356,7 +353,6 @@ public abstract class PersonData
     public void destroy(){
         this.inheritFrom = null;
         this.datastoreEntity = null;
-        this.key = null;
         this.id = null;
         this.logonId = null;
     }
@@ -392,34 +388,6 @@ public abstract class PersonData
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
-            return true;
-        }
-        else
-            return false;
-    }
-    public final boolean hasKey(boolean mayInherit){
-        return (null != this.getKey(mayInherit));
-    }
-    public final boolean hasNotKey(boolean mayInherit){
-        return (null == this.getKey(mayInherit));
-    }
-    public final boolean dropKey(){
-        if (null != this.key){
-            this.key = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final Key getKey(){
-        return this.key;
-    }
-    public final Key getKey(boolean ignore){
-        return this.key;
-    }
-    public final boolean setKey(Key key){
-        if (IsNotEqual(this.key,key)){
-            this.key = key;
             return true;
         }
         else
@@ -493,9 +461,6 @@ public abstract class PersonData
     public final String getClassFieldUnique(){
         return "id";
     }
-    public final String getClassFieldKeyName(){
-        return "key";
-    }
     public final List<gap.data.Field> getClassFields(){
         return (new gap.data.Field.List(Field.values()));
     }
@@ -523,11 +488,6 @@ public abstract class PersonData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Key:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.hasKey(true);
             case Id:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -550,11 +510,6 @@ public abstract class PersonData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Key:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return gap.Strings.KeyToString(this.getKey(true));
             case Id:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -578,8 +533,6 @@ public abstract class PersonData
         if (null != field){
             if (name.has(1)){
                 switch (field){
-                case Key:
-                    throw new IllegalStateException(field.name());
                 case Id:
                     throw new IllegalStateException(field.name());
                 case LogonId:
@@ -599,8 +552,6 @@ public abstract class PersonData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Key:
-                return null;
             case Id:
                 return null;
             case LogonId:

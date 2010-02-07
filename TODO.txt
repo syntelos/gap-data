@@ -1,5 +1,16 @@
                                                 -*-outline-*-
 
+* Support Field type BigTable
+** References stored as keys
+
+* Integrate collection type fields with get section in BeanData.java.xtm 
+
+* Request
+** implement binding for bigtable read access from template names
+*** subject := collection or item identified by path
+*** viewer := me
+** path equivalent names
+
 * Edit
 ** POST
 *** Collection Create
@@ -9,14 +20,4 @@
 *** Item Read
 ** Relation Data Structure
 *** Compound paths 
-**** name/id/name/(id)
-
-* Integrate collection type fields with get section in BeanData.java.xtm 
-
-* Key (self) fields should not go into the datastore
-** But they are needed in memcache
-
-* For Request
-** name/id (and compounds)
-*** implement caching and binding for direct access into store from template names
 **** name/id/name/(id)

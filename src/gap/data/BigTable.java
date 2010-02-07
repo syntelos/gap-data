@@ -208,6 +208,8 @@ public abstract class BigTable
 
     protected volatile Key inheritFromKey;
 
+    protected volatile Key key;
+
     private transient volatile Lock lock;
 
 
@@ -216,6 +218,40 @@ public abstract class BigTable
     }
 
 
+    /**
+     * Data store reference to this instance.
+     */
+    public final boolean hasKey(){
+        return (null != this.key);
+    }
+    public final boolean hasNotKey(){
+        return (null == this.key);
+    }
+    public final boolean dropKey(){
+        if (null != this.key){
+            this.key = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    /**
+     * @return Data store reference to this instance.
+     */
+    public final Key getKey(){
+        return this.key;
+    }
+    /**
+     * @param key Data store reference to this instance.
+     */
+    public final boolean setKey(Key key){
+        if (IsNotEqual(this.key,key)){
+            this.key = key;
+            return true;
+        }
+        else
+            return false;
+    }
     /**
      * Called by the Store layer after retrieving an instance object
      * from the datastore or memcache.  Subclasses should ensure that
@@ -262,7 +298,7 @@ public abstract class BigTable
     }
     public final BigTable setFromDatastore(Key with) {
         this.fromDatastore = true;
-        this.defineKey(with);
+        this.setKey(with);
         return this;
     }
 
@@ -287,16 +323,9 @@ public abstract class BigTable
      * as from web interfaces.
      */
     public abstract String getClassFieldUnique();
-    /**
-     * A static value naming the identity field having type 'Key'.
-     */
-    public abstract String getClassFieldKeyName();
 
-    public final Key getClassFieldKeyValue(){
-        return (Key)this.valueOf(this.getClassKeyField(),MayNotInherit);
-    }
     public final Field getClassKeyField(){
-        return (this.getClassFieldByName(this.getClassFieldKeyName()));
+        return (this.getClassFieldByName("key"));
     }
     /**
      * A key based shared system lock associated with this instance
@@ -311,7 +340,7 @@ public abstract class BigTable
     public final Lock getLock(){
         Lock lock = this.lock;
         if (null == lock){
-            lock = new Lock(this.getClassFieldKeyValue());
+            lock = new Lock(this.key);
             this.lock = lock;
         }
         return lock;
@@ -341,11 +370,11 @@ public abstract class BigTable
     public final Entity getDatastoreEntity(){
         Entity datastoreEntity = this.datastoreEntity;
         if (null == datastoreEntity){
-            Key key = this.getClassFieldKeyValue();
+            Key key = this.key;
             if (null != key){
                 try {
                     datastoreEntity = Store.P.Get().get(key);
-                    this.defineKeyFrom(datastoreEntity);
+                    this.setKey(datastoreEntity.getKey());
                 }
                 catch (com.google.appengine.api.datastore.EntityNotFoundException exc){
                     Kind kind = this.getClassKind();
@@ -426,7 +455,7 @@ public abstract class BigTable
                     else 
                         entity.setUnindexedProperty(fieldName, value);
                 }
-                else //if (null != entity.getProperty(fieldName))//(redundant op)
+                else //if (null != entity.getProperty(fieldName))//(redundant)
                     entity.removeProperty(fieldName);
             }
             else
@@ -442,16 +471,11 @@ public abstract class BigTable
 
             this.define(field,object);
         }
-        this.defineKeyFrom(entity);
+        this.setKey(entity.getKey());
         return entity;
     }
-    protected final void defineKeyFrom(Entity entity){
-        this.define(this.getClassKeyField(),entity.getKey());
-    }
-    protected final void defineKey(Key key){
-        this.define(this.getClassKeyField(),key);
-    }
-
+    /*
+     */
     public final static boolean IsUnindexed(java.lang.Class jclass){
         if (null == jclass)
             return false;

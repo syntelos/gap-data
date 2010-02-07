@@ -34,15 +34,13 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2010-02-07T15:13:47.619Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2010-02-07T17:49:19.618Z")
 public final class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>
 {
 
-    private final static long serialVersionUID = 2;
-
-    public final static String AncestorKeyFieldName = "key";
+    private final static long serialVersionUID = 3;
 
     public final static String ParentTypeName = "Template";
 
@@ -60,7 +58,6 @@ public final class ListShortTemplateTemplateNode
         this();
         if (null != parent){
             this.parent = parent;
-            this.ancestorKeyFieldName = AncestorKeyFieldName;
             this.setValueClassAncestorKey();
         }
         else
@@ -105,7 +102,7 @@ public final class ListShortTemplateTemplateNode
         return ChildTypeClass;
     }
     public void setValueClassAncestorKey(){
-        Key key = this.getParent().getClassFieldKeyValue();
+        Key key = this.getParent().getKey();
         if (key != this.ancestorKey){
             this.ancestorKey = key;
             this.query = TemplateNode.CreateQueryFor(this.ancestorKey);

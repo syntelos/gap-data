@@ -74,8 +74,6 @@ public abstract class AbstractList<V extends BigTable>
 
     protected Key ancestorKey;
 
-    protected String ancestorKeyFieldName;
-
     protected Query query;
 
     protected Page page = Page.Default;
@@ -192,15 +190,6 @@ public abstract class AbstractList<V extends BigTable>
     }
     public abstract void setValueClassAncestorKey();
 
-    public final String getValueClassAncestorKeyFieldName(){
-        return this.ancestorKeyFieldName;
-    }
-    public final boolean hasValueClassAncestorKeyFieldName(){
-        return (null != this.ancestorKeyFieldName);
-    }
-    public final void setValueClassAncestorKeyFieldName(String name){
-        this.ancestorKeyFieldName = name;
-    }
     public final int size(){
         BigTable[] buffer = this.buffer;
         if (null == buffer)

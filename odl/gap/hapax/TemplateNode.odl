@@ -1,10 +1,9 @@
 package gap.hapax;
 path /template-nodes;
 
-child TemplateNode version 1 
+child TemplateNode version 2 
     parent Template
 {
-    Key key;
     *unique String id;
     *hash-unique String nodeType;
     *hash-unique Integer lineNumber;

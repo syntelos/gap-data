@@ -49,8 +49,9 @@ Data Bean
    below).
 
    Each data bean class has an abstract super class named
-   "<ClassName>Data" that can be regenerated liberally for changes to
-   the source BeanData.java.xtm template.
+   "<ClassName>Data" that implements data binding strategies. These
+   bindings are regenerated for changes to the source
+   BeanData.java.xtm template.
 
    A data bean (user) class is generated once and not overwritten,
    according to the definitions found in the "odl" directory.  The
