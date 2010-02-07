@@ -34,7 +34,9 @@ import java.util.Date;
 import javax.annotation.Generated;
 
 /**
- * Generated data bean
+ * Generated bean data binding.
+ * 
+ * @see {{=class_name}}
  */
 @Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}")
 public abstract class {{=class_name}}Data
@@ -318,7 +320,7 @@ public abstract class {{=class_name}}Data
      */
     public final static void Delete({{=class_name}} instance){
         if (null != instance){
-            Key key = instance.get{{=field_key_nameCamel}}();
+            Key key = instance.getKey();
             gap.data.Store.DeleteCollection(KIND,new Query(key));
             gap.data.Store.Delete(key);
         }
@@ -328,7 +330,7 @@ public abstract class {{=class_name}}Data
      */
     public final static void Clean({{=class_name}} instance){
         if (null != instance){
-            Key key = instance.get{{=field_key_nameCamel}}();
+            Key key = instance.getKey();
             gap.data.Store.Clean(key);
         }
     }
@@ -415,7 +417,8 @@ public abstract class {{=class_name}}Data
         implements gap.data.Field<Field>
     {
         InheritFromKey("inheritFromKey"),{{#class_re_child_or_group}}
-        ParentKey("parentKey"),{{/class_re_child_or_group}}{{#pfield}}
+        ParentKey("parentKey"),{{/class_re_child_or_group}}
+        Key("key"),{{#pfield}}
         {{=field_nameCamel}}("{{=field_name}}"){{#pfield_it_NotLast}},{{/pfield_it_NotLast}}{{#pfield_it_Last}};{{/pfield_it_Last}}{{/pfield}}
 
 
@@ -448,7 +451,9 @@ public abstract class {{=class_name}}Data
             case InheritFromKey:
                 return instance.getInheritFromKey();{{#class_re_child_or_group}}
             case ParentKey:
-                return instance.getParentKey();{{/class_re_child_or_group}}{{#pfield}}
+                return instance.getParentKey();{{/class_re_child_or_group}}
+            case Key:
+                return instance.getKey();{{#pfield}}
             case {{=field_nameCamel}}:
                 return instance.get{{=field_nameCamel}}(mayInherit);{{/pfield}}
             default:
@@ -460,7 +465,9 @@ public abstract class {{=class_name}}Data
             case InheritFromKey:
                 return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));{{#class_re_child_or_group}}
             case ParentKey:
-                return instance.setParentKey(gap.Objects.KeyFromObject(value));{{/class_re_child_or_group}}{{#pfield}}
+                return instance.setParentKey(gap.Objects.KeyFromObject(value));{{/class_re_child_or_group}}
+            case Key:
+                return instance.setKey(gap.Objects.KeyFromObject(value));{{#pfield}}
             case {{=field_nameCamel}}:
                 return instance.set{{=field_nameCamel}}({{=field_from_object_prefix}}value{{=field_from_object_suffix}});{{/pfield}}
             default:
@@ -487,13 +494,11 @@ public abstract class {{=class_name}}Data
 
     private volatile transient {{=class_name}} inheritFrom;
 
-{{#pfield}}
-    private volatile {{=field_class}} {{=field_name}};    {{#field_is_unique}}// {{=data_model}}{{/field_is_unique}}{{#field_is_hash_unique}}// {{=data_model}}{{/field_is_hash_unique}}{{/pfield}}
-
-{{#cfield}}
-    private volatile {{=field_class}} {{=field_name}};{{/cfield}}
-
-{{#tfield}}
+{{#pfield}}{{#field_is_primitive}}
+    private volatile {{=field_class}} {{=field_name}};    {{#field_is_unique}}// {{=data_model}}{{/field_is_unique}}{{#field_is_hash_unique}}// {{=data_model}}{{/field_is_hash_unique}}{{/field_is_primitive}}{{#field_is_bigTable}}
+    private volatile Key {{=field_name}}Key;
+    private volatile transient {{=field_class}} {{=field_name}};{{/field_is_bigTable}}{{/pfield}}{{#cfield}}
+    private volatile {{=field_class}} {{=field_name}};{{/cfield}}{{#tfield}}
     private volatile transient {{=field_class}} {{=field_name}};{{/tfield}}
 
 {{#class_re_child_or_group}}
@@ -510,7 +515,7 @@ public abstract class {{=class_name}}Data
         String {{=field_unique_name}} = {{=field_unique_nameCamel}}For({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         this.set{{=field_unique_nameCamel}}({{=field_unique_name}});
         Key key = KeyLongFor({{=field_unique_name}});
-        this.set{{=field_key_nameCamel}}(key);
+        this.setKey(key);
     }{{/class_re_not_child_or_group}}{{#class_re_child_or_group}}
     protected {{=class_name}}Data(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
@@ -520,7 +525,7 @@ public abstract class {{=class_name}}Data
         this.set{{=field_unique_nameCamel}}({{=field_unique_name}});{{#class_re_childgroup}}
         Key key = KeyShortFor(ancestor,{{=field_unique_name}});{{/class_re_childgroup}}{{#class_re_child}}
         Key key = KeyLongFor(ancestor,{{=field_unique_name}});{{/class_re_child}}
-        this.set{{=field_key_nameCamel}}(key);
+        this.setKey(key);
     }{{/class_re_child_or_group}}
 {{/field_hash_unique}}
 
@@ -557,7 +562,7 @@ public abstract class {{=class_name}}Data
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
-                this.inheritFromKey = ancestor.get{{=field_key_nameCamel}}();
+                this.inheritFromKey = ancestor.getKey();
             return true;
         }
         else
@@ -567,7 +572,7 @@ public abstract class {{=class_name}}Data
         if (IsNotEqual(this.inheritFrom,ancestor)){
             this.inheritFrom = ancestor;
             if (null != ancestor)
-                this.inheritFromKey = ancestor.get{{=field_key_nameCamel}}();
+                this.inheritFromKey = ancestor.getKey();
             return true;
         }
         else
@@ -612,7 +617,7 @@ public abstract class {{=class_name}}Data
         if (IsNotEqual(this.parent,ancestor)){
             this.parent = ancestor;
             if (null != ancestor)
-                this.parentKey = ancestor.getClassFieldKeyValue();
+                this.parentKey = ancestor.getKey();
             return true;
         }
         else
@@ -801,9 +806,6 @@ public abstract class {{=class_name}}Data
     }
     public final {{=field_unique_class}} getClassFieldUnique(){
         return "{{=field_unique_name}}";
-    }
-    public final String getClassFieldKeyName(){
-        return "{{=field_key_name}}";
     }
     public final List<gap.data.Field> getClassFields(){
         return (new gap.data.Field.List(Field.values()));

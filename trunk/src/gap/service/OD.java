@@ -567,14 +567,6 @@ public final class OD
 
                     TemplateDataDictionary field_is = dataField.addSection(TemplateNames.FieldIsKey);
 
-                    if (null == key){
-                        key = field;
-
-                        top.setVariable(new TemplateName(prefix,"field_key_name"),fieldName);
-                        top.setVariable(new TemplateName(prefix,"field_key_nameCamel"),fieldNameCamel);
-                        top.setVariable(new TemplateName(prefix,"field_key_class"),fieldType);
-                        top.setVariable(new TemplateName(prefix,"field_key_classClean"),fieldTypeClean);
-                    }
                 }
                 else if (IsTypeClassList(fieldTypeClass)){
 
@@ -768,15 +760,6 @@ public final class OD
                 }
             }
         }
-
-        /*
-         * Current template model requires 'key'.
-         */
-        if (null != key)
-            return;
-        else
-            throw new ODStateException(cd,"Model requires a field having type 'com.google.appengine.api.datastore.Key'.");
-
     }
 
     public final static lxl.List<FieldDescriptor> FieldsOfTypeList(PackageDescriptor pkg, ClassDescriptor cd, lxl.List<ImportDescriptor> imports){

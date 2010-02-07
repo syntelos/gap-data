@@ -112,10 +112,6 @@ public interface Collection<V>
      */
     public boolean isCompleteValueClassAncestorKey();
 
-    public String getValueClassAncestorKeyFieldName();
-
-    public boolean hasValueClassAncestorKeyFieldName();
-
     public boolean isEmpty();
 
     public boolean isNotEmpty();

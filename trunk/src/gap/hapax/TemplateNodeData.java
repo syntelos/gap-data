@@ -33,15 +33,17 @@ import java.util.Date;
 import javax.annotation.Generated;
 
 /**
- * Generated data bean
+ * Generated bean data binding.
+ * 
+ * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-07T15:13:48.345Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-07T17:49:20.414Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
 {
 
-    private final static long serialVersionUID = 1;
+    private final static long serialVersionUID = 2;
 
     public final static Kind KIND = Kind.Create("TemplateNode","gap.hapax","TemplateNode","/template-nodes");
 
@@ -322,7 +324,7 @@ public abstract class TemplateNodeData
             case ParentKey:
                 return instance.getParentKey();
             case Key:
-                return instance.getKey(mayInherit);
+                return instance.getKey();
             case Id:
                 return instance.getId(mayInherit);
             case NodeType:
@@ -384,17 +386,12 @@ public abstract class TemplateNodeData
     private volatile transient TemplateNode inheritFrom;
 
 
-    private volatile Key key;    
     private volatile String id;    // *unique
     private volatile String nodeType;    // *hash-unique
     private volatile Integer lineNumber;    // *hash-unique
     private volatile Text nodeContent;    // *hash-unique
     private volatile Integer offset;    
     private volatile Integer offsetCloseRelative;    
-
-
-
-
 
 
     private volatile Key parentKey;
@@ -421,7 +418,6 @@ public abstract class TemplateNodeData
     public void destroy(){
         this.inheritFrom = null;
         this.datastoreEntity = null;
-        this.key = null;
         this.id = null;
         this.nodeType = null;
         this.lineNumber = null;
@@ -505,41 +501,13 @@ public abstract class TemplateNodeData
         if (IsNotEqual(this.parent,ancestor)){
             this.parent = ancestor;
             if (null != ancestor)
-                this.parentKey = ancestor.getClassFieldKeyValue();
+                this.parentKey = ancestor.getKey();
             return true;
         }
         else
             return false;
     }
 
-    public final boolean hasKey(boolean mayInherit){
-        return (null != this.getKey(mayInherit));
-    }
-    public final boolean hasNotKey(boolean mayInherit){
-        return (null == this.getKey(mayInherit));
-    }
-    public final boolean dropKey(){
-        if (null != this.key){
-            this.key = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final Key getKey(){
-        return this.key;
-    }
-    public final Key getKey(boolean ignore){
-        return this.key;
-    }
-    public final boolean setKey(Key key){
-        if (IsNotEqual(this.key,key)){
-            this.key = key;
-            return true;
-        }
-        else
-            return false;
-    }
     public final boolean hasId(boolean mayInherit){
         return (null != this.getId(mayInherit));
     }
@@ -750,9 +718,6 @@ public abstract class TemplateNodeData
     public final String getClassFieldUnique(){
         return "id";
     }
-    public final String getClassFieldKeyName(){
-        return "key";
-    }
     public final List<gap.data.Field> getClassFields(){
         return (new gap.data.Field.List(Field.values()));
     }
@@ -783,11 +748,6 @@ public abstract class TemplateNodeData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Key:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.hasKey(true);
             case Id:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -830,11 +790,6 @@ public abstract class TemplateNodeData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Key:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return gap.Strings.KeyToString(this.getKey(true));
             case Id:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -878,8 +833,6 @@ public abstract class TemplateNodeData
         if (null != field){
             if (name.has(1)){
                 switch (field){
-                case Key:
-                    throw new IllegalStateException(field.name());
                 case Id:
                     throw new IllegalStateException(field.name());
                 case NodeType:
@@ -907,8 +860,6 @@ public abstract class TemplateNodeData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Key:
-                return null;
             case Id:
                 return null;
             case NodeType:

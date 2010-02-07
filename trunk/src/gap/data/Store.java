@@ -421,7 +421,7 @@ public final class Store
 
         table = P.Put(table);
 
-        Key key = table.getClassFieldKeyValue();
+        Key key = table.getKey();
 
         C.Put(key,table);
 
