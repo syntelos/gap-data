@@ -25,9 +25,6 @@
  */
 package gap.hapax;
 
-import gap.data.Template;
-import gap.data.TemplateNode;
-
 /**
  * 
  * @author dcoker

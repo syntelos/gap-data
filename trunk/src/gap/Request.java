@@ -99,7 +99,7 @@ public class Request
     }
     public static enum Field {
         method, protocol, path, accept, fileManager, parameters, userReference, 
-            logon, logonUrl, logonText, contentType, isAdmin, isPartner, isMember, resource, tool;
+            logon, logonUrl, logonText, contentType, isAdmin, isMember;
 
         public static Field For(String name){
             try {
@@ -123,9 +123,7 @@ public class Request
     public final Logon logon;
     public final String logonUrl, logonText;
     public final ContentType contentType;
-    public final boolean isAdmin, isPartner, isMember;
-    public Resource resource;
-    public Tool tool;
+    public final boolean isAdmin, isMember;
 
 
     public Request(HttpServletRequest req, Method method, Protocol protocol, Path path, 
@@ -142,29 +140,11 @@ public class Request
         this.userReference = uri;
         this.logon = logon;
         this.contentType = ContentType.For(req);
-        this.resource = FileManager.GetResource(path);
         this.isAdmin = logon.serviceAdmin;
 
         String logonId = logon.serviceLogon;
 
         this.isMember = (null != logonId);
-
-        if (null != this.resource){
-            this.tool = FileManager.GetTool(this.resource,method,req.getParameter("op"));
-
-            if (logon.serviceAdmin)
-                this.isPartner = true;
-            else {
-                if (null != logonId)
-                    this.isPartner = (null != resource.getPartners(logonId));
-                else
-                    this.isPartner = false;
-            }
-        }
-        else {
-            this.tool = null;
-            this.isPartner = false;
-        }
 
         if (logon.isLoggedIn()){
             this.logonUrl = logon.getLogoutURL();
@@ -179,22 +159,6 @@ public class Request
     }
 
 
-    public Resource getResource(){
-        return this.resource;
-    }
-    public boolean hasTool(){
-        return (null != this.tool);
-    }
-    public Tool getTool(){
-        return this.tool;
-    }
-    public Map<String,Tool> getTools(){
-        Resource resource = this.resource;
-        if (null != resource)
-            return resource.getTools(MayInherit);
-        else
-            return null;
-    }
     /**
      * @return May be null
      */
@@ -257,9 +221,6 @@ public class Request
     }
     public final Servlet getServlet(Path path){
         return this.fileManager.getServlet(path);
-    }
-    public final ToolFunction getToolFunction(Servlet instance, Request request, Response response, Resource resource, Tool tool){
-        return this.fileManager.getToolFunction(instance, request, response, resource, tool);
     }
     public final boolean isPath(String string){
         return this.path.equals(string);
@@ -360,19 +321,9 @@ public class Request
                 return true;
             case contentType:
             case isAdmin:
-            case isPartner:
             case isMember:
                 return name.is(0);
-            case resource:
-                if (name.has(1) && null != this.resource)
-                    return this.resource.hasVariable(new TemplateName(name));
-                else
-                    return name.is(0);
-            case tool:
-                if (name.has(1) && null != this.tool)
-                    return this.tool.hasVariable(new TemplateName(name));
-                else
-                    return name.is(0);
+
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -433,26 +384,12 @@ public class Request
                     return "Admin";
                 else
                     return "";
-            case isPartner:
-                if (name.is(0) && this.isPartner)
-                    return "Partner";
-                else
-                    return "";
             case isMember:
                 if (name.is(0) && this.isMember)
                     return "Member";
                 else
                     return "";
-            case resource:
-                if (name.has(1) && null != this.resource)
-                    return this.resource.getVariable(new TemplateName(name));
-                else
-                    return "";
-            case tool:
-                if (name.has(1) && null != this.tool)
-                    return this.tool.getVariable(new TemplateName(name));
-                else
-                    return "";
+
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -485,19 +422,8 @@ public class Request
             case logonText:
             case contentType:
             case isAdmin:
-            case isPartner:
             case isMember:
                 return null;
-            case resource:
-                if (null != this.resource)
-                    return this.resource.getSection(new TemplateName(name));
-                else
-                    return null;
-            case tool:
-                if (null != this.tool)
-                    return this.tool.getSection(new TemplateName(name));
-                else
-                    return null;
             default:
                 throw new IllegalStateException(field.name());
             }

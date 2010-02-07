@@ -25,7 +25,6 @@
  */
 package gap.hapax;
 
-import gap.data.Template;
 import com.google.appengine.api.datastore.Key;
 
 /**

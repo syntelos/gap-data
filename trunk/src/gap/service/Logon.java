@@ -71,9 +71,6 @@ public final class Logon
     public static boolean IsMember(){
         return LTL.get().isLoggedIn();
     }
-    public static boolean IsPartner(){
-        return gap.Request.Get().isPartner;
-    }
     public static boolean IsAdmin(){
         return LTL.get().serviceAdmin;
     }

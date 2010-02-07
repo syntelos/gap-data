@@ -133,11 +133,11 @@ public class FileManager
         /**
          * {@link gap.data.Resource} or {@link gap.data.Tool}
          */
-        public final BigTable descriptor;
+        public final Resource descriptor;
         public final String errors;
 
 
-        CompileError(String classname, BigTable desc, StringWriter err){
+        CompileError(String classname, Resource desc, StringWriter err){
             super(classname);
             this.classname = classname;
             this.descriptor = desc;
@@ -177,33 +177,13 @@ public class FileManager
 
 
     public Servlet getServlet(Path path){
-
-        String base = "";
-        String name = null;
-        if (path.hasBase()){
-            if (path.hasName()){
-                base = path.getBase();
-                name = path.getName();
-            }
-            else {
-                name = path.getBase();
-            }
-        }
-        else {
-            name = "";
-        }
-
         Servlet servlet = null;
-
-        Resource desc = Resource.ForLongBaseName(base,name);
-        if (null != desc)
-            servlet = this.getServlet(desc);
 
         return servlet;
     }
     public Servlet getServlet(Resource desc){
 
-        String servletClassName = desc.getServletClassname(true);
+        String servletClassName = desc.getJavaClassName(true);
         if (null != servletClassName){
             try {
                 Class<gap.service.Servlet> jclass;
@@ -212,7 +192,7 @@ public class FileManager
                 }
                 catch (ClassNotFoundException not){
 
-                    jclass = this.define(desc);
+                    jclass = (Class<gap.service.Servlet>)this.define(desc);
                 }
                 if (null != jclass){
                     Servlet servlet = jclass.newInstance();
@@ -232,62 +212,9 @@ public class FileManager
         else
             return null;
     }
-    public boolean compile(Resource desc)
-        throws java.io.IOException,
-               FileManager.CompileError
-    {
-        String className = desc.getServletClassname(true);
-        String sourceText = gap.Strings.TextToString(desc.getServletSourceJava(true));
-
-        if (null != className && null != sourceText){
-
-            Reader in = new java.io.StringReader(sourceText); 
-            StringWriter err = new StringWriter();
-            ByteArrayOutputStream bin = new ByteArrayOutputStream();
-
-            URI uri = FileManager.ToUri(className);
-
-            List<JavaFileObject> units = new java.util.ArrayList<JavaFileObject>(1);
-            {
-                units.add(new Input(uri,Kind.SOURCE,in));
-            }
-
-            this.output.put(uri,new Output(uri,Kind.CLASS,bin));
-
-            JavaCompiler tool  = new gap.jac.api.JavacTool();
-            try {
-                gap.jac.tools.JavaCompiler.CompilationTask task =
-                    tool.getTask(err, this, null, Options, null, units);
-
-                if (task.call()){
-                    desc.setServletClassfileJvm(new Blob(bin.toByteArray()));
-                    desc.save();
-                    return true;
-                }
-                else
-                    throw new CompileError(className,desc,err);
-            }
-            finally {
-                tool.destroy();
-            }
-        }
-        else 
-            return false;
-    }
-
-    public Class<gap.service.Servlet> define(Resource desc){
-        String classname = desc.getServletClassname(true);
-        if (null != classname){
-            Blob classfile = desc.getServletClassfileJvm(true);
-            if (null != classfile)
-                return (Class<gap.service.Servlet>)this.define(classname,classfile.getBytes());
-        }
-        return null;
-    }
-
     public ToolFunction getToolFunction(Servlet instance, Request request, Response response, Resource resource, Tool desc){
 
-        String functionClassName = desc.getFunctionClassname(true);
+        String functionClassName = desc.getJavaClassName(true);
         if (null != functionClassName){
             try {
                 Class jclass;
@@ -316,18 +243,59 @@ public class FileManager
         else
             return null;
     }
+    public boolean compile(Resource desc)
+        throws java.io.IOException,
+               FileManager.CompileError
+    {
+        String className = desc.getJavaClassName(true);
+        String sourceText = gap.Strings.TextToString(desc.getJavaClassSource(true));
 
+        if (null != className && null != sourceText){
+
+            Reader in = new java.io.StringReader(sourceText); 
+            StringWriter err = new StringWriter();
+            ByteArrayOutputStream bin = new ByteArrayOutputStream();
+
+            URI uri = FileManager.ToUri(className);
+
+            List<JavaFileObject> units = new java.util.ArrayList<JavaFileObject>(1);
+            {
+                units.add(new Input(uri,Kind.SOURCE,in));
+            }
+
+            this.output.put(uri,new Output(uri,Kind.CLASS,bin));
+
+            JavaCompiler tool  = new gap.jac.api.JavacTool();
+            try {
+                gap.jac.tools.JavaCompiler.CompilationTask task =
+                    tool.getTask(err, this, null, Options, null, units);
+
+                if (task.call()){
+                    desc.setJavaClassBinary(new Blob(bin.toByteArray()));
+                    desc.save();
+                    return true;
+                }
+                else
+                    throw new CompileError(className,desc,err);
+            }
+            finally {
+                tool.destroy();
+            }
+        }
+        else 
+            return false;
+    }
     public boolean compile(Resource resource, Tool desc)
         throws java.io.IOException,
                FileManager.CompileError
     {
-        String className = desc.getFunctionClassname(true);
-        String sourceText = gap.Strings.TextToString(desc.getFunctionSourceJava(true));
+        String className = desc.getJavaClassName(true);
+        String sourceText = gap.Strings.TextToString(desc.getJavaMethodSource(true));
         if (null == sourceText){
             JelaToolFunction prog = new JelaToolFunction(resource,desc);
             sourceText = prog.getSource();
-            desc.setFunctionSourceJava(Strings.TextFromString(sourceText));
-            desc.setFunctionClassname(prog.fullClassName);
+            desc.setJavaClassSource(Strings.TextFromString(sourceText));
+            desc.setJavaClassName(prog.fullClassName);
         }
 
         if (null != className && null != sourceText){
@@ -351,7 +319,7 @@ public class FileManager
                     tool.getTask(err, this, null, Options, null, units);
 
                 if (task.call()){
-                    desc.setFunctionClassfileJvm(new Blob(bin.toByteArray()));
+                    desc.setJavaClassBinary(new Blob(bin.toByteArray()));
                     desc.save();
                     return true;
                 }
@@ -365,13 +333,12 @@ public class FileManager
         else 
             return false;
     }
-
-    public Class<gap.service.ToolFunction> define(Tool desc){
-        String classname = desc.getFunctionClassname(true);
+    public Class define(Resource desc){
+        String classname = desc.getJavaClassName(true);
         if (null != classname){
-            Blob classfile = desc.getFunctionClassfileJvm(true);
+            Blob classfile = desc.getJavaClassBinary(true);
             if (null != classfile)
-                return (Class<gap.service.ToolFunction>)this.define(classname,classfile.getBytes());
+                return (Class<gap.service.Servlet>)this.define(classname,classfile.getBytes());
         }
         return null;
     }
@@ -465,7 +432,6 @@ public class FileManager
     }
     public void close() throws IOException {
     }
-
     public String toString(){
         Location location = this.location;
         if (null != location)
@@ -473,7 +439,8 @@ public class FileManager
         else
             return "";
     }
-
+    /*
+     */
     public final static URI ToUri(String name) {
         StringBuilder strbuf = new StringBuilder();
         strbuf.append("mfm:///");
@@ -481,48 +448,28 @@ public class FileManager
 
         return URI.create(strbuf.toString());
     }
-
-
-    public final static Resource GetResource(Path path){
-
-        return Resource.ForLongBaseName(path.getBase(),path.getName());
-    }
-    public final static Resource GetCreateResource(Path path){
-
-        return Resource.GetCreateLong(path.getBase(),path.getName());
-    }
-    public final static Tool GetTool(Resource resource, Method method, String name){
-        if (null != resource){
-            if (null != name)
-                return resource.getTools(name);
-            else
-                return resource.getTools(method.lower);
-        }
-        else
-            return null;
-    }
     public final static String DerivePackage(Resource resource){
-        String base = resource.getBase();
-        String name = resource.getName();
-        if (null != base && 0 != base.length()){
-            if (0 != name.length())
-                return (OD.Decamel(base)+'.'+OD.Decamel(name));
-            else
-                throw new IllegalStateException();
+        String fullname = resource.getJavaClassName(true);
+        if (null != fullname){
+            int idx = fullname.lastIndexOf('.');
+            if (-1 != idx){
+                return fullname.substring(0,idx);
+            }
         }
-        else if (0 != name.length())
-            return OD.Decamel(name);
-        else
-            throw new IllegalStateException();
+        throw new IllegalStateException(fullname);
+    }
+    public final static String DeriveName(Resource resource){
+        String fullname = resource.getJavaClassName(true);
+        if (null != fullname){
+            int idx = fullname.lastIndexOf('.');
+            if (-1 != idx){
+                return fullname.substring(idx+1);
+            }
+        }
+        return null;
     }
     public final static String DerivePackage(AbstractList list){
         return OD.Decamel(list.getChildTypeName());
-    }
-
-    public final static String GetPath(Resource desc){
-        String base = desc.getBase();
-        String name = desc.getName();
-        return GetPath(base,name);
     }
     public final static String GetPath(String base, String name){
         if (null != name){

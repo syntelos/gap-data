@@ -316,52 +316,12 @@ public class Servlet
     protected void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
-        Resource resource = req.resource;
-        if (null != resource){
-            String op = req.getParameter("op");
-            if (null == op)
-                this.error(req,rep,400,"Missing request parameter 'op'");
-
-            else if ("create".equals(op)){
-
-                this.error(req,rep,400,"Not available to create");
-            }
-            else {
-                Tool tool = resource.getTools(op);
-                if (null != tool){
-                    ToolFunction function = req.getToolFunction(this,req,rep,resource,tool);
-                    if (null != function)
-                        function.invoke();
-                    else
-                        this.error(req,rep,400,"Operator function not found");
-                }
-                else
-                    this.error(req,rep,400,"Unrecognized request parameter 'op'");
-            }
-        }
-        else {
-            String op = req.getParameter("op");
-            if (null == op)
-                this.error(req,rep,400,"Missing request parameter 'op'");
-
-            else if ("create".equals(op)){
-                if (req.isMember){
-
-                    resource = FileManager.GetCreateResource(req.path);
-
-                    if (resource.updateFrom(req))
-                        resource.save();
-
-                    Templates.CreateTools(resource);
-
-                    this.redirectToItem(req,rep,resource.getId());
-                }
-                else
-                    this.error(req,rep,403,"Access not granted");
-            }
-            else
-                this.error(req,rep,400,"Unrecognized request parameter 'op' not 'create'");
-        }
+        /*
+         * TODO 
+         * Get create bean from path
+         * bean.updateFrom(req)
+         */
+        this.undefined(req,rep);
     }
     protected void doPut(Request req, Response rep)
         throws ServletException, IOException

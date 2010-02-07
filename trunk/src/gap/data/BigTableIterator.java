@@ -74,11 +74,6 @@ public final class BigTableIterator<V extends BigTable>
             if (!Logon.IsAdmin())
                 throw new AdminAccessException();
         }
-        else if (gdo instanceof PartnerReadWrite.ReadRestricted){
-
-            if (!Logon.IsPartner())
-                throw new PartnerAccessException();
-        }
         gdo.setFromDatastore();
         gdo.onread();
         return (V)gdo;

@@ -39,7 +39,7 @@ public abstract class JelaProgram
     };
     protected final static String[] Lines(Tool tool){
         if (null != tool){
-            String text = gap.Strings.TextToString(tool.getFunctionBody(true));
+            String text = gap.Strings.TextToString(tool.getJavaMethodSource(true));
             if (null != text){
                 StringTokenizer strtok = new StringTokenizer(text,"\r\n");
                 int count = strtok.countTokens();
