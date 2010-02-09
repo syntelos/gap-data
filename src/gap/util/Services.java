@@ -45,6 +45,60 @@ public class Services
 
     protected final static Logger Log = Logger.getLogger(Services.class.getName());
 
+    public static lxl.List<String> Read(Class service)
+        throws IOException
+    {
+        lxl.List<String> re = new lxl.ArrayList<String>();
+        String name = NamePrefix+service.getName();
+        Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(name);
+        while (resources.hasMoreElements()){
+            URL resource = resources.nextElement();
+            InputStream in = resource.openStream();
+            if (null != in){
+                BufferedReader strin = new BufferedReader(new InputStreamReader(in));
+                try {
+                    String line;
+                    while (null != (line = strin.readLine())){
+                        int comment = line.indexOf('#');
+                        if (-1 != comment)
+                            line = line.substring(0,comment);
+                        line = line.trim();
+                        if (0 != line.length())
+                            re.add(line);
+                    }
+                }
+                finally {
+                    in.close();
+                }
+            }
+        }
+        return re;
+    }
+    public static lxl.List<String> Read(java.io.File file)
+        throws IOException
+    {
+        lxl.List<String> re = new lxl.ArrayList<String>();
+        InputStream in = new java.io.FileInputStream(file);
+        if (null != in){
+            BufferedReader strin = new BufferedReader(new InputStreamReader(in));
+            try {
+                String line;
+                while (null != (line = strin.readLine())){
+                    int comment = line.indexOf('#');
+                    if (-1 != comment)
+                        line = line.substring(0,comment);
+                    line = line.trim();
+                    if (0 != line.length())
+                        re.add(line);
+                }
+            }
+            finally {
+                in.close();
+            }
+        }
+        return re;
+    }
+
 
     private final Class service;
 

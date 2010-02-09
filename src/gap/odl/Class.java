@@ -20,6 +20,7 @@
 package gap.odl;
 
 import gap.service.od.ClassDescriptor;
+import static gap.service.od.ClassDescriptor.Relation.Type.*;
 import gap.service.od.FieldDescriptor;
 import gap.service.od.ImportDescriptor;
 import gap.service.od.MethodDescriptor;
@@ -308,6 +309,30 @@ public final class Class
     public Relation.Type getRelation(){
         return this.relation;
     }
+    public boolean isRelationPrimary(){
+        switch (this.relation){
+        case None:
+        case Parent:
+            return true;
+        case Child:
+        case ChildGroup:
+            return false;
+        default:
+            throw new IllegalStateException();
+        }
+    }
+    public boolean isRelationSecondary(){
+        switch (this.relation){
+        case None:
+        case Parent:
+            return false;
+        case Child:
+        case ChildGroup:
+            return true;
+        default:
+            throw new IllegalStateException();
+        }
+    }
     public boolean hasVersion(){
         return (null != this.version);
     }
@@ -351,6 +376,9 @@ public final class Class
     }
     public boolean hasParent(){
         return (null != this.parent);
+    }
+    public boolean hasNotParent(){
+        return (null == this.parent);
     }
     public String getParent(){
         if (null != this.parent)
