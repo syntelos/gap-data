@@ -6,7 +6,7 @@
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -34,10 +34,10 @@ import javax.annotation.Generated;
 
 /**
  * Generated bean data binding.
- * 
+ *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-07T17:49:17.363Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-09T03:38:04.939Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -252,8 +252,8 @@ public abstract class PersonData
         implements gap.data.Field<Field>
     {
         InheritFromKey("inheritFromKey",Field.Type.Primitive),
-            Key("key",Field.Type.Primitive),
-            Id("id",Field.Type.Primitive),
+        Key("key",Field.Type.Primitive),
+        Id("id",Field.Type.Primitive),
         LogonId("logonId",Field.Type.Primitive);
 
 
@@ -301,10 +301,6 @@ public abstract class PersonData
                 return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
             case Key:
                 return instance.setKey(gap.Objects.KeyFromObject(value));
-            case Id:
-                return instance.setId(gap.Objects.StringFromObject(value));
-            case LogonId:
-                return instance.setLogonId(gap.Objects.StringFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in Person");
             }
@@ -321,9 +317,25 @@ public abstract class PersonData
         Field(String fieldName, Field.Type fieldType){
             this.fieldName = fieldName;
             this.fieldType = fieldType;
-            this.fieldTypePrimitive = (Field.Type.Primitive == this.fieldType);
-            this.fieldTypeBigTable = (Field.Type.BigTable == this.fieldType);
-            this.fieldTypeCollection = (Field.Type.Collection == this.fieldType);
+            switch (fieldType){
+            case Primitive:
+                this.fieldTypePrimitive = true;
+                this.fieldTypeBigTable = false;
+                this.fieldTypeCollection = false;
+                break;
+            case BigTable:
+                this.fieldTypePrimitive = false;
+                this.fieldTypeBigTable = true;
+                this.fieldTypeCollection = false;
+                break;
+            case Collection:
+                this.fieldTypePrimitive = false;
+                this.fieldTypeBigTable = false;
+                this.fieldTypeCollection = true;
+                break;
+            default:
+                throw new IllegalStateException("Unimplemented field type "+fieldType);
+            }
         }
 
 
@@ -439,8 +451,8 @@ public abstract class PersonData
     public final String getId(){
         return this.id;
     }
-    public final String getId(boolean ignore){
-        return this.id;
+    public final String getId(boolean mayInherit){
+        return this.getId();
     }
     public final boolean setId(String id){
         if (IsNotEqual(this.id,id)){
@@ -467,8 +479,8 @@ public abstract class PersonData
     public final String getLogonId(){
         return this.logonId;
     }
-    public final String getLogonId(boolean ignore){
-        return this.logonId;
+    public final String getLogonId(boolean mayInherit){
+        return this.getLogonId();
     }
     public final boolean setLogonId(String logonId){
         if (IsNotEqual(this.logonId,logonId)){
@@ -504,6 +516,7 @@ public abstract class PersonData
         return this.updateFrom( (Person)proto);
     }
     public final boolean updateFrom(Person proto){
+        boolean mayInherit = (!this.hasInheritFromKey());
         boolean change = false;
         return change;
     }
