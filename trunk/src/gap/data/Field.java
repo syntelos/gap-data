@@ -33,6 +33,10 @@ public interface Field<E extends Enum>
     extends java.lang.Comparable<E>
 {
 
+    public static enum Type {
+        Primitive, BigTable, Collection;
+    }
+
     public final static class List
         extends gap.util.AbstractListPrimitive.Any<Field>
     {
@@ -63,4 +67,19 @@ public interface Field<E extends Enum>
      * Downcase name
      */
     public String getFieldName();
+
+    public Type getFieldType();
+
+    public boolean isFieldTypePrimitive();
+
+    public boolean isNotFieldTypePrimitive();
+
+    public boolean isFieldTypeBigTable();
+
+    public boolean isNotFieldTypeBigTable();
+
+    public boolean isFieldTypeCollection();
+
+    public boolean isNotFieldTypeCollection();
+
 }

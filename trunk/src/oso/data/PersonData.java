@@ -251,10 +251,10 @@ public abstract class PersonData
     public static enum Field
         implements gap.data.Field<Field>
     {
-        InheritFromKey("inheritFromKey"),
-        Key("key"),
-        Id("id"),
-        LogonId("logonId");
+        InheritFromKey("inheritFromKey",Field.Type.Primitive),
+            Key("key",Field.Type.Primitive),
+            Id("id",Field.Type.Primitive),
+        LogonId("logonId",Field.Type.Primitive);
 
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -313,14 +313,43 @@ public abstract class PersonData
 
         private final String fieldName;
 
+        private final Field.Type fieldType;
 
-        Field(String fieldName){
+        private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
+
+
+        Field(String fieldName, Field.Type fieldType){
             this.fieldName = fieldName;
+            this.fieldType = fieldType;
+            this.fieldTypePrimitive = (Field.Type.Primitive == this.fieldType);
+            this.fieldTypeBigTable = (Field.Type.BigTable == this.fieldType);
+            this.fieldTypeCollection = (Field.Type.Collection == this.fieldType);
         }
 
 
         public String getFieldName(){
             return this.fieldName;
+        }
+        public Type getFieldType(){
+            return this.fieldType;
+        }
+        public boolean isFieldTypePrimitive(){
+            return this.fieldTypePrimitive;
+        }
+        public boolean isNotFieldTypePrimitive(){
+            return (!this.fieldTypePrimitive);
+        }
+        public boolean isFieldTypeBigTable(){
+            return this.fieldTypeBigTable;
+        }
+        public boolean isNotFieldTypeBigTable(){
+            return (!this.fieldTypeBigTable);
+        }
+        public boolean isFieldTypeCollection(){
+            return this.fieldTypeCollection;
+        }
+        public boolean isNotFieldTypeCollection(){
+            return (!this.fieldTypeCollection);
         }
         public String toString(){
             return this.fieldName;

@@ -6,7 +6,7 @@
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 
 /**
  * Generated bean data binding.
- * 
+ *
  * @see {{=class_name}}
  */
 @Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}")
@@ -416,10 +416,10 @@ public abstract class {{=class_name}}Data
     public static enum Field
         implements gap.data.Field<Field>
     {
-        InheritFromKey("inheritFromKey"),{{#class_re_child_or_group}}
-        ParentKey("parentKey"),{{/class_re_child_or_group}}
-        Key("key"),{{#pfield}}
-        {{=field_nameCamel}}("{{=field_name}}"){{#pfield_it_NotLast}},{{/pfield_it_NotLast}}{{#pfield_it_Last}};{{/pfield_it_Last}}{{/pfield}}
+        InheritFromKey("inheritFromKey",Field.Type.Primitive),{{#class_re_child_or_group}}
+        ParentKey("parentKey",Field.Type.Primitive),{{/class_re_child_or_group}}
+        Key("key",Field.Type.Primitive),{{#field}}
+        {{=field_nameCamel}}("{{=field_name}}",Field.Type.{{#field_is_primitive}}Primitive{{/field_is_primitive}}{{#field_is_bigTable}}BigTable{{/field_is_bigTable}}{{#field_is_collection}}Collection{{/field_is_collection}}){{#field_it_NotLast}},{{/field_it_NotLast}}{{#field_it_Last}};{{/field_it_Last}}{{/field}}
 
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -453,9 +453,9 @@ public abstract class {{=class_name}}Data
             case ParentKey:
                 return instance.getParentKey();{{/class_re_child_or_group}}
             case Key:
-                return instance.getKey();{{#pfield}}
+                return instance.getKey();{{#field}}
             case {{=field_nameCamel}}:
-                return instance.get{{=field_nameCamel}}(mayInherit);{{/pfield}}
+                return instance.get{{=field_nameCamel}}(mayInherit);{{/field}}
             default:
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
@@ -467,9 +467,9 @@ public abstract class {{=class_name}}Data
             case ParentKey:
                 return instance.setParentKey(gap.Objects.KeyFromObject(value));{{/class_re_child_or_group}}
             case Key:
-                return instance.setKey(gap.Objects.KeyFromObject(value));{{#pfield}}
+                return instance.setKey(gap.Objects.KeyFromObject(value));{{#field}}{{#field_is_not_collection}}
             case {{=field_nameCamel}}:
-                return instance.set{{=field_nameCamel}}({{=field_from_object_prefix}}value{{=field_from_object_suffix}});{{/pfield}}
+                return instance.set{{=field_nameCamel}}({{=field_from_object_prefix}}value{{=field_from_object_suffix}});{{/field_is_not_collection}}{{/field}}
             default:
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
@@ -478,14 +478,59 @@ public abstract class {{=class_name}}Data
 
         private final String fieldName;
 
+        private final Field.Type fieldType;
 
-        Field(String fieldName){
+        private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
+
+
+        Field(String fieldName, Field.Type fieldType){
             this.fieldName = fieldName;
+            this.fieldType = fieldType;
+            switch (fieldType){
+            case Primitive:
+                this.fieldTypePrimitive = true;
+                this.fieldTypeBigTable = false;
+                this.fieldTypeCollection = false;
+                break;
+            case BigTable:
+                this.fieldTypePrimitive = false;
+                this.fieldTypeBigTable = true;
+                this.fieldTypeCollection = false;
+                break;
+            case Collection:
+                this.fieldTypePrimitive = false;
+                this.fieldTypeBigTable = false;
+                this.fieldTypeCollection = true;
+                break;
+            default:
+                throw new IllegalStateException("Unimplemented field type "+fieldType);
+            }
         }
 
 
         public String getFieldName(){
             return this.fieldName;
+        }
+        public Type getFieldType(){
+            return this.fieldType;
+        }
+        public boolean isFieldTypePrimitive(){
+            return this.fieldTypePrimitive;
+        }
+        public boolean isNotFieldTypePrimitive(){
+            return (!this.fieldTypePrimitive);
+        }
+        public boolean isFieldTypeBigTable(){
+            return this.fieldTypeBigTable;
+        }
+        public boolean isNotFieldTypeBigTable(){
+            return (!this.fieldTypeBigTable);
+        }
+        public boolean isFieldTypeCollection(){
+            return this.fieldTypeCollection;
+        }
+        public boolean isNotFieldTypeCollection(){
+            return (!this.fieldTypeCollection);
         }
         public String toString(){
             return this.fieldName;
@@ -633,34 +678,63 @@ public abstract class {{=class_name}}Data
     }
     public final boolean drop{{=field_nameCamel}}(){
         if (null != this.{{=field_name}}){
-            this.{{=field_name}} = null;
+            this.{{=field_name}} = null;{{#field_is_bigTable}}
+            this.{{=field_name}}Key = null;{{/field_is_bigTable}}
             return true;
         }
         else
             return false;
     }{{#field_is_not_inheritable}}
-    public final {{=field_class}} get{{=field_nameCamel}}(){
-        return this.{{=field_name}};
+    public final {{=field_class}} get{{=field_nameCamel}}(){{{#field_is_not_bigTable}}
+        return this.{{=field_name}};{{/field_is_not_bigTable}}{{#field_is_bigTable}}
+        {{=field_class}} {{=field_name}} = this.{{=field_name}};
+        if (null == {{=field_name}}){
+            Key {{=field_name}}Key = this.{{=field_name}}Key;
+            if (null != {{=field_name}}Key){
+                {{=field_name}} = {{=field_class}}.Get({{=field_name}}Key);
+                this.{{=field_name}} = {{=field_name}};
+            }
+        }
+        return {{=field_name}};{{/field_is_bigTable}}
     }
-    public final {{=field_class}} get{{=field_nameCamel}}(boolean ignore){
-        return this.{{=field_name}};
-    }{{/field_is_not_inheritable}}{{#field_is_inheritable}}
     public final {{=field_class}} get{{=field_nameCamel}}(boolean mayInherit){
+        return this.get{{=field_nameCamel}}();
+    }{{/field_is_not_inheritable}}{{#field_is_inheritable}}
+    public final {{=field_class}} get{{=field_nameCamel}}(){
+        return this.get{{=field_nameCamel}}(MayInherit);
+    }
+    public final {{=field_class}} get{{=field_nameCamel}}(boolean mayInherit){{{#field_is_not_bigTable}}
         if (mayInherit){
             {{=field_class}} {{=field_name}} = this.{{=field_name}};
             if (null == {{=field_name}} && this.hasInheritFrom()){
                 {{=class_name}} inheritFrom = this.getInheritFrom();
-                if (null != inheritFrom)
-                    return inheritFrom.get{{=field_nameCamel}}(MayInherit);
+                return inheritFrom.get{{=field_nameCamel}}(MayInherit);
             }
             return {{=field_name}};
         }
         else
-            return this.{{=field_name}};
+            return this.{{=field_name}};{{/field_is_not_bigTable}}{{#field_is_bigTable}}
+        {{=field_class}} {{=field_name}} = this.{{=field_name}};
+        if (null == {{=field_name}}){
+            Key {{=field_name}}Key = this.{{=field_name}}Key;
+            if (null == {{=field_name}}Key && mayInherit && this.hasInheritFrom()){
+                {{=class_name}} inheritFrom = this.getInheritFrom();
+                return inheritFrom.get{{=field_nameCamel}}(MayInherit);
+            }
+            else if (null != {{=field_name}}Key){
+                {{=field_name}} = {{=field_class}}.Get({{=field_name}}Key);
+                this.{{=field_name}} = {{=field_name}};
+            }
+        }
+        return {{=field_name}};{{/field_is_bigTable}}
     }
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}, boolean withInheritance){
         if (IsNotEqual(this.{{=field_name}},this.get{{=field_nameCamel}}(withInheritance))){
-            this.{{=field_name}} = {{=field_name}};
+            this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
+            if (null != {{=field_name}})
+                this.{{=field_name}}Key = {{=field_name}}.getKey();
+            else
+                this.{{=field_name}}Key = null;{{/field_is_bigTable}}
             return true;
         }
         else
@@ -668,7 +742,11 @@ public abstract class {{=class_name}}Data
     }{{/field_is_inheritable}}
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
-            this.{{=field_name}} = {{=field_name}};
+            this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
+            if (null != {{=field_name}})
+                this.{{=field_name}}Key = {{=field_name}}.getKey();
+            else
+                this.{{=field_name}}Key = null;{{/field_is_bigTable}}
             return true;
         }
         else
@@ -690,6 +768,9 @@ public abstract class {{=class_name}}Data
         }
         else
             return false;
+    }
+    public final {{=field_class}} get{{=field_nameCamel}}(){
+        return this.get{{=field_nameCamel}}(MayInherit);
     }
     public final {{=field_class}} get{{=field_nameCamel}}(boolean mayInherit){
         {{=field_class}} {{=field_name}} = this.{{=field_name}};
@@ -814,28 +895,29 @@ public abstract class {{=class_name}}Data
         return Field.getField(name);
     }
     public boolean updateFrom(Request req) throws ValidationError {
-        boolean change = false;{{#pfield}}{{#field_is_updatable}}
+        boolean change = false;{{#pfield}}{{#field_is_primitive}}{{#field_is_not_unique}}{{#field_is_not_hash_unique}}
         String {{=field_name}}Request = req.getParameter("{{=field_name}}");
         try {
             {{=field_class}} {{=field_name}} = Strings.{{=field_class}}FromString({{=field_name}}Request);
-            if (this.set{{=field_nameCamel}}({{=field_name}},MayInherit)){
+            if (this.set{{=field_nameCamel}}({{=field_name}})){
                 change = true;
             }
         }
         catch (RuntimeException exc){
             throw new ValidationError(ClassName,"{{=field_name}}",{{=field_name}}Request,exc);
-        }{{/field_is_updatable}}{{/pfield}}
+        }{{/field_is_not_hash_unique}}{{/field_is_not_unique}}{{/field_is_primitive}}{{/pfield}}
         return change;
     }
     public final boolean updateFrom(BigTable proto){
         return this.updateFrom( ({{=class_name}})proto);
     }
     public final boolean updateFrom({{=class_name}} proto){
-        boolean change = false;{{#pfield}}{{#field_is_updatable}}
-        {{=field_class}} {{=field_name}} = proto.get{{=field_nameCamel}}();
-        if (null != {{=field_name}} && this.set{{=field_nameCamel}}({{=field_name}},MayInherit)){
+        boolean mayInherit = (!this.hasInheritFromKey());
+        boolean change = false;{{#pfield}}{{#field_is_primitive}}{{#field_is_not_unique}}{{#field_is_not_hash_unique}}
+        {{=field_class}} {{=field_name}} = proto.get{{=field_nameCamel}}(mayInherit);
+        if (null != {{=field_name}} && this.set{{=field_nameCamel}}({{=field_name}})){
             change = true;
-        }{{/field_is_updatable}}{{/pfield}}
+        }{{/field_is_not_hash_unique}}{{/field_is_not_unique}}{{/field_is_primitive}}{{/pfield}}
         return change;
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){

@@ -76,5 +76,12 @@ public interface TemplateDataDictionary
      * @return New section.
      */
     public TemplateDataDictionary addSection(TemplateName sectionName);
+    /**
+     * Intended to permit the reflection of a section element within
+     * multiple named sections.
+     * 
+     * @return Section argument.
+     */
+    public TemplateDataDictionary addSection(TemplateName name, TemplateDataDictionary section);
 
 }

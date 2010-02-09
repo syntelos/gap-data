@@ -61,27 +61,26 @@ public abstract class TemplateNodeData
 
 
 
-    public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent){
-        String id = IdFor(ancestor, nodeType,  lineNumber,  nodeContent);
+    public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer lineNumber){
+        String id = IdFor(ancestor, nodeType,  lineNumber);
         return KeyShortFor(ancestor,id);
     }
 
 
-    public final static String IdFor(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent){
-        if (ancestor.isComplete() && null != nodeType && null != lineNumber && null != nodeContent){
+    public final static String IdFor(Key ancestor, String nodeType, Integer lineNumber){
+        if (ancestor.isComplete() && null != nodeType && null != lineNumber){
             String nodeTypeString = nodeType;
             String lineNumberString = gap.Strings.IntegerToString(lineNumber);
-            String nodeContentString = gap.Strings.TextToString(nodeContent);
-            return gap.data.Hash.For(ToString(ancestor)+'/'+nodeTypeString+'/'+lineNumberString+'/'+nodeContentString);
+            return gap.data.Hash.For(ToString(ancestor)+'/'+nodeTypeString+'/'+lineNumberString);
         }
         else
             throw new IllegalArgumentException();
     }
 
 
-    public final static TemplateNode ForShortNodeTypeLineNumberNodeContent(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent){
-        if (null != nodeType && null != lineNumber && null != nodeContent){
-            Key key = KeyShortIdFor(ancestor, nodeType, lineNumber, nodeContent);
+    public final static TemplateNode ForShortNodeTypeLineNumberNodeContent(Key ancestor, String nodeType, Integer lineNumber){
+        if (null != nodeType && null != lineNumber){
+            Key key = KeyShortIdFor(ancestor, nodeType, lineNumber);
             TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -95,10 +94,10 @@ public abstract class TemplateNodeData
     }
 
 
-    public final static TemplateNode GetCreateShort(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent){
-        TemplateNode templateNode = ForShortNodeTypeLineNumberNodeContent(ancestor, nodeType, lineNumber, nodeContent);
+    public final static TemplateNode GetCreateShort(Key ancestor, String nodeType, Integer lineNumber){
+        TemplateNode templateNode = ForShortNodeTypeLineNumberNodeContent(ancestor, nodeType, lineNumber);
         if (null == templateNode){
-            templateNode = new TemplateNode(ancestor, nodeType, lineNumber, nodeContent);
+            templateNode = new TemplateNode(ancestor, nodeType, lineNumber);
             templateNode = (TemplateNode)gap.data.Store.Put(templateNode);
         }
         return templateNode;
@@ -282,15 +281,15 @@ public abstract class TemplateNodeData
     public static enum Field
         implements gap.data.Field<Field>
     {
-        InheritFromKey("inheritFromKey"),
-        ParentKey("parentKey"),
-        Key("key"),
-        Id("id"),
-        NodeType("nodeType"),
-        LineNumber("lineNumber"),
-        NodeContent("nodeContent"),
-        Offset("offset"),
-        OffsetCloseRelative("offsetCloseRelative");
+        InheritFromKey("inheritFromKey",Field.Type.Primitive),
+        ParentKey("parentKey",Field.Type.Primitive),
+        Key("key",Field.Type.Primitive),
+        Id("id",Field.Type.Primitive),
+        NodeType("nodeType",Field.Type.Primitive),
+        LineNumber("lineNumber",Field.Type.Primitive),
+        NodeContent("nodeContent",Field.Type.Primitive),
+        Offset("offset",Field.Type.Primitive),
+        OffsetCloseRelative("offsetCloseRelative",Field.Type.Primitive);
 
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -369,14 +368,43 @@ public abstract class TemplateNodeData
 
         private final String fieldName;
 
+        private final Field.Type fieldType;
 
-        Field(String fieldName){
+        private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
+
+
+        Field(String fieldName, Field.Type fieldType){
             this.fieldName = fieldName;
+            this.fieldType = fieldType;
+            this.fieldTypePrimitive = (Field.Type.Primitive == this.fieldType);
+            this.fieldTypeBigTable = (Field.Type.BigTable == this.fieldType);
+            this.fieldTypeCollection = (Field.Type.Collection == this.fieldType);
         }
 
 
         public String getFieldName(){
             return this.fieldName;
+        }
+        public Type getFieldType(){
+            return this.fieldType;
+        }
+        public boolean isFieldTypePrimitive(){
+            return this.fieldTypePrimitive;
+        }
+        public boolean isNotFieldTypePrimitive(){
+            return (!this.fieldTypePrimitive);
+        }
+        public boolean isFieldTypeBigTable(){
+            return this.fieldTypeBigTable;
+        }
+        public boolean isNotFieldTypeBigTable(){
+            return (!this.fieldTypeBigTable);
+        }
+        public boolean isFieldTypeCollection(){
+            return this.fieldTypeCollection;
+        }
+        public boolean isNotFieldTypeCollection(){
+            return (!this.fieldTypeCollection);
         }
         public String toString(){
             return this.fieldName;
@@ -401,13 +429,12 @@ public abstract class TemplateNodeData
     protected TemplateNodeData() {
         super();
     }
-    protected TemplateNodeData(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent) {
+    protected TemplateNodeData(Key ancestor, String nodeType, Integer lineNumber) {
         super();
         this.setNodeType(nodeType);
         this.setLineNumber(lineNumber);
-        this.setNodeContent(nodeContent);
         this.parentKey = ancestor;
-        String id = IdFor(ancestor,  nodeType, lineNumber, nodeContent);
+        String id = IdFor(ancestor,  nodeType, lineNumber);
         this.setId(id);
         Key key = KeyShortFor(ancestor,id);
         this.setKey(key);
