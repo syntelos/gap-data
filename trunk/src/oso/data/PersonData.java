@@ -251,10 +251,10 @@ public abstract class PersonData
     public static enum Field
         implements gap.data.Field<Field>
     {
-        InheritFromKey("inheritFromKey",Field.Type.Primitive),
-        Key("key",Field.Type.Primitive),
-        Id("id",Field.Type.Primitive),
-        LogonId("logonId",Field.Type.Primitive);
+        InheritFromKey("inheritFromKey",Type.Primitive),
+        Key("key",Type.Primitive),
+        Id("id",Type.Primitive),
+        LogonId("logonId",Type.Primitive);
 
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -309,12 +309,12 @@ public abstract class PersonData
 
         private final String fieldName;
 
-        private final Field.Type fieldType;
+        private final Type fieldType;
 
         private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
 
 
-        Field(String fieldName, Field.Type fieldType){
+        Field(String fieldName, Type fieldType){
             this.fieldName = fieldName;
             this.fieldType = fieldType;
             switch (fieldType){

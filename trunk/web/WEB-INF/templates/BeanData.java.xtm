@@ -416,10 +416,10 @@ public abstract class {{=class_name}}Data
     public static enum Field
         implements gap.data.Field<Field>
     {
-        InheritFromKey("inheritFromKey",Field.Type.Primitive),{{#class_re_child_or_group}}
-        ParentKey("parentKey",Field.Type.Primitive),{{/class_re_child_or_group}}
-        Key("key",Field.Type.Primitive),{{#field}}
-        {{=field_nameCamel}}("{{=field_name}}",Field.Type.{{#field_is_primitive}}Primitive{{/field_is_primitive}}{{#field_is_bigTable}}BigTable{{/field_is_bigTable}}{{#field_is_collection}}Collection{{/field_is_collection}}){{#field_it_NotLast}},{{/field_it_NotLast}}{{#field_it_Last}};{{/field_it_Last}}{{/field}}
+        InheritFromKey("inheritFromKey",Type.Primitive),{{#class_re_child_or_group}}
+        ParentKey("parentKey",Type.Primitive),{{/class_re_child_or_group}}
+        Key("key",Type.Primitive),{{#field}}
+        {{=field_nameCamel}}("{{=field_name}}",Type.{{#field_is_primitive}}Primitive{{/field_is_primitive}}{{#field_is_bigTable}}BigTable{{/field_is_bigTable}}{{#field_is_collection}}Collection{{/field_is_collection}}){{#field_it_NotLast}},{{/field_it_NotLast}}{{#field_it_Last}};{{/field_it_Last}}{{/field}}
 
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -478,12 +478,12 @@ public abstract class {{=class_name}}Data
 
         private final String fieldName;
 
-        private final Field.Type fieldType;
+        private final Type fieldType;
 
         private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
 
 
-        Field(String fieldName, Field.Type fieldType){
+        Field(String fieldName, Type fieldType){
             this.fieldName = fieldName;
             this.fieldType = fieldType;
             switch (fieldType){
