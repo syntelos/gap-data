@@ -281,15 +281,15 @@ public abstract class TemplateNodeData
     public static enum Field
         implements gap.data.Field<Field>
     {
-        InheritFromKey("inheritFromKey",Field.Type.Primitive),
-        ParentKey("parentKey",Field.Type.Primitive),
-        Key("key",Field.Type.Primitive),
-        Id("id",Field.Type.Primitive),
-        NodeType("nodeType",Field.Type.Primitive),
-        LineNumber("lineNumber",Field.Type.Primitive),
-        NodeContent("nodeContent",Field.Type.Primitive),
-        Offset("offset",Field.Type.Primitive),
-        OffsetCloseRelative("offsetCloseRelative",Field.Type.Primitive);
+        InheritFromKey("inheritFromKey",Type.Primitive),
+        ParentKey("parentKey",Type.Primitive),
+        Key("key",Type.Primitive),
+        Id("id",Type.Primitive),
+        NodeType("nodeType",Type.Primitive),
+        LineNumber("lineNumber",Type.Primitive),
+        NodeContent("nodeContent",Type.Primitive),
+        Offset("offset",Type.Primitive),
+        OffsetCloseRelative("offsetCloseRelative",Type.Primitive);
 
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -356,12 +356,12 @@ public abstract class TemplateNodeData
 
         private final String fieldName;
 
-        private final Field.Type fieldType;
+        private final Type fieldType;
 
         private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
 
 
-        Field(String fieldName, Field.Type fieldType){
+        Field(String fieldName, Type fieldType){
             this.fieldName = fieldName;
             this.fieldType = fieldType;
             switch (fieldType){

@@ -253,13 +253,13 @@ public abstract class TemplateData
     public static enum Field
         implements gap.data.Field<Field>
     {
-        InheritFromKey("inheritFromKey",Field.Type.Primitive),
-        Key("key",Field.Type.Primitive),
-        Id("id",Field.Type.Primitive),
-        Name("name",Field.Type.Primitive),
-        LastModified("lastModified",Field.Type.Primitive),
-        TemplateSourceHapax("templateSourceHapax",Field.Type.Primitive),
-        TemplateTargetHapax("templateTargetHapax",Field.Type.Collection);
+        InheritFromKey("inheritFromKey",Type.Primitive),
+        Key("key",Type.Primitive),
+        Id("id",Type.Primitive),
+        Name("name",Type.Primitive),
+        LastModified("lastModified",Type.Primitive),
+        TemplateSourceHapax("templateSourceHapax",Type.Primitive),
+        TemplateTargetHapax("templateTargetHapax",Type.Collection);
 
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -320,12 +320,12 @@ public abstract class TemplateData
 
         private final String fieldName;
 
-        private final Field.Type fieldType;
+        private final Type fieldType;
 
         private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
 
 
-        Field(String fieldName, Field.Type fieldType){
+        Field(String fieldName, Type fieldType){
             this.fieldName = fieldName;
             this.fieldType = fieldType;
             switch (fieldType){
