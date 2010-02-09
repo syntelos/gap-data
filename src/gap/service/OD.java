@@ -62,7 +62,7 @@ public final class OD
         public final static TemplateName FieldClassClean = new TemplateName("field_classClean");
         public final static TemplateName FieldClassCleanClean = new TemplateName("field_classCleanClean");
         public final static TemplateName FieldImplClassName = new TemplateName("field_impl_class_name");
-        public final static TemplateName FieldIsCollectionLongOrShort = new TemplateName("field_is_collection_long_or_short");
+        public final static TemplateName FieldIsCollection = new TemplateName("field_is_collection");
         public final static TemplateName FieldIsHashUnique = new TemplateName("field_is_hash_unique");
         public final static TemplateName FieldIsInheritable = new TemplateName("field_is_inheritable");
         public final static TemplateName FieldIsKey = new TemplateName("field_is_key");
@@ -80,7 +80,7 @@ public final class OD
         public final static TemplateName FieldIsMapLongOrShort = new TemplateName("field_is_map_long_or_short");
         public final static TemplateName FieldIsMapPrimitive = new TemplateName("field_is_map_primitive");
         public final static TemplateName FieldIsMapShort = new TemplateName("field_is_map_short");
-        public final static TemplateName FieldIsNotCollectionLongOrShort = new TemplateName("field_is_not_collection_long_or_short");
+        public final static TemplateName FieldIsNotCollection = new TemplateName("field_is_not_collection");
         public final static TemplateName FieldIsNotHashUnique = new TemplateName("field_is_not_hash_unique");
         public final static TemplateName FieldIsNotInheritable = new TemplateName("field_is_not_inheritable");
         public final static TemplateName FieldIsNotKey = new TemplateName("field_is_not_key");
@@ -407,6 +407,7 @@ public final class OD
                     isPersistent = true;
 
                     dataField = top.addSection(new TemplateName(prefix,"pfield"));
+                    top.addSection(new TemplateName(prefix,"field"), dataField);
 
                     /*
                      * Populate 'pfield' section
@@ -489,6 +490,7 @@ public final class OD
                     isCollection = true;
 
                     dataField = top.addSection(new TemplateName(prefix,"cfield"));
+                    top.addSection(new TemplateName(prefix,"field"), dataField);
                     /*
                      * Populate 'cfield' section
                      */
@@ -499,6 +501,7 @@ public final class OD
                     isRelation = true;
 
                     dataField = top.addSection(new TemplateName(prefix,"rfield"));
+                    top.addSection(new TemplateName(prefix,"field"), dataField);
                     /*
                      * Populate 'rfield' section
                      */
@@ -513,6 +516,7 @@ public final class OD
                     isTransient = true;
 
                     dataField = top.addSection(new TemplateName(prefix,"tfield"));
+                    top.addSection(new TemplateName(prefix,"field"), dataField);
                     /*
                      * Populate 'tfield' section
                      */
@@ -580,21 +584,21 @@ public final class OD
                         switch(listType){
                         case ListPrimitive:
                             dataField.addSection(TemplateNames.FieldIsListPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsNotCollectionLongOrShort);
+                            dataField.addSection(TemplateNames.FieldIsNotCollection);
                             dataField.addSection(TemplateNames.FieldIsNotListLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotListLong);
                             dataField.addSection(TemplateNames.FieldIsNotListShort);
                             break;
                         case ListShort:
                             dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsCollectionLongOrShort);
+                            dataField.addSection(TemplateNames.FieldIsCollection);
                             dataField.addSection(TemplateNames.FieldIsListLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotListLong);
                             dataField.addSection(TemplateNames.FieldIsListShort);
                             break;
                         case ListLong:
                             dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsCollectionLongOrShort);
+                            dataField.addSection(TemplateNames.FieldIsCollection);
                             dataField.addSection(TemplateNames.FieldIsListLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsListLong);
                             dataField.addSection(TemplateNames.FieldIsNotListShort);
@@ -631,21 +635,21 @@ public final class OD
                         switch(mapChild.mapType){
                         case MapPrimitive:
                             dataField.addSection(TemplateNames.FieldIsMapPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsNotCollectionLongOrShort);
+                            dataField.addSection(TemplateNames.FieldIsNotCollection);
                             dataField.addSection(TemplateNames.FieldIsNotMapLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotMapLong);
                             dataField.addSection(TemplateNames.FieldIsNotMapShort);
                             break;
                         case MapShort:
                             dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsCollectionLongOrShort);
+                            dataField.addSection(TemplateNames.FieldIsCollection);
                             dataField.addSection(TemplateNames.FieldIsMapLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotMapLong);
                             dataField.addSection(TemplateNames.FieldIsMapShort);
                             break;
                         case MapLong:
                             dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsCollectionLongOrShort);
+                            dataField.addSection(TemplateNames.FieldIsCollection);
                             dataField.addSection(TemplateNames.FieldIsMapLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsMapLong);
                             dataField.addSection(TemplateNames.FieldIsNotMapShort);

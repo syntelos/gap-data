@@ -446,17 +446,18 @@ public abstract class BigTable
             String fieldName = field.getFieldName();
 
             if (field != classKeyField){
+                if (field.isNotFieldTypeCollection()){
+                    java.io.Serializable value = this.valueOf(field,MayNotInherit);
+                    if (null != value){
 
-                java.io.Serializable value = this.valueOf(field,MayNotInherit);
-                if (null != value){
-
-                    if (IsIndexed(value))
-                        entity.setProperty(fieldName, value);
-                    else 
-                        entity.setUnindexedProperty(fieldName, value);
+                        if (IsIndexed(value))
+                            entity.setProperty(fieldName, value);
+                        else 
+                            entity.setUnindexedProperty(fieldName, value);
+                    }
+                    else //if (null != entity.getProperty(fieldName))//(redundant)
+                        entity.removeProperty(fieldName);
                 }
-                else //if (null != entity.getProperty(fieldName))//(redundant)
-                    entity.removeProperty(fieldName);
             }
             else
                 entity.removeProperty(fieldName); //[TEMP propagate change not storing key onto itself]

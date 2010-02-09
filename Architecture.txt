@@ -181,3 +181,16 @@ References: Long and Short
 
        }
      }
+
+
+For more info
+
+   * About.txt 
+
+   * TODO.txt 
+
+   * http://code.google.com/p/gap-data 
+
+   * http://groups.google.com/group/gap-data
+
+   * http://code.google.com/appengine/docs/java/overview.html

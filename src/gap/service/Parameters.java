@@ -32,8 +32,9 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
- * 
- * 
+ * Wrapper of servlet request parameters with special and default
+ * values common to the Open Social model.
+ * @see gap.Request
  * @author jdp
  */
 public final class Parameters
@@ -424,10 +425,24 @@ public final class Parameters
     public int size(){
         return this.size;
     }
+    public boolean has(String name){
+        return this.parameters.containsKey(name);
+    }
     public String[] get(String name){
         return this.parameters.get(name);
     }
     public String valueOf(String name){
+        return this.valueOf(name,null);
+    }
+    /**
+     * @param name Request parameter name
+     * @param sep Infix separator of multiple values defaults to comma
+     * and space, <i>", "</i>.
+     */
+    public String valueOf(String name, String sep){
+        if (null == sep)
+            sep = ", ";
+
         String[] value = this.parameters.get(name);
         if (null != value && 0 < value.length){
             if (1 == value.length)
@@ -436,7 +451,7 @@ public final class Parameters
                 StringBuilder string = new StringBuilder();
                 for (String v : value){
                     if (0 < string.length())
-                        string.append(',');
+                        string.append(sep);
                     string.append(v);
                 }
                 return string.toString();
@@ -456,5 +471,20 @@ public final class Parameters
     }
     public String[] getFields(){
         return this.fields.list;
+    }
+    /*
+     * Template Data Dictionary
+     */
+    public boolean hasVariable(TemplateName name){
+        if (name.has(1))
+            return super.hasVariable(name);
+        else
+            return this.has(name.getComponent(0));
+    }
+    public String getVariable(TemplateName name){
+        if (name.has(1))
+            return super.getVariable(name);
+        else
+            return this.valueOf(name.getComponent(0)," ");
     }
 }

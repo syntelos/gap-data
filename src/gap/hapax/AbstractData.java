@@ -193,28 +193,35 @@ public class AbstractData
 
         TemplateDataDictionary newSection = new AbstractData(this);
 
-        lxl.Map<String,List<TemplateDataDictionary>> sections = this.sections;
-        if (null == sections){
-            sections = new lxl.Map<String,List<TemplateDataDictionary>>();
-            this.sections = sections;
-            List<TemplateDataDictionary> section = Add(null,newSection);
-            sections.put(name.getComponent(0),section);
-        }
-        else {
-            List<TemplateDataDictionary> section = sections.get(name.getComponent(0));
-            if (null == section){
-                section = Add(section,newSection);
-                sections.put(name.getComponent(0),section);
-            }
-            else
-                section = Add(section,newSection);
-        }
-        if (name.is(0))
-            return newSection;
-        else
-            return newSection.addSection(new TemplateName(name));
+        return this.addSection(name,newSection);
     }
 
+    public TemplateDataDictionary addSection(TemplateName name, TemplateDataDictionary newSection){
+        if (null == name || null == newSection)
+            throw new IllegalArgumentException();
+        else {
+            lxl.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+            if (null == sections){
+                sections = new lxl.Map<String,List<TemplateDataDictionary>>();
+                this.sections = sections;
+                List<TemplateDataDictionary> section = Add(null,newSection);
+                sections.put(name.getComponent(0),section);
+            }
+            else {
+                List<TemplateDataDictionary> section = sections.get(name.getComponent(0));
+                if (null == section){
+                    section = Add(section,newSection);
+                    sections.put(name.getComponent(0),section);
+                }
+                else
+                    section = Add(section,newSection);
+            }
+            if (name.is(0))
+                return newSection;
+            else
+                return newSection.addSection(new TemplateName(name));
+        }
+    }
     public final static List<TemplateDataDictionary> Add(List<TemplateDataDictionary> list, TemplateDataDictionary data){
         if (null == list){
             List.Primitive<TemplateDataDictionary> newSectionList = new gap.util.AbstractListPrimitive.Any<TemplateDataDictionary>();

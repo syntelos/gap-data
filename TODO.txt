@@ -1,9 +1,6 @@
                                                 -*-outline-*-
 
-* Support Field type BigTable
-** References stored as keys
-
-* Integrate collection type fields with get section in BeanData.java.xtm 
+* Integrate collection+bigtable type fields with get section in BeanData.java.xtm 
 
 * Request
 ** implement binding for bigtable read access from template names
@@ -11,13 +8,6 @@
 *** viewer := me
 ** path equivalent names
 
-* Edit
-** POST
-*** Collection Create
-*** Item Update
-** GET 
-*** Collection List
-*** Item Read
-** Relation Data Structure
-*** Compound paths 
-**** name/id/name/(id)
+* Types support in BeanData.java.xtm, currently
+** gap.Primitives
+** gap.data.BigTable

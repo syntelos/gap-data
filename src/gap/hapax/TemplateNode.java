@@ -38,8 +38,12 @@ public final class TemplateNode
     public TemplateNode() {
         super();
     }
+    public TemplateNode(Key ancestor, String nodeType, Integer lineNumber) {
+        super(ancestor,  nodeType,  lineNumber);
+    }
     public TemplateNode(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent) {
-        super(ancestor,  nodeType,  lineNumber,  nodeContent);
+        super(ancestor,  nodeType,  lineNumber);
+        this.setNodeContent(nodeContent);
     }
 
 
