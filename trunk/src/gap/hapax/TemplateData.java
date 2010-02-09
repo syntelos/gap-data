@@ -6,7 +6,7 @@
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -34,10 +34,10 @@ import javax.annotation.Generated;
 
 /**
  * Generated bean data binding.
- * 
+ *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-07T17:49:19.106Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-09T03:38:07.261Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -258,7 +258,8 @@ public abstract class TemplateData
         Id("id",Field.Type.Primitive),
         Name("name",Field.Type.Primitive),
         LastModified("lastModified",Field.Type.Primitive),
-        TemplateSourceHapax("templateSourceHapax",Field.Type.Primitive);
+        TemplateSourceHapax("templateSourceHapax",Field.Type.Primitive),
+        TemplateTargetHapax("templateTargetHapax",Field.Type.Collection);
 
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -299,6 +300,8 @@ public abstract class TemplateData
                 return instance.getLastModified(mayInherit);
             case TemplateSourceHapax:
                 return instance.getTemplateSourceHapax(mayInherit);
+            case TemplateTargetHapax:
+                return instance.getTemplateTargetHapax(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }
@@ -309,14 +312,6 @@ public abstract class TemplateData
                 return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
             case Key:
                 return instance.setKey(gap.Objects.KeyFromObject(value));
-            case Id:
-                return instance.setId(gap.Objects.StringFromObject(value));
-            case Name:
-                return instance.setName(gap.Objects.StringFromObject(value));
-            case LastModified:
-                return instance.setLastModified(gap.Objects.LongFromObject(value));
-            case TemplateSourceHapax:
-                return instance.setTemplateSourceHapax(gap.Objects.TextFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }
@@ -333,9 +328,25 @@ public abstract class TemplateData
         Field(String fieldName, Field.Type fieldType){
             this.fieldName = fieldName;
             this.fieldType = fieldType;
-            this.fieldTypePrimitive = (Field.Type.Primitive == this.fieldType);
-            this.fieldTypeBigTable = (Field.Type.BigTable == this.fieldType);
-            this.fieldTypeCollection = (Field.Type.Collection == this.fieldType);
+            switch (fieldType){
+            case Primitive:
+                this.fieldTypePrimitive = true;
+                this.fieldTypeBigTable = false;
+                this.fieldTypeCollection = false;
+                break;
+            case BigTable:
+                this.fieldTypePrimitive = false;
+                this.fieldTypeBigTable = true;
+                this.fieldTypeCollection = false;
+                break;
+            case Collection:
+                this.fieldTypePrimitive = false;
+                this.fieldTypeBigTable = false;
+                this.fieldTypeCollection = true;
+                break;
+            default:
+                throw new IllegalStateException("Unimplemented field type "+fieldType);
+            }
         }
 
 
@@ -461,8 +472,8 @@ public abstract class TemplateData
     public final String getId(){
         return this.id;
     }
-    public final String getId(boolean ignore){
-        return this.id;
+    public final String getId(boolean mayInherit){
+        return this.getId();
     }
     public final boolean setId(String id){
         if (IsNotEqual(this.id,id)){
@@ -489,8 +500,8 @@ public abstract class TemplateData
     public final String getName(){
         return this.name;
     }
-    public final String getName(boolean ignore){
-        return this.name;
+    public final String getName(boolean mayInherit){
+        return this.getName();
     }
     public final boolean setName(String name){
         if (IsNotEqual(this.name,name)){
@@ -514,13 +525,15 @@ public abstract class TemplateData
         else
             return false;
     }
+    public final Long getLastModified(){
+        return this.getLastModified(MayInherit);
+    }
     public final Long getLastModified(boolean mayInherit){
         if (mayInherit){
             Long lastModified = this.lastModified;
             if (null == lastModified && this.hasInheritFrom()){
                 Template inheritFrom = this.getInheritFrom();
-                if (null != inheritFrom)
-                    return inheritFrom.getLastModified(MayInherit);
+                return inheritFrom.getLastModified(MayInherit);
             }
             return lastModified;
         }
@@ -557,13 +570,15 @@ public abstract class TemplateData
         else
             return false;
     }
+    public final Text getTemplateSourceHapax(){
+        return this.getTemplateSourceHapax(MayInherit);
+    }
     public final Text getTemplateSourceHapax(boolean mayInherit){
         if (mayInherit){
             Text templateSourceHapax = this.templateSourceHapax;
             if (null == templateSourceHapax && this.hasInheritFrom()){
                 Template inheritFrom = this.getInheritFrom();
-                if (null != inheritFrom)
-                    return inheritFrom.getTemplateSourceHapax(MayInherit);
+                return inheritFrom.getTemplateSourceHapax(MayInherit);
             }
             return templateSourceHapax;
         }
@@ -601,6 +616,9 @@ public abstract class TemplateData
         }
         else
             return false;
+    }
+    public final List.Short<TemplateNode> getTemplateTargetHapax(){
+        return this.getTemplateTargetHapax(MayInherit);
     }
     public final List.Short<TemplateNode> getTemplateTargetHapax(boolean mayInherit){
         List.Short<TemplateNode> templateTargetHapax = this.templateTargetHapax;
@@ -676,13 +694,42 @@ public abstract class TemplateData
     }
     public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;
+        String lastModifiedRequest = req.getParameter("lastModified");
+        try {
+            Long lastModified = Strings.LongFromString(lastModifiedRequest);
+            if (this.setLastModified(lastModified)){
+                change = true;
+            }
+        }
+        catch (RuntimeException exc){
+            throw new ValidationError(ClassName,"lastModified",lastModifiedRequest,exc);
+        }
+        String templateSourceHapaxRequest = req.getParameter("templateSourceHapax");
+        try {
+            Text templateSourceHapax = Strings.TextFromString(templateSourceHapaxRequest);
+            if (this.setTemplateSourceHapax(templateSourceHapax)){
+                change = true;
+            }
+        }
+        catch (RuntimeException exc){
+            throw new ValidationError(ClassName,"templateSourceHapax",templateSourceHapaxRequest,exc);
+        }
         return change;
     }
     public final boolean updateFrom(BigTable proto){
         return this.updateFrom( (Template)proto);
     }
     public final boolean updateFrom(Template proto){
+        boolean mayInherit = (!this.hasInheritFromKey());
         boolean change = false;
+        Long lastModified = proto.getLastModified(mayInherit);
+        if (null != lastModified && this.setLastModified(lastModified)){
+            change = true;
+        }
+        Text templateSourceHapax = proto.getTemplateSourceHapax(mayInherit);
+        if (null != templateSourceHapax && this.setTemplateSourceHapax(templateSourceHapax)){
+            change = true;
+        }
         return change;
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
