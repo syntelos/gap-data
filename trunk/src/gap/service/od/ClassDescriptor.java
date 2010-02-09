@@ -92,9 +92,9 @@ public interface ClassDescriptor
     }
 
     /**
-     * The class relation position as parent or child.  None is
-     * generally equivalent to parent in that there's no relation to
-     * another class as parent.
+     * The class relation position (itself) as parent or child.  None
+     * is generally equivalent to parent in that there's no relation
+     * to another class as parent.
      */
     public interface Relation 
         extends ClassDescriptor
@@ -111,6 +111,14 @@ public interface ClassDescriptor
         public boolean hasRelation();
 
         public Type getRelation();
+        /**
+         * @return Relation is type none or parent
+         */
+        public boolean isRelationPrimary();
+        /**
+         * @return Relation is type child or child-group
+         */
+        public boolean isRelationSecondary();
 
         /**
          * A child must have a parent.  The parent is a {@link
@@ -119,6 +127,8 @@ public interface ClassDescriptor
          * import expression includes it.
          */
         public boolean hasParent();
+
+        public boolean hasNotParent();
 
         public String getParent();
     }

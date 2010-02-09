@@ -135,6 +135,11 @@ public final class OD
         public final static TemplateName Primitives = new TemplateName("primitives");
         public final static TemplateName Type = new TemplateName("type");
 
+        public final static TemplateName WebXmlSection = new TemplateName("servlet");
+        public final static TemplateName WebXmlSectionName = new TemplateName("name");
+        public final static TemplateName WebXmlSectionClass = new TemplateName("class_name");
+        public final static TemplateName WebXmlSectionUrl = new TemplateName("url_pattern");
+        public final static TemplateName WebXmlSectionLoad = new TemplateName("load_on");
     }
 
     public final static void GenerateBeanSource(TemplateName xtm, PackageDescriptor pkg, lxl.List<ImportDescriptor> imports,
@@ -154,6 +159,94 @@ public final class OD
 
             try {
                 template.render(top,out); 
+            }
+            catch (TemplateException exc){
+                throw new TemplateException("In template '"+xtm.source+"'.",exc);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+
+    public final static boolean GenerateServletSource(TemplateName xtm, PackageDescriptor pkg, lxl.List<ImportDescriptor> imports,
+                                                      ClassDescriptor cd, PrintWriter out)
+        throws ODStateException, IOException, TemplateException
+    {
+        if (null != xtm && null != pkg && null != imports && null != cd && null != out){
+
+            if (IsClassRelationPrimary(cd)){
+
+                TemplateRenderer template = Templates.GetTemplate(xtm);
+                TemplateDataDictionary top = new gap.hapax.AbstractData();
+
+                DefineDescription(xtm,top);
+
+                DefinePrimitives(top);
+
+                DefineClass(pkg,cd,imports,top);
+
+                try {
+                    template.render(top,out);
+
+                    return true;
+                }
+                catch (TemplateException exc){
+                    throw new TemplateException("In template '"+xtm.source+"'.",exc);
+                }
+            }
+            else
+                return false;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static void GenerateWebXml(TemplateName xtm, lxl.List<String> servlets, PrintWriter out)
+        throws ODStateException, IOException, TemplateException
+    {
+        if (null != xtm && null != servlets && null != out){
+
+            TemplateRenderer template = Templates.GetTemplate(xtm);
+            TemplateDataDictionary top = new gap.hapax.AbstractData();
+            TemplateDataDictionary servlet;
+            {
+                /*
+                 * Defaults
+                 */
+                servlet = top.addSection(TemplateNames.WebXmlSection);
+                servlet.setVariable(TemplateNames.WebXmlSectionName,"Site");
+                servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Site");
+                servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/*");
+                servlet.setVariable(TemplateNames.WebXmlSectionLoad,"1");
+
+                servlet.setVariable(TemplateNames.WebXmlSectionName,"Source");
+                servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Source");
+                servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/src/*");
+                servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
+
+                servlet.setVariable(TemplateNames.WebXmlSectionName,"Inspect");
+                servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Inspect");
+                servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/inspect/*");
+                servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
+            }
+            {
+                /*
+                 * Generated
+                 */
+                for (String servletClassName : servlets){
+                    ClassDescriptor cd = gap.odl.Main.ClassDescriptorForServlet(servletClassName);
+                    if (null != cd){
+                        servlet = top.addSection(TemplateNames.WebXmlSection);
+                        servlet.setVariable(TemplateNames.WebXmlSectionName,cd.getName());
+                        servlet.setVariable(TemplateNames.WebXmlSectionClass,servletClassName);
+                        servlet.setVariable(TemplateNames.WebXmlSectionUrl,WebXmlPathStar(cd));
+                        servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
+                    }
+                    else
+                        throw new IllegalStateException("Missing class descriptor for '"+servletClassName+"'");
+                }
+            }
+            try {
+                template.render(top,out);
             }
             catch (TemplateException exc){
                 throw new TemplateException("In template '"+xtm.source+"'.",exc);
@@ -1043,6 +1136,14 @@ public final class OD
                 throw new ODStateException(field,"Map type parameters not found.");
         }
     }
+    public final static boolean IsClassRelationPrimary(ClassDescriptor cd){
+        if (cd instanceof ClassDescriptor.Relation){
+            ClassDescriptor.Relation cdr = (ClassDescriptor.Relation)cd;
+            return cdr.isRelationPrimary();
+        }
+        else
+            return true;
+    }
     public final static String[] FieldTypeParameters(String typeName){
         int start = typeName.indexOf('<');
         if (-1 != start){
@@ -1488,5 +1589,18 @@ public final class OD
             }
             return false;
         }
+    }
+    public final static String WebXmlPathStar(ClassDescriptor cd){
+        String path = ClassPath(cd);
+        if (null != path && 0 != path.length()){
+            StringBuilder string = new StringBuilder();
+            if ('/' != path.charAt(0))
+                string.append('/');
+            string.append(path);
+            string.append("/*");
+            return string.toString();
+        }
+        else
+            throw new IllegalStateException("Missing path for class '"+cd.getName()+"'");
     }
 }
