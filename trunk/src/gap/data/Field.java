@@ -23,9 +23,6 @@ package gap.data;
 /**
  * Implemented by an Enum for the fields of a persistent data class.
  * 
- * @see oso.data.Activity
- * @see oso.data.Message
- * @see oso.data.MessageCollection
  * @see oso.data.Person
  * @author jdp
  */
