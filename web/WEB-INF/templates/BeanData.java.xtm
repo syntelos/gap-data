@@ -53,6 +53,10 @@ public abstract class {{=class_name}}Data
 
     public final static String DefaultSortBy = "{{=class_defaultSortBy}}";
 
+    static {
+        {{=class_name}}Data.Field.SInit();
+    }
+
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
         return ClassDescriptorFor({{=class_name}}.class);
     }{{#class_re_child_or_group}}
@@ -421,7 +425,8 @@ public abstract class {{=class_name}}Data
         Key("key",Type.Primitive),{{#field}}
         {{=field_nameCamel}}("{{=field_name}}",Type.{{#field_is_primitive}}Primitive{{/field_is_primitive}}{{#field_is_bigTable}}BigTable{{/field_is_bigTable}}{{#field_is_collection}}Collection{{/field_is_collection}}){{#field_it_NotLast}},{{/field_it_NotLast}}{{#field_it_Last}};{{/field_it_Last}}{{/field}}
 
-
+        static void SInit(){
+        }
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
         static {
