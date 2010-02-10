@@ -331,27 +331,31 @@ public abstract class TemplateData
 
 
         Field(String fieldName, Type fieldType){
-            this.fieldName = fieldName;
-            this.fieldType = fieldType;
-            switch (fieldType){
-            case Primitive:
-                this.fieldTypePrimitive = true;
-                this.fieldTypeBigTable = false;
-                this.fieldTypeCollection = false;
-                break;
-            case BigTable:
-                this.fieldTypePrimitive = false;
-                this.fieldTypeBigTable = true;
-                this.fieldTypeCollection = false;
-                break;
-            case Collection:
-                this.fieldTypePrimitive = false;
-                this.fieldTypeBigTable = false;
-                this.fieldTypeCollection = true;
-                break;
-            default:
-                throw new IllegalStateException("Unimplemented field type "+fieldType);
+            if (null != fieldName && null != fieldType){
+                this.fieldName = fieldName;
+                this.fieldType = fieldType;
+                switch (fieldType){
+                case Primitive:
+                    this.fieldTypePrimitive = true;
+                    this.fieldTypeBigTable = false;
+                    this.fieldTypeCollection = false;
+                    break;
+                case BigTable:
+                    this.fieldTypePrimitive = false;
+                    this.fieldTypeBigTable = true;
+                    this.fieldTypeCollection = false;
+                    break;
+                case Collection:
+                    this.fieldTypePrimitive = false;
+                    this.fieldTypeBigTable = false;
+                    this.fieldTypeCollection = true;
+                    break;
+                default:
+                    throw new IllegalStateException("Unimplemented field type "+fieldType);
+                }
             }
+            else
+                throw new IllegalStateException();
         }
 
 
