@@ -51,6 +51,10 @@ public abstract class TemplateNodeData
 
     public final static String DefaultSortBy = "offset";
 
+    static {
+        TemplateNodeData.Field.SInit();
+    }
+
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
         return ClassDescriptorFor(TemplateNode.class);
     }
@@ -291,7 +295,8 @@ public abstract class TemplateNodeData
         Offset("offset",Type.Primitive),
         OffsetCloseRelative("offsetCloseRelative",Type.Primitive);
 
-
+        static void SInit(){
+        }
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
         static {

@@ -53,6 +53,10 @@ public abstract class TemplateData
 
     public final static String DefaultSortBy = "name";
 
+    static {
+        TemplateData.Field.SInit();
+    }
+
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
         return ClassDescriptorFor(Template.class);
     }
@@ -261,7 +265,8 @@ public abstract class TemplateData
         TemplateSourceHapax("templateSourceHapax",Type.Primitive),
         TemplateTargetHapax("templateTargetHapax",Type.Collection);
 
-
+        static void SInit(){
+        }
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
         static {
