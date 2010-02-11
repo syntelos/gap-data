@@ -1,2 +1,0 @@
-<div class="tool rhs off" onclick="javascript:return false;" style="background-image: url('{{=tool_buttonOffUri}}');">
-</div>
