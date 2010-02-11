@@ -348,6 +348,18 @@ public abstract class TemplateNodeData
                 return instance.setParentKey(gap.Objects.KeyFromObject(value));
             case Key:
                 return instance.setKey(gap.Objects.KeyFromObject(value));
+            case Id:
+                return instance.setId(gap.Objects.StringFromObject(value));
+            case NodeType:
+                return instance.setNodeType(gap.Objects.StringFromObject(value));
+            case LineNumber:
+                return instance.setLineNumber(gap.Objects.IntegerFromObject(value));
+            case NodeContent:
+                return instance.setNodeContent(gap.Objects.TextFromObject(value));
+            case Offset:
+                return instance.setOffset(gap.Objects.IntegerFromObject(value));
+            case OffsetCloseRelative:
+                return instance.setOffsetCloseRelative(gap.Objects.IntegerFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in TemplateNode");
             }
