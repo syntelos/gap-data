@@ -312,6 +312,14 @@ public abstract class TemplateData
                 return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
             case Key:
                 return instance.setKey(gap.Objects.KeyFromObject(value));
+            case Id:
+                return instance.setId(gap.Objects.StringFromObject(value));
+            case Name:
+                return instance.setName(gap.Objects.StringFromObject(value));
+            case LastModified:
+                return instance.setLastModified(gap.Objects.LongFromObject(value));
+            case TemplateSourceHapax:
+                return instance.setTemplateSourceHapax(gap.Objects.TextFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }
