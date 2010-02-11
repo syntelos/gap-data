@@ -361,7 +361,7 @@ public abstract class TemplateNodeData
             case OffsetCloseRelative:
                 return instance.setOffsetCloseRelative(gap.Objects.IntegerFromObject(value));
             default:
-                throw new IllegalArgumentException(field.toString()+" in TemplateNode");
+                throw new IllegalArgumentException(field.toString()+" in TemplateNode from "+value);
             }
         }
 
