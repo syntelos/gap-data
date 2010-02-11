@@ -15,6 +15,7 @@
 *** Make template from ver/web/WEB-INF/web.xml to web/WEB-INF/templates
 *** Move odl/* into src/odl/* 
 *** Drop web/WEB-INF/templates/index.html.xtm
+*** Merge services lists, change in process
 
 * Request
 ** implement binding for bigtable read access from template names
