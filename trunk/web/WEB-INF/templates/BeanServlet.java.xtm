@@ -39,7 +39,7 @@ public final class {{=class_name}}Servlet
     extends gap.service.Servlet
 {
 
-    public {{=class_name}}() {
+    public {{=class_name}}Servlet() {
         super();
     }
 
