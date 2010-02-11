@@ -621,6 +621,11 @@ public final class OD
                     }
                 }
 
+                if (isCollection)
+                    dataField.addSection(TemplateNames.FieldIsCollection);
+                else
+                    dataField.addSection(TemplateNames.FieldIsNotCollection);
+
                 /*
                  * Populate 'dataField' name and type information
                  */
@@ -677,21 +682,18 @@ public final class OD
                         switch(listType){
                         case ListPrimitive:
                             dataField.addSection(TemplateNames.FieldIsListPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsNotCollection);
                             dataField.addSection(TemplateNames.FieldIsNotListLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotListLong);
                             dataField.addSection(TemplateNames.FieldIsNotListShort);
                             break;
                         case ListShort:
                             dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsCollection);
                             dataField.addSection(TemplateNames.FieldIsListLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotListLong);
                             dataField.addSection(TemplateNames.FieldIsListShort);
                             break;
                         case ListLong:
                             dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsCollection);
                             dataField.addSection(TemplateNames.FieldIsListLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsListLong);
                             dataField.addSection(TemplateNames.FieldIsNotListShort);
@@ -728,21 +730,18 @@ public final class OD
                         switch(mapChild.mapType){
                         case MapPrimitive:
                             dataField.addSection(TemplateNames.FieldIsMapPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsNotCollection);
                             dataField.addSection(TemplateNames.FieldIsNotMapLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotMapLong);
                             dataField.addSection(TemplateNames.FieldIsNotMapShort);
                             break;
                         case MapShort:
                             dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsCollection);
                             dataField.addSection(TemplateNames.FieldIsMapLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotMapLong);
                             dataField.addSection(TemplateNames.FieldIsMapShort);
                             break;
                         case MapLong:
                             dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsCollection);
                             dataField.addSection(TemplateNames.FieldIsMapLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsMapLong);
                             dataField.addSection(TemplateNames.FieldIsNotMapShort);
