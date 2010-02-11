@@ -329,25 +329,27 @@ public abstract class TemplateData
             if (null != fieldName && null != fieldType){
                 this.fieldName = fieldName;
                 this.fieldType = fieldType;
-                switch (fieldType){
-                case Primitive:
+                /*
+                 * Using a switch here causes a null pointer
+                 * initializing the switch map.
+                 */
+                if (Type.Primitive == fieldType){
                     this.fieldTypePrimitive = true;
                     this.fieldTypeBigTable = false;
                     this.fieldTypeCollection = false;
-                    break;
-                case BigTable:
+                }
+                else if (Type.BigTable == fieldType){
                     this.fieldTypePrimitive = false;
                     this.fieldTypeBigTable = true;
                     this.fieldTypeCollection = false;
-                    break;
-                case Collection:
+                }
+                else if (Type.Collection == fieldType){
                     this.fieldTypePrimitive = false;
                     this.fieldTypeBigTable = false;
                     this.fieldTypeCollection = true;
-                    break;
-                default:
-                    throw new IllegalStateException("Unimplemented field type "+fieldType);
                 }
+                else
+                    throw new IllegalStateException("Unimplemented field type "+fieldType);
             }
             else
                 throw new IllegalStateException();
