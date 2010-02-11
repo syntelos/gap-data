@@ -2,6 +2,14 @@
 
 * Integrate collection+bigtable type fields with get section in BeanData.java.xtm 
 
+* Application export package (work in progress)
+** SVN ?
+*** /svn/application for 'svn copy'
+**** With version branches
+** ZIP
+*** Contents of /svn/application for file copy
+**** Versioned filenames
+
 * Request
 ** implement binding for bigtable read access from template names
 *** subject := collection or item identified by path
