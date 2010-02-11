@@ -9,6 +9,12 @@
 ** ZIP
 *** Contents of /svn/application for file copy
 **** Versioned filenames
+** Use same build scripts and structures
+** Staticize gap-data 
+*** Jar classes into lib
+*** Make template from ver/web/WEB-INF/web.xml to web/WEB-INF/templates
+*** Move odl/* into src/odl/* 
+*** Drop web/WEB-INF/templates/index.html.xtm
 
 * Request
 ** implement binding for bigtable read access from template names
@@ -19,3 +25,8 @@
 * Types support in BeanData.java.xtm, currently
 ** gap.Primitives
 ** gap.data.BigTable
+** gap.data collections, List and Map
+
+* ODL Main options
+** Overwrite BeanUser, BeanServlet
+
