@@ -321,7 +321,7 @@ public abstract class TemplateData
             case TemplateSourceHapax:
                 return instance.setTemplateSourceHapax(gap.Objects.TextFromObject(value));
             default:
-                throw new IllegalArgumentException(field.toString()+" in Template");
+                throw new IllegalArgumentException(field.toString()+" in Template from "+value);
             }
         }
 
