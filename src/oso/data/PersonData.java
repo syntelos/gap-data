@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-09T03:38:04.939Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-11T05:41:24.458Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -50,6 +50,7 @@ public abstract class PersonData
     public final static String ClassName = "Person";
 
     public final static String DefaultSortBy = "logonId";
+
 
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
         return ClassDescriptorFor(Person.class);
@@ -256,7 +257,6 @@ public abstract class PersonData
         Id("id",Type.Primitive),
         LogonId("logonId",Type.Primitive);
 
-
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
         static {
@@ -301,6 +301,10 @@ public abstract class PersonData
                 return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
             case Key:
                 return instance.setKey(gap.Objects.KeyFromObject(value));
+            case Id:
+                return instance.setId(gap.Objects.StringFromObject(value));
+            case LogonId:
+                return instance.setLogonId(gap.Objects.StringFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in Person");
             }
@@ -315,27 +319,33 @@ public abstract class PersonData
 
 
         Field(String fieldName, Type fieldType){
-            this.fieldName = fieldName;
-            this.fieldType = fieldType;
-            switch (fieldType){
-            case Primitive:
-                this.fieldTypePrimitive = true;
-                this.fieldTypeBigTable = false;
-                this.fieldTypeCollection = false;
-                break;
-            case BigTable:
-                this.fieldTypePrimitive = false;
-                this.fieldTypeBigTable = true;
-                this.fieldTypeCollection = false;
-                break;
-            case Collection:
-                this.fieldTypePrimitive = false;
-                this.fieldTypeBigTable = false;
-                this.fieldTypeCollection = true;
-                break;
-            default:
-                throw new IllegalStateException("Unimplemented field type "+fieldType);
+            if (null != fieldName && null != fieldType){
+                this.fieldName = fieldName;
+                this.fieldType = fieldType;
+                /*
+                 * Using a switch here causes a null pointer
+                 * initializing the switch map.
+                 */
+                if (Type.Primitive == fieldType){
+                    this.fieldTypePrimitive = true;
+                    this.fieldTypeBigTable = false;
+                    this.fieldTypeCollection = false;
+                }
+                else if (Type.BigTable == fieldType){
+                    this.fieldTypePrimitive = false;
+                    this.fieldTypeBigTable = true;
+                    this.fieldTypeCollection = false;
+                }
+                else if (Type.Collection == fieldType){
+                    this.fieldTypePrimitive = false;
+                    this.fieldTypeBigTable = false;
+                    this.fieldTypeCollection = true;
+                }
+                else
+                    throw new IllegalStateException("Unimplemented field type "+fieldType);
             }
+            else
+                throw new IllegalStateException();
         }
 
 

@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-09T03:38:07.261Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-11T05:41:26.483Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -323,7 +323,7 @@ public abstract class TemplateData
             case TemplateTargetHapax:
                 return instance.setTemplateTargetHapax((List.Short<TemplateNode>)value);
             default:
-                throw new IllegalArgumentException(field.toString()+" in Template from "+value);
+                throw new IllegalArgumentException(field.toString()+" in Template");
             }
         }
 

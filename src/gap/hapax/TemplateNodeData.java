@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-09T03:38:08.245Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-11T05:41:27.581Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -361,7 +361,7 @@ public abstract class TemplateNodeData
             case OffsetCloseRelative:
                 return instance.setOffsetCloseRelative(gap.Objects.IntegerFromObject(value));
             default:
-                throw new IllegalArgumentException(field.toString()+" in TemplateNode from "+value);
+                throw new IllegalArgumentException(field.toString()+" in TemplateNode");
             }
         }
 
