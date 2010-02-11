@@ -320,6 +320,8 @@ public abstract class TemplateData
                 return instance.setLastModified(gap.Objects.LongFromObject(value));
             case TemplateSourceHapax:
                 return instance.setTemplateSourceHapax(gap.Objects.TextFromObject(value));
+            case TemplateTargetHapax:
+                return instance.setTemplateTargetHapax((List.Short<TemplateNode>)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Template from "+value);
             }
@@ -651,8 +653,13 @@ public abstract class TemplateData
         }
         return templateTargetHapax;
     }
-    public final void setTemplateTargetHapax(List.Short<TemplateNode> templateTargetHapax){
-        this.templateTargetHapax = templateTargetHapax;
+    public final boolean setTemplateTargetHapax(List.Short<TemplateNode> templateTargetHapax){
+        if (IsNotEqual(this.templateTargetHapax,templateTargetHapax)){
+            this.templateTargetHapax = templateTargetHapax;
+            return true;
+        }
+        else
+            return false;
     }
     public final boolean isEmptyTemplateTargetHapax(){
         List.Short<TemplateNode> collection = this.templateTargetHapax;

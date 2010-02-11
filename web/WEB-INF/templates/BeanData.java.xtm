@@ -467,9 +467,9 @@ public abstract class {{=class_name}}Data
             case ParentKey:
                 return instance.setParentKey(gap.Objects.KeyFromObject(value));{{/class_re_child_or_group}}
             case Key:
-                return instance.setKey(gap.Objects.KeyFromObject(value));{{#field}}{{#field_is_not_collection}}
+                return instance.setKey(gap.Objects.KeyFromObject(value));{{#field}}
             case {{=field_nameCamel}}:
-                return instance.set{{=field_nameCamel}}({{=field_from_object_prefix}}value{{=field_from_object_suffix}});{{/field_is_not_collection}}{{/field}}
+                return instance.set{{=field_nameCamel}}({{=field_from_object_prefix}}value{{=field_from_object_suffix}});{{/field}}
             default:
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
@@ -795,8 +795,13 @@ public abstract class {{=class_name}}Data
         }
         return {{=field_name}};
     }
-    public final void set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
-        this.{{=field_name}} = {{=field_name}};
+    public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
+        if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
+            this.{{=field_name}} = {{=field_name}};
+            return true;
+        }
+        else
+            return false;
     }
     public final boolean isEmpty{{=field_nameCamel}}(){
         {{=field_class}} collection = this.{{=field_name}};
@@ -879,8 +884,17 @@ public abstract class {{=class_name}}Data
     public final {{=field_class}} get{{=field_nameCamel}}(){
         return this.{{=field_name}};
     }
-    public final void set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
-        this.{{=field_name}} = {{=field_name}};
+    public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
+        if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
+            this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
+            if (null != {{=field_name}})
+                this.{{=field_name}}Key = {{=field_name}}.getKey();
+            else
+                this.{{=field_name}}Key = null;{{/field_is_bigTable}}
+            return true;
+        }
+        else
+            return false;
     }{{/tfield}}
     /*
      * Data binding supports

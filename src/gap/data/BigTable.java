@@ -502,7 +502,9 @@ public abstract class BigTable
             return IsIndexed(value.getClass());
     }
     public final static boolean IsEqual(Object a, Object b){
-        if (null == a)
+        if (a == b)
+            return true;
+        else if (null == a)
             return (null == b);
         else if (null == b)
             return false;
@@ -510,7 +512,9 @@ public abstract class BigTable
             return (a.equals(b));
     }
     public final static boolean IsNotEqual(Object a, Object b){
-        if (null == a)
+        if (a == b)
+            return false;
+        else if (null == a)
             return (null != b);
         else if (null == b)
             return true;
