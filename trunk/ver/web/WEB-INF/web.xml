@@ -4,14 +4,50 @@
   <display-name>@ProjectTarget@</display-name>
 
   <servlet>
+    <servlet-name>Site</servlet-name>
+    <servlet-class>gap.servlet.Site</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>Source</servlet-name>
+    <servlet-class>gap.servlet.Source</servlet-class>
+    <load-on-startup>-1</load-on-startup>
+  </servlet>
+  <servlet>
     <servlet-name>Inspect</servlet-name>
     <servlet-class>gap.servlet.Inspect</servlet-class>
     <load-on-startup>-1</load-on-startup>
   </servlet>
+  <servlet>
+    <servlet-name>Person</servlet-name>
+    <servlet-class>oso.data.PersonServlet</servlet-class>
+    <load-on-startup>-1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>Template</servlet-name>
+    <servlet-class>gap.hapax.TemplateServlet</servlet-class>
+    <load-on-startup>-1</load-on-startup>
+  </servlet>
 
+  <servlet-mapping>
+    <servlet-name>Site</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Source</servlet-name>
+    <url-pattern>/src/*</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Inspect</servlet-name>
     <url-pattern>/inspect/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Person</servlet-name>
+    <url-pattern>/people/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Template</servlet-name>
+    <url-pattern>/templates/*</url-pattern>
   </servlet-mapping>
 
   <error-page>
