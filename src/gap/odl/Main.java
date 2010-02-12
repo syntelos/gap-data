@@ -141,8 +141,13 @@ public final class Main
     public final static Class ClassDescriptorForServlet(String name)
         throws IOException, Syntax
     {
-        if (null != name && name.endsWith("Servlet"))
-            return ClassDescriptorFor(name.substring(0,name.length()-7));
+        if (null != name && name.endsWith("Servlet")){
+            name = name.substring(0,name.length()-7);
+            int idx = name.lastIndexOf('.');
+            if (-1 != idx)
+                name = name.substring(idx+1);
+            return ClassDescriptorFor(name);
+        }
         else
             return null;
     }
@@ -217,6 +222,20 @@ public final class Main
                     }
                     finally {
                         out.close();
+                    }
+                }
+                else if (OD.IsClassRelationPrimary(clas)){
+                    /*
+                     * Services Record
+                     */
+                    if (null != servlets){
+                        PrintWriter services = new PrintWriter(new FileWriter(servlets,true));
+                        try {
+                            services.println(pack.getName()+'.'+parentClassName+"Servlet");
+                        }
+                        finally {
+                            services.close();
+                        }
                     }
                 }
             }
