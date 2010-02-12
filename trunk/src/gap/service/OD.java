@@ -218,11 +218,13 @@ public final class OD
                 servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/*");
                 servlet.setVariable(TemplateNames.WebXmlSectionLoad,"1");
 
+                servlet = top.addSection(TemplateNames.WebXmlSection);
                 servlet.setVariable(TemplateNames.WebXmlSectionName,"Source");
                 servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Source");
                 servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/src/*");
                 servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
 
+                servlet = top.addSection(TemplateNames.WebXmlSection);
                 servlet.setVariable(TemplateNames.WebXmlSectionName,"Inspect");
                 servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Inspect");
                 servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/inspect/*");
