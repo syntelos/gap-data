@@ -199,8 +199,21 @@ public final class Main
                 if (!servletJava.exists()){
                     PrintWriter out = new PrintWriter(new FileWriter(servletJava));
                     try {
-                        if (OD.GenerateServletSource(TemplateNames.BeanServlet, pack, imports, clas, out))
+                        if (OD.GenerateServletSource(TemplateNames.BeanServlet, pack, imports, clas, out)){
                             products.add(servletJava);
+                            /*
+                             * Services Record
+                             */
+                            if (null != servlets){
+                                PrintWriter services = new PrintWriter(new FileWriter(servlets,true));
+                                try {
+                                    services.println(pack.getName()+'.'+parentClassName+"Servlet");
+                                }
+                                finally {
+                                    services.close();
+                                }
+                            }
+                        }
                     }
                     finally {
                         out.close();
@@ -211,12 +224,12 @@ public final class Main
              * Services Record
              */
             if (null != beans){
-                PrintWriter out = new PrintWriter(new FileWriter(beans,true));
+                PrintWriter services = new PrintWriter(new FileWriter(beans,true));
                 try {
-                    out.println(pack.getName()+'.'+parentClassName);
+                    services.println(pack.getName()+'.'+parentClassName);
                 }
                 finally {
-                    out.close();
+                    services.close();
                 }
             }
             /*
