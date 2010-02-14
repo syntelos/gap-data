@@ -4,7 +4,7 @@
 
 = Applications =
 
- Of course, everyone is welcome to get a copy of Gep Data from the svn repository and run it in their own appengine space, or to use Get Data online, according to preferences.
+ Of course, everyone is welcome to get a copy of Gap Data from the svn repository and run it in their own appengine space, or to use Get Data online, according to preferences.
 
  Gap Data is always running at http://gap-data.appspot.com/
 
