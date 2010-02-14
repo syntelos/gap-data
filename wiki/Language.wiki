@@ -7,7 +7,7 @@ The Object Description Language (ODL) is a data model driving [http://books.goog
 
 The GAP ODL process employs a [http://code.google.com/p/hapax2/wiki/Language Hapax Template] for transforming the ODL model into Java Programming Language (JPL) sourcecode. 
 
-One example ODL file is for the online Hapax3 [http://code.google.com/p/gap-data/source/browse/trunk/odl/gap/hapax/Template.odl Template].
+An example ODL class is the [http://code.google.com/p/gap-data/source/browse/trunk/odl/gap/hapax/Template.odl Hapax3 Template].
 
 = Structure = 
 
