@@ -1,0 +1,25 @@
+#summary Cluster features
+#labels Documentation
+
+= System =
+
+The set of [http://code.google.com/p/appengine App Engine] application instances on one application Memcache and Datastore.
+
+= Lock =
+
+The [http://code.google.com/p/gap-data/source/browse/trunk/src/gap/data/Lock.java Gap Data Lock] is a system level thread mutex. Appengine will kill off requests into overdue locks.
+{{{
+ Lock lock = new Lock("statistic-live-count");
+ if (lock.enter(999)){
+   try {
+    Long count = Statistic.Live.Count();
+    this.write(count.toString());
+   }
+   finally {
+    lock.exit();
+   }
+ }
+ else 
+  this.error("Lock unavailable");
+}}}
+
