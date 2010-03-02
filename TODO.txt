@@ -2,6 +2,9 @@
 
 * Integrate collection+bigtable type fields with get section in BeanData.java.xtm 
 
+* Rename 'hash-unique' to 'unique' 
+** Make 'unique id' a default in BigTable
+
 * Application export package (work in progress)
 ** SVN ?
 *** /svn/application for 'svn copy'
