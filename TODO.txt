@@ -7,6 +7,8 @@
 
 * Review primitive types handling in data template
 ** Field type 'int' bug!
+*** The template generated list code 
+*** Type spec could have been converted to 'Integer' or an exception should have been thrown
 
 * Application export package (work in progress)
 ** SVN ?
