@@ -5,6 +5,9 @@
 * Rename 'hash-unique' to 'unique' 
 ** Make 'unique id' a default in BigTable
 
+* Review primitive types handling in data template
+** Field type 'int' bug!
+
 * Application export package (work in progress)
 ** SVN ?
 *** /svn/application for 'svn copy'
