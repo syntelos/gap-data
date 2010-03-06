@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-02-12T02:19:19.591Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-06T14:29:12.758Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -257,7 +257,7 @@ public abstract class TemplateNodeData
         else
             throw new IllegalArgumentException();
     }
-    public final static BigTableIterator QueryN(Query query, Page page){
+    public final static BigTableIterator<TemplateNode> QueryN(Query query, Page page){
         if (null != query && null != page)
             return gap.data.Store.QueryN(query,page);
         else
