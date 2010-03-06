@@ -1,0 +1,10 @@
+<queue-entries>
+  <queue>
+    <name>favorites</name>
+    <rate>3/m</rate>
+  </queue>
+  <queue>
+    <name>commands</name>
+    <rate>20/m</rate>
+  </queue>
+</queue-entries>

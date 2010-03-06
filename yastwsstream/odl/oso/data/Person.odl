@@ -1,0 +1,8 @@
+package oso.data;
+path /people;
+
+class Person version 3 {
+    *unique String id;
+    *hash-unique String logonId;
+    String twitterId;
+}

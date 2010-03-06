@@ -1,0 +1,6 @@
+package yas.data;
+path /retweet;
+
+class Retweet version 1 {
+    *unique String id;
+}
