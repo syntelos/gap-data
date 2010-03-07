@@ -19,28 +19,68 @@
  */
 package yas.data;
 
+import com.google.appengine.api.datastore.Key;
 
-import gap.*;
-import gap.data.*;
-import gap.util.*;
-
-import com.google.appengine.api.datastore.*;
-
-import java.util.Date;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 /**
- * Generated once (user) bean.
- * This source file will not be overwritten unless deleted,
- * so it can be edited for extensions.
+ * 
  *
  * @see CommandData
  */
 public final class Command
     extends CommandData
 {
+    public enum Identifier {
+        help, stats, sources, source, drop;
+    }
 
+    /**
+     * Parser features not persistent
+     */
+    public transient final Identifier identifier;
+    public transient final String name;
+
+
+    /**
+     * Parse new receipt
+     */
+    public Command(Key key, Feed.Data data){
+        super();
+        this.setId(data.guid);
+        this.setKey(key);
+        StringTokenizer strtok = new StringTokenizer(data.content," \t\r\n");
+        switch (strtok.countTokens()){
+        case 1:
+            this.identifier = Identifier.valueOf(strtok.nextToken());
+            this.name = null;
+            break;
+        case 2:
+        default:
+            this.identifier = Identifier.valueOf(strtok.nextToken());
+            this.name = Twitter.Name.Clean(strtok.nextToken());
+            break;
+        }
+        switch (this.identifier){
+        case help:
+        case stats:
+        case sources:
+            break;
+        case source:
+        case drop:
+            if (null == this.name)
+                throw new IllegalStateException();
+            else
+                break;
+        default:
+            break;
+        }
+    }
     public Command() {
         super();
+        this.identifier = null;
+        this.name = null;
     }
 
 

@@ -25,21 +25,45 @@ import gap.data.*;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.labs.taskqueue.*;
 
+import java.io.IOException;
 import java.util.Date;
+import javax.servlet.ServletException;
 
 /**
- * Generated once.  This source file will not be overwritten
- * unless deleted, so it can be edited.
+ * Favorites process is task driven.
  *
  * @see Retweet
  */
 public final class RetweetServlet
-    extends gap.service.Servlet
+    extends TaskServlet
 {
 
     public RetweetServlet() {
         super();
     }
 
+
+    protected void doPost(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        if (req.hasPath(0)){
+            if ("history".equals(req.getPath(0))){
+                /*
+                 * Manual invocation to initialize source history
+                 */
+
+            }
+            else
+                this.undefined(req,rep);
+        }
+        else {
+            UpdateQueueFavorites();
+            /*
+             * Automated invocation to read recent source history
+             */
+
+        }
+    }
 }

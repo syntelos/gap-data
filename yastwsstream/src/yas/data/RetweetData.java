@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Retweet
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-06T09:33:51.358Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-06T14:54:40.410Z")
 public abstract class RetweetData
     extends gap.data.BigTable
     implements DataInheritance<Retweet>
@@ -184,7 +184,7 @@ public abstract class RetweetData
         else
             throw new IllegalArgumentException();
     }
-    public final static BigTableIterator QueryN(Query query, Page page){
+    public final static BigTableIterator<Retweet> QueryN(Query query, Page page){
         if (null != query && null != page)
             return gap.data.Store.QueryN(query,page);
         else
