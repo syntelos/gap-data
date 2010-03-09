@@ -26,11 +26,12 @@ import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
 
+import java.io.IOException;
 import java.util.Date;
+import javax.servlet.ServletException;
 
 /**
- * Generated once.  This source file will not be overwritten
- * unless deleted, so it can be edited.
+ * Configure target.
  *
  * @see Target
  */
@@ -42,4 +43,97 @@ public final class TargetServlet
         super();
     }
 
+
+    protected void doGet(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        if (req.isLoggedIn()){
+            Target target = Target.Instance();
+            if (Ok(req,target)){
+                if (null != target){
+
+                    String twitterId = target.getTwitterId();
+                    if (null != twitterId)
+                        req.setVariable("twitterId",twitterId);
+                    else
+                        req.setVariable("twitterId",gap.Version.Target);
+
+                    String twitterPass = target.getTwitterPass();
+                    if (null != twitterPass)
+                        req.setVariable("twitterPass",twitterPass);
+
+                    String logonId = target.getLogonId();
+                    if (null == logonId)
+                        logonId = req.getLogonId();
+                    
+                    req.setVariable("logonId",logonId);
+
+                }
+                else {
+                    String logonId = req.getLogonId();
+                    
+                    req.setVariable("logonId",logonId);
+
+                    req.setVariable("twitterId",gap.Version.Target);
+                }
+                this.render(req,rep,"target.html");
+            }
+            else
+                this.error(req,rep,403,"Access denied");
+        }
+        else
+            this.error(req,rep,403,"Require login");
+    }
+    protected void doPost(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        if (req.isLoggedIn()){
+            Target target = Target.Instance();
+            if (Ok(req,target)){
+                String twitterId = req.getParameter("twitterId");
+                String twitterPass = req.getParameter("twitterPass");
+                String logonId = req.getParameter("logonId");
+                if (null != twitterId && null != twitterPass && null != logonId){
+                    if (null == target){
+                        target = new Target(twitterId);
+                        target.setTwitterPass(twitterPass);
+                        target.setLogonId(logonId);
+                        target.save();
+                        /*
+                         */
+                        req.setVariable("twitterId",twitterId);
+                        req.setVariable("twitterPass",twitterPass);
+                        req.setVariable("logonId",logonId);
+                        this.render(req,rep,"target.html");
+                    }
+                    else if (twitterId.equalsIgnoreCase(target.getTwitterId())){
+                        target.setTwitterPass(twitterPass);
+                        target.setLogonId(logonId);
+                        target.save();
+                        /*
+                         */
+                        req.setVariable("twitterId",twitterId);
+                        req.setVariable("twitterPass",twitterPass);
+                        req.setVariable("logonId",logonId);
+                        this.render(req,rep,"target.html");
+                    }
+                    else
+                        this.error(req,rep,400,"Unable to change Target Twitter ID");
+                }
+                else
+                    this.error(req,rep,400,"Missing fields");
+            }
+            else
+                this.error(req,rep,403,"Access denied");
+        }
+        else
+            this.error(req,rep,403,"Require login");
+    }
+
+    private final static boolean Ok(Request req, Target target){
+        if (null == target || null == target.getLogonId())
+            return req.isAdmin;
+        else
+            return (req.getLogonId().equalsIgnoreCase(target.getLogonId()));
+    }
 }

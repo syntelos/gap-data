@@ -51,30 +51,22 @@ public final class Command
         this.setId(data.guid);
         this.setKey(key);
         StringTokenizer strtok = new StringTokenizer(data.content," \t\r\n");
-        switch (strtok.countTokens()){
-        case 1:
-            this.identifier = Identifier.valueOf(strtok.nextToken());
-            this.name = null;
-            break;
-        case 2:
-        default:
-            this.identifier = Identifier.valueOf(strtok.nextToken());
-            this.name = Twitter.Name.Clean(strtok.nextToken());
-            break;
-        }
+        this.identifier = Identifier.valueOf(strtok.nextToken());
         switch (this.identifier){
         case help:
         case stats:
         case sources:
+            this.name = null;
             break;
         case source:
         case drop:
+            this.name = Twitter.Name.Clean(strtok.nextToken());
             if (null == this.name)
                 throw new IllegalStateException();
             else
                 break;
         default:
-            break;
+            throw new IllegalStateException();
         }
     }
     public Command() {

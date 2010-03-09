@@ -99,7 +99,7 @@ public class Request
     }
     public static enum Field {
         method, protocol, path, accept, fileManager, parameters, userReference, 
-            logon, logonUrl, logonText, contentType, isAdmin, isMember;
+            logon, logonUrl, logonText, contentType, isAdmin, isMember, version;
 
         public static Field For(String name){
             try {
@@ -324,6 +324,11 @@ public class Request
             case isMember:
                 return name.is(0);
 
+            case version:
+                if (name.has(1))
+                    return gap.Version.HasVariable(new TemplateName(name));
+                else
+                    return true;
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -390,6 +395,12 @@ public class Request
                 else
                     return "";
 
+            case version:
+                if (name.has(1))
+                    return gap.Version.GetVariable(new TemplateName(name));
+                else
+                    return gap.Version.Short;
+
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -398,9 +409,9 @@ public class Request
             return super.getVariable(name);
         }
     }
-    public void setVariable(TemplateName name, String value){
+    public void setVariable(String name, String value){
 
-        super.setVariable(name,value);
+        super.setVariable(new TemplateName(name),value);
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){
         Field field = Field.For(name.getComponent(0));
@@ -423,6 +434,7 @@ public class Request
             case contentType:
             case isAdmin:
             case isMember:
+            case version:
                 return null;
             default:
                 throw new IllegalStateException(field.name());

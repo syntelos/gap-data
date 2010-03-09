@@ -425,24 +425,38 @@ public class Servlet
     protected final void undefined(Request req, Response rep)
         throws ServletException, IOException
     {
-        this.error(req,rep,HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+Method.Get()+"' not implemented");
+        this.error(req,rep,HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+req.getMethod()+"' not implemented");
+    }
+    protected final void render(Request req, Response rep, String templateName)
+        throws IOException, ServletException, TemplateException
+    {
+        TemplateRenderer template = Templates.GetTemplate(templateName);
+        if (null != template)
+            this.render(req,rep,template);
+        else
+            this.error(req,rep,500,"Template not found '"+templateName+"'");
     }
     protected final void render(Request req, Response rep, TemplateRenderer template)
         throws IOException, ServletException, TemplateException
     {
-        template.render(req,rep.getWriter());
+        try {
+            template.render(req,rep.getWriter());
 
-        if (req.accept("text/html"))
-            rep.setContentType("text/html;charset=utf-8");
+            if (req.accept("text/html"))
+                rep.setContentType("text/html;charset=utf-8");
 
-        else if (req.accept("application/json"))
-            rep.setContentType("application/json");
+            else if (req.accept("application/json"))
+                rep.setContentType("application/json");
 
-        else if (req.accept("text/xml"))
-            rep.setContentType("text/xml");
+            else if (req.accept("text/xml"))
+                rep.setContentType("text/xml");
 
-        else if (req.accept("application/xml"))
-            rep.setContentType("application/xml");
+            else if (req.accept("application/xml"))
+                rep.setContentType("application/xml");
+        }
+        finally {
+            req.renderComplete();
+        }
     }
     protected void redirectToItem(Request req, Response rep, String id)
         throws IOException, ServletException

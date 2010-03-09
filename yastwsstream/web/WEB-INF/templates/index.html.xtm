@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>Gap Data: The Experiment</title>
+    <title>Twitter Streaming Groups</title>
     <link rel="stylesheet" type="text/css" href="/top.css" />
     <link rel="icon" href="/icons/favicon.ico" />
     <script src="/top.js" type="text/javascript"><!--  --></script>
@@ -9,35 +9,43 @@
     <div class="logon">{{>div.logon.html}}
     </div>
     <div class="block">
-      <div class="block inside">
+      <h1>Help</h1>
 
-        <p><a href="http://code.google.com/p/gap-data">Gap Data</a> is a web interface for <a href="http://appengine.google.com/">appengine development</a>.</p>
+      <p> This bot scans the favorites of its owners and retweets them
+        on its own account, producing an independent twitter stream
+        for the group of source owners.  </p>
 
-        <div class="block">
-          <img src="images/gap-data-1-400x252.png" width="400" height="252" />
-        </div>
+      <p> Twitter bot command format
+        <pre>command [@name] #{{=twitterId}}</pre>
+        This bot only responds to its owners -- otherwise known as
+        "source" users -- and only to correctly formatted commands.
+        </p>
 
-        <div class="block inside">
-          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-          exposes its configuration to its site administrators,
-          including all site content and programming. </p>
+      <p> Commands' summary
+        <table border="0">
+          <tr>
+            <td><code>help</code></td><td>Link to this page</td>
+          </tr>
+          <tr>
+            <td><code>stats</code></td><td>Current health report</td>
+          </tr>
+          <tr>
+            <td><code>sources</code></td><td>List owners</td>
+          </tr>
+          <tr>
+            <td><code>source @name</code></td><td>Add new source user</td>
+          </tr>
+          <tr>
+            <td><code>drop @name</code></td><td>Drop existing source user</td>
+          </tr>
+        </table>
+      </p>
 
-          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-          site administrators may adapt its web based programming to
-          create groups or roles or capabilities' delegations to
-          other web logons as desired. </p>
+      <p> The bot's twitter account is <a href="/target">configured
+        here</a> (admin).  </p>
 
-          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-          is like a <i>"java application wiki"</i>.
-          </p>
-
-        </div>
-      </div>
     </div>
     <div class="copyrights">
-      <p> <a href="http://www.java.com/">Java</a> is a trademark of <a href="http://www.sun.com/">Sun Microsystems</a>.</p>
-      <p> <a href="http://appengine.google.com/">Appengine</a> is a service of <a href="http://www.google.com/">Google</a>.</p>
-      <p> <a href="http://gap-data.googlecode.com/">Gap Data is a service from some folks around here</a>.</p>
     </div>
     <div class="logo rhs" onclick="javascript:document.location = 'http://gap-data.appspot.com/'; return true;">
     </div>

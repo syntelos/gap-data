@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Twitter Streaming Groups</title>
+    <link rel="stylesheet" type="text/css" href="/top.css" />
+    <link rel="icon" href="/icons/favicon.ico" />
+  </head>
+  <body>
+    <div class="logon">{{>div.logon.html}}
+    </div>
+    <div class="block">
+      <h1>Twitter Configuration</h1>
+
+      <table border="0">
+        <form method="POST">
+          <tr>
+            <td><label for="twitterId">Twitter ID</label>
+            </td>
+            <td><input id="twitterId" name="twitterId" value="{{=twitterId}}" class="tool" />
+            </td>
+          </tr>
+          <tr>
+            <td><label for="twitterPass">Password</label>
+            </td>
+            <td><input id="twitterPass" name="twitterPass" value="{{=twitterPass}}" class="tool" />
+            </td>
+          </tr>
+          <tr>
+            <td><label for="logonId">Logon ID</label>
+            </td>
+            <td><input id="logonId" name="logonId" value="{{=logonId}}" class="tool" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+            </td>
+            <td><input type="submit" value="Update" class="tool" />
+            </td>
+          </tr>
+        </form>
+      </table>
+    </div>
+    <div class="copyrights">
+    </div>
+    <div class="logo rhs" onclick="javascript:document.location = 'http://gap-data.appspot.com/'; return true;">
+    </div>
+  </body>
+</html>

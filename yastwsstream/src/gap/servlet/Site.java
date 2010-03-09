@@ -19,8 +19,12 @@
  */
 package gap.servlet;
 
-import gap.*;
-import gap.data.*;
+import gap.Request;
+import gap.Response;
+import yas.data.Target;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
 
 /**
  * Bound to path <code>'/*'</code>
@@ -34,4 +38,20 @@ public class Site
     }
 
 
+    protected void doGet(Request req, Response rep)
+        throws ServletException, IOException
+    {
+        Target target = Target.Instance();
+        if (null != target){
+            String twitterId = target.getTwitterId();
+            if (null != twitterId)
+                req.setVariable("twitterId",twitterId);
+            else
+                req.setVariable("twitterId",gap.Version.Target);
+        }
+        else
+            req.setVariable("twitterId",gap.Version.Target);
+
+        super.doGet(req,rep);
+    }
 }

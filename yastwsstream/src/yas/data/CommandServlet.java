@@ -54,15 +54,16 @@ public final class CommandServlet
     {
         UpdateQueueCommands();
         try {
-            Target target = TaskServlet.Target();
+            Target target = Target.Instance();
             if (null != target){
                 String targetId = target.getTwitterId();
-                Feed feed = Twitter.Command.Search(targetId);
+                int targetIdLen = targetId.length();
+                Feed feed = Twitter.Command.Search(target);
                 lxl.Map<String,Source> sourceCache = new lxl.Map<String,Source>();
                 for (Feed.Data data : feed){
                     try {
                         Source source = SourceFor(sourceCache,data.author);
-                        if (null != source){
+                        if (null != source && (!targetId.equalsIgnoreCase(source.getTwitterId()))){
                             Key commandKey = Command.KeyLongFor(data.guid);
                             Command command = Command.Get(commandKey);
                             if (null == command){
@@ -70,28 +71,42 @@ public final class CommandServlet
                                 command.save();
                                 switch (command.identifier){
                                 case help:
-                                    Twitter.Command.Reply(data,"See http://"+gap.Version.Target+".appspot.com/");
+                                    Twitter.Command.Reply(target,data,"Help http://"+gap.Version.Target+".appspot.com/ #"+targetId);
                                     break;
                                 case stats:
-                                    Twitter.Command.Reply(data,"ok");
+                                    Twitter.Command.Reply(target,data,"Stats Ok #"+targetId);
                                     break;
                                 case sources:
                                     BigTableIterator<Source> list = Sources();
                                     StringBuilder listString = new StringBuilder();
                                     for (Source src: list){
-                                        if (0 != listString.length())
-                                            listString.append(' ');
+                                        String twid = src.getTwitterId();
+                                        int len = listString.length();
+                                        if (0 != len){
+                                            if (140 > (len + twid.length() + 10 + targetIdLen))
+                                                break;
+                                            else
+                                                listString.append(' ');
+                                        }
                                         listString.append('@');
-                                        listString.append(src.getTwitterId());
+                                        listString.append(twid);
                                     }
-                                    Twitter.Command.Reply(data,listString.toString());
+                                    listString.insert(0,"Sources ");
+                                    Twitter.Command.Reply(target,data,listString.toString());
                                     break;
                                 case source:
                                     Source.GetCreateLong(command.name);
-                                    Twitter.Command.Reply(data,"Source @"+command.name);
+                                    Twitter.Command.Reply(target,data,"Source @"+command.name);
                                     break;
                                 case drop:
-
+                                    Source that = Source.ForLongTwitterId(command.name);
+                                    if (null != that){
+                                        that.drop();
+                                        Twitter.Command.Reply(target,data,"Source Dropped @"+command.name);
+                                    }
+                                    else
+                                        Twitter.Command.Reply(target,data,"Source not found @"+command.name);
+                                    break;
                                 }
                             }
                         }

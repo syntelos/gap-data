@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Target
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-06T14:54:39.830Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-08T15:06:19.571Z")
 public abstract class TargetData
     extends gap.data.BigTable
     implements DataInheritance<Target>
@@ -256,7 +256,8 @@ public abstract class TargetData
         Key("key",Type.Primitive),
         Id("id",Type.Primitive),
         TwitterId("twitterId",Type.Primitive),
-        TwitterPass("twitterPass",Type.Primitive);
+        TwitterPass("twitterPass",Type.Primitive),
+        LogonId("logonId",Type.Primitive);
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
@@ -294,6 +295,8 @@ public abstract class TargetData
                 return instance.getTwitterId(mayInherit);
             case TwitterPass:
                 return instance.getTwitterPass(mayInherit);
+            case LogonId:
+                return instance.getLogonId(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Target");
             }
@@ -310,6 +313,8 @@ public abstract class TargetData
                 return instance.setTwitterId(gap.Objects.StringFromObject(value));
             case TwitterPass:
                 return instance.setTwitterPass(gap.Objects.StringFromObject(value));
+            case LogonId:
+                return instance.setLogonId(gap.Objects.StringFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in Target");
             }
@@ -389,6 +394,7 @@ public abstract class TargetData
     private volatile String id;    // *unique
     private volatile String twitterId;    // *hash-unique
     private volatile String twitterPass;    
+    private volatile String logonId;    
 
 
 
@@ -413,6 +419,7 @@ public abstract class TargetData
         this.id = null;
         this.twitterId = null;
         this.twitterPass = null;
+        this.logonId = null;
     }
     public final boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -552,6 +559,51 @@ public abstract class TargetData
         else
             return false;
     }
+    public final boolean hasLogonId(boolean mayInherit){
+        return (null != this.getLogonId(mayInherit));
+    }
+    public final boolean hasNotLogonId(boolean mayInherit){
+        return (null == this.getLogonId(mayInherit));
+    }
+    public final boolean dropLogonId(){
+        if (null != this.logonId){
+            this.logonId = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final String getLogonId(){
+        return this.getLogonId(MayInherit);
+    }
+    public final String getLogonId(boolean mayInherit){
+        if (mayInherit){
+            String logonId = this.logonId;
+            if (null == logonId && this.hasInheritFrom()){
+                Target inheritFrom = this.getInheritFrom();
+                return inheritFrom.getLogonId(MayInherit);
+            }
+            return logonId;
+        }
+        else
+            return this.logonId;
+    }
+    public final boolean setLogonId(String logonId, boolean withInheritance){
+        if (IsNotEqual(this.logonId,this.getLogonId(withInheritance))){
+            this.logonId = logonId;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean setLogonId(String logonId){
+        if (IsNotEqual(this.logonId,logonId)){
+            this.logonId = logonId;
+            return true;
+        }
+        else
+            return false;
+    }
     /*
      * Data binding supports
      */
@@ -582,6 +634,16 @@ public abstract class TargetData
         catch (RuntimeException exc){
             throw new ValidationError(ClassName,"twitterPass",twitterPassRequest,exc);
         }
+        String logonIdRequest = req.getParameter("logonId");
+        try {
+            String logonId = Strings.StringFromString(logonIdRequest);
+            if (this.setLogonId(logonId)){
+                change = true;
+            }
+        }
+        catch (RuntimeException exc){
+            throw new ValidationError(ClassName,"logonId",logonIdRequest,exc);
+        }
         return change;
     }
     public final boolean updateFrom(BigTable proto){
@@ -592,6 +654,10 @@ public abstract class TargetData
         boolean change = false;
         String twitterPass = proto.getTwitterPass(mayInherit);
         if (null != twitterPass && this.setTwitterPass(twitterPass)){
+            change = true;
+        }
+        String logonId = proto.getLogonId(mayInherit);
+        if (null != logonId && this.setLogonId(logonId)){
             change = true;
         }
         return change;
@@ -621,6 +687,11 @@ public abstract class TargetData
                     throw new IllegalStateException(field.name());
                 else
                     return this.hasTwitterPass(true);
+            case LogonId:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasLogonId(true);
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -648,6 +719,11 @@ public abstract class TargetData
                     throw new IllegalStateException(field.name());
                 else
                     return this.getTwitterPass(true);
+            case LogonId:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getLogonId(true);
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -666,6 +742,8 @@ public abstract class TargetData
                 case TwitterId:
                     throw new IllegalStateException(field.name());
                 case TwitterPass:
+                    throw new IllegalStateException(field.name());
+                case LogonId:
                     throw new IllegalStateException(field.name());
                 default:
                     throw new IllegalStateException(field.name());
@@ -687,6 +765,8 @@ public abstract class TargetData
             case TwitterId:
                 return null;
             case TwitterPass:
+                return null;
+            case LogonId:
                 return null;
             default:
                 throw new IllegalStateException(field.name());

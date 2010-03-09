@@ -76,13 +76,6 @@ public abstract class TaskServlet
         return Source.QueryN(SourcesQuery,SourcesPage);
     }
 
-    private final static Query TargetsQuery = Target.CreateQueryFor();
-    /**
-     * Retrieve target
-     */
-    public final static Target Target(){
-        return Target.Query1(TargetsQuery);
-    }
     public final static Source SourceFor(lxl.Map<String,Source> cache, String twid){
         Source source = cache.get(twid);
         if (null == source){

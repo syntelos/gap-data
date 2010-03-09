@@ -19,14 +19,8 @@
  */
 package yas.data;
 
-
-import gap.*;
-import gap.data.*;
-import gap.util.*;
-
-import com.google.appengine.api.datastore.*;
-
-import java.util.Date;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.urlfetch.HTTPHeader;
 
 /**
  * Generated once (user) bean.
@@ -39,6 +33,19 @@ public final class Target
     extends TargetData
 {
 
+    private final static Query TargetsQuery = Target.CreateQueryFor();
+    /**
+     * Retrieve target
+     */
+    public final static Target Instance(){
+        return Target.Query1(TargetsQuery);
+    }
+
+
+    private volatile transient String referer;
+    private volatile transient HTTPHeader authBasic;
+
+
     public Target() {
         super();
     }
@@ -47,7 +54,32 @@ public final class Target
     }
 
 
-
+    public String getReferer(){
+        String referer = this.referer;
+        if (null == referer){
+            String twitterId = this.getTwitterId();
+            if (null != twitterId){
+                referer = "http://twitter.com/"+twitterId;
+                this.referer = referer;
+            }
+        }
+        return referer;
+    }
+    public HTTPHeader getAuthenticationBasic(){
+        HTTPHeader authBasic = this.authBasic;
+        if (null == authBasic){
+            String uid = this.getTwitterId();
+            String pas = this.getTwitterPass();
+            if (null != uid && null != pas){
+                String code = Encode(uid+':'+pas);
+                authBasic = new HTTPHeader("Authentication","Basic "+code);
+                this.authBasic = authBasic;
+            }
+            else
+                throw new IllegalStateException("Target not configured");
+        }
+        return authBasic;
+    }
     public void onread(){
     }
     public void onwrite(){
@@ -69,5 +101,16 @@ public final class Target
     }
     public void store(){
         Store(this);
+    }
+
+    private final static String Encode(String string){
+        try {
+            byte[] in = string.getBytes("US-ASCII");
+            byte[] out = alto.io.u.B64.encode(in);
+            return new String(out,"US-ASCII");
+        }
+        catch (java.io.IOException exc){
+            throw new InternalError();
+        }
     }
 }

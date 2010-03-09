@@ -5,20 +5,18 @@
     <link rel="icon" href="/icons/favicon.ico" />
   </head>
   <body>
-    <div class="logon">{{>logon}}
+    <div class="logon">{{>div.logon.html}}
     </div>
+    {{#error}}
     <div class="block">
-      {{#error}}
-      <div class="block inside">
-        <h1 class="errors"> {{=error_status}}</h1>
-        <p class="errors"> {{=error_message}}
-        </p>
-        <pre class="errors">
+      <h1 class="errors"> {{=error_status}}</h1>
+      <p class="errors"> {{=error_message}}
+      </p>
+      <pre class="errors">
 {{=error_exception}}
-        </pre>
-      </div>
-      {{/error}}
+      </pre>
     </div>
+    {{/error}}
     <div class="logo rhs" onclick="javascript:document.location = 'http://gap-data.appspot.com/'; return true;" />
   </body>
 </html>
