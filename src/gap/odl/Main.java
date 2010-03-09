@@ -464,7 +464,7 @@ public final class Main
                     }
                 }
 
-                gap.util.Main appenv = gap.util.Main.Install();
+//                gap.util.Main appenv = gap.util.Main.Install();
                 int rc = 0;
                 try {
                     System.out.println("Source: "+odl.getPath());
@@ -483,7 +483,7 @@ public final class Main
                     rc = 1;
                 }
                 finally {
-                    appenv.destroy();
+//                    appenv.destroy();
                     System.exit(rc);
                 }
             }
