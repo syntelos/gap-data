@@ -70,12 +70,7 @@ public final class TemplateRenderer
     public void render(TemplateDataDictionary dict, PrintWriter writer)
         throws TemplateException
     {
-        try {
-            Render(this.context, this.template, dict, writer);
-        }
-        finally {
-            dict.renderComplete();
-        }
+        Render(this.context, this.template, dict, writer);
     }
     public String renderToString(TemplateDataDictionary dict)
         throws TemplateException
