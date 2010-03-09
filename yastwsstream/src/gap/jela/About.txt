@@ -1,3 +1,0 @@
-
-The jela language in the gap environment.  Different code and methods of operation, but same external programming language features as http://code.google.com/p/jela
-

@@ -82,30 +82,10 @@ public abstract class BigTable
         return Find(Kind.For(kindName));
     }
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(String kind){
-        try {
-            return ClassDescriptorFor(Find(kind));
-        }
-        catch (IllegalStateException exc){
-            return null;
-        }
+        throw new UnsupportedOperationException();
     }
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(Class<? extends BigTable> clas){
-        if (null != clas){
-            String path = "odl/"+clas.getName().replace('.','/')+".odl";
-            File file = new File(path);
-            if (file.isFile()){
-                try {
-                    return gap.odl.Main.ClassDescriptorFor(file);
-                }
-                catch (java.io.IOException exc){
-                    throw new IllegalArgumentException(clas.getName(),exc);
-                }
-            }
-            else
-                throw new IllegalArgumentException(clas.getName());
-        }
-        else
-            throw new IllegalArgumentException();
+        throw new UnsupportedOperationException();
     }
     public final static boolean IsAdmin(Kind kind){        
         if (null != kind){

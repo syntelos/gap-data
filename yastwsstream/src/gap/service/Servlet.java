@@ -71,10 +71,9 @@ public class Servlet
      * One servlet config in the classloader scope.
      */
     protected volatile static ServletConfig Config;
-
-
-    private volatile gap.jbx.Function.List functionList;
-
+    /**
+     * Error output structure
+     */
     public final static class TemplateNames {
         public final static TemplateName Error = new TemplateName("error");
         public final static TemplateName ErrorException = new TemplateName("error_exception");
@@ -93,14 +92,7 @@ public class Servlet
     }
 
 
-    public final gap.jbx.Function.List getFunctionList(){
-        gap.jbx.Function.List functionList = this.functionList;
-        if (null == functionList){
-            functionList = new gap.jbx.Function.List(this.getClass());
-            this.functionList = functionList;
-        }
-        return functionList;
-    }
+
     @Override
     public final void init(ServletConfig config) throws ServletException {
 

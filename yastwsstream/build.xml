@@ -30,7 +30,7 @@
 
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.version.xml"/>
-  <import file="ant/build.in.odl.xml"/>
+
   <import file="ant/build.in.gap.xml"/>
 
   <!-- 
@@ -150,11 +150,7 @@
         <include name="**/*.properties" />
       </fileset>
     </copy>
-<!--    <copy todir="${out.src}"> -->
-<!--      <fileset dir="${src}"> -->
-<!--        <include name="**/*.java" /> -->
-<!--      </fileset> -->
-<!--    </copy> -->
+
     <copy todir="${out.odl}">
       <fileset dir="${odl}">
         <include name="**/*.odl" />
@@ -163,17 +159,6 @@
   </target>
 
 
-  <target name="odl" description="Generate 'src/pkg/*.java' files from 'odl/pkg/*.odl' files.  Requires prequisite plain 'ant' run.">
-
-    <copy todir="${out}">
-
-      <fileset dir="${web}">
-        <include name="**/*.xtm" />
-      </fileset>
-    </copy>
-    <odl-write classpath.id="lib.path"/>
-
-  </target>
 
   <target name="compile" depends="version,init" description="Compile code from 'src' to bin.">
 
