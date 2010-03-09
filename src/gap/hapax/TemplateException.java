@@ -31,7 +31,7 @@ package gap.hapax;
  * @author dcoker
  */
 public class TemplateException
-    extends Exception
+    extends java.io.IOException
 {
 
     public TemplateException(Throwable throwable) {

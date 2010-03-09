@@ -22,8 +22,7 @@
 *** Jar classes into lib
 *** Make template from ver/web/WEB-INF/web.xml to web/WEB-INF/templates
 *** Move odl/* into src/odl/* 
-*** Drop web/WEB-INF/templates/index.html.xtm
-*** Merge services lists, change in process
+*** Copy services lists into a source location for merge ops
 
 * Request
 ** implement binding for bigtable read access from template names
