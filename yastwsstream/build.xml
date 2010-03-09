@@ -150,11 +150,11 @@
         <include name="**/*.properties" />
       </fileset>
     </copy>
-    <copy todir="${out.src}">
-      <fileset dir="${src}">
-        <include name="**/*.java" />
-      </fileset>
-    </copy>
+<!--    <copy todir="${out.src}"> -->
+<!--      <fileset dir="${src}"> -->
+<!--        <include name="**/*.java" /> -->
+<!--      </fileset> -->
+<!--    </copy> -->
     <copy todir="${out.odl}">
       <fileset dir="${odl}">
         <include name="**/*.odl" />
