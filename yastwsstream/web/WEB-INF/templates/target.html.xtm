@@ -25,7 +25,7 @@
             </td>
           </tr>
           <tr>
-            <td><label for="logonId">Logon ID</label>
+            <td><label for="logonId">Admin</label>
             </td>
             <td><input id="logonId" name="logonId" value="{{=logonId}}" class="tool" />
             </td>

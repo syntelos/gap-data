@@ -16,7 +16,7 @@
         for the group of source owners.  </p>
 
       <p> Twitter bot command format
-        <pre>command [@name] #{{=twitterId}}</pre>
+        <code>command [@name] #{{=twitterId}}</code>
         This bot only responds to its owners -- otherwise known as
         "source" users -- and only to correctly formatted commands.
         </p>

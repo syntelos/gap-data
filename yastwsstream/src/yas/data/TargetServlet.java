@@ -106,7 +106,8 @@ public final class TargetServlet
                         req.setVariable("logonId",logonId);
                         this.render(req,rep,"target.html");
                     }
-                    else if (twitterId.equalsIgnoreCase(target.getTwitterId())){
+                    else {
+                        target.setTwitterId(twitterId);
                         target.setTwitterPass(twitterPass);
                         target.setLogonId(logonId);
                         target.save();
@@ -117,8 +118,6 @@ public final class TargetServlet
                         req.setVariable("logonId",logonId);
                         this.render(req,rep,"target.html");
                     }
-                    else
-                        this.error(req,rep,400,"Unable to change Target Twitter ID");
                 }
                 else
                     this.error(req,rep,400,"Missing fields");
