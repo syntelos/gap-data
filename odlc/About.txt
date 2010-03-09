@@ -5,3 +5,7 @@ From 1.3.0 to 1.3.1 appengine changed such that a command line tool is pushed aw
 
 For the moment this change can be seen in gap/util/Main.jav
 
+All of this makes sense, as appengine is for smaller things not larger things according to its economic scalability.  
+
+The server side drops all design time ideas, pushed out to the desktop.
+
