@@ -36,7 +36,7 @@ import javax.servlet.ServletException;
  * @see Target
  */
 public final class TargetServlet
-    extends gap.service.Servlet
+    extends YasServlet
 {
 
     public TargetServlet() {
@@ -49,7 +49,7 @@ public final class TargetServlet
     {
         if (req.isLoggedIn()){
             Target target = Target.Instance();
-            if (Ok(req,target)){
+            if (IsAdmin(req,target)){
                 if (null != target){
 
                     String twitterId = target.getTwitterId();
@@ -89,11 +89,12 @@ public final class TargetServlet
     {
         if (req.isLoggedIn()){
             Target target = Target.Instance();
-            if (Ok(req,target)){
+            if (IsAdmin(req,target)){
                 String twitterId = req.getParameter("twitterId");
                 String twitterPass = req.getParameter("twitterPass");
                 String logonId = req.getParameter("logonId");
                 if (null != twitterId && null != twitterPass && null != logonId){
+
                     if (null == target){
                         target = new Target(twitterId);
                         target.setTwitterPass(twitterPass);
@@ -129,10 +130,4 @@ public final class TargetServlet
             this.error(req,rep,403,"Require login");
     }
 
-    private final static boolean Ok(Request req, Target target){
-        if (null == target || null == target.getLogonId())
-            return req.isAdmin;
-        else
-            return (req.getLogonId().equalsIgnoreCase(target.getLogonId()));
-    }
 }

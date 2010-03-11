@@ -40,11 +40,16 @@
           </tr>
         </table>
       </p>
+    </div>{{#admin}}
+    <div class="block">
+      <h2>Administration</h2>
 
-      <p> The bot's twitter account is <a href="/target">configured
-        here</a> (admin).  </p>
+      <p> <a href="/target">Target</a> </p>
 
-    </div>
+      <p> <a href="/source">Sources</a> </p>
+
+      <p> <a href="/source">Control</a> </p>
+    </div>{{/admin}}
     <div class="copyrights">
     </div>
     <div class="logo rhs" onclick="javascript:document.location = 'http://gap-data.appspot.com/'; return true;">

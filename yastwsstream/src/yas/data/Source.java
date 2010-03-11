@@ -38,6 +38,25 @@ import java.util.Date;
 public final class Source
     extends SourceData
 {
+    private final static Page SourcesPage = new Page(0,99);
+    private final static Query SourcesQuery = Source.CreateQueryFor();
+    /**
+     * List sources
+     */
+    public final static BigTableIterator<Source> Sources(){
+        return Source.QueryN(SourcesQuery,SourcesPage);
+    }
+
+    public final static Source SourceFor(lxl.Map<String,Source> cache, String twid){
+        Source source = cache.get(twid);
+        if (null == source){
+            source = Source.ForLongTwitterId(twid);
+            if (null != source)
+                cache.put(twid,source);
+        }
+        return source;
+    }
+
 
     public Source() {
         super();

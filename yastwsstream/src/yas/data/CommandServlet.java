@@ -62,7 +62,7 @@ public final class CommandServlet
                 lxl.Map<String,Source> sourceCache = new lxl.Map<String,Source>();
                 for (Feed.Data data : feed){
                     try {
-                        Source source = SourceFor(sourceCache,data.author);
+                        Source source = Source.SourceFor(sourceCache,data.author);
                         if (null != source && (!targetId.equalsIgnoreCase(source.getTwitterId()))){
                             Key commandKey = Command.KeyLongFor(data.guid);
                             Command command = Command.Get(commandKey);
@@ -77,7 +77,7 @@ public final class CommandServlet
                                     Twitter.Command.Reply(target,data,"Stats Ok #"+targetId);
                                     break;
                                 case sources:
-                                    BigTableIterator<Source> list = Sources();
+                                    BigTableIterator<Source> list = Source.Sources();
                                     StringBuilder listString = new StringBuilder();
                                     for (Source src: list){
                                         String twid = src.getTwitterId();

@@ -8,7 +8,9 @@
     <div class="logon">{{>div.logon.html}}
     </div>
     <div class="block">
-      <h1>Twitter Configuration</h1>
+      <h1>Target Administration</h1>
+
+      <p> <i>Twitter destination account.  The administrator is identified by an email address for a google account employed here for access to these configuration screens. </i> </p>
 
       <table border="0">
         <form method="POST">

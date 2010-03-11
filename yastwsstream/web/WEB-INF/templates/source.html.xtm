@@ -1,0 +1,89 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Twitter Streaming Groups</title>
+    <link rel="stylesheet" type="text/css" href="/top.css" />
+    <link rel="icon" href="/icons/favicon.ico" />
+  </head>
+  <body>
+    <div class="logon">{{>div.logon.html}}
+    </div>
+    <div class="block">
+      <h1>Source Administation</h1>
+
+      <p> <i>Twitter source accounts.  A twitter "@name" is required.
+        Logon is optional, it is a google account used here for a
+        possible administrator.</i> </p>
+
+      <p> <i>Start engages the bot with twitter.  Commands executes
+      one pass of the command processor.  Favorites executes one pass
+      of the favorites processor.</i> </p>
+
+      <table border="0">
+        <tr>
+          <th>Twitter
+          </th>
+          <th>Logon
+          </th>
+        </tr>{{#sources}}
+        <tr>
+          <form method="POST">
+            <td><input name="twitterId" value="{{=twitterId}}" class="tool" />
+            </td>
+            <td><input name="logonId" value="{{=logonId}}" class="tool" />
+            </td>
+            <td><input type="submit" name="op" value="Update" class="tool" />
+            </td>
+            <td><input type="submit" name="op" value="Drop" class="tool" />
+            </td>
+          </form>
+        </tr>{{/sources}}
+        <tr>
+          <form method="POST">
+            <td><input name="twitterId" class="tool" />
+            </td>
+            <td><input name="logonId" class="tool" />
+            </td>
+            <td><input type="submit" name="op" value="Add" class="tool" />
+            </td>
+          </form>
+        </tr>
+        <tr>
+          <form method="POST">
+            <td>
+            </td>
+            <td>
+            </td>
+            <td><input type="submit" name="op" value="Start" class="tool" />
+            </td>
+          </form>
+        </tr>
+        <tr>
+          <form method="POST" action="/command">
+            <input type="hidden" name="op" value="Test" class="tool" />
+            <td>
+            </td>
+            <td>
+            </td>
+            <td><input type="submit" value="Commands" class="tool" />
+            </td>
+          </form>
+        </tr>
+        <tr>
+          <form method="POST" action="/retweet">
+            <input type="hidden" name="op" value="Test" class="tool" />
+            <td>
+            </td>
+            <td>
+            </td>
+            <td><input type="submit" value="Favorites" class="tool" />
+            </td>
+          </form>
+        </tr>
+      </table>
+    </div>
+    <div class="copyrights">
+    </div>
+    <div class="logo rhs" onclick="javascript:document.location = 'http://gap-data.appspot.com/'; return true;">
+    </div>
+  </body>
+</html>

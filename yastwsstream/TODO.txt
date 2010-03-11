@@ -1,6 +1,12 @@
-                                                      -*-outline-*-
+                                                 -*-outline-*-
 
-* Command & Retweet
-** history
-** start
-** stop
+* /retweet/history/<source>
+** from <page-num>
+** for <page-count>
+
+* /source
+** (start & stop)
+*** Add "bool running" to Target schema 
+** Admin edit
+*** add
+*** drop

@@ -278,7 +278,7 @@ public abstract class SourceData
         public static Field For(String name) {
             Field field = FieldName.get(name);
             if (null == field)
-                return Field.valueOf(name);
+                return null;
             else
                 return field;
         }

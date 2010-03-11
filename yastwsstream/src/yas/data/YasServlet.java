@@ -17,29 +17,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package {{=package_name}};
-{{#import}}
-import {{=import_spec}};{{/import}}
+package yas.data;
+
 
 import gap.*;
 import gap.data.*;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.labs.taskqueue.*;
 
 import java.util.Date;
 
 /**
- * Generated once.  This source file will not be overwritten
- * unless deleted, so it can be edited.
- *
- * @see {{=class_name}}
+ * Tools layer under servlets in this package includes access control
+ * policy function, {@link #IsAdmin IsAdmin}.
  */
-public final class {{=class_name}}Servlet
+public abstract class YasServlet
     extends gap.service.Servlet
 {
 
-    public {{=class_name}}Servlet() {
+    protected final static boolean IsAdmin(Request req, Target target){
+        if (req.isLoggedIn()){
+            if (null == target || null == target.getLogonId())
+                return req.isAdmin;
+            else
+                return (req.getLogonId().equalsIgnoreCase(target.getLogonId()));
+        }
+        else
+            return false;
+    }
+
+    public YasServlet() {
         super();
     }
 

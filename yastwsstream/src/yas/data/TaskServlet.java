@@ -40,7 +40,7 @@ import java.util.Date;
  * @see CommandServlet
  */
 public abstract class TaskServlet
-    extends gap.service.Servlet
+    extends YasServlet
 {
     public final static com.google.appengine.api.datastore.Transaction TxNil = null;
     /**
@@ -66,24 +66,6 @@ public abstract class TaskServlet
         TaskOptions topt = TaskOptions.Builder.url("/command");
         topt = topt.method(TaskOptions.Method.POST);
         return queue.add(TxNil,topt);
-    }
-    private final static Page SourcesPage = new Page(0,99);
-    private final static Query SourcesQuery = Source.CreateQueryFor();
-    /**
-     * List sources
-     */
-    public final static BigTableIterator<Source> Sources(){
-        return Source.QueryN(SourcesQuery,SourcesPage);
-    }
-
-    public final static Source SourceFor(lxl.Map<String,Source> cache, String twid){
-        Source source = cache.get(twid);
-        if (null == source){
-            source = Source.ForLongTwitterId(twid);
-            if (null != source)
-                cache.put(twid,source);
-        }
-        return source;
     }
 
 

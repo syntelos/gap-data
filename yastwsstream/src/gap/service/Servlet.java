@@ -43,6 +43,8 @@ import java.security.Principal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.LogRecord;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This core servlet is extended in {@link gap.servlet.Error} and
@@ -61,6 +63,40 @@ public class Servlet
         gap.data.BigTable.Services.init();
     }
 
+    /**
+     * Email address handling
+     */
+    public final static class Email {
+
+        private final static Pattern EMAILADDR = Pattern.compile("[\\w\\-\\.]+@[\\w\\-\\.]+", Pattern.CASE_INSENSITIVE);
+        /**
+         * @param string Input
+         * @return Non null for recognized "valid" email address
+         */
+        public final static String Clean(String string){
+            if (null == string || 0 == string.length())
+                return null;
+            else {
+                Matcher m = EMAILADDR.matcher(string);
+                if (m.matches())
+                    return string;
+                else
+                    return null;
+            }
+        }
+        /**
+         * @param string Input
+         * @return Recognized "valid" email address
+         */
+        public final static boolean IsValid(String string){
+            if (null == string || 0 == string.length())
+                return false;
+            else {
+                Matcher m = EMAILADDR.matcher(string);
+                return (m.matches());
+            }
+        }
+    }
     /**
      * Universal charset
      */

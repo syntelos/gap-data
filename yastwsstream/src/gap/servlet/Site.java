@@ -21,6 +21,7 @@ package gap.servlet;
 
 import gap.Request;
 import gap.Response;
+import gap.hapax.TemplateName;
 import yas.data.Target;
 
 import java.io.IOException;
@@ -30,8 +31,13 @@ import javax.servlet.ServletException;
  * Bound to path <code>'/*'</code>
  */
 public class Site
-    extends gap.service.Servlet
+    extends yas.data.YasServlet
 {
+    protected static class TemplateNames {
+
+        protected final static TemplateName Admin = new TemplateName("admin");
+    }
+
 
     public Site(){
         super();
@@ -51,6 +57,9 @@ public class Site
         }
         else
             req.setVariable("twitterId",gap.Version.Target);
+
+        if (IsAdmin(req,target))
+            req.showSection(TemplateNames.Admin);
 
         super.doGet(req,rep);
     }

@@ -320,10 +320,11 @@ public class Request
             case logonText:
                 return true;
             case contentType:
+                return (name.is(0) && null != this.contentType);
             case isAdmin:
+                return (name.is(0) && this.isAdmin);
             case isMember:
-                return name.is(0);
-
+                return (name.is(0) && this.isMember);
             case version:
                 if (name.has(1))
                     return gap.Version.HasVariable(new TemplateName(name));
@@ -345,36 +346,36 @@ public class Request
                 if (name.is(0))
                     return this.method.name;
                 else
-                    return "";
+                    return null;
             case protocol:
                 if (name.is(0))
                     return this.protocol.name;
                 else
-                    return "";
+                    return null;
             case path:
                 if (name.is(0))
                     return this.path.getFull();
                 else
-                    return "";
+                    return null;
             case accept:
                 if (name.is(0))
                     return this.getHeader("Accept");
                 else
-                    return "";
+                    return null;
             case fileManager:
-                return "";
+                return null;
             case parameters:
                 if (name.has(1))
                     return this.parameters.getVariable(new TemplateName(name));
                 else
-                    return "";
+                    return null;
             case userReference:
                 return this.userReference;
             case logon:
                 if (name.has(1))
                     return this.logon.getVariable(new TemplateName(name));
                 else
-                    return "";
+                    return null;
             case logonUrl:
                 return this.logonUrl;
             case logonText:
@@ -383,17 +384,17 @@ public class Request
                 if (name.is(0) && null != this.contentType)
                     return this.contentType.name();
                 else
-                    return "";
+                    return null;
             case isAdmin:
-                if (name.is(0) && this.isMember)
+                if (name.is(0) && this.isAdmin)
                     return "Admin";
                 else
-                    return "";
+                    return null;
             case isMember:
                 if (name.is(0) && this.isMember)
                     return "Member";
                 else
-                    return "";
+                    return null;
 
             case version:
                 if (name.has(1))
