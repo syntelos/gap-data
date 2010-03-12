@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="yusu" default="jar">
+
+  <property name="src" value="src"/>
+  <property name="lib" value="lib"/>
+  <property name="bin" value="bin"/>
+  <property name="version" value="2.1.1"/>
+
+  <path id="project.class.path">
+    <fileset dir="${lib}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement path="${bin}"/>
+  </path>
+
+  <target name="jar" depends="compile">
+
+    <jar jarfile="${ant.project.name}-${version}.jar" basedir="${bin}" manifest="MANIFEST.MF"/>
+
+    <delete dir="${bin}"/>
+
+  </target>
+
+  <target name="compile" >
+
+    <mkdir dir="${bin}"/>
+
+    <javac srcdir="${src}" destdir="${bin}" encoding="UTF-8"
+           deprecation="false" debug="true" target="1.5" source="1.5">
+
+      <include name="**/*.java"/>
+
+      <classpath refid="project.class.path"/>
+
+    </javac>
+
+  </target>
+
+</project>
