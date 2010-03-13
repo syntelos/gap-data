@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="gap-data" default="write">
+<project name="gap-data-odlc" default="jar">
   <tstamp/>
   <property name="compiler.source" value="1.6"/>
   <property name="compiler.target" value="1.6"/>
@@ -8,174 +8,38 @@
   <property name="compiler.deprecation" value="false"/>
 
   <property name="src" value="src"/>
-  <property name="ver.src" value="ver/src"/>
-  <property name="ver.web" value="ver/web"/>
-  <property name="web" value="web"/>
-  <property name="out" value="war"/>
-  <property name="out.webinf" value="${out}/WEB-INF"/>
-  <property name="out.bin" value="${out.webinf}/classes"/>
-  <property name="out.lib" value="${out.webinf}/lib"/>
-  <property name="out.src" value="${out.webinf}/src"/>
-  <property name="out.odl" value="${out}/odl"/>
   <property name="lib" value="lib"/>
-  <property name="doc" value="doc"/>
-  <property name="odl" value="odl"/>
+  <property name="bin" value="bin"/>
 
-  <!-- 
-     - Application
-    -->
-  <property file="project.application"/>
-
-  <fail unless="project.application" message="Unrecognized configuration, missing 'project.application'."/>
+  <property name="ver.src" value="ver/src"/>
 
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.version.xml"/>
-  <import file="ant/build.in.odl.xml"/>
-  <import file="ant/build.in.gap.xml"/>
-
-  <!-- 
-     - G.App Engine
-    -->
-  <property name="gap.sdk" value="appengine-java-sdk"/>
-  <property file="${gap.sdk}/current.properties" />
-  <property name="gap.sdk.dir" value="${gap.sdk}/${gap.sdk.version}"/>
-  <import file="${gap.sdk.dir}/config/user/ant-macros.xml" />
-
 
   <path id="lib.path">
-    <pathelement path="${out.bin}" />
+
     <fileset dir="${lib}">
-      <include name="**/*.jar" />
-    </fileset>
-    <fileset dir="${gap.sdk.dir}/lib/shared">
-      <include name="**/*.jar" />
-    </fileset>
-    <fileset dir="${gap.sdk.dir}/lib/user">
-      <include name="**/*.jar" />
-    </fileset>
-    <fileset dir="${gap.sdk.dir}/lib/impl">
       <include name="**/*.jar" />
     </fileset>
   </path>
 
-  <target name="init" description="">
-    <mkdir dir="${out.lib}"/>
-    <copy todir="${out.lib}" flatten="true">
-
-      <fileset dir="${lib}">
-        <include name="**/*.jar" />
-      </fileset>
-      <fileset dir="${gap.sdk.dir}/lib/user">
-        <include name="**/*.jar" />
-        <exclude name="**/orm/**"/>
-      </fileset>
-    </copy>
-
-  </target>
-
-
-  <target name="run" depends="write" description="Starts local debug http server on port 8888 with jpda on port 9999.">
-    <dev_appserver war="${out}" port="8888" >
-      <options>
-        <arg value="--jvm_flag=-Xdebug"/>
-        <arg value="--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999"/>
-      </options>
-    </dev_appserver>
-  </target>
-
-  <target name="debug" depends="write" description="Starts local debug http server, suspended, on port 8888 with jpda on port 9999.">
-    <dev_appserver war="${out}" port="8888" >
-      <options>
-        <arg value="--jvm_flag=-Xdebug"/>
-        <arg value="--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9999"/>
-      </options>
-    </dev_appserver>
-  </target>
 
   <target name="clean" description="Delete all products: 'out', 'jar', etc..">
 
     <clean bin="${out}" this="."/>
   </target>
 
-  <target name="clean_build" description="Delete classes, then compile, then package.">
+  <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">
+    <archive.cleanly/>
 
-    <flush dir="${out.bin}" type="class"/>
+    <archive target="${target.jar}" bin="${bin}" src="${src}" manifest="${src}/Manifest.mf">
+      <pack/>
+    </archive>
 
-    <antcall target="write"/>
+    <flush dir="${bin}" type="class"/>
   </target>
 
-  <target name="write" depends="compile,version" description="Compile application into directory 'war'.">
-
-    <!-- enhance_war war="${out}" / -->
-
-    <copy todir="${out}" overwrite="true">
-      <filterset>
-        <filter token="ProjectTarget"        value="${project.application}"/>
-        <filter token="VersionName"          value="${ant.project.name}"/>
-        <filter token="VersionMajor"         value="${version.major}"/>
-        <filter token="VersionMinor"         value="${version.minor}"/>
-        <filter token="VersionBuild"         value="${version.build}"/>
-      </filterset>
-      <fileset dir="${ver.web}">
-        <include name="**/*.css"/>
-        <include name="**/*.html"/>
-        <include name="**/*.js"/>
-        <include name="**/*.properties"/>
-        <include name="**/*.txt"/>
-        <include name="**/*.xml"/>
-        <include name="**/*.xtm"/>
-      </fileset>
-    </copy>
-
-    <copy todir="${out}">
-
-      <fileset dir="${web}">
-        <include name="**/*.css" />
-        <include name="**/*.gif" />
-        <include name="**/*.html" />
-        <include name="**/*.ico" />
-        <include name="**/*.jpg" />
-        <include name="**/*.js" />
-        <include name="**/*.png" />
-        <include name="**/*.properties"/>
-        <include name="**/*.txt" />
-        <include name="**/*.xml" />
-        <include name="**/*.xtm" />
-      </fileset>
-    </copy>
-    <copy todir="${out.bin}">
-
-      <fileset dir="${src}">
-        <include name="**/*.xml" />
-        <include name="**/*.properties" />
-      </fileset>
-    </copy>
-<!--    <copy todir="${out.src}"> -->
-<!--      <fileset dir="${src}"> -->
-<!--        <include name="**/*.java" /> -->
-<!--      </fileset> -->
-<!--    </copy> -->
-    <copy todir="${out.odl}">
-      <fileset dir="${odl}">
-        <include name="**/*.odl" />
-      </fileset>
-    </copy>
-  </target>
-
-
-  <target name="odl" description="Generate 'src/pkg/*.java' files from 'odl/pkg/*.odl' files.  Requires prequisite plain 'ant' run.">
-
-    <copy todir="${out}">
-
-      <fileset dir="${web}">
-        <include name="**/*.xtm" />
-      </fileset>
-    </copy>
-    <odl-write classpath.id="lib.path"/>
-
-  </target>
-
-  <target name="compile" depends="version,init" description="Compile code from 'src' to bin.">
+  <target name="compile" depends="version" description="Compile code from 'src' to bin.">
 
     <compile src="${src}" ver="${ver.src}" bin="${out.bin}" classpath.id="lib.path"/>
 
@@ -183,6 +47,8 @@
 
   <target name="version" description="Report current project version.">
     <version/>
+    <property name="target.jar" value="${ant.project.name}-${this.version}.jar"/>
+
   </target>
 
   <target name="build" description="Increment project version build number.">
@@ -198,29 +64,6 @@
   <target name="minor" description="Increment project version minor number.">
     <version-minor/>
     <version/>
-  </target>
-
-  <target name="update" depends="write" description="Application upload.">
-    <appcfg action="update" war="${out}" />
-  </target>
-
-  <target name="update_indexes" depends="write" description="Datastore index configuration upload.">
-    <appcfg action="update_indexes" war="${out}" />
-  </target>
-
-  <target name="rollback" depends="write" description="Roll back interrupted update.">
-    <appcfg action="rollback" war="${out}" />
-  </target>
-
-  <target name="request_logs" description="Download log data.">
-    <appcfg action="request_logs" war="${out}">
-      <options>
-        <arg value="--num_days=1"/>
-      </options>
-      <args>
-        <arg value="logs.txt"/>
-      </args>
-    </appcfg>
   </target>
 
 </project>
