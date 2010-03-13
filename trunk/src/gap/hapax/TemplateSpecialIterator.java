@@ -50,6 +50,18 @@ package gap.hapax;
  * 
  * </dl>
  * 
+ * Each iteration defines the following numeric variables.
+ * 
+ * <dl>
+ * 
+ * <dt> <i>name</i><code>_it_Index</code> </dt> <dd> An integer counting from zero. </dd>
+ * 
+ * <dt> <i>name</i><code>_it_Count</code> </dt> <dd> An integer counting from one. </dd>
+ * 
+ * <dt> <i>name</i><code>_it_Total</code> </dt> <dd> An integer number of elements in the iteration. </dd>
+ * 
+ * </dl>
+ * 
  * 
  * @author jdp
  */
@@ -62,6 +74,9 @@ public class TemplateSpecialIterator
         public final static String Last      = "_it_Last";
         public final static String NotLast   = "_it_NotLast";
         public final static String Exclusive = "_it_Exclusive";
+        public final static String Index     = "_it_Index";
+        public final static String Count     = "_it_Count";
+        public final static String Total     = "_it_Total";
     }
 
     public final static void Define(TemplateDataDictionary dict, TemplateName sectionName, int cc, int count){
@@ -81,6 +96,9 @@ public class TemplateSpecialIterator
             dict.showSection(new TemplateName(sectionName,Suffix.NotLast));
             dict.showSection(new TemplateName(sectionName,Suffix.Exclusive));
         }
+        dict.setVariable(new TemplateName(sectionName,Suffix.Index),String.valueOf(cc));
+        dict.setVariable(new TemplateName(sectionName,Suffix.Count),String.valueOf(cc+1));
+        dict.setVariable(new TemplateName(sectionName,Suffix.Total),String.valueOf(count));
     }
 
 }
