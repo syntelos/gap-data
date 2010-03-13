@@ -17,13 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.hapax;
+package gap.odl.hapax;
 
 
 import gap.*;
 import gap.data.*;
-import gap.hapax.TemplateDataDictionary;
-import gap.hapax.TemplateName;
+import gap.odl.hapax.TemplateDataDictionary;
+import gap.odl.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
@@ -45,7 +45,7 @@ public abstract class TemplateNodeData
 
     private final static long serialVersionUID = 3;
 
-    public final static Kind KIND = Kind.Create("TemplateNode","gap.hapax","TemplateNode","/template-nodes");
+    public final static Kind KIND = Kind.Create("TemplateNode","gap.odl.hapax","TemplateNode","/template-nodes");
 
     public final static String ClassName = "TemplateNode";
 

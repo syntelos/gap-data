@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package oso.data;
+package gap.odl.hapax;
 
 
 import gap.*;
@@ -31,15 +31,19 @@ import java.util.Date;
 /**
  * Generated once bean data user.
  */
-public final class Person
-    extends PersonData
+public final class TemplateNode
+    extends TemplateNodeData
 {
 
-    public Person() {
+    public TemplateNode() {
         super();
     }
-    public Person(String logonId) {
-        super( logonId);
+    public TemplateNode(Key ancestor, String nodeType, Integer lineNumber) {
+        super(ancestor,  nodeType,  lineNumber);
+    }
+    public TemplateNode(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent) {
+        super(ancestor,  nodeType,  lineNumber);
+        this.setNodeContent(nodeContent);
     }
 
 

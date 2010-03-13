@@ -23,11 +23,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package gap.hapax;
+package gap.odl.hapax;
 
 import gap.data.*;
 
-import static gap.hapax.TemplateNodeType.*;
+import static gap.odl.hapax.TemplateNodeType.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
