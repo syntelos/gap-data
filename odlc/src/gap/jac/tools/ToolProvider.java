@@ -63,7 +63,8 @@ public class ToolProvider {
 
 
     public static JavaCompiler getSystemJavaCompiler() {
-        return new gap.jac.api.JavacTool();
+
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -77,7 +78,7 @@ public class ToolProvider {
      */
     public static ClassLoader getSystemToolClassLoader() {
 
-        return gap.jac.api.JavacTool.class.getClassLoader();
+        throw new UnsupportedOperationException();
     }
 
 }

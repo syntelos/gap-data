@@ -26,7 +26,7 @@
 
   <target name="clean" description="Delete all products: 'out', 'jar', etc..">
 
-    <clean bin="${out}" this="."/>
+    <clean bin="${bin}" this="."/>
   </target>
 
   <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">
@@ -41,7 +41,7 @@
 
   <target name="compile" depends="version" description="Compile code from 'src' to bin.">
 
-    <compile src="${src}" ver="${ver.src}" bin="${out.bin}" classpath.id="lib.path"/>
+    <compile src="${src}" ver="${ver.src}" bin="${bin}" classpath.id="lib.path"/>
 
   </target>
 
