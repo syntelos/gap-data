@@ -23,9 +23,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package gap.odl.hapax;
+package gap.hapax;
 
-import gap.data.List;
+import lxl.List;
 
 import java.util.StringTokenizer;
 

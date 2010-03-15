@@ -23,11 +23,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package gap.odl.hapax;
+package gap.hapax;
 
-import gap.data.*;
+import lxl.List;
 
-import static gap.odl.hapax.TemplateNodeType.*;
+import static gap.hapax.TemplateNodeType.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -43,7 +43,7 @@ import java.text.MessageFormat;
 public final class TemplateRenderer 
     extends Object
 {
-    private final List.Short<TemplateNode> template;
+    private final List<TemplateNode> template;
     private final TemplateLoader context;
 
 
@@ -54,7 +54,7 @@ public final class TemplateRenderer
         if (null != context){
             this.context = context;
             if (null != source){
-                List.Short<TemplateNode> template = source.getTemplateTargetHapax(true);
+                List<TemplateNode> template = source.getTemplateTargetHapax();
                 if (template.isEmpty())
                     template = TemplateParser.Parse(source,template);
                 this.template = template;
@@ -86,13 +86,13 @@ public final class TemplateRenderer
             dict.renderComplete();
         }
     }
-    public final static void Render(TemplateLoader context, List.Short<TemplateNode> template, 
+    public final static void Render(TemplateLoader context, List<TemplateNode> template, 
                                     TemplateDataDictionary dict, PrintWriter writer)
         throws TemplateException
     {
         Render(context,template,0,(template.size()-1),dict,writer);
     }
-    private final static void Render(TemplateLoader context, List.Short<TemplateNode> template, 
+    private final static void Render(TemplateLoader context, List<TemplateNode> template, 
                                      int start, int end, TemplateDataDictionary dict, 
                                      PrintWriter writer)
         throws TemplateException
@@ -131,13 +131,13 @@ public final class TemplateRenderer
             }
         }
     }
-    private final static int RenderSection(TemplateLoader context, List.Short<TemplateNode> template,
+    private final static int RenderSection(TemplateLoader context, List<TemplateNode> template,
                                             TemplateDataDictionary dict, int open, TemplateNode node,
                                             PrintWriter writer)
         throws TemplateException
     {
         int next = (open + 1);
-        int close = (open + node.getOffsetCloseRelative(false));
+        int close = (open + node.getOffsetCloseRelative());
         TemplateName sectionName = new TemplateName(gap.Strings.TextToString(node.getNodeContent()));
 
         if (close >= next && close < template.size()){
@@ -173,7 +173,7 @@ public final class TemplateRenderer
         else
             throw new TemplateException("Missing close tag for section '"+sectionName+"' at line "+node.getLineNumber()+".");
     }
-    private final static int RenderVariable(TemplateLoader context, List.Short<TemplateNode> template,
+    private final static int RenderVariable(TemplateLoader context, List<TemplateNode> template,
                                             TemplateDataDictionary dict, int pos, TemplateNode node,
                                             PrintWriter writer)
         throws TemplateException
@@ -186,7 +186,7 @@ public final class TemplateRenderer
 
         return pos;
     }
-    private final static int RenderText(TemplateLoader context, List.Short<TemplateNode> template,
+    private final static int RenderText(TemplateLoader context, List<TemplateNode> template,
                                         TemplateDataDictionary dict, int pos, TemplateNode node,
                                         PrintWriter writer)
         throws TemplateException
@@ -198,7 +198,7 @@ public final class TemplateRenderer
 
         return pos;
     }
-    private final static int RenderInclude(TemplateLoader context, List.Short<TemplateNode> template,
+    private final static int RenderInclude(TemplateLoader context, List<TemplateNode> template,
                                            TemplateDataDictionary dict, int pos, TemplateNode node,
                                            PrintWriter writer)
         throws TemplateException

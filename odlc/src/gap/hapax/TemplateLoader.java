@@ -23,24 +23,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package gap.odl.hapax;
+package gap.hapax;
 
 /**
- * An Exception that is thrown by {@link Template} when something goes awry.
- *
+ * 
  * @author dcoker
+ * @author jdp
  */
-public class TemplateException
-    extends java.io.IOException
-{
+public interface TemplateLoader {
 
-    public TemplateException(Throwable throwable) {
-        super(throwable);
-    }
-    public TemplateException(String m, Throwable t) {
-        super(m,t);
-    }
-    public TemplateException(String message) {
-        super(message);
-    }
+    public TemplateRenderer getTemplate(TemplateName name)
+        throws TemplateException;
+
 }

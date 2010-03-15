@@ -23,11 +23,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package gap.odl.hapax;
+package gap.hapax;
 
-import gap.data.*;
+import lxl.List;
 
-import static gap.odl.hapax.TemplateNodeType.*;
+import static gap.hapax.TemplateNodeType.*;
 
 import java.text.MessageFormat;
 
@@ -42,11 +42,11 @@ public final class TemplateParser
     extends Object
 {
 
-    public static List.Short<TemplateNode> Parse(Template source, List.Short<TemplateNode> list)
+    public static List<TemplateNode> Parse(Template source, List<TemplateNode> list)
         throws TemplateParserException
     {
-        if (source.hasTemplateSourceHapax(true)){
-            list.drop();
+        if (source.hasTemplateSourceHapax()){
+            list.clear();
             TemplateParserReader input = new TemplateParserReader(source);
             TemplateNode node = null;
             while (true) {
@@ -71,15 +71,8 @@ public final class TemplateParser
                     break;
                 case EOF:
                     ParserClose(list);
-                    try {
-                        if (list.save(3000))
-                            return list;
-                        else
-                            throw new TemplateParserException("Unable to save template node list.");
-                    }
-                    catch (InterruptedException exc){
-                        throw new TemplateParserException("Unable to save template node list.",exc);
-                    }
+                    return list;
+
                 default:
                     throw new TemplateParserException("Internal error parsing template.");
                 }
@@ -134,7 +127,7 @@ public final class TemplateParser
     /**
      * Terminal scan
      */
-    private static void ParserClose(List.Short<TemplateNode> template)
+    private static void ParserClose(List<TemplateNode> template)
         throws TemplateParserException
     {
         for (int cc = 0, count = template.size(); cc < count; cc++){
@@ -164,12 +157,12 @@ public final class TemplateParser
 
             String text = input.truncate();
 
-            return (new TemplateNode(input.getSourceKey(),Text.name(),lno,gap.Strings.TextFromString(text)));
+            return (new TemplateNode(Text.name(),lno,gap.Strings.TextFromString(text)));
         }
         else {
             String text = input.delete(0, next_braces);
             if (text.length() > 0)
-                return (new TemplateNode(input.getSourceKey(),Text.name(),lno,gap.Strings.TextFromString(text)));
+                return (new TemplateNode(Text.name(),lno,gap.Strings.TextFromString(text)));
             else
                 return null;
         }
@@ -181,7 +174,7 @@ public final class TemplateParser
         int lno = input.lineNumber();
         String consumed = ParseClose(input);
         String token = consumed.substring(3,consumed.length()-2).trim();
-        return (new TemplateNode(input.getSourceKey(),Include.name(),lno,gap.Strings.TextFromString(token)));
+        return (new TemplateNode(Include.name(),lno,gap.Strings.TextFromString(token)));
     }
     private static TemplateNode ParseVariable(TemplateParserReader input)
         throws TemplateParserException
@@ -193,7 +186,7 @@ public final class TemplateParser
             token = consumed.substring(3,consumed.length()-2).trim();
         else
             token = consumed.substring(2,consumed.length()-2).trim();
-        return (new TemplateNode(input.getSourceKey(),Variable.name(),lno,gap.Strings.TextFromString(token)));
+        return (new TemplateNode(Variable.name(),lno,gap.Strings.TextFromString(token)));
     }
     private static TemplateNode ParseCloseSection(TemplateParserReader input)
         throws TemplateParserException
@@ -201,7 +194,7 @@ public final class TemplateParser
         int lno = input.lineNumber();
         String consumed = ParseClose(input);
         String token = consumed.substring(3,consumed.length()-2).trim();
-        return (new TemplateNode(input.getSourceKey(),SectionClose.name(),lno,gap.Strings.TextFromString(token)));
+        return (new TemplateNode(SectionClose.name(),lno,gap.Strings.TextFromString(token)));
     }
     private static TemplateNode ParseOpenSection(TemplateParserReader input)
         throws TemplateParserException
@@ -209,7 +202,7 @@ public final class TemplateParser
         int lno = input.lineNumber();
         String consumed = ParseClose(input);
         String token = consumed.substring(3,consumed.length()-2).trim();
-        return (new TemplateNode(input.getSourceKey(),SectionOpen.name(),lno,gap.Strings.TextFromString(token)));
+        return (new TemplateNode(SectionOpen.name(),lno,gap.Strings.TextFromString(token)));
     }
     private static TemplateNode ParseComment(TemplateParserReader input)
         throws TemplateParserException
@@ -217,7 +210,7 @@ public final class TemplateParser
         int lno = input.lineNumber();
         String consumed = ParseClose(input);
         String token = consumed.substring(3,consumed.length()-2).trim();
-        return (new TemplateNode(input.getSourceKey(),Comment.name(),lno,gap.Strings.TextFromString(token)));
+        return (new TemplateNode(Comment.name(),lno,gap.Strings.TextFromString(token)));
     }
 
     private static String ParseClose(TemplateParserReader input)
@@ -232,7 +225,7 @@ public final class TemplateParser
         }
     }
 
-    private final static int DistanceToClose(List.Short<TemplateNode> template, int node_ofs, TemplateNode node)
+    private final static int DistanceToClose(List<TemplateNode> template, int node_ofs, TemplateNode node)
         throws TemplateParserException
     {
         int stack = DistanceToCloseStackInit, ofs = (node_ofs+1), length = template.size();

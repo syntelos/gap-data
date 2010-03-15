@@ -32,7 +32,7 @@
   <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">
     <archive.cleanly/>
 
-    <archive target="${target.jar}" bin="${bin}" src="${src}" manifest="${src}/Manifest.mf">
+    <archive target="${target.jar}" bin="${bin}" manifest="${src}/Manifest.mf">
       <pack/>
     </archive>
 

@@ -23,9 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package gap.odl.hapax;
-
-import com.google.appengine.api.datastore.Key;
+package gap.hapax;
 
 /**
  * Line number string reader
@@ -50,7 +48,7 @@ public final class TemplateParserReader
         super();
         if (null != source){
             this.source = source;
-            String string = gap.Strings.TextToString(source.getTemplateSourceHapax(true));
+            String string = gap.Strings.TextToString(source.getTemplateSourceHapax());
             if (null != string && 0 != string.length())
                 this.buffer = string.toCharArray();
         }
@@ -60,9 +58,6 @@ public final class TemplateParserReader
 
     public Template getSource(){
         return this.source;
-    }
-    public Key getSourceKey(){
-        return this.source.getKey();
     }
     public int lineNumber(){
         return this.lno;

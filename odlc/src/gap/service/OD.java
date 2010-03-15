@@ -27,7 +27,6 @@ import gap.hapax.TemplateName;
 import gap.hapax.TemplateRenderer;
 import gap.hapax.TemplateDataDictionary;
 import gap.hapax.TemplateException;
-import gap.service.Templates;
 import gap.service.od.ClassDescriptor;
 import gap.service.od.FieldDescriptor;
 import gap.service.od.ImportDescriptor;

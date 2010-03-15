@@ -109,20 +109,10 @@ public abstract class AbstractList<V extends BigTable>
     /**
      * Attempt buffer fill every time
      */
-    public final List<V> refill(){
+    public List<V> refill(){
         Query query = this.query;
-        if (null != query){
-            Page page = this.page;
-            this.buffering(page);
-            BigTableIterator<BigTable> iterable = Store.QueryN(query,page);
-            this.gross = iterable.gross;
-            this.hitEnd = iterable.hitEnd;
-            this.clearBuffer();
-            for (BigTable table: iterable){
-                this.addToBuffer(table);
-            }
-            return this;
-        }
+        if (null != query)
+            throw new UnsupportedOperationException();
         else
             throw new IllegalStateException("Missing query.");
     }
@@ -326,23 +316,8 @@ public abstract class AbstractList<V extends BigTable>
         throws java.lang.InterruptedException
     {
         BigTable[] buffer = this.buffer;
-        if (null != buffer){
-            Lock lock = this.getParent().getLock();
-            if (lock.enter(timeout)){
-                try {
-                    for (int cc = 0, count = buffer.length; cc < count; cc++){
-                        BigTable instance = buffer[cc];
-                        instance.save();
-                    }
-                    return true;
-                }
-                finally {
-                    lock.exit();
-                }
-            }
-            else
-                return false;
-        }
+        if (null != buffer)
+            throw new UnsupportedOperationException();
         else
             return true;
     }

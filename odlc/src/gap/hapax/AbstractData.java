@@ -17,9 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.odl.hapax;
+package gap.hapax;
 
-import gap.data.List;
+import lxl.ArrayList;
+import lxl.List;
+import lxl.Map;
 
 /**
  * @author jdp
@@ -29,8 +31,8 @@ public class AbstractData
     implements TemplateDataDictionary
 {
     protected transient TemplateDataDictionary parent;
-    protected transient lxl.Map<String,String> variables;
-    protected transient lxl.Map<String,List<TemplateDataDictionary>> sections;
+    protected transient Map<String,String> variables;
+    protected transient Map<String,List<TemplateDataDictionary>> sections;
 
 
     public AbstractData(){
@@ -43,10 +45,10 @@ public class AbstractData
 
     public void renderComplete(){
         this.parent = null;
-        lxl.Map<String,String> variables = this.variables;
+        Map<String,String> variables = this.variables;
         if (null != variables)
             variables.clear();
-        lxl.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        Map<String,List<TemplateDataDictionary>> sections = this.sections;
         if (null != sections){
             for (List<TemplateDataDictionary> list: sections.values()){
                 for (TemplateDataDictionary item: list){
@@ -79,7 +81,7 @@ public class AbstractData
     }
     public boolean hasVariable(TemplateName name){
 
-        lxl.Map<String,String> variables = this.variables;
+        Map<String,String> variables = this.variables;
         if (null != variables && variables.containsKey(name.getName())){
             return true;
         }
@@ -91,7 +93,7 @@ public class AbstractData
     }
     public String getVariable(TemplateName name){
 
-        lxl.Map<String,String> variables = this.variables;
+        Map<String,String> variables = this.variables;
         if (null != variables){
             String value = variables.get(name.getName());
             if (null != value)
@@ -105,16 +107,16 @@ public class AbstractData
     }
     public void setVariable(TemplateName name, String value){
 
-        lxl.Map<String,String> variables = this.variables;
+        Map<String,String> variables = this.variables;
         if (null == variables){
-            variables = new lxl.Map<String,String>();
+            variables = new Map<String,String>();
             this.variables = variables;
         }
         variables.put(name.getName(),value);
     }
     public List<TemplateDataDictionary> getSection(TemplateName name){
 
-        lxl.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        Map<String,List<TemplateDataDictionary>> sections = this.sections;
         List<TemplateDataDictionary> section = null;
         if (null != sections){
             section = sections.get(name.getComponent(0));
@@ -155,9 +157,9 @@ public class AbstractData
     }
     public List<TemplateDataDictionary> showSection(TemplateName name){
 
-        lxl.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        Map<String,List<TemplateDataDictionary>> sections = this.sections;
         if (null == sections){
-            sections = new lxl.Map<String,List<TemplateDataDictionary>>();
+            sections = new Map<String,List<TemplateDataDictionary>>();
             this.sections = sections;
 
             TemplateDataDictionary newSection = new AbstractData(this);
@@ -200,9 +202,9 @@ public class AbstractData
         if (null == name || null == newSection)
             throw new IllegalArgumentException();
         else {
-            lxl.Map<String,List<TemplateDataDictionary>> sections = this.sections;
+            Map<String,List<TemplateDataDictionary>> sections = this.sections;
             if (null == sections){
-                sections = new lxl.Map<String,List<TemplateDataDictionary>>();
+                sections = new Map<String,List<TemplateDataDictionary>>();
                 this.sections = sections;
                 List<TemplateDataDictionary> section = Add(null,newSection);
                 sections.put(name.getComponent(0),section);
@@ -224,22 +226,14 @@ public class AbstractData
     }
     public final static List<TemplateDataDictionary> Add(List<TemplateDataDictionary> list, TemplateDataDictionary data){
         if (null == list){
-            List.Primitive<TemplateDataDictionary> newSectionList = new gap.util.AbstractListPrimitive.Any<TemplateDataDictionary>();
+            List<TemplateDataDictionary> newSectionList = new ArrayList<TemplateDataDictionary>();
             newSectionList.add(data);
             return newSectionList;
         }
-        else if (list instanceof List.Primitive){
-            List.Primitive<TemplateDataDictionary> primitiveSectionList = (List.Primitive<TemplateDataDictionary>)list;
-            primitiveSectionList.add(data);
-            return primitiveSectionList;
-        }
-        else if (list instanceof List.Short){
-            List.Short<TemplateDataDictionary> shortSectionList = (List.Short<TemplateDataDictionary>)list;
-            shortSectionList.add(data);
-            return shortSectionList;
-        }
-        else
+        else {
+            list.add(data);
             return list;
+        }
     }
     public final static List<TemplateDataDictionary> SectionClone(TemplateDataDictionary parent, List<TemplateDataDictionary> section){
 
@@ -248,7 +242,7 @@ public class AbstractData
         for (int sectionIndex = 0, sectionCount = sectionClone.size(); sectionIndex < sectionCount; sectionIndex++){
             TemplateDataDictionary sectionItem = sectionClone.get(sectionIndex);
             TemplateDataDictionary sectionItemClone = sectionItem.clone(parent);
-            sectionClone.set(sectionIndex,sectionItemClone);
+            sectionClone.update(sectionIndex,sectionItemClone);
         }
 
         return sectionClone;
