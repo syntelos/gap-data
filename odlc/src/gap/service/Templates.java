@@ -26,8 +26,7 @@ import gap.hapax.TemplateRenderer;
 
 import com.google.appengine.api.datastore.Text;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -38,34 +37,20 @@ import java.nio.charset.Charset;
  * @author jdp
  */
 public final class Templates
-    extends lxl.Map<File,Template>
+    extends lxl.Map<Resource,Template>
     implements gap.data.DataInheritance.Notation,
                gap.hapax.TemplateLoader
 {
 
-    private static File TemplatesLocation = new File("WEB-INF/templates");
-    /**
-     * Called from main programs with working directory
-     */
-    public final static void SInit(File dir){
-        if (TemplatesLocation.isDirectory())
-            throw new IllegalStateException();
-        else {
-            File validate = new File(dir,"WEB-INF/templates");
-            if (validate.isDirectory())
-                TemplatesLocation = validate;
-            else
-                throw new IllegalArgumentException(dir.getPath());
-        }
-    }
     /**
      * Tempaltes are read from disk in the ASCII transparent UTF-8
      * character encoding.
      */
     public final static Charset UTF8 = Charset.forName("UTF-8");
 
-    private final static String TemplatesFilenameSuffix = ".xtm";
-    private final static int TemplatesFilenameSuffixLen = TemplatesFilenameSuffix.length();
+    private final static String ResourcePrefix = "/xtm/";
+    private final static String ResourceSuffix = ".xtm";
+
 
     private final static Templates Instance = new Templates();
 
@@ -79,34 +64,28 @@ public final class Templates
     {
         return Instance.getTemplate(pathname);
     }
-    private static File TemplateFile(String name)
-        throws TemplateException
-    {
-        if (!name.endsWith(TemplatesFilenameSuffix))
-            name += TemplatesFilenameSuffix;
 
-        File file = new File(TemplatesLocation,name);
-        if (file.isFile())
-            return file;
-        else
-            return null;
-    }
-    public static String ReadToString(File file)
+    public static String ReadToString(Resource resource)
         throws IOException
     {
-        Reader reader = new java.io.InputStreamReader(new java.io.FileInputStream(file),UTF8);
-        try {
-            StringBuilder string = new StringBuilder();
-            char[] buf = new char[0x200];
-            int read;
-            while (0 < (read = reader.read(buf,0,0x200))){
-                string.append(buf,0,read);
+        InputStream file = resource.openStream();
+        if (null != file){
+            Reader reader = new java.io.InputStreamReader(file,UTF8);
+            try {
+                StringBuilder string = new StringBuilder();
+                char[] buf = new char[0x200];
+                int read;
+                while (0 < (read = reader.read(buf,0,0x200))){
+                    string.append(buf,0,read);
+                }
+                return string.toString();
             }
-            return string.toString();
+            finally {
+                reader.close();
+            }
         }
-        finally {
-            reader.close();
-        }
+        else
+            return null;
     }
 
 
@@ -123,27 +102,23 @@ public final class Templates
     private TemplateRenderer getTemplate(String path)
         throws TemplateException
     {
-        File templateFile = TemplateFile(path);
-        if (null != templateFile){
-            Template template = this.get(templateFile);
-            if (null == template){
-                template = new Template(path);
-                try {
-                    template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFile)));
-                    template.setLastModified(templateFile.lastModified());
-                    this.put(templateFile,template);
+        Resource templateResource = new Resource(path,ResourcePrefix,ResourceSuffix);
+        Template template = this.get(templateResource);
+        if (null == template){
+            template = new Template(path);
+            try {
+                template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateResource)));
+                template.setLastModified(System.currentTimeMillis());
+                this.put(templateResource,template);
 
-                    return new TemplateRenderer(this,template);
-                }
-                catch (IOException exc){
-                    throw new TemplateException(templateFile.getPath(),exc);
-                }
-            }
-            else
                 return new TemplateRenderer(this,template);
+            }
+            catch (IOException exc){
+                throw new TemplateException(templateResource.getPath(),exc);
+            }
         }
         else
-            return null;
+            return new TemplateRenderer(this,template);
     }
 
 }

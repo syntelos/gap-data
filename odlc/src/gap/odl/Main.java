@@ -23,9 +23,11 @@ import static gap.data.List.Type.*;
 import gap.hapax.TemplateException;
 import gap.hapax.TemplateName;
 import gap.service.OD;
+import gap.service.Resource;
 import gap.service.od.FieldDescriptor;
 import gap.service.od.ImportDescriptor;
 import gap.service.od.ODStateException;
+import gap.util.Services;
 
 import alto.io.u.Find;
 
@@ -108,9 +110,7 @@ public final class Main
             desc = Classes.get(name);
         }
         if (null == desc){
-            if (Files.isEmpty()){
-                SInit();
-            }
+
             File file = Files.get(name);
             if (null != file){
                 Reader odlReader = new Reader(file);
@@ -154,7 +154,7 @@ public final class Main
     /**
      * Generate bean, validate, servlet and list classes.
      */
-    public final static lxl.List<File> ProcessFiles(File odl, File src, File beans, File servlets)
+    public final static lxl.List<File> ProcessFiles(File odl, File src, Services beans, Services servlets)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         try {
@@ -210,13 +210,7 @@ public final class Main
                              * Services Record
                              */
                             if (null != servlets){
-                                PrintWriter services = new PrintWriter(new FileWriter(servlets,true));
-                                try {
-                                    services.println(pack.getName()+'.'+parentClassName+"Servlet");
-                                }
-                                finally {
-                                    services.close();
-                                }
+                                servlets.add(pack.getName()+'.'+parentClassName+"Servlet");
                             }
                         }
                     }
@@ -229,13 +223,7 @@ public final class Main
                      * Services Record
                      */
                     if (null != servlets){
-                        PrintWriter services = new PrintWriter(new FileWriter(servlets,true));
-                        try {
-                            services.println(pack.getName()+'.'+parentClassName+"Servlet");
-                        }
-                        finally {
-                            services.close();
-                        }
+                        servlets.add(pack.getName()+'.'+parentClassName+"Servlet");
                     }
                 }
             }
@@ -243,13 +231,7 @@ public final class Main
              * Services Record
              */
             if (null != beans){
-                PrintWriter services = new PrintWriter(new FileWriter(beans,true));
-                try {
-                    services.println(pack.getName()+'.'+parentClassName);
-                }
-                finally {
-                    services.close();
-                }
+                beans.add(pack.getName()+'.'+parentClassName);
             }
             /*
              * Lists
@@ -373,12 +355,10 @@ public final class Main
      * Run on directories
      * @return List of target products
      */
-    public final static lxl.List<File> ProcessDirectories(File odlDir, File src, File beans, File servlets)
+    public final static lxl.List<File> ProcessDirectories(File odlDir, File src, Services beans, Services servlets)
         throws IOException, TemplateException, Syntax, ODStateException
     {
         lxl.List<File> products = new lxl.ArrayList<File>();
-
-        SInit();
 
         for (File odlFile: Files.values()){
             try {
@@ -396,18 +376,16 @@ public final class Main
      * Generate 'web.xml' from servlets service file plus defaults.
      * @return List of target products
      */
-    public final static File ProcessServlets(File servletsService)
+    public final static File ProcessServlets(Services servlets)
         throws IOException, TemplateException, Syntax, ODStateException
     {
-        lxl.List<String> servlets = gap.util.Services.Read(servletsService);
-
         File webXml = new File("ver/web/WEB-INF/web.xml");
         PrintWriter out = new PrintWriter(new FileWriter(webXml));
         try {
             OD.GenerateWebXml(TemplateNames.WebXml,servlets,out);
         }
         catch (ODStateException ODStateException){
-            throw new ODStateException("In '"+servletsService+"'",ODStateException);
+            throw new ODStateException("In '"+servlets.getServiceName()+"'",ODStateException);
         }
         finally {
             out.close();
@@ -419,7 +397,7 @@ public final class Main
     public final static void usage(java.io.PrintStream out){
         out.println("Usage");
         out.println();
-        out.println("  gap.odl.Main ");
+        out.println("  gap.odl.Main [odl-dir [src-dir]]");
         out.println();
         out.println("Description");
         out.println();
@@ -427,87 +405,116 @@ public final class Main
         out.println("     framework.  It will generate bean, validation, servlet and list");
         out.println("     types for the input ODL packages.");
         out.println();
+        out.println("     The ODL directory defaults to 'odl', and the source directory");
+        out.println("     defaults to 'src'.");
+        out.println();
     }
 
     public final static void main(String[] argv){
-        if (0 == argv.length){
+        File odl, src;
+        switch (argv.length){
+        case 0:
+            odl = new File("odl");
+            src = new File("src");
+            break;
+        case 1:
+            odl = new File(argv[0]);
+            src = new File("src");
+            break;
+        case 2:
+            odl = new File(argv[0]);
+            src = new File(argv[1]);
+            break;
+        default:
+            usage(System.err);
+            System.exit(1);
+            return;
+        }
 
-            File odl = new File("odl");
-            File src = new File("src");
-            if (odl.isDirectory() && src.isDirectory()){
-
-                File beans = new File(src,"META-INF/services/gap.data.BigTable");
-                if (!DropTouch(beans)){
-                    if (!beans.getParentFile().isDirectory()){
-                        System.err.println("Error, parent directory not found: '"+beans.getPath()+"'.");
-                        System.exit(1);
-                        return;
-                    }
-                    else {
-                        System.err.println("Error, file not writeable: '"+beans.getPath()+"'.");
-                        System.exit(1);
-                        return;
-                    }
-                }
-
-                File servlets = new File(src,"META-INF/services/gap.service.Servlet");
-                if (!DropTouch(servlets)){
-                    if (!servlets.getParentFile().isDirectory()){
-                        System.err.println("Error, parent directory not found: '"+servlets.getPath()+"'.");
-                        System.exit(1);
-                        return;
-                    }
-                    else {
-                        System.err.println("Error, file not writeable: '"+servlets.getPath()+"'.");
-                        System.exit(1);
-                        return;
-                    }
-                }
-
-//                gap.util.Main appenv = gap.util.Main.Install();
-                int rc = 0;
-                try {
-                    System.out.println("Source: "+odl.getPath());
-                    System.out.println("Target: "+src.getPath());
-                    lxl.List<File> products = Main.ProcessDirectories(odl,src,beans,servlets);
-                    for (File product : products){
-                        System.out.println("Product: "+product.getPath());
-                    }
-                    System.out.println("Product: "+beans.getPath());
-                    System.out.println("Product: "+servlets.getPath());
-                    File webXml = Main.ProcessServlets(servlets);
-                    System.out.println("Product: "+webXml.getPath());
-                }
-                catch (Throwable thrown){
-                    thrown.printStackTrace();
-                    rc = 1;
-                }
-                finally {
-//                    appenv.destroy();
-                    System.exit(rc);
+        if (odl.isDirectory() && src.isDirectory()){
+            /*
+             * (init)
+             */
+            {
+                Find find = new Find(ODLFiles,odl);
+                while (find.hasNext()){
+                    File file = find.next();
+                    String name = ClassName(file);
+                    Files.put(name,file);
                 }
             }
-            else {
-                if (!odl.isDirectory()){
-                    System.err.println("Error, directory not found: '"+odl.getPath()+"'.");
-
-                    if (!src.isDirectory())
-                        System.err.println("Error, directory not found: '"+src.getPath()+"'.");
-
+            /*
+             * (run)
+             */
+            Services beans = new Services(src,"gap.data.BigTable");
+            if (!beans.dropTouch()){
+                if (!beans.getParentFile().isDirectory()){
+                    System.err.println("Error, parent directory not found: '"+beans.getName()+"'.");
                     System.exit(1);
                     return;
                 }
                 else {
-                    System.err.println("Error, directory not found: '"+src.getPath()+"'.");
+                    System.err.println("Error, file not writeable: '"+beans.getName()+"'.");
                     System.exit(1);
                     return;
                 }
             }
+            Services servlets = new Services(src,"gap.service.Servlet");
+            if (!servlets.dropTouch()){
+                if (!servlets.getParentFile().isDirectory()){
+                    System.err.println("Error, parent directory not found: '"+servlets.getName()+"'.");
+                    System.exit(1);
+                    return;
+                }
+                else {
+                    System.err.println("Error, file not writeable: '"+servlets.getName()+"'.");
+                    System.exit(1);
+                    return;
+                }
+            }
+            int rc = 0;
+            try {
+                System.out.println("Source: "+odl.getPath());
+                System.out.println("Target: "+src.getPath());
+                lxl.List<File> products = Main.ProcessDirectories(odl,src,beans,servlets);
+                for (File product : products){
+                    System.out.println("Product: "+product.getPath());
+                }
+                System.out.println("Product: "+beans.getName());
+                System.out.println("Product: "+servlets.getName());
+                File webXml = Main.ProcessServlets(servlets);
+                System.out.println("Product: "+webXml.getPath());
+                /*
+                 */
+                servlets.write();
+                beans.write();
+            }
+            catch (Throwable thrown){
+                thrown.printStackTrace();
+                rc = 1;
+            }
+            finally {
+                System.exit(rc);
+            }
         }
         else {
-            usage(System.err);
-            System.exit(1);
-            return;
+            if (!odl.isDirectory()){
+                System.err.println("Error, ODL directory not found: '"+odl.getPath()+"'.");
+
+                if (!src.isDirectory())
+                    System.err.println("Error, source directory not found: '"+src.getPath()+"'.");
+
+                usage(System.err);
+                System.exit(1);
+                return;
+            }
+            else {
+                System.err.println("Error, source directory not found: '"+src.getPath()+"'.");
+
+                usage(System.err);
+                System.exit(1);
+                return;
+            }
         }
     }
 
@@ -548,28 +555,4 @@ public final class Main
         }
     }
 
-
-    static void SInit(){
-        if (Files.isEmpty()){
-            File odlDir = new File("odl");
-            Find find = new Find(ODLFiles,odlDir);
-            while (find.hasNext()){
-                File odl = find.next();
-                String name = ClassName(odl);
-                Files.put(name,odl);
-            }
-        }
-    }
-    /**
-     * File content cleared for appending.
-     */
-    private final static boolean DropTouch(File file){
-        try {
-            new java.io.FileOutputStream(file).close();
-            return true;
-        }
-        catch (Exception err){
-            return false;
-        }
-    }
 }

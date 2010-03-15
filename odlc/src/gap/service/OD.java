@@ -33,6 +33,8 @@ import gap.service.od.ImportDescriptor;
 import gap.service.od.MethodDescriptor;
 import gap.service.od.ODStateException;
 import gap.service.od.PackageDescriptor;
+import gap.util.ClassName;
+import gap.util.Services;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -199,7 +201,7 @@ public final class OD
         else
             throw new IllegalArgumentException();
     }
-    public final static void GenerateWebXml(TemplateName xtm, lxl.List<String> servlets, PrintWriter out)
+    public final static void GenerateWebXml(TemplateName xtm, Services servlets, PrintWriter out)
         throws ODStateException, IOException, TemplateException
     {
         if (null != xtm && null != servlets && null != out){
@@ -233,12 +235,12 @@ public final class OD
                 /*
                  * Generated
                  */
-                for (String servletClassName : servlets){
-                    ClassDescriptor cd = gap.odl.Main.ClassDescriptorForServlet(servletClassName);
+                for (ClassName servletClassName : servlets){
+                    ClassDescriptor cd = gap.odl.Main.ClassDescriptorForServlet(servletClassName.getName());
                     if (null != cd){
                         servlet = top.addSection(TemplateNames.WebXmlSection);
                         servlet.setVariable(TemplateNames.WebXmlSectionName,cd.getName());
-                        servlet.setVariable(TemplateNames.WebXmlSectionClass,servletClassName);
+                        servlet.setVariable(TemplateNames.WebXmlSectionClass,servletClassName.getName());
                         servlet.setVariable(TemplateNames.WebXmlSectionUrl,WebXmlPathStar(cd));
                         servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
                     }

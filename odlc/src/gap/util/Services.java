@@ -19,10 +19,16 @@
  */
 package gap.util;
 
+import gap.service.Resource;
+
 import java.io.Closeable;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -31,21 +37,18 @@ import java.util.logging.Logger;
 import java.util.logging.LogRecord;
 
 /**
- * A services file reader that intializes classes.
+ * A services file reader for ODL processing.
  * 
- * @see gap.data.BigTable
- * @see gap.service.Servlet
- * @author jdp
  */
 public class Services
-    extends lxl.ArrayList<Class>
+    extends lxl.ArrayList<ClassName>
     implements gap.data.HasName
 {
     public final static String NamePrefix = "META-INF/services/";
 
     protected final static Logger Log = Logger.getLogger(Services.class.getName());
 
-    public static lxl.List<String> Read(Class service)
+    public static lxl.List<String> Read(ClassName service)
         throws IOException
     {
         lxl.List<String> re = new lxl.ArrayList<String>();
@@ -100,21 +103,84 @@ public class Services
     }
 
 
-    private final Class service;
+    private final ClassName service;
 
-    private final String name;
+    private final Resource resource;
 
 
-    public Services(Class service){
+    public Services(File dir, String className){
+        this(dir, (new ClassName(className)));
+    }
+    public Services(File dir, ClassName service){
         super();
         if (null != service){
             this.service = service;
-            this.name = NamePrefix+service.getName();
+            this.resource = new Resource(dir,(NamePrefix+service.getName()));
             try {
-                this.fill();
+                InputStream in = resource.openStream();
+                if (null != in){
+                    BufferedReader strin = new BufferedReader(new InputStreamReader(in));
+                    try {
+                        String line;
+                        while (null != (line = strin.readLine())){
+                            int comment = line.indexOf('#');
+                            if (-1 != comment)
+                                line = line.substring(0,comment);
+                            line = line.trim();
+                            if (0 != line.length()){
+                                this.add(line);
+                            }
+                        }
+                    }
+                    finally {
+                        in.close();
+                    }
+                }
             }
             catch (IOException exc){
-                LogRecord rec = new LogRecord(Level.SEVERE,this.name);
+                LogRecord rec = new LogRecord(Level.SEVERE,this.resource.getPath());
+                rec.setThrown(exc);
+                Log.log(rec);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public Services(String className){
+        this(new ClassName(className));
+    }
+    public Services(ClassName service){
+        super();
+        if (null != service){
+            this.service = service;
+            this.resource = new Resource(NamePrefix+service.getName());
+            try {
+                Enumeration<URL> resources = this.resource.scanfor();
+                while (resources.hasMoreElements()){
+                    URL resource = resources.nextElement();
+                    InputStream in = resource.openStream();
+                    if (null != in){
+                        BufferedReader strin = new BufferedReader(new InputStreamReader(in));
+                        try {
+                            String line;
+                            while (null != (line = strin.readLine())){
+                                int comment = line.indexOf('#');
+                                if (-1 != comment)
+                                    line = line.substring(0,comment);
+                                line = line.trim();
+                                if (0 != line.length()){
+                                    this.add(line);
+                                }
+                            }
+                        }
+                        finally {
+                            in.close();
+                        }
+                    }
+                }
+            }
+            catch (IOException exc){
+                LogRecord rec = new LogRecord(Level.SEVERE,this.resource.getPath());
                 rec.setThrown(exc);
                 Log.log(rec);
             }
@@ -124,55 +190,30 @@ public class Services
     }
 
 
-    public final Class getService(){
+    public void add(String name){
+
+        ClassName clas = new ClassName(name);
+        if (!this.contains(clas)){
+            this.add(clas);
+        }
+    }
+    public final ClassName getService(){
         return this.service;
+    }
+    public final Resource getResource(){
+        return this.resource;
     }
     public final String getServiceName(){
         return this.service.getName();
     }
     public final String getName(){
-        return this.name;
+        return this.resource.getPath();
     }
-    /**
-     * Called from constructor.
-     */
-    public void fill()
-        throws IOException
-    {
-        this.clear();
-        Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(this.name);
-        while (resources.hasMoreElements()){
-            URL resource = resources.nextElement();
-            InputStream in = resource.openStream();
-            if (null != in){
-                BufferedReader strin = new BufferedReader(new InputStreamReader(in));
-                try {
-                    String line;
-                    while (null != (line = strin.readLine())){
-                        int comment = line.indexOf('#');
-                        if (-1 != comment)
-                            line = line.substring(0,comment);
-                        line = line.trim();
-                        if (0 != line.length()){
-                            try {
-                                Class clas = Class.forName(line);
-                                if (!this.contains(clas)){
-                                    this.add(clas);
-                                }
-                            }
-                            catch (ClassNotFoundException exc){
-                                LogRecord rec = new LogRecord(Level.SEVERE,line);
-                                rec.setThrown(exc);
-                                Log.log(rec);
-                            }
-                        }
-                    }
-                }
-                finally {
-                    in.close();
-                }
-            }
-        }
+    public boolean dropTouch(){
+        return this.resource.dropTouch();
+    }
+    public File getParentFile(){
+        return this.resource.getParentFile();
     }
     /**
      * Indempotent initializer will get called more than once, but
@@ -180,5 +221,21 @@ public class Services
      */
     public Services init(){
         return this;
+    }
+    public boolean write() throws IOException {
+        OutputStream out = this.resource.openOutput();
+        if (null != out){
+            try {
+                PrintWriter services = new PrintWriter(new OutputStreamWriter(out,"US-ASCII"));
+                for (ClassName name: this){
+                    services.println(name);
+                }
+                return true;
+            }
+            finally {
+                out.close();
+            }
+        }
+        return false;
     }
 }

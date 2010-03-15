@@ -9,6 +9,7 @@
 
   <property name="src" value="src"/>
   <property name="lib" value="lib"/>
+  <property name="xtm" value="xtm"/>
   <property name="bin" value="bin"/>
 
   <property name="ver.src" value="ver/src"/>
@@ -31,6 +32,12 @@
 
   <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">
     <archive.cleanly/>
+
+    <copy todir="${bin}/xtm">
+      <fileset dir="${xtm}">
+        <include name="**/*.xtm" />
+      </fileset>
+    </copy>
 
     <archive target="${target.jar}" bin="${bin}" manifest="${src}/Manifest.mf">
       <pack/>
