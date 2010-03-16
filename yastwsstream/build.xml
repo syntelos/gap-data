@@ -57,6 +57,15 @@
     </fileset>
   </path>
 
+  <path id="odl.path">
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="ant">
+      <include name="**/gap-data-odlc-*.jar" />
+    </fileset>
+  </path>
+
   <target name="init" description="">
     <mkdir dir="${out.lib}"/>
     <copy todir="${out.lib}" flatten="true">
@@ -93,7 +102,7 @@
 
   <target name="odl" description="Generate ODL products">
 
-    <odl-write/>
+    <odl-write classpathref="odl.path"/>
   </target>
 
   <target name="clean" description="Delete all products: 'out', 'jar', etc..">

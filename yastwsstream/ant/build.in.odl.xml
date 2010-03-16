@@ -1,13 +1,9 @@
 <project name="build-gap-data">
 
   <macrodef name="odl-write">
+    <attribute name="classpathref"/>
     <sequential>
-      <path id="odl.path">
-        <fileset dir="ant">
-          <include name="**/gap-data-odlc-*.jar" />
-        </fileset>
-      </path>
-      <java classname="gap.odl.Main" classpathref="odl.path" failonerror="true" fork="true" />
+      <java classname="gap.odl.Main" classpathref="@{classpathref}" failonerror="true" fork="true" />
     </sequential>
   </macrodef>
 
