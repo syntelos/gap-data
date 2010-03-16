@@ -40,7 +40,11 @@
     </copy>
 
     <archive target="${target.jar}" bin="${bin}" manifest="${src}/Manifest.mf">
-      <pack/>
+      <pack>
+        <fileset dir="${lib}">
+          <include name="**/*.jar" />
+        </fileset>
+      </pack>
     </archive>
 
     <flush dir="${bin}" type="class"/>
