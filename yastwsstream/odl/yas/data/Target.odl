@@ -4,6 +4,7 @@ path /target;
 class Target version 1 {
     *unique String id;
     *hash-unique String twitterId;
-    String twitterPass;
+    String twitterKey;
+    String twitterSecret;
     String logonId;
 }

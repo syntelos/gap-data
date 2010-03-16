@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="gap-data" default="write">
+<project name="gap-data-yastwsstream" default="write">
   <tstamp/>
   <property name="compiler.source" value="1.6"/>
   <property name="compiler.target" value="1.6"/>
@@ -30,8 +30,7 @@
 
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.version.xml"/>
-
-  <import file="ant/build.in.gap.xml"/>
+  <import file="ant/build.in.odl.xml"/>
 
   <!-- 
      - G.App Engine
@@ -90,6 +89,11 @@
         <arg value="--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9999"/>
       </options>
     </dev_appserver>
+  </target>
+
+  <target name="odl" description="Generate ODL products">
+
+    <odl-write/>
   </target>
 
   <target name="clean" description="Delete all products: 'out', 'jar', etc..">
