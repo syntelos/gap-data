@@ -361,13 +361,15 @@ public final class Main
         lxl.List<File> products = new lxl.ArrayList<File>();
 
         for (File odlFile: Files.values()){
-            try {
-                lxl.List<File> files = Main.ProcessFiles(odlFile,src,beans,servlets);
+            if (!odlFile.getPath().startsWith("lib/")){
+                try {
+                    lxl.List<File> files = Main.ProcessFiles(odlFile,src,beans,servlets);
 
-                products.addAll(files);
-            }
-            catch (ODStateException ODStateException){
-                throw new ODStateException("In '"+odlFile+"'",ODStateException);
+                    products.addAll(files);
+                }
+                catch (ODStateException ODStateException){
+                    throw new ODStateException("In '"+odlFile+"'",ODStateException);
+                }
             }
         }
         return products;
@@ -441,6 +443,15 @@ public final class Main
                     File file = find.next();
                     String name = ClassName(file);
                     Files.put(name,file);
+                }
+                File libDir = new File("lib");
+                if (libDir.isDirectory()){
+                    find = new Find(ODLFiles,libDir);
+                    while (find.hasNext()){
+                        File file = find.next();
+                        String name = ClassName(file);
+                        Files.put(name,file);
+                    }
                 }
             }
             /*
