@@ -85,7 +85,7 @@ public final class Templates
             }
         }
         else
-            return null;
+            throw new java.io.FileNotFoundException(resource.getPath());
     }
 
 

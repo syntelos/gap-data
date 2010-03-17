@@ -493,12 +493,22 @@ public final class Main
                 }
                 System.out.println("Product: "+beans.getName());
                 System.out.println("Product: "+servlets.getName());
-                File webXml = Main.ProcessServlets(servlets);
-                System.out.println("Product: "+webXml.getPath());
+                try {
+                    File webXml = Main.ProcessServlets(servlets);
+                    System.out.println("Product: "+webXml.getPath());
+                }
+                catch (java.io.FileNotFoundException ignore){
+                }
                 /*
                  */
-                servlets.write();
-                beans.write();
+                if (!servlets.write()){
+                    System.err.println("Error, services write error: '"+servlets.getResource().getPath()+"'.");
+                    rc = 1;
+                }
+                if (!beans.write()){
+                    System.err.println("Error, services write error: '"+beans.getResource().getPath()+"'.");
+                    rc = 1;
+                }
             }
             catch (Throwable thrown){
                 thrown.printStackTrace();
