@@ -205,11 +205,10 @@ public final class OD
         throws ODStateException, IOException, TemplateException
     {
         if (null != xtm && null != servlets && null != out){
-
-            TemplateRenderer template = Templates.GetTemplate(xtm);
-            TemplateDataDictionary top = new gap.hapax.AbstractData();
-            TemplateDataDictionary servlet;
-            {
+            try {
+                TemplateRenderer template = Templates.GetTemplate(xtm);
+                TemplateDataDictionary top = new gap.hapax.AbstractData();
+                TemplateDataDictionary servlet;
                 /*
                  * Defaults
                  */
@@ -230,8 +229,6 @@ public final class OD
                 servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Inspect");
                 servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/inspect/*");
                 servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
-            }
-            {
                 /*
                  * Generated
                  */
@@ -247,12 +244,16 @@ public final class OD
                     else
                         throw new IllegalStateException("Missing class descriptor for '"+servletClassName+"'");
                 }
+
+                try {
+                    template.render(top,out);
+                }
+                catch (TemplateException exc){
+                    throw new TemplateException("In template '"+xtm.source+"'.",exc);
+                }
             }
-            try {
-                template.render(top,out);
-            }
-            catch (TemplateException exc){
-                throw new TemplateException("In template '"+xtm.source+"'.",exc);
+            catch (java.io.FileNotFoundException templ){
+                return;
             }
         }
         else
