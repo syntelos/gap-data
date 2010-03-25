@@ -4,6 +4,8 @@
 
 * Rename 'hash-unique' to 'unique' 
 ** Make 'unique id' a default in BigTable
+** Make 'id' transient
+*** ID from key
 
 * Review primitive types handling in data template
 ** Field type 'int' bug!
