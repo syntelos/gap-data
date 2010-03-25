@@ -26,6 +26,7 @@ import gap.hapax.TemplateRenderer;
 
 import com.google.appengine.api.datastore.Text;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.Reader;
@@ -50,6 +51,7 @@ public final class Templates
 
     private final static String ResourcePrefix = "/xtm/";
     private final static String ResourceSuffix = ".xtm";
+    private final static File ResourceDir = new File("xtm");
 
 
     private final static Templates Instance = new Templates();
@@ -106,15 +108,26 @@ public final class Templates
         Template template = this.get(templateResource);
         if (null == template){
             template = new Template(path);
+            Resource templateFileResource = new Resource(ResourceDir,templateResource);
             try {
-                template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateResource)));
-                template.setLastModified(System.currentTimeMillis());
+                template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFileResource)));
+                template.setLastModified(templateFileResource.getLastModified());
                 this.put(templateResource,template);
 
                 return new TemplateRenderer(this,template);
             }
-            catch (IOException exc){
-                throw new TemplateException(templateResource.getPath(),exc);
+            catch (IOException exc1){
+                try {
+                    template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateResource)));
+                    template.setLastModified(templateResource.getLastModified());
+                    this.put(templateResource,template);
+
+                    return new TemplateRenderer(this,template);
+                }
+                catch (IOException exc2){
+
+                    throw new TemplateException(templateResource.getPath(),exc1);
+                }
             }
         }
         else

@@ -66,18 +66,31 @@ public final class Resource
     public Resource(String path, String prefix, String suffix){
         super();
         this.file = null;
-        if (null != path && 0 != path.length() && null != prefix && null != suffix){
+        if (null != path && 0 != path.length()){
 
-            if (!path.endsWith(suffix))
+            if (null != suffix && (!path.endsWith(suffix)))
                 path += suffix;
 
-            if (!path.startsWith(prefix))
+            if (null != prefix && (!path.startsWith(prefix)))
                 path = (prefix + path);
 
             this.path = path;
         }
         else
             throw new IllegalArgumentException(path);
+    }
+    public Resource(File dir, Resource resource){
+        super();
+        if (null != dir && null != resource){
+            String path = resource.path;
+            if ('/' == path.charAt(0))
+                path = path.substring(1);
+
+            this.path = path;
+            this.file = new File(dir,path);
+        }
+        else
+            throw new IllegalArgumentException();
     }
 
 
@@ -122,6 +135,13 @@ public final class Resource
             return this.file.getParentFile();
         else
             throw new IllegalStateException();
+    }
+    public long getLastModified(){
+        File file = this.file;
+        if (null != file)
+            return file.lastModified();
+        else
+            return System.currentTimeMillis();
     }
     public File filein(File dir){
         return new File(dir,this.path);
