@@ -119,18 +119,8 @@ public class Services
             try {
                 InputStream in = resource.openStream();
                 if (null != in){
-                    BufferedReader strin = new BufferedReader(new InputStreamReader(in));
                     try {
-                        String line;
-                        while (null != (line = strin.readLine())){
-                            int comment = line.indexOf('#');
-                            if (-1 != comment)
-                                line = line.substring(0,comment);
-                            line = line.trim();
-                            if (0 != line.length()){
-                                this.add(line);
-                            }
-                        }
+                        this.read(in);
                     }
                     finally {
                         in.close();
@@ -159,23 +149,11 @@ public class Services
                 while (resources.hasMoreElements()){
                     URL resource = resources.nextElement();
                     InputStream in = resource.openStream();
-                    if (null != in){
-                        BufferedReader strin = new BufferedReader(new InputStreamReader(in));
-                        try {
-                            String line;
-                            while (null != (line = strin.readLine())){
-                                int comment = line.indexOf('#');
-                                if (-1 != comment)
-                                    line = line.substring(0,comment);
-                                line = line.trim();
-                                if (0 != line.length()){
-                                    this.add(line);
-                                }
-                            }
-                        }
-                        finally {
-                            in.close();
-                        }
+                    try {
+                        this.read(in);
+                    }
+                    finally {
+                        in.close();
                     }
                 }
             }
@@ -228,14 +206,34 @@ public class Services
             try {
                 PrintWriter services = new PrintWriter(new OutputStreamWriter(out,"US-ASCII"));
                 for (ClassName name: this){
-                    services.println(name);
+                    services.println(name.toString());
                 }
+                services.flush();
                 return true;
             }
             finally {
+                out.flush();
                 out.close();
             }
         }
         return false;
+    }
+    private int read(InputStream in) throws IOException {
+        int count = 0;
+        if (null != in){
+            BufferedReader strin = new BufferedReader(new InputStreamReader(in));
+            String line;
+            while (null != (line = strin.readLine())){
+                int comment = line.indexOf('#');
+                if (-1 != comment)
+                    line = line.substring(0,comment);
+                line = line.trim();
+                if (0 != line.length()){
+                    this.add(line);
+                    count += 1;
+                }
+            }
+        }
+        return count;
     }
 }

@@ -201,59 +201,61 @@ public final class OD
         else
             throw new IllegalArgumentException();
     }
-    public final static void GenerateWebXml(TemplateName xtm, Services servlets, PrintWriter out)
+    public final static void GenerateWebXml(TemplateName xtm, Services servlets, File webXml)
         throws ODStateException, IOException, TemplateException
     {
-        if (null != xtm && null != servlets && null != out){
-            try {
-                TemplateRenderer template = Templates.GetTemplate(xtm);
-                TemplateDataDictionary top = new gap.hapax.AbstractData();
-                TemplateDataDictionary servlet;
-                /*
-                 * Defaults
-                 */
-                servlet = top.addSection(TemplateNames.WebXmlSection);
-                servlet.setVariable(TemplateNames.WebXmlSectionName,"Site");
-                servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Site");
-                servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/*");
-                servlet.setVariable(TemplateNames.WebXmlSectionLoad,"1");
+        if (null != xtm && null != servlets && null != webXml){
 
-                servlet = top.addSection(TemplateNames.WebXmlSection);
-                servlet.setVariable(TemplateNames.WebXmlSectionName,"Source");
-                servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Source");
-                servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/src/*");
-                servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
+            TemplateRenderer template = Templates.GetTemplate(xtm);
+            TemplateDataDictionary top = new gap.hapax.AbstractData();
+            TemplateDataDictionary servlet;
+            /*
+             * Defaults
+             */
+            servlet = top.addSection(TemplateNames.WebXmlSection);
+            servlet.setVariable(TemplateNames.WebXmlSectionName,"Site");
+            servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Site");
+            servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/*");
+            servlet.setVariable(TemplateNames.WebXmlSectionLoad,"1");
 
-                servlet = top.addSection(TemplateNames.WebXmlSection);
-                servlet.setVariable(TemplateNames.WebXmlSectionName,"Inspect");
-                servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Inspect");
-                servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/inspect/*");
-                servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
-                /*
-                 * Generated
-                 */
-                for (ClassName servletClassName : servlets){
-                    ClassDescriptor cd = gap.odl.Main.ClassDescriptorForServlet(servletClassName.getName());
-                    if (null != cd){
-                        servlet = top.addSection(TemplateNames.WebXmlSection);
-                        servlet.setVariable(TemplateNames.WebXmlSectionName,cd.getName());
-                        servlet.setVariable(TemplateNames.WebXmlSectionClass,servletClassName.getName());
-                        servlet.setVariable(TemplateNames.WebXmlSectionUrl,WebXmlPathStar(cd));
-                        servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
-                    }
-                    else
-                        throw new IllegalStateException("Missing class descriptor for '"+servletClassName+"'");
-                }
+            servlet = top.addSection(TemplateNames.WebXmlSection);
+            servlet.setVariable(TemplateNames.WebXmlSectionName,"Source");
+            servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Source");
+            servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/src/*");
+            servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
 
-                try {
-                    template.render(top,out);
+            servlet = top.addSection(TemplateNames.WebXmlSection);
+            servlet.setVariable(TemplateNames.WebXmlSectionName,"Inspect");
+            servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Inspect");
+            servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/inspect/*");
+            servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
+            /*
+             * Generated
+             */
+            for (ClassName servletClassName : servlets){
+                ClassDescriptor cd = gap.odl.Main.ClassDescriptorForServlet(servletClassName.getName());
+                if (null != cd){
+                    servlet = top.addSection(TemplateNames.WebXmlSection);
+                    servlet.setVariable(TemplateNames.WebXmlSectionName,cd.getName());
+                    servlet.setVariable(TemplateNames.WebXmlSectionClass,servletClassName.getName());
+                    servlet.setVariable(TemplateNames.WebXmlSectionUrl,WebXmlPathStar(cd));
+                    servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
                 }
-                catch (TemplateException exc){
-                    throw new TemplateException("In template '"+xtm.source+"'.",exc);
-                }
+                else
+                    throw new IllegalStateException("Missing class descriptor for '"+servletClassName+"'");
             }
-            catch (java.io.FileNotFoundException templ){
+
+            PrintWriter out = new PrintWriter(new FileWriter(webXml));
+            try {
+                template.render(top,out);
+
                 return;
+            }
+            catch (TemplateException exc){
+                throw new TemplateException("In template '"+xtm.source+"'.",exc);
+            }
+            finally {
+                out.close();
             }
         }
         else

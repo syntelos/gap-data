@@ -382,15 +382,11 @@ public final class Main
         throws IOException, TemplateException, Syntax, ODStateException
     {
         File webXml = new File("ver/web/WEB-INF/web.xml");
-        PrintWriter out = new PrintWriter(new FileWriter(webXml));
         try {
-            OD.GenerateWebXml(TemplateNames.WebXml,servlets,out);
+            OD.GenerateWebXml(TemplateNames.WebXml,servlets,webXml);
         }
         catch (ODStateException ODStateException){
             throw new ODStateException("In '"+servlets.getServiceName()+"'",ODStateException);
-        }
-        finally {
-            out.close();
         }
         return webXml;
     }
@@ -491,8 +487,8 @@ public final class Main
                 for (File product : products){
                     System.out.println("Product: "+product.getPath());
                 }
-                System.out.println("Product: "+beans.getName());
-                System.out.println("Product: "+servlets.getName());
+                /*
+                 */
                 try {
                     File webXml = Main.ProcessServlets(servlets);
                     System.out.println("Product: "+webXml.getPath());
@@ -505,10 +501,15 @@ public final class Main
                     System.err.println("Error, services write error: '"+servlets.getResource().getPath()+"'.");
                     rc = 1;
                 }
+                else
+                    System.out.println("Product: "+servlets.getName());
+
                 if (!beans.write()){
                     System.err.println("Error, services write error: '"+beans.getResource().getPath()+"'.");
                     rc = 1;
                 }
+                else
+                    System.out.println("Product: "+beans.getName());
             }
             catch (Throwable thrown){
                 thrown.printStackTrace();
