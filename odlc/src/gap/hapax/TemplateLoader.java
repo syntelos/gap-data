@@ -33,6 +33,6 @@ package gap.hapax;
 public interface TemplateLoader {
 
     public TemplateRenderer getTemplate(TemplateName name)
-        throws TemplateException;
+        throws java.io.IOException, TemplateException;
 
 }

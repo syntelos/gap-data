@@ -29,6 +29,7 @@ import lxl.List;
 
 import static gap.hapax.TemplateNodeType.*;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.MessageFormat;
@@ -120,7 +121,14 @@ public final class TemplateRenderer
                 break;
 
             case Include:
-                position = RenderInclude(context, template, dict, position, node, writer);
+                try {
+                    position = RenderInclude(context, template, dict, position, node, writer);
+                }
+                catch (IOException exc){
+                    /*
+                     * Template not found, continue
+                     */
+                }
                 break;
 
             case Comment:
@@ -201,7 +209,7 @@ public final class TemplateRenderer
     private final static int RenderInclude(TemplateLoader context, List<TemplateNode> template,
                                            TemplateDataDictionary dict, int pos, TemplateNode node,
                                            PrintWriter writer)
-        throws TemplateException
+        throws IOException, TemplateException
     {
         TemplateName sectionName = new TemplateName(gap.Strings.TextToString(node.getNodeContent()));
 

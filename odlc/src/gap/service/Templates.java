@@ -57,12 +57,12 @@ public final class Templates
     private final static Templates Instance = new Templates();
 
     public static TemplateRenderer GetTemplate(TemplateName name)
-        throws TemplateException
+        throws IOException, TemplateException
     {
         return Instance.getTemplate(name);
     }
     public static TemplateRenderer GetTemplate(String pathname)
-        throws TemplateException
+        throws IOException, TemplateException
     {
         return Instance.getTemplate(pathname);
     }
@@ -97,12 +97,12 @@ public final class Templates
 
 
     public TemplateRenderer getTemplate(TemplateName name)
-        throws TemplateException
+        throws IOException, TemplateException
     {
         return this.getTemplate(name.getSource());
     }
     private TemplateRenderer getTemplate(String path)
-        throws TemplateException
+        throws IOException, TemplateException
     {
         Resource templateResource = new Resource(path,ResourcePrefix,ResourceSuffix);
         Template template = this.get(templateResource);
@@ -116,18 +116,13 @@ public final class Templates
 
                 return new TemplateRenderer(this,template);
             }
-            catch (IOException exc1){
-                try {
-                    template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateResource)));
-                    template.setLastModified(templateResource.getLastModified());
-                    this.put(templateResource,template);
+            catch (IOException tryresource){
 
-                    return new TemplateRenderer(this,template);
-                }
-                catch (IOException exc2){
+                template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateResource)));
+                template.setLastModified(templateResource.getLastModified());
+                this.put(templateResource,template);
 
-                    throw new TemplateException(templateResource.getPath(),exc1);
-                }
+                return new TemplateRenderer(this,template);
             }
         }
         else
