@@ -58,9 +58,13 @@ public final class TargetServlet
                     else
                         req.setVariable("twitterId",gap.Version.Target);
 
-                    String twitterPass = target.getTwitterPass();
-                    if (null != twitterPass)
-                        req.setVariable("twitterPass",twitterPass);
+                    String twitterKey = target.getTwitterKey();
+                    if (null != twitterKey)
+                        req.setVariable("twitterKey",twitterKey);
+
+                    String twitterSecret = target.getTwitterSecret();
+                    if (null != twitterSecret)
+                        req.setVariable("twitterSecret",twitterSecret);
 
                     String logonId = target.getLogonId();
                     if (null == logonId)
@@ -91,31 +95,36 @@ public final class TargetServlet
             Target target = Target.Instance();
             if (IsAdmin(req,target)){
                 String twitterId = req.getParameter("twitterId");
-                String twitterPass = req.getParameter("twitterPass");
+                String twitterKey = req.getParameter("twitterKey");
+                String twitterSecret = req.getParameter("twitterSecret");
                 String logonId = req.getParameter("logonId");
-                if (null != twitterId && null != twitterPass && null != logonId){
+                if (null != twitterId && null != twitterKey && null != twitterSecret && null != logonId){
 
                     if (null == target){
                         target = new Target(twitterId);
-                        target.setTwitterPass(twitterPass);
+                        target.setTwitterKey(twitterKey);
+                        target.setTwitterSecret(twitterSecret);
                         target.setLogonId(logonId);
                         target.save();
                         /*
                          */
                         req.setVariable("twitterId",twitterId);
-                        req.setVariable("twitterPass",twitterPass);
+                        req.setVariable("twitterKey",twitterKey);
+                        req.setVariable("twitterSecret",twitterSecret);
                         req.setVariable("logonId",logonId);
                         this.render(req,rep,"target.html");
                     }
                     else {
                         target.setTwitterId(twitterId);
-                        target.setTwitterPass(twitterPass);
+                        target.setTwitterKey(twitterKey);
+                        target.setTwitterSecret(twitterSecret);
                         target.setLogonId(logonId);
                         target.save();
                         /*
                          */
                         req.setVariable("twitterId",twitterId);
-                        req.setVariable("twitterPass",twitterPass);
+                        req.setVariable("twitterKey",twitterKey);
+                        req.setVariable("twitterSecret",twitterSecret);
                         req.setVariable("logonId",logonId);
                         this.render(req,rep,"target.html");
                     }

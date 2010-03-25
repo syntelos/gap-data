@@ -1,5 +1,6 @@
                                                  -*-outline-*-
 
+* /retweet
 * /retweet/history/<source>
 ** from <page-num>
 ** for <page-count>

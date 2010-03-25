@@ -48,7 +48,7 @@ public final class Version {
      */
     public final static java.lang.String Long = Short+'.'+Build;
 
-    public final static java.lang.String Name = "gap-data";
+    public final static java.lang.String Name = "gap-data-yastwsstream";
 
     public final static java.lang.String Target = "yastwsstream";
 

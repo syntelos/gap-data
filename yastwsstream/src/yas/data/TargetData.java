@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Target
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-08T15:06:19.571Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-25T08:40:04.201Z")
 public abstract class TargetData
     extends gap.data.BigTable
     implements DataInheritance<Target>
@@ -256,7 +256,8 @@ public abstract class TargetData
         Key("key",Type.Primitive),
         Id("id",Type.Primitive),
         TwitterId("twitterId",Type.Primitive),
-        TwitterPass("twitterPass",Type.Primitive),
+        TwitterKey("twitterKey",Type.Primitive),
+        TwitterSecret("twitterSecret",Type.Primitive),
         LogonId("logonId",Type.Primitive);
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -293,8 +294,10 @@ public abstract class TargetData
                 return instance.getId(mayInherit);
             case TwitterId:
                 return instance.getTwitterId(mayInherit);
-            case TwitterPass:
-                return instance.getTwitterPass(mayInherit);
+            case TwitterKey:
+                return instance.getTwitterKey(mayInherit);
+            case TwitterSecret:
+                return instance.getTwitterSecret(mayInherit);
             case LogonId:
                 return instance.getLogonId(mayInherit);
             default:
@@ -311,8 +314,10 @@ public abstract class TargetData
                 return instance.setId(gap.Objects.StringFromObject(value));
             case TwitterId:
                 return instance.setTwitterId(gap.Objects.StringFromObject(value));
-            case TwitterPass:
-                return instance.setTwitterPass(gap.Objects.StringFromObject(value));
+            case TwitterKey:
+                return instance.setTwitterKey(gap.Objects.StringFromObject(value));
+            case TwitterSecret:
+                return instance.setTwitterSecret(gap.Objects.StringFromObject(value));
             case LogonId:
                 return instance.setLogonId(gap.Objects.StringFromObject(value));
             default:
@@ -393,7 +398,8 @@ public abstract class TargetData
 
     private volatile String id;    // *unique
     private volatile String twitterId;    // *hash-unique
-    private volatile String twitterPass;    
+    private volatile String twitterKey;    
+    private volatile String twitterSecret;    
     private volatile String logonId;    
 
 
@@ -418,7 +424,8 @@ public abstract class TargetData
         this.datastoreEntity = null;
         this.id = null;
         this.twitterId = null;
-        this.twitterPass = null;
+        this.twitterKey = null;
+        this.twitterSecret = null;
         this.logonId = null;
     }
     public final boolean hasInheritFrom(){
@@ -514,46 +521,91 @@ public abstract class TargetData
         else
             return false;
     }
-    public final boolean hasTwitterPass(boolean mayInherit){
-        return (null != this.getTwitterPass(mayInherit));
+    public final boolean hasTwitterKey(boolean mayInherit){
+        return (null != this.getTwitterKey(mayInherit));
     }
-    public final boolean hasNotTwitterPass(boolean mayInherit){
-        return (null == this.getTwitterPass(mayInherit));
+    public final boolean hasNotTwitterKey(boolean mayInherit){
+        return (null == this.getTwitterKey(mayInherit));
     }
-    public final boolean dropTwitterPass(){
-        if (null != this.twitterPass){
-            this.twitterPass = null;
+    public final boolean dropTwitterKey(){
+        if (null != this.twitterKey){
+            this.twitterKey = null;
             return true;
         }
         else
             return false;
     }
-    public final String getTwitterPass(){
-        return this.getTwitterPass(MayInherit);
+    public final String getTwitterKey(){
+        return this.getTwitterKey(MayInherit);
     }
-    public final String getTwitterPass(boolean mayInherit){
+    public final String getTwitterKey(boolean mayInherit){
         if (mayInherit){
-            String twitterPass = this.twitterPass;
-            if (null == twitterPass && this.hasInheritFrom()){
+            String twitterKey = this.twitterKey;
+            if (null == twitterKey && this.hasInheritFrom()){
                 Target inheritFrom = this.getInheritFrom();
-                return inheritFrom.getTwitterPass(MayInherit);
+                return inheritFrom.getTwitterKey(MayInherit);
             }
-            return twitterPass;
+            return twitterKey;
         }
         else
-            return this.twitterPass;
+            return this.twitterKey;
     }
-    public final boolean setTwitterPass(String twitterPass, boolean withInheritance){
-        if (IsNotEqual(this.twitterPass,this.getTwitterPass(withInheritance))){
-            this.twitterPass = twitterPass;
+    public final boolean setTwitterKey(String twitterKey, boolean withInheritance){
+        if (IsNotEqual(this.twitterKey,this.getTwitterKey(withInheritance))){
+            this.twitterKey = twitterKey;
             return true;
         }
         else
             return false;
     }
-    public final boolean setTwitterPass(String twitterPass){
-        if (IsNotEqual(this.twitterPass,twitterPass)){
-            this.twitterPass = twitterPass;
+    public final boolean setTwitterKey(String twitterKey){
+        if (IsNotEqual(this.twitterKey,twitterKey)){
+            this.twitterKey = twitterKey;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean hasTwitterSecret(boolean mayInherit){
+        return (null != this.getTwitterSecret(mayInherit));
+    }
+    public final boolean hasNotTwitterSecret(boolean mayInherit){
+        return (null == this.getTwitterSecret(mayInherit));
+    }
+    public final boolean dropTwitterSecret(){
+        if (null != this.twitterSecret){
+            this.twitterSecret = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final String getTwitterSecret(){
+        return this.getTwitterSecret(MayInherit);
+    }
+    public final String getTwitterSecret(boolean mayInherit){
+        if (mayInherit){
+            String twitterSecret = this.twitterSecret;
+            if (null == twitterSecret && this.hasInheritFrom()){
+                Target inheritFrom = this.getInheritFrom();
+                return inheritFrom.getTwitterSecret(MayInherit);
+            }
+            return twitterSecret;
+        }
+        else
+            return this.twitterSecret;
+    }
+    public final boolean setTwitterSecret(String twitterSecret, boolean withInheritance){
+        if (IsNotEqual(this.twitterSecret,this.getTwitterSecret(withInheritance))){
+            this.twitterSecret = twitterSecret;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean setTwitterSecret(String twitterSecret){
+        if (IsNotEqual(this.twitterSecret,twitterSecret)){
+            this.twitterSecret = twitterSecret;
             return true;
         }
         else
@@ -624,15 +676,25 @@ public abstract class TargetData
     }
     public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;
-        String twitterPassRequest = req.getParameter("twitterPass");
+        String twitterKeyRequest = req.getParameter("twitterKey");
         try {
-            String twitterPass = Strings.StringFromString(twitterPassRequest);
-            if (this.setTwitterPass(twitterPass)){
+            String twitterKey = Strings.StringFromString(twitterKeyRequest);
+            if (this.setTwitterKey(twitterKey)){
                 change = true;
             }
         }
         catch (RuntimeException exc){
-            throw new ValidationError(ClassName,"twitterPass",twitterPassRequest,exc);
+            throw new ValidationError(ClassName,"twitterKey",twitterKeyRequest,exc);
+        }
+        String twitterSecretRequest = req.getParameter("twitterSecret");
+        try {
+            String twitterSecret = Strings.StringFromString(twitterSecretRequest);
+            if (this.setTwitterSecret(twitterSecret)){
+                change = true;
+            }
+        }
+        catch (RuntimeException exc){
+            throw new ValidationError(ClassName,"twitterSecret",twitterSecretRequest,exc);
         }
         String logonIdRequest = req.getParameter("logonId");
         try {
@@ -652,8 +714,12 @@ public abstract class TargetData
     public final boolean updateFrom(Target proto){
         boolean mayInherit = (!this.hasInheritFromKey());
         boolean change = false;
-        String twitterPass = proto.getTwitterPass(mayInherit);
-        if (null != twitterPass && this.setTwitterPass(twitterPass)){
+        String twitterKey = proto.getTwitterKey(mayInherit);
+        if (null != twitterKey && this.setTwitterKey(twitterKey)){
+            change = true;
+        }
+        String twitterSecret = proto.getTwitterSecret(mayInherit);
+        if (null != twitterSecret && this.setTwitterSecret(twitterSecret)){
             change = true;
         }
         String logonId = proto.getLogonId(mayInherit);
@@ -682,11 +748,16 @@ public abstract class TargetData
                     throw new IllegalStateException(field.name());
                 else
                     return this.hasTwitterId(true);
-            case TwitterPass:
+            case TwitterKey:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
-                    return this.hasTwitterPass(true);
+                    return this.hasTwitterKey(true);
+            case TwitterSecret:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.hasTwitterSecret(true);
             case LogonId:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -714,11 +785,16 @@ public abstract class TargetData
                     throw new IllegalStateException(field.name());
                 else
                     return this.getTwitterId(true);
-            case TwitterPass:
+            case TwitterKey:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
-                    return this.getTwitterPass(true);
+                    return this.getTwitterKey(true);
+            case TwitterSecret:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getTwitterSecret(true);
             case LogonId:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -741,7 +817,9 @@ public abstract class TargetData
                     throw new IllegalStateException(field.name());
                 case TwitterId:
                     throw new IllegalStateException(field.name());
-                case TwitterPass:
+                case TwitterKey:
+                    throw new IllegalStateException(field.name());
+                case TwitterSecret:
                     throw new IllegalStateException(field.name());
                 case LogonId:
                     throw new IllegalStateException(field.name());
@@ -764,7 +842,9 @@ public abstract class TargetData
                 return null;
             case TwitterId:
                 return null;
-            case TwitterPass:
+            case TwitterKey:
+                return null;
+            case TwitterSecret:
                 return null;
             case LogonId:
                 return null;

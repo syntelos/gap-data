@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Retweet
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-08T15:06:20.199Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-25T08:40:04.275Z")
 public abstract class RetweetData
     extends gap.data.BigTable
     implements DataInheritance<Retweet>

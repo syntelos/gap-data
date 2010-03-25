@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Source
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-08T15:06:21.301Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-25T08:40:04.331Z")
 public abstract class SourceData
     extends gap.data.BigTable
     implements DataInheritance<Source>
@@ -278,7 +278,7 @@ public abstract class SourceData
         public static Field For(String name) {
             Field field = FieldName.get(name);
             if (null == field)
-                return null;
+                return Field.valueOf(name);
             else
                 return field;
         }

@@ -65,21 +65,7 @@ public final class Target
         }
         return referer;
     }
-    public HTTPHeader getAuthenticationBasic(){
-        HTTPHeader authBasic = this.authBasic;
-        if (null == authBasic){
-            String uid = this.getTwitterId();
-            String pas = this.getTwitterPass();
-            if (null != uid && null != pas){
-                String code = Encode(uid+':'+pas);
-                authBasic = new HTTPHeader("Authentication","Basic "+code);
-                this.authBasic = authBasic;
-            }
-            else
-                throw new IllegalStateException("Target not configured");
-        }
-        return authBasic;
-    }
+
     public void onread(){
     }
     public void onwrite(){
@@ -103,14 +89,4 @@ public final class Target
         Store(this);
     }
 
-    private final static String Encode(String string){
-        try {
-            byte[] in = string.getBytes("US-ASCII");
-            byte[] out = alto.io.u.B64.encode(in);
-            return new String(out,"US-ASCII");
-        }
-        catch (java.io.IOException exc){
-            throw new InternalError();
-        }
-    }
 }

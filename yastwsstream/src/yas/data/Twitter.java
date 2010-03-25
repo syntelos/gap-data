@@ -41,7 +41,7 @@ import javax.xml.stream.XMLStreamException;
  *
  */
 public final class Twitter
-    extends Object
+    extends yusu.Twitter
 {
     private final static double DeadlineSeconds = 6;
     private final static FetchOptions Options = FetchOptions.Builder.disallowTruncate().setDeadline(DeadlineSeconds);
@@ -184,5 +184,11 @@ public final class Twitter
             HTTPResponse response = Twitter.IO.Post(referrer,PostUrl,body.toString());
             return (2 == (response.getResponseCode()/100));
         }
+    }
+
+
+
+    public Twitter(Target target){
+        super(target.getTwitterKey(),target.getTwitterSecret());
     }
 }
