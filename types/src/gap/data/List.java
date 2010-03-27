@@ -91,6 +91,7 @@ public interface List<V>
     public interface Primitive<V>
         extends List<V>, Collection.PrimitiveC<V>
     {
+
         public List<V> add(V instance);
 
         public List<V> remove(V instance);
@@ -129,8 +130,10 @@ public interface List<V>
     public V get(int index);
     /**
      * For list buffer operations as in deep cloning.
+     * 
+     * @return Previous value
      */
-    public void set(int index, V value);
+    public V set(int index, V value);
 
     public List<V> clone();
 }

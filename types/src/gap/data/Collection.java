@@ -98,6 +98,11 @@ public interface Collection<V>
 
         public boolean hitEnd();
 
+        /**
+         * Get value from datastore without adding into the list buffer,
+         * and without disturbing the relationship between the page and
+         * the buffer.
+         */
         public V fetch(Filter filter);
     }
 

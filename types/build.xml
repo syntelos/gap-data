@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="gap-data-types" default="jar">
+<project name="gap-data-types" default="update">
   <tstamp/>
   <property name="compiler.source" value="1.6"/>
   <property name="compiler.target" value="1.6"/>
@@ -13,6 +13,7 @@
   <property name="bin" value="bin"/>
 
   <property name="ver.src" value="ver/src"/>
+  <property file="../update.properties"/>
 
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.version.xml"/>
@@ -27,6 +28,14 @@
   <target name="clean" description="Delete all products: 'out', 'jar', etc..">
 
     <clean bin="${bin}" this="."/>
+  </target>
+
+  <target name="update" if="gap.data.types.update" depends="jar" description="Copy jar product to targets defined in '{user.home}/gd.properties' name 'gap.data.types.update'.">
+
+    <java classname="Update" classpath="ant" fork="true" failonerror="true">
+      <arg value="${target.jar}"/>
+      <arg value="${gap.data.types.update}"/>
+    </java>
   </target>
 
   <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">
