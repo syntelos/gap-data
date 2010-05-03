@@ -16,6 +16,7 @@
   <property file="../update.properties"/>
 
   <import file="ant/build.in.java.xml"/>
+  <import file="ant/build.in.update.xml"/>
   <import file="ant/build.in.version.xml"/>
 
   <path id="lib.path">
@@ -32,10 +33,7 @@
 
   <target name="update" if="gap.data.types.update" depends="jar" description="Copy jar product to targets defined in '{user.home}/gd.properties' name 'gap.data.types.update'.">
 
-    <java classname="Update" classpath="ant" fork="true" failonerror="true">
-      <arg value="${target.jar}"/>
-      <arg value="${gap.data.types.update}"/>
-    </java>
+    <do-update src="${target.jar}" tgt="${gap.data.types.update}" />
   </target>
 
   <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">

@@ -19,8 +19,8 @@
  */
 package gap.hapax;
 
-import lxl.ArrayList;
-import lxl.List;
+import gap.util.ArrayList;
+import gap.data.List;
 
 import com.google.appengine.api.datastore.Text;
 

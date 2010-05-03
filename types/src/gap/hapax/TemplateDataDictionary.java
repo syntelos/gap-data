@@ -67,11 +67,11 @@ public interface TemplateDataDictionary
     /**
      * @return Child, child from ancestry, or synthetic on variable.
      */
-    public List<TemplateDataDictionary> getSection(TemplateName sectionName);
+    public List.Short<TemplateDataDictionary> getSection(TemplateName sectionName);
     /**
      * @return Existing section, or with no existing section create new.
      */
-    public List<TemplateDataDictionary> showSection(TemplateName sectionName);
+    public List.Short<TemplateDataDictionary> showSection(TemplateName sectionName);
     /**
      * @return New section.
      */

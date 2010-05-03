@@ -1,8 +1,9 @@
 Hapax3
 
-A transformation of Hapax2 (http://code.google.com/p/hapax2) for Gap Data.
+Interfaces defined in //gap-data//types
 
-Operates identically to Hapax2 in overall syntax and semantics, with
-extended naming features.  See TemplateName.
+Operates identically to Hapax2 (http://code.google.com/p/hapax2) in
+overall syntax and semantics, with extended naming features.  See
+TemplateName.
 
 

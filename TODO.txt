@@ -1,0 +1,13 @@
+                                        -*-outline-*-
+
+* See ./yastw.sh comments
+
+* Move permissions and BigTable interfaces into types
+** Admin*.java
+
+* Pack types jar into each user
+
+* Use gap.data.List in Hapax
+** Drop TemplateDataDictionary2 from odlc
+** Return types TemplateDataDictionary to trunk version
+

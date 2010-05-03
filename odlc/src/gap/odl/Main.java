@@ -23,7 +23,7 @@ import static gap.data.List.Type.*;
 import gap.hapax.TemplateException;
 import gap.hapax.TemplateName;
 import gap.service.OD;
-import gap.service.Resource;
+import gap.util.Resource;
 import gap.service.od.FieldDescriptor;
 import gap.service.od.ImportDescriptor;
 import gap.service.od.ODStateException;

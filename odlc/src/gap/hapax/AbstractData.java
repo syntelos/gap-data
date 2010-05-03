@@ -19,8 +19,8 @@
  */
 package gap.hapax;
 
-import lxl.ArrayList;
-import lxl.List;
+import gap.util.ArrayList;
+import gap.data.List;
 import lxl.Map;
 
 /**
@@ -32,7 +32,7 @@ public class AbstractData
 {
     protected transient TemplateDataDictionary parent;
     protected transient Map<String,String> variables;
-    protected transient Map<String,List<TemplateDataDictionary>> sections;
+    protected transient Map<String,List.Short<TemplateDataDictionary>> sections;
 
 
     public AbstractData(){
@@ -48,9 +48,9 @@ public class AbstractData
         Map<String,String> variables = this.variables;
         if (null != variables)
             variables.clear();
-        Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        Map<String,List.Short<TemplateDataDictionary>> sections = this.sections;
         if (null != sections){
-            for (List<TemplateDataDictionary> list: sections.values()){
+            for (List.Short<TemplateDataDictionary> list: sections.values()){
                 for (TemplateDataDictionary item: list){
                     item.renderComplete();
                 }
@@ -114,10 +114,10 @@ public class AbstractData
         }
         variables.put(name.getName(),value);
     }
-    public List<TemplateDataDictionary> getSection(TemplateName name){
+    public List.Short<TemplateDataDictionary> getSection(TemplateName name){
 
-        Map<String,List<TemplateDataDictionary>> sections = this.sections;
-        List<TemplateDataDictionary> section = null;
+        Map<String,List.Short<TemplateDataDictionary>> sections = this.sections;
+        List.Short<TemplateDataDictionary> section = null;
         if (null != sections){
             section = sections.get(name.getComponent(0));
         }
@@ -155,15 +155,15 @@ public class AbstractData
             return sectionData.getSection(new TemplateName(name));
         }
     }
-    public List<TemplateDataDictionary> showSection(TemplateName name){
+    public List.Short<TemplateDataDictionary> showSection(TemplateName name){
 
-        Map<String,List<TemplateDataDictionary>> sections = this.sections;
+        Map<String,List.Short<TemplateDataDictionary>> sections = this.sections;
         if (null == sections){
-            sections = new Map<String,List<TemplateDataDictionary>>();
+            sections = new Map<String,List.Short<TemplateDataDictionary>>();
             this.sections = sections;
 
             TemplateDataDictionary newSection = new AbstractData(this);
-            List<TemplateDataDictionary> newSectionList = Add(null,newSection);
+            List.Short<TemplateDataDictionary> newSectionList = Add(null,newSection);
             sections.put(name.getComponent(0),newSectionList);
             if (name.is(0))
                 return newSectionList;
@@ -171,7 +171,7 @@ public class AbstractData
                 return newSection.showSection(new TemplateName(name));
         }
         else {
-            List<TemplateDataDictionary> section = sections.get(name.getComponent(0));
+            List.Short<TemplateDataDictionary> section = sections.get(name.getComponent(0));
             if (null != section){
                 if (name.is(0))
                     return section;
@@ -202,15 +202,15 @@ public class AbstractData
         if (null == name || null == newSection)
             throw new IllegalArgumentException();
         else {
-            Map<String,List<TemplateDataDictionary>> sections = this.sections;
+            Map<String,List.Short<TemplateDataDictionary>> sections = this.sections;
             if (null == sections){
-                sections = new Map<String,List<TemplateDataDictionary>>();
+                sections = new Map<String,List.Short<TemplateDataDictionary>>();
                 this.sections = sections;
-                List<TemplateDataDictionary> section = Add(null,newSection);
+                List.Short<TemplateDataDictionary> section = Add(null,newSection);
                 sections.put(name.getComponent(0),section);
             }
             else {
-                List<TemplateDataDictionary> section = sections.get(name.getComponent(0));
+                List.Short<TemplateDataDictionary> section = sections.get(name.getComponent(0));
                 if (null == section){
                     section = Add(section,newSection);
                     sections.put(name.getComponent(0),section);
@@ -224,20 +224,19 @@ public class AbstractData
                 return newSection.addSection(new TemplateName(name));
         }
     }
-    public final static List<TemplateDataDictionary> Add(List<TemplateDataDictionary> list, TemplateDataDictionary data){
+    public final static List.Short<TemplateDataDictionary> Add(List.Short<TemplateDataDictionary> list, TemplateDataDictionary data){
         if (null == list){
-            List<TemplateDataDictionary> newSectionList = new ArrayList<TemplateDataDictionary>();
-            newSectionList.add(data);
-            return newSectionList;
+            List.Short<TemplateDataDictionary> newSectionList = new ArrayList<TemplateDataDictionary>();
+            return newSectionList.add(data);
         }
         else {
             list.add(data);
             return list;
         }
     }
-    public final static List<TemplateDataDictionary> SectionClone(TemplateDataDictionary parent, List<TemplateDataDictionary> section){
+    public final static List.Short<TemplateDataDictionary> SectionClone(TemplateDataDictionary parent, List.Short<TemplateDataDictionary> section){
 
-        List<TemplateDataDictionary> sectionClone = section.clone();
+        List.Short<TemplateDataDictionary> sectionClone = section.clone();
 
         for (int sectionIndex = 0, sectionCount = sectionClone.size(); sectionIndex < sectionCount; sectionIndex++){
             TemplateDataDictionary sectionItem = sectionClone.get(sectionIndex);

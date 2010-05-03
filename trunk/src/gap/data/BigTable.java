@@ -59,9 +59,8 @@ import java.io.File;
  */
 public abstract class BigTable
     extends gap.hapax.AbstractData
-    implements java.io.Serializable,
-               RequestCreateUpdate,
-               DataInheritance.Notation
+    implements TableClass,
+               RequestCreateUpdate
 {
     /**
      * Initialize data bean classes, called in the class
@@ -252,6 +251,24 @@ public abstract class BigTable
         else
             return false;
     }
+    public final boolean hasId(){
+        return (null != this.key);
+    }
+    public final boolean hasNotId(){
+        return (null == this.key);
+    }
+    public final boolean dropId(){
+        return false;
+    }
+    public final String getId(){
+        if (null != this.key)
+            return this.key.getName();
+        else
+            return null;
+    }
+    public final boolean setId(String id){
+        return false;
+    }
     /**
      * Called by the Store layer after retrieving an instance object
      * from the datastore or memcache.  Subclasses should ensure that
@@ -318,12 +335,6 @@ public abstract class BigTable
     public final String getClassKindPath(){
         return this.getClassKind().pathName;
     }
-    /**
-     * A static value naming the field employed for instance lookups,
-     * as from web interfaces.
-     */
-    public abstract String getClassFieldUnique();
-
     public final Field getClassKeyField(){
         return (this.getClassFieldByName("key"));
     }

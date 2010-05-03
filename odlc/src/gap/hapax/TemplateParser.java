@@ -25,7 +25,7 @@
  */
 package gap.hapax;
 
-import lxl.List;
+import gap.data.List;
 
 import static gap.hapax.TemplateNodeType.*;
 

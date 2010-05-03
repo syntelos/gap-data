@@ -30,7 +30,7 @@ import com.google.appengine.api.datastore.ShortBlob;
 import java.io.File;
 
 /**
- * 
+ * Mockup class for compiler types.
  * 
  * @author jdp
  */

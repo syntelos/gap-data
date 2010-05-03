@@ -23,6 +23,7 @@ import gap.hapax.Template;
 import gap.hapax.TemplateException;
 import gap.hapax.TemplateName;
 import gap.hapax.TemplateRenderer;
+import gap.util.Resource;
 
 import com.google.appengine.api.datastore.Text;
 
@@ -114,7 +115,7 @@ public final class Templates
                 template.setLastModified(templateFileResource.getLastModified());
                 this.put(templateResource,template);
 
-                return new TemplateRenderer(this,template);
+                return new gap.hapax.TemplateRendererImpl(this,template);
             }
             catch (IOException tryresource){
 
@@ -122,11 +123,11 @@ public final class Templates
                 template.setLastModified(templateResource.getLastModified());
                 this.put(templateResource,template);
 
-                return new TemplateRenderer(this,template);
+                return new gap.hapax.TemplateRendererImpl(this,template);
             }
         }
         else
-            return new TemplateRenderer(this,template);
+            return new gap.hapax.TemplateRendererImpl(this,template);
     }
 
 }

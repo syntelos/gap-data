@@ -1,0 +1,4 @@
+${appengine.sdk.home}/lib/appengine-tools-api.jar
+${appengine.sdk.home}/lib/shared
+${appengine.sdk.home}/lib/user
+${appengine.sdk.home}/lib/impl

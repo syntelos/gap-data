@@ -110,9 +110,11 @@ public interface List<T>
 
     public Iterable<T> values();
 
-    public List cloneList();
+    public List<T> clone();
 
     public boolean isEmpty();
+
+    public boolean isNotEmpty();
     /**
      * Unsafe array is the internal list.
      */

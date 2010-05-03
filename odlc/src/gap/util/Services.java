@@ -19,7 +19,7 @@
  */
 package gap.util;
 
-import gap.service.Resource;
+import gap.util.Resource;
 
 import java.io.Closeable;
 import java.io.BufferedReader;
