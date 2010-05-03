@@ -1,5 +1,0 @@
-
-The jbxml binding framework in the gap environment supports gap data lists.
-
-Different code and methods but same features as http://code.google.com/p/jbxml
-
