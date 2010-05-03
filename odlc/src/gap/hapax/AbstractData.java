@@ -241,7 +241,7 @@ public class AbstractData
         for (int sectionIndex = 0, sectionCount = sectionClone.size(); sectionIndex < sectionCount; sectionIndex++){
             TemplateDataDictionary sectionItem = sectionClone.get(sectionIndex);
             TemplateDataDictionary sectionItemClone = sectionItem.clone(parent);
-            sectionClone.update(sectionIndex,sectionItemClone);
+            sectionClone.set(sectionIndex,sectionItemClone);
         }
 
         return sectionClone;

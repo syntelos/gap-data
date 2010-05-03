@@ -37,7 +37,7 @@ public final class Template
     private volatile String name;
     private volatile Long lastModified;    
     private volatile Text templateSourceHapax;    
-    private volatile List<TemplateNode> templateTargetHapax;
+    private volatile List.Short<TemplateNode> templateTargetHapax;
 
 
 
@@ -67,14 +67,25 @@ public final class Template
     public final boolean hasLastModified(){
         return (null != this.lastModified);
     }
+    public final boolean hasLastModified(boolean inh){
+        return (null != this.lastModified);
+    }
     public final boolean hasNotLastModified(){
         return (null == this.lastModified);
     }
     public final Long getLastModified(){
         return this.lastModified;
     }
-    public final void setLastModified(Long lastModified){
-        this.lastModified = lastModified;
+    public final Long getLastModified(boolean inh){
+        return this.lastModified;
+    }
+    public final boolean setLastModified(Long lastModified){
+        if (lastModified != this.lastModified){
+            this.lastModified = lastModified;
+            return true;
+        }
+        else
+            return false;
     }
     public final boolean hasTemplateSourceHapax(){
         return (null != this.templateSourceHapax);
@@ -94,26 +105,26 @@ public final class Template
     public final boolean hasNotTemplateTargetHapax(){
         return (this.getTemplateTargetHapax().isEmpty());
     }
-    public final List<TemplateNode> getTemplateTargetHapax(){
-        List<TemplateNode> templateTargetHapax = this.templateTargetHapax;
+    public final List.Short<TemplateNode> getTemplateTargetHapax(){
+        List.Short<TemplateNode> templateTargetHapax = this.templateTargetHapax;
         if (null == templateTargetHapax){
             templateTargetHapax = new ArrayList<TemplateNode>();
             this.templateTargetHapax = templateTargetHapax;
         }
         return templateTargetHapax;
     }
-    public final void setTemplateTargetHapax(List<TemplateNode> templateTargetHapax){
+    public final void setTemplateTargetHapax(List.Short<TemplateNode> templateTargetHapax){
         this.templateTargetHapax = templateTargetHapax;
     }
     public final boolean isEmptyTemplateTargetHapax(){
-        List<TemplateNode> collection = this.templateTargetHapax;
+        List.Short<TemplateNode> collection = this.templateTargetHapax;
         if (null != collection)
             return collection.isEmpty();
         else
             return true;
     }
     public final boolean isNotEmptyTemplateTargetHapax(){
-        List<TemplateNode> collection = this.templateTargetHapax;
+        List.Short<TemplateNode> collection = this.templateTargetHapax;
         if (null != collection)
             return (!collection.isEmpty());
         else

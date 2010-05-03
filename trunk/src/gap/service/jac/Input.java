@@ -17,20 +17,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package gap.data;
+package gap.service.jac;
+
+import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.CharBuffer;
+import gap.jac.tools.JavaFileObject.Kind;
 
 /**
- * Implemented by {@link BigTable} classes for a store managed
- * timestamp.
+ * 
+ * 
+ * @author jdp
  */
-public interface LastModified {
+public final class Input
+    extends gap.jac.tools.SimpleJavaFileObject
+{
 
-    public boolean hasLastModified(boolean mayInherit);
+    private Reader in;
 
-    public Long getLastModified(boolean mayInherit);
-    /**
-     * @return State change: argument differed from state by value.
-     */
-    public boolean setLastModified(Long Long);
 
+    public Input(URI uri, Kind kind, Reader in) {
+        super(uri, kind);
+        this.in = in;
+    }
+
+
+    public Reader openReader() {
+        return this.in;
+    }
+    public String toString(){
+        return this.toUri().toString();
+    }
 }

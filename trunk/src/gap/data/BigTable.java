@@ -74,7 +74,7 @@ public abstract class BigTable
      */
     public static Class<? extends BigTable> Find(Kind kind){
         if (null != kind)
-            return kind.getTableClass();
+            return (Class<? extends BigTable>)kind.getTableClass();
         else
             throw new IllegalArgumentException();
     }

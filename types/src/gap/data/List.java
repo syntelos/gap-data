@@ -92,9 +92,9 @@ public interface List<V>
         extends List<V>, Collection.PrimitiveC<V>
     {
 
-        public List<V> add(V instance);
+        public List.Primitive<V> add(V instance);
 
-        public List<V> remove(V instance);
+        public List.Primitive<V> remove(V instance);
     }
 
     public interface Short<V>
@@ -102,13 +102,15 @@ public interface List<V>
     {
         public void drop();
 
-        public List<V> add(V instance);
+        public List.Short<V> add(V instance);
 
         /**
          * @return False on failure to lock collection parent.
          */
         public boolean save(long timeout)
             throws java.lang.InterruptedException;
+
+        public List.Short<V> clone();
     }
 
     public interface Long<V>

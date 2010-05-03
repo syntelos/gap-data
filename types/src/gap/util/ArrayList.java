@@ -88,7 +88,7 @@ public class ArrayList<V>
     public final void clearBuffer(){
         this.buffer = null;
     }
-    public List<V> clone(){
+    public List.Short<V> clone(){
         try {
             ArrayList<V> clone = (ArrayList<V>)super.clone();
             if (null != this.buffer)
@@ -100,7 +100,7 @@ public class ArrayList<V>
         }
     }
     public void drop(){
-        throw new UnsupportedOperationException();
+        this.buffer = null;
     }
     public boolean save(long timeout)
         throws java.lang.InterruptedException
@@ -147,7 +147,7 @@ public class ArrayList<V>
     public boolean containsNot(V instance){
         return (-1 == this.indexInBuffer(instance));
     }
-    public List<V> add(V instance){
+    public List.Short<V> add(V instance){
         return this.addToBuffer(instance);
     }
     public V get(int index){
@@ -169,7 +169,7 @@ public class ArrayList<V>
         }
         throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
     }
-    public final List<V> addToBuffer(V instance){
+    public final List.Short<V> addToBuffer(V instance){
         if (null != instance){
             Object[] buffer = this.buffer;
             if (null == buffer){

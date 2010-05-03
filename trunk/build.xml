@@ -31,7 +31,6 @@
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.version.xml"/>
   <import file="ant/build.in.odl.xml"/>
-  <import file="ant/build.in.gap.xml"/>
 
   <!-- 
      - G.App Engine

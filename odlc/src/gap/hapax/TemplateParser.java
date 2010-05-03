@@ -42,11 +42,13 @@ public final class TemplateParser
     extends Object
 {
 
-    public static List<TemplateNode> Parse(Template source, List<TemplateNode> list)
+    public static List.Short<TemplateNode> Parse(Template source, List.Short<TemplateNode> list)
         throws TemplateParserException
     {
         if (source.hasTemplateSourceHapax()){
-            list.clear();
+
+            list.drop();
+
             TemplateParserReader input = new TemplateParserReader(source);
             TemplateNode node = null;
             while (true) {

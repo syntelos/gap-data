@@ -19,18 +19,30 @@
  */
 package gap.data;
 
+import com.google.appengine.api.datastore.Blob;
+import com.google.appengine.api.datastore.Text;
+
 /**
- * Implemented by {@link BigTable} classes for a store managed
- * timestamp.
+ * A data bean for programming, interface for compilation.
+ * 
+ * @see Tool
+ * @author jdp
  */
-public interface LastModified {
+public interface Resource
+    extends HasName
+{
 
-    public boolean hasLastModified(boolean mayInherit);
+    public boolean hasJavaClassName(boolean inheritable);
+    public String getJavaClassName(boolean inheritable);
+    public void setJavaClassName(String name);
 
-    public Long getLastModified(boolean mayInherit);
-    /**
-     * @return State change: argument differed from state by value.
-     */
-    public boolean setLastModified(Long Long);
+    public boolean hasJavaClassSource(boolean inheritable);
+    public Text getJavaClassSource(boolean inheritable);
+    public void setJavaClassSource(Text text);
 
+    public boolean hasJavaClassBinary(boolean inheritable);
+    public Blob getJavaClassBinary(boolean inheritable);
+    public void setJavaClassBinary(Blob data);
+
+    public void save();
 }

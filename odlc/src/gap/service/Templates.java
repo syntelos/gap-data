@@ -98,12 +98,12 @@ public final class Templates
 
 
     public TemplateRenderer getTemplate(TemplateName name)
-        throws IOException, TemplateException
+        throws TemplateException
     {
         return this.getTemplate(name.getSource());
     }
     private TemplateRenderer getTemplate(String path)
-        throws IOException, TemplateException
+        throws TemplateException
     {
         Resource templateResource = new Resource(path,ResourcePrefix,ResourceSuffix);
         Template template = this.get(templateResource);
@@ -118,12 +118,16 @@ public final class Templates
                 return new gap.hapax.TemplateRendererImpl(this,template);
             }
             catch (IOException tryresource){
+                try {
+                    template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateResource)));
+                    template.setLastModified(templateResource.getLastModified());
+                    this.put(templateResource,template);
 
-                template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateResource)));
-                template.setLastModified(templateResource.getLastModified());
-                this.put(templateResource,template);
-
-                return new gap.hapax.TemplateRendererImpl(this,template);
+                    return new gap.hapax.TemplateRendererImpl(this,template);
+                }
+                catch (IOException iox){
+                    throw new TemplateException(templateResource.toString(),iox);
+                }
             }
         }
         else

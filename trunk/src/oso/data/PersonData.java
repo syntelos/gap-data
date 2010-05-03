@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-25T08:40:03.544Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-03T20:30:25.486Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -255,8 +255,8 @@ public abstract class PersonData
         InheritFromKey("inheritFromKey",Type.Primitive),
         Key("key",Type.Primitive),
         Id("id",Type.Primitive),
-        LogonId("logonId",Type.Primitive),
-        TwitterId("twitterId",Type.Primitive);
+        Id("id",Type.Primitive),
+        LogonId("logonId",Type.Primitive);
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
@@ -289,11 +289,11 @@ public abstract class PersonData
             case Key:
                 return instance.getKey();
             case Id:
+                return instance.getId();
+            case Id:
                 return instance.getId(mayInherit);
             case LogonId:
                 return instance.getLogonId(mayInherit);
-            case TwitterId:
-                return instance.getTwitterId(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Person");
             }
@@ -306,12 +306,30 @@ public abstract class PersonData
                 return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
                 return instance.setId(gap.Objects.StringFromObject(value));
+            case Id:
+                return instance.setId(gap.Objects.StringFromObject(value));
             case LogonId:
                 return instance.setLogonId(gap.Objects.StringFromObject(value));
-            case TwitterId:
-                return instance.setTwitterId(gap.Objects.StringFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in Person");
+            }
+        }
+
+        public final static class List
+            extends gap.util.AbstractListPrimitive.Any<Field>
+        {
+            public List(){
+                super();
+            }
+            public List(Field[] fields){
+                super();
+                for (Field field : fields)
+                    this.add(field);
+            }
+            public List(Iterable<Field> fields){
+                super();
+                for (Field field : fields)
+                    this.add(field);
             }
         }
 
@@ -386,9 +404,8 @@ public abstract class PersonData
     private volatile transient Person inheritFrom;
 
 
-    private volatile String id;    // *unique
-    private volatile String logonId;    // *hash-unique
-    private volatile String twitterId;    
+    private volatile String id;
+    private volatile String logonId;
 
 
 
@@ -400,7 +417,6 @@ public abstract class PersonData
         super();
         this.setLogonId(logonId);
         String id = IdFor( logonId);
-        this.setId(id);
         Key key = KeyLongFor(id);
         this.setKey(key);
     }
@@ -412,7 +428,6 @@ public abstract class PersonData
         this.datastoreEntity = null;
         this.id = null;
         this.logonId = null;
-        this.twitterId = null;
     }
     public final boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -507,51 +522,6 @@ public abstract class PersonData
         else
             return false;
     }
-    public final boolean hasTwitterId(boolean mayInherit){
-        return (null != this.getTwitterId(mayInherit));
-    }
-    public final boolean hasNotTwitterId(boolean mayInherit){
-        return (null == this.getTwitterId(mayInherit));
-    }
-    public final boolean dropTwitterId(){
-        if (null != this.twitterId){
-            this.twitterId = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final String getTwitterId(){
-        return this.getTwitterId(MayInherit);
-    }
-    public final String getTwitterId(boolean mayInherit){
-        if (mayInherit){
-            String twitterId = this.twitterId;
-            if (null == twitterId && this.hasInheritFrom()){
-                Person inheritFrom = this.getInheritFrom();
-                return inheritFrom.getTwitterId(MayInherit);
-            }
-            return twitterId;
-        }
-        else
-            return this.twitterId;
-    }
-    public final boolean setTwitterId(String twitterId, boolean withInheritance){
-        if (IsNotEqual(this.twitterId,this.getTwitterId(withInheritance))){
-            this.twitterId = twitterId;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final boolean setTwitterId(String twitterId){
-        if (IsNotEqual(this.twitterId,twitterId)){
-            this.twitterId = twitterId;
-            return true;
-        }
-        else
-            return false;
-    }
     /*
      * Data binding supports
      */
@@ -561,27 +531,14 @@ public abstract class PersonData
     public final String getClassName(){
         return ClassName;
     }
-    public final String getClassFieldUnique(){
-        return "id";
-    }
     public final List<gap.data.Field> getClassFields(){
-        return (new gap.data.Field.List(Field.values()));
+        return (new Person.Field.List(Field.values()));
     }
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
     public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;
-        String twitterIdRequest = req.getParameter("twitterId");
-        try {
-            String twitterId = Strings.StringFromString(twitterIdRequest);
-            if (this.setTwitterId(twitterId)){
-                change = true;
-            }
-        }
-        catch (RuntimeException exc){
-            throw new ValidationError(ClassName,"twitterId",twitterIdRequest,exc);
-        }
         return change;
     }
     public final boolean updateFrom(BigTable proto){
@@ -590,10 +547,6 @@ public abstract class PersonData
     public final boolean updateFrom(Person proto){
         boolean mayInherit = (!this.hasInheritFromKey());
         boolean change = false;
-        String twitterId = proto.getTwitterId(mayInherit);
-        if (null != twitterId && this.setTwitterId(twitterId)){
-            change = true;
-        }
         return change;
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
@@ -616,11 +569,6 @@ public abstract class PersonData
                     throw new IllegalStateException(field.name());
                 else
                     return this.hasLogonId(true);
-            case TwitterId:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.hasTwitterId(true);
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -643,11 +591,6 @@ public abstract class PersonData
                     throw new IllegalStateException(field.name());
                 else
                     return this.getLogonId(true);
-            case TwitterId:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.getTwitterId(true);
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -665,8 +608,6 @@ public abstract class PersonData
                     throw new IllegalStateException(field.name());
                 case LogonId:
                     throw new IllegalStateException(field.name());
-                case TwitterId:
-                    throw new IllegalStateException(field.name());
                 default:
                     throw new IllegalStateException(field.name());
                 }
@@ -678,15 +619,13 @@ public abstract class PersonData
             super.setVariable(name,value);
         }
     }
-    public List<TemplateDataDictionary> getSection(TemplateName name){
+    public List.Short<TemplateDataDictionary> getSection(TemplateName name){
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
             case Id:
                 return null;
             case LogonId:
-                return null;
-            case TwitterId:
                 return null;
             default:
                 throw new IllegalStateException(field.name());

@@ -149,7 +149,7 @@ public abstract class AbstractListPrimitive<V>
     public final boolean containsNot(V instance){
         return (-1 == this.indexOf(instance));
     }
-    public final List<V> add(V instance){
+    public final List.Primitive<V> add(V instance){
         if (null != instance){
             if (this.containsNot(instance)){
                 Object[] list = this.list;
@@ -168,7 +168,7 @@ public abstract class AbstractListPrimitive<V>
         else
             throw new IllegalArgumentException();
     }
-    public final List<V> remove(V instance){
+    public final List.Primitive<V> remove(V instance){
         int index = this.indexOf(instance);
         if (-1 != index){
             Object[] list = this.list;
@@ -208,12 +208,12 @@ public abstract class AbstractListPrimitive<V>
         }
         throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
     }
-    public final void set(int index, V value){
+    public final V set(int index, V value){
         if (-1 < index){
             Object[] list = this.list;
             if (null != list && index < list.length){
                 list[index] = value;
-                return;
+                return value;
             }
         }
         throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));

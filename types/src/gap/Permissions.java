@@ -39,10 +39,6 @@ public enum Permissions {
      */
     Members,
     /**
-     * Partners are commercially associated with a resource.
-     */
-    Partners,
-    /**
      * Admins are configured in the appengine dashboard as the
      * developers of the appengine application.
      */

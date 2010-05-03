@@ -56,7 +56,7 @@ public final class TemplateRendererImpl
         if (null != context){
             this.context = context;
             if (null != source){
-                List<TemplateNode> template = source.getTemplateTargetHapax();
+                List.Short<TemplateNode> template = source.getTemplateTargetHapax();
                 if (template.isEmpty())
                     template = TemplateParser.Parse(source,template);
                 this.template = template;

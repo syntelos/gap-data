@@ -414,7 +414,7 @@ public class Request
 
         super.setVariable(new TemplateName(name),value);
     }
-    public List<TemplateDataDictionary> getSection(TemplateName name){
+    public List.Short<TemplateDataDictionary> getSection(TemplateName name){
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
