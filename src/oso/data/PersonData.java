@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-03T21:28:24.409Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-03T22:17:48.584Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -100,27 +100,6 @@ public abstract class PersonData
         return person;
     }
 
-
-
-    public final static Key KeyLongFor(String id){
-        return KeyFactory.createKey(KIND.getName(),id);
-    }
-
-
-    public final static Person ForLongId(String id){
-        if (null != id){
-            Key key = KeyLongFor(id);
-            Person instance = (Person)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
 
 
     public final static Person Get(Key key){
@@ -255,7 +234,6 @@ public abstract class PersonData
         InheritFromKey("inheritFromKey",Type.Primitive),
         Key("key",Type.Primitive),
         Id("id",Type.Primitive),
-        Id("id",Type.Primitive),
         LogonId("logonId",Type.Primitive);
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -290,8 +268,6 @@ public abstract class PersonData
                 return instance.getKey();
             case Id:
                 return instance.getId();
-            case Id:
-                return instance.getId(mayInherit);
             case LogonId:
                 return instance.getLogonId(mayInherit);
             default:
@@ -304,8 +280,6 @@ public abstract class PersonData
                 return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
             case Key:
                 return instance.setKey(gap.Objects.KeyFromObject(value));
-            case Id:
-                return instance.setId(gap.Objects.StringFromObject(value));
             case Id:
                 return instance.setId(gap.Objects.StringFromObject(value));
             case LogonId:
@@ -404,7 +378,6 @@ public abstract class PersonData
     private volatile transient Person inheritFrom;
 
 
-    private volatile String id;
     private volatile String logonId;
 
 
@@ -426,7 +399,6 @@ public abstract class PersonData
     public void destroy(){
         this.inheritFrom = null;
         this.datastoreEntity = null;
-        this.id = null;
         this.logonId = null;
     }
     public final boolean hasInheritFrom(){
@@ -461,34 +433,6 @@ public abstract class PersonData
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
-            return true;
-        }
-        else
-            return false;
-    }
-    public final boolean hasId(boolean mayInherit){
-        return (null != this.getId(mayInherit));
-    }
-    public final boolean hasNotId(boolean mayInherit){
-        return (null == this.getId(mayInherit));
-    }
-    public final boolean dropId(){
-        if (null != this.id){
-            this.id = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final String getId(){
-        return this.id;
-    }
-    public final String getId(boolean mayInherit){
-        return this.getId();
-    }
-    public final boolean setId(String id){
-        if (IsNotEqual(this.id,id)){
-            this.id = id;
             return true;
         }
         else
@@ -559,11 +503,6 @@ public abstract class PersonData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Id:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.hasId(true);
             case LogonId:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -581,11 +520,6 @@ public abstract class PersonData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Id:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.getId(true);
             case LogonId:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -604,8 +538,6 @@ public abstract class PersonData
         if (null != field){
             if (name.has(1)){
                 switch (field){
-                case Id:
-                    throw new IllegalStateException(field.name());
                 case LogonId:
                     throw new IllegalStateException(field.name());
                 default:
@@ -623,8 +555,6 @@ public abstract class PersonData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Id:
-                return null;
             case LogonId:
                 return null;
             default:

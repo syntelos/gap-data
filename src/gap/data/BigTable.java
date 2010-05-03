@@ -198,6 +198,29 @@ public abstract class BigTable
     }
 
 
+    public final boolean hasId(){
+        return (null != this.key);
+    }
+    public final boolean hasNotId(){
+        return (null == this.key);
+    }
+    public final String getId(){
+        Key key = this.key;
+        if (null != key){
+            String n = key.getName();
+            if (null != n && 0 != n.length())
+                return n;
+            else {
+                long num = key.getId();
+                if (0L != num)
+                    return String.valueOf(num);
+                else
+                    throw new IllegalArgumentException("Key is incomplete '"+key+"'.");
+            }
+        }
+        else
+            return null;
+    }
     /**
      * Data store reference to this instance.
      */
