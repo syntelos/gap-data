@@ -217,12 +217,12 @@ public abstract class AbstractList<V extends BigTable>
         }
         throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
     }
-    public void set(int index, V value){
+    public V set(int index, V value){
         if (-1 < index){
             BigTable[] buffer = this.buffer;
             if (null != buffer && index < buffer.length){
                 buffer[index] = value;
-                return;
+                return value;
             }
         }
         throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));

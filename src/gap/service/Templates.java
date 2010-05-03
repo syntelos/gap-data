@@ -143,7 +143,7 @@ public final class Templates
     {
         Template template = Template.ForLongName(path);
         if (null != template)
-            return new TemplateRenderer(this,template);
+            return new TemplateRendererImpl(this,template);
         else {
             File templateFile = TemplateFile(path);
             if (null != templateFile){
@@ -152,7 +152,7 @@ public final class Templates
                     template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFile)));
                     template.setLastModified(templateFile.lastModified());
                     template.save();
-                    return new TemplateRenderer(this,template);
+                    return new TemplateRendererImpl(this,template);
                 }
                 catch (IOException exc){
                     throw new TemplateException(templateFile.getPath(),exc);

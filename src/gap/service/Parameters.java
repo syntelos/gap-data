@@ -396,7 +396,7 @@ public final class Parameters
     public Parameters(HttpServletRequest req, int page, Kind kind){
         this(req,page,kind.getTableClass());
     }
-    public Parameters(HttpServletRequest req, int page, Class<? extends gap.data.BigTable> table){
+    public Parameters(HttpServletRequest req, int page, Class<? extends gap.data.TableClass> table){
         super();
         Map<String,String[]> parameters = (Map<String,String[]>)req.getParameterMap();
         this.parameters = parameters;

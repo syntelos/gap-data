@@ -55,7 +55,7 @@ public class OD
         else
             return string.toLowerCase();
     }
-    public final static String ClassSortBy(Class<? extends gap.data.BigTable> table){
+    public final static String ClassSortBy(Class<? extends gap.data.TableClass> table){
         if (null != table){
             try {
                 java.lang.reflect.Field fieldDefaultSortBy = table.getField("DefaultSortBy");

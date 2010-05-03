@@ -19,8 +19,7 @@
  */
 package gap.service;
 
-import gap.*;
-import gap.data.*;
+import gap.data.Resource;
 import gap.jac.tools.FileObject;
 import gap.jac.tools.JavaFileObject;
 import gap.jac.tools.JavaFileObject.Kind;
@@ -30,7 +29,7 @@ import gap.jac.tools.JavaFileManager;
 import gap.jac.tools.ToolProvider;
 import gap.service.jac.Input;
 import gap.service.jac.Output;
-import gap.util.*;
+import gap.util.AbstractList;
 
 import com.google.appengine.api.datastore.Blob;
 

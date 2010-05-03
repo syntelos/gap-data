@@ -503,7 +503,7 @@ public class Servlet
             rep.sendRedirect(path);
     }
     protected Parameters createParameters(HttpServletRequest req, Path path){
-        Class<? extends gap.data.BigTable> table = null;
+        Class<? extends gap.data.TableClass> table = null;
         {
             if (path.hasKind(0))
                 table = path.getKind(0).getTableClass();
