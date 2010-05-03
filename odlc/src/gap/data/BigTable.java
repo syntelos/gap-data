@@ -19,6 +19,8 @@
  */
 package gap.data;
 
+import gap.service.Classes;
+
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DataTypeUtils;
 import com.google.appengine.api.datastore.Entity;
@@ -49,7 +51,7 @@ public abstract class BigTable
             File file = new File(path);
             if (file.isFile()){
                 try {
-                    return gap.odl.Main.ClassDescriptorFor(file);
+                    return Classes.For(file);
                 }
                 catch (java.io.IOException exc){
                     throw new IllegalArgumentException(clas.getName(),exc);

@@ -49,6 +49,12 @@ public class Classes {
 
     private final static lxl.Map<ClassName,ClassDescriptor> C = new lxl.Map<ClassName,ClassDescriptor>();
 
+    public final static Iterable<Resource> Resources(){
+        return R.values();
+    }
+    public final static Iterable<ClassDescriptor> Classes(){
+        return C.values();
+    }
 
     public final static ClassDescriptor For(ClassName name)
         throws java.io.IOException, gap.odl.Syntax

@@ -233,7 +233,7 @@ public final class OD
              * Generated
              */
             for (ClassName servletClassName : servlets){
-                ClassDescriptor cd = gap.odl.Main.ClassDescriptorForServlet(servletClassName.getName());
+                ClassDescriptor cd = Classes.ForServlet(servletClassName.getName());
                 if (null != cd){
                     servlet = top.addSection(TemplateNames.WebXmlSection);
                     servlet.setVariable(TemplateNames.WebXmlSectionName,cd.getName());
@@ -282,7 +282,7 @@ public final class OD
 
             DefineClass(pkg,parent,imports,top,TemplateNames.PrefixParent);
 
-            ClassDescriptor child = gap.odl.Main.ClassDescriptorFor(childClassName);
+            ClassDescriptor child = Classes.For(childClassName);
             if (null != child){
 
                 DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
@@ -323,7 +323,7 @@ public final class OD
 
             DefineClass(pkg,parent,imports,top,TemplateNames.PrefixParent);
 
-            ClassDescriptor child = gap.odl.Main.ClassDescriptorFor(mapChild.childValueClassName);
+            ClassDescriptor child = Classes.For(mapChild.childValueClassName);
             if (null != child){
 
                 DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
@@ -427,7 +427,7 @@ public final class OD
 
                 top.setVariable(new TemplateName(prefix,"parent_class_name"),classRelationParent);
 
-                parent = gap.odl.Main.ClassDescriptorFor(classRelationParent);
+                parent = Classes.For(classRelationParent);
                 if (null == parent)
                     throw new ODStateException(cd,"Parent class not found.");
             }
@@ -445,7 +445,7 @@ public final class OD
 
                 top.setVariable(new TemplateName(prefix,"parent_class_name"),classRelationParent);
 
-                parent = gap.odl.Main.ClassDescriptorFor(classRelationParent);
+                parent = Classes.For(classRelationParent);
                 if (null == parent)
                     throw new ODStateException(cd,"Parent class not found.");
             }
@@ -712,7 +712,7 @@ public final class OD
                         if (IsTypeOf(typeComponent,"HasName"))
                             dataField.addSection(TemplateNames.FieldListComponentNamed);
 
-                        ClassDescriptor component = gap.odl.Main.ClassDescriptorFor(typeComponent);
+                        ClassDescriptor component = Classes.For(typeComponent);
                         if (null != component){
                             String componentKind = ClassKind(component);
                             if (null != componentKind)
@@ -767,7 +767,7 @@ public final class OD
                         if (IsTypeOf(typeComponentTo,"HasName"))
                             dataField.addSection(TemplateNames.FieldMapComponentNamed);
 
-                        ClassDescriptor componentTo = gap.odl.Main.ClassDescriptorFor(typeComponentTo);
+                        ClassDescriptor componentTo = Classes.For(typeComponentTo);
                         if (null != componentTo){
                             String componentToKind = ClassKind(componentTo);
                             if (null != componentToKind)

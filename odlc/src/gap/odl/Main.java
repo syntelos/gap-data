@@ -22,12 +22,14 @@ package gap.odl;
 import static gap.data.List.Type.*;
 import gap.hapax.TemplateException;
 import gap.hapax.TemplateName;
+import gap.service.Classes;
 import gap.service.OD;
-import gap.util.Resource;
 import gap.service.od.FieldDescriptor;
 import gap.service.od.ImportDescriptor;
 import gap.service.od.ODStateException;
+import gap.util.Resource;
 import gap.util.Services;
+import gap.util.ClassName;
 
 import alto.io.u.Find;
 
@@ -61,96 +63,6 @@ public final class Main
         public final static TemplateName WebXml = new TemplateName("web.xml");
     }
 
-    private final static lxl.Map<String,Class> Classes = new lxl.Map<String,Class>();
-    private final static lxl.Map<String,File> Files = new lxl.Map<String,File>();
-
-    public final static String ClassName(File odl){
-        String name = odl.getName();
-        int idx = name.lastIndexOf('.');
-        if (-1 != idx)
-            return name.substring(0,idx);
-        else
-            return name;
-    }
-    public final static Class ClassDescriptorFor(File odl)
-        throws IOException, Syntax
-    {
-        String name = ClassName(odl);
-        Class desc;
-        synchronized(Classes){
-            desc = Classes.get(name);
-        }
-        if (null == desc){
-            Reader odlReader = new Reader(odl);
-            try {
-                desc = (new Class(odlReader));
-            }
-            finally {
-                odlReader.close();
-            }
-            synchronized(Classes){
-                Classes.put(name,desc);
-            }
-        }
-        return desc;
-    }
-    public final static Class ClassDescriptorFor(gap.data.HasName clas)
-        throws IOException, Syntax
-    {
-        return ClassDescriptorFor(clas.getName());
-    }
-    /**
-     * @param name Class base name, typically the big table KIND name.
-     */
-    public final static Class ClassDescriptorFor(String name)
-        throws IOException, Syntax
-    {
-        Class desc;
-        synchronized(Classes){
-            desc = Classes.get(name);
-        }
-        if (null == desc){
-
-            File file = Files.get(name);
-            if (null != file){
-                Reader odlReader = new Reader(file);
-                try {
-                    desc = (new Class(odlReader));
-                }
-                catch (Syntax exc){
-                    throw new Syntax("In '"+file+"'.",exc);
-                }
-                finally {
-                    odlReader.close();
-                }
-                synchronized(Classes){
-                    Classes.put(name,desc);
-                }
-            }
-        }
-        return desc;
-    }
-    public final static Class ClassDescriptorForData(String name)
-        throws IOException, Syntax
-    {
-        if (null != name && name.endsWith("Data"))
-            return ClassDescriptorFor(name.substring(0,name.length()-4));
-        else
-            return null;
-    }
-    public final static Class ClassDescriptorForServlet(String name)
-        throws IOException, Syntax
-    {
-        if (null != name && name.endsWith("Servlet")){
-            name = name.substring(0,name.length()-7);
-            int idx = name.lastIndexOf('.');
-            if (-1 != idx)
-                name = name.substring(idx+1);
-            return ClassDescriptorFor(name);
-        }
-        else
-            return null;
-    }
     /**
      * Generate bean, validate, servlet and list classes.
      */
@@ -159,7 +71,7 @@ public final class Main
     {
         try {
             lxl.List<File> products = new lxl.ArrayList<File>();
-            Class clas = ClassDescriptorFor(odl);
+            Class clas = (Class)Classes.For(odl);
             Package pack = clas.pack;
             lxl.List<ImportDescriptor> imports = clas.imports;
 
@@ -360,10 +272,11 @@ public final class Main
     {
         lxl.List<File> products = new lxl.ArrayList<File>();
 
-        for (File odlFile: Files.values()){
-            if (!odlFile.getPath().startsWith("lib/")){
+        for (Resource odlFile: Classes.Resources()){
+
+            if (odlFile.hasFile() && (!odlFile.getPath().startsWith("lib/"))){
                 try {
-                    lxl.List<File> files = Main.ProcessFiles(odlFile,src,beans,servlets);
+                    lxl.List<File> files = Main.ProcessFiles(odlFile.getFile(),src,beans,servlets);
 
                     products.addAll(files);
                 }
@@ -434,20 +347,11 @@ public final class Main
              * (init)
              */
             {
-                Find find = new Find(ODLFiles,odl);
-                while (find.hasNext()){
-                    File file = find.next();
-                    String name = ClassName(file);
-                    Files.put(name,file);
-                }
-                File libDir = new File("lib");
-                if (libDir.isDirectory()){
-                    find = new Find(ODLFiles,libDir);
-                    while (find.hasNext()){
-                        File file = find.next();
-                        String name = ClassName(file);
-                        Files.put(name,file);
-                    }
+                Classes.Resources(new Find(ODLFiles,odl));
+                {
+                    File libDir = new File("lib");
+                    if (libDir.isDirectory())
+                        Classes.Resources(new Find(ODLFiles,libDir));
                 }
             }
             /*
@@ -557,24 +461,5 @@ public final class Main
         }
     }
     public final static FileFilter ODLFiles = new FileFilter();
-
-    public final static class FindClass
-        extends Object
-        implements java.io.FileFilter
-    {
-        private final String name;
-
-        public FindClass(String name){
-            super();
-            this.name = name+".odl";
-        }
-
-        public boolean accept(File file){
-            if (file.isFile())
-                return (this.name.equals(file.getName()));
-            else
-                return (!file.getName().equals(".svn"));
-        }
-    }
 
 }
