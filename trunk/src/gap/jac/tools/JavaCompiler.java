@@ -48,7 +48,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
-import gap.jac.annotation.processing.Processor;
+import javax.annotation.processing.Processor;
 
 /**
  * Interface to invoke Java&trade; programming language compilers from
