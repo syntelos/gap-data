@@ -59,8 +59,9 @@ import java.io.File;
  */
 public abstract class BigTable
     extends gap.hapax.AbstractData
-    implements TableClass,
-               RequestCreateUpdate
+    implements java.io.Serializable,
+               RequestCreateUpdate,
+               DataInheritance.Notation
 {
     /**
      * Initialize data bean classes, called in the class
@@ -81,30 +82,10 @@ public abstract class BigTable
         return Find(Kind.For(kindName));
     }
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(String kind){
-        try {
-            return ClassDescriptorFor(Find(kind));
-        }
-        catch (IllegalStateException exc){
-            return null;
-        }
+        throw new UnsupportedOperationException();
     }
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(Class<? extends BigTable> clas){
-        if (null != clas){
-            String path = "odl/"+clas.getName().replace('.','/')+".odl";
-            File file = new File(path);
-            if (file.isFile()){
-                try {
-                    return gap.odl.Main.ClassDescriptorFor(file);
-                }
-                catch (java.io.IOException exc){
-                    throw new IllegalArgumentException(clas.getName(),exc);
-                }
-            }
-            else
-                throw new IllegalArgumentException(clas.getName());
-        }
-        else
-            throw new IllegalArgumentException();
+        throw new UnsupportedOperationException();
     }
     public final static boolean IsAdmin(Kind kind){        
         if (null != kind){
@@ -251,24 +232,6 @@ public abstract class BigTable
         else
             return false;
     }
-    public final boolean hasId(){
-        return (null != this.key);
-    }
-    public final boolean hasNotId(){
-        return (null == this.key);
-    }
-    public final boolean dropId(){
-        return false;
-    }
-    public final String getId(){
-        if (null != this.key)
-            return this.key.getName();
-        else
-            return null;
-    }
-    public final boolean setId(String id){
-        return false;
-    }
     /**
      * Called by the Store layer after retrieving an instance object
      * from the datastore or memcache.  Subclasses should ensure that
@@ -335,6 +298,12 @@ public abstract class BigTable
     public final String getClassKindPath(){
         return this.getClassKind().pathName;
     }
+    /**
+     * A static value naming the field employed for instance lookups,
+     * as from web interfaces.
+     */
+    public abstract String getClassFieldUnique();
+
     public final Field getClassKeyField(){
         return (this.getClassFieldByName("key"));
     }

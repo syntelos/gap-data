@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-06T14:29:12.758Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-08T15:06:18.576Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
