@@ -2,9 +2,10 @@
 
 * Integrate collection+bigtable type fields with get section in BeanData.java.xtm 
 
+* Type must be primitive or bigtable (class descriptor) or exception not pass
+
 * Rename 'hash-unique' to 'unique' 
 ** Make 'unique id' a default in BigTable
-** Make 'id' transient
 *** ID from key
 
 * Review primitive types handling in data template
@@ -19,12 +20,8 @@
 ** ZIP
 *** Contents of /svn/application for file copy
 **** Versioned filenames
-** Use same build scripts and structures
 ** Staticize gap-data 
 *** Jar classes into lib
-*** Make template from ver/web/WEB-INF/web.xml to web/WEB-INF/templates
-*** Move odl/* into src/odl/* 
-*** Copy services lists into a source location for merge ops
 
 * Request
 ** implement binding for bigtable read access from template names

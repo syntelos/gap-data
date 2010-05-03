@@ -21,18 +21,16 @@ package gap.service;
 
 import gap.*;
 import gap.data.*;
-import gap.jela.JelaToolFunction;
-import gap.util.*;
-import gap.service.jac.*;
-
 import gap.jac.tools.FileObject;
-import gap.jac.tools.JavaCompiler;
 import gap.jac.tools.JavaFileObject;
 import gap.jac.tools.JavaFileObject.Kind;
 import gap.jac.tools.JavaFileManager;
 import gap.jac.tools.JavaFileManager.Location;
 import gap.jac.tools.JavaFileManager;
 import gap.jac.tools.ToolProvider;
+import gap.service.jac.Input;
+import gap.service.jac.Output;
+import gap.util.*;
 
 import com.google.appengine.api.datastore.Blob;
 
@@ -57,7 +55,6 @@ import java.util.logging.LogRecord;
  * Instantiated per request for infinite many locations and stateful
  * process handling.
  * 
- * @see Compiler
  * @author jdp
  */
 public class FileManager
@@ -121,27 +118,6 @@ public class FileManager
         }
         public boolean isOutputLocation(){
             return this.isOutput;
-        }
-    }
-    /**
-     * Complete compilation error results.
-     */
-    public final static class CompileError
-        extends java.lang.IllegalStateException
-    {
-        public final String classname;
-        /**
-         * {@link gap.data.Resource} or {@link gap.data.Tool}
-         */
-        public final Resource descriptor;
-        public final String errors;
-
-
-        CompileError(String classname, Resource desc, StringWriter err){
-            super(classname);
-            this.classname = classname;
-            this.descriptor = desc;
-            this.errors = err.toString();
         }
     }
 
@@ -211,127 +187,6 @@ public class FileManager
         }
         else
             return null;
-    }
-    public ToolFunction getToolFunction(Servlet instance, Request request, Response response, Resource resource, Tool desc){
-
-        String functionClassName = desc.getJavaClassName(true);
-        if (null != functionClassName){
-            try {
-                Class jclass;
-                try {
-                    jclass = Class.forName(functionClassName);
-                }
-                catch (ClassNotFoundException not){
-
-                    jclass = this.define(desc);
-                }
-                if (null != jclass){
-                    ToolFunction.Constructor ctor = new ToolFunction.Constructor(jclass);
-
-                    return ctor.create(instance, request, response, resource, desc);
-                }
-                else
-                    return null;
-            }
-            catch (Exception any){
-                LogRecord rec = new LogRecord(Level.SEVERE,"error");
-                rec.setThrown(any);
-                FileManager.Log.log(rec);
-                return null;
-            }
-        }
-        else
-            return null;
-    }
-    public boolean compile(Resource desc)
-        throws java.io.IOException,
-               FileManager.CompileError
-    {
-        String className = desc.getJavaClassName(true);
-        String sourceText = gap.Strings.TextToString(desc.getJavaClassSource(true));
-
-        if (null != className && null != sourceText){
-
-            Reader in = new java.io.StringReader(sourceText); 
-            StringWriter err = new StringWriter();
-            ByteArrayOutputStream bin = new ByteArrayOutputStream();
-
-            URI uri = FileManager.ToUri(className);
-
-            List<JavaFileObject> units = new java.util.ArrayList<JavaFileObject>(1);
-            {
-                units.add(new Input(uri,Kind.SOURCE,in));
-            }
-
-            this.output.put(uri,new Output(uri,Kind.CLASS,bin));
-
-            JavaCompiler tool  = new gap.jac.api.JavacTool();
-            try {
-                gap.jac.tools.JavaCompiler.CompilationTask task =
-                    tool.getTask(err, this, null, Options, null, units);
-
-                if (task.call()){
-                    desc.setJavaClassBinary(new Blob(bin.toByteArray()));
-                    desc.save();
-                    return true;
-                }
-                else
-                    throw new CompileError(className,desc,err);
-            }
-            finally {
-                tool.destroy();
-            }
-        }
-        else 
-            return false;
-    }
-    public boolean compile(Resource resource, Tool desc)
-        throws java.io.IOException,
-               FileManager.CompileError
-    {
-        String className = desc.getJavaClassName(true);
-        String sourceText = gap.Strings.TextToString(desc.getJavaMethodSource(true));
-        if (null == sourceText){
-            JelaToolFunction prog = new JelaToolFunction(resource,desc);
-            sourceText = prog.getSource();
-            desc.setJavaClassSource(Strings.TextFromString(sourceText));
-            desc.setJavaClassName(prog.fullClassName);
-        }
-
-        if (null != className && null != sourceText){
-
-            Reader in = new java.io.StringReader(sourceText); 
-            StringWriter err = new StringWriter();
-            ByteArrayOutputStream bin = new ByteArrayOutputStream();
-
-            URI uri = FileManager.ToUri(className);
-
-            List<JavaFileObject> units = new java.util.ArrayList<JavaFileObject>(1);
-            {
-                units.add(new Input(uri,Kind.SOURCE,in));
-            }
-
-            this.output.put(uri,new Output(uri,Kind.CLASS,bin));
-
-            JavaCompiler tool  = new gap.jac.api.JavacTool();
-            try {
-                gap.jac.tools.JavaCompiler.CompilationTask task =
-                    tool.getTask(err, this, null, Options, null, units);
-
-                if (task.call()){
-                    desc.setJavaClassBinary(new Blob(bin.toByteArray()));
-                    desc.save();
-                    return true;
-                }
-                else
-                    throw new CompileError(className,desc,err);
-            }
-            finally {
-                tool.destroy();
-            }
-        }
-        else 
-            return false;
     }
     public Class define(Resource desc){
         String classname = desc.getJavaClassName(true);

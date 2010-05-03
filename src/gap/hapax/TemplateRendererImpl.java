@@ -40,14 +40,15 @@ import java.text.MessageFormat;
  * @author dcoker
  * @author jdp
  */
-public final class TemplateRenderer 
+public final class TemplateRendererImpl
     extends Object
+    implements TemplateRenderer
 {
     private final List.Short<TemplateNode> template;
     private final TemplateLoader context;
 
 
-    public TemplateRenderer(TemplateLoader context, Template source)
+    public TemplateRendererImpl(TemplateLoader context, Template source)
         throws TemplateException
     {
         super();

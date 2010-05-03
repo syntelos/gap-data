@@ -36,10 +36,10 @@
   <!-- 
      - G.App Engine
     -->
-  <property name="gap.sdk" value="appengine-java-sdk"/>
-  <property file="${gap.sdk}/current.properties" />
-  <property name="gap.sdk.dir" value="${gap.sdk}/${gap.sdk.version}"/>
-  <import file="${gap.sdk.dir}/config/user/ant-macros.xml" />
+  <property name="appengine.sdk" value="appengine-java-sdk"/>
+  <property file="${appengine.sdk}/current.properties" />
+  <property name="appengine.sdk.home" value="${appengine.sdk}/${appengine.sdk.version}"/>
+  <import file="${appengine.sdk.home}/config/user/ant-macros.xml" />
 
 
   <path id="lib.path">
@@ -47,13 +47,25 @@
     <fileset dir="${lib}">
       <include name="**/*.jar" />
     </fileset>
-    <fileset dir="${gap.sdk.dir}/lib/shared">
+    <fileset dir="${appengine.sdk.home}/lib/shared">
       <include name="**/*.jar" />
     </fileset>
-    <fileset dir="${gap.sdk.dir}/lib/user">
+    <fileset dir="${appengine.sdk.home}/lib/user">
       <include name="**/*.jar" />
     </fileset>
-    <fileset dir="${gap.sdk.dir}/lib/impl">
+    <fileset dir="${appengine.sdk.home}/lib/impl">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <path id="odl.path">
+    <fileset dir="ant">
+      <include name="**/gap-data-odlc-*.jar" />
+    </fileset>
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${appengine.sdk.home}/lib/user">
       <include name="**/*.jar" />
     </fileset>
   </path>
@@ -65,7 +77,7 @@
       <fileset dir="${lib}">
         <include name="**/*.jar" />
       </fileset>
-      <fileset dir="${gap.sdk.dir}/lib/user">
+      <fileset dir="${appengine.sdk.home}/lib/user">
         <include name="**/*.jar" />
         <exclude name="**/orm/**"/>
       </fileset>
@@ -165,13 +177,7 @@
 
   <target name="odl" description="Generate 'src/pkg/*.java' files from 'odl/pkg/*.odl' files.  Requires prequisite plain 'ant' run.">
 
-    <copy todir="${out}">
-
-      <fileset dir="${web}">
-        <include name="**/*.xtm" />
-      </fileset>
-    </copy>
-    <odl-write classpath.id="lib.path"/>
+    <odl-write classpathref="odl.path"/>
 
   </target>
 
