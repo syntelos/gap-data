@@ -95,6 +95,11 @@ public final class Resource
                 path = path.substring(1);
 
             this.path = path;
+
+            String test = dir.getName()+'/';
+            if (path.startsWith(test))
+                path = path.substring(test.length());
+
             this.file = new File(dir,path);
         }
         else

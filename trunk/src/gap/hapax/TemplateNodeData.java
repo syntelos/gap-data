@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-03T17:19:45.516Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-03T21:28:25.091Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -286,6 +286,7 @@ public abstract class TemplateNodeData
         ParentKey("parentKey",Type.Primitive),
         Key("key",Type.Primitive),
         Id("id",Type.Primitive),
+        Id("id",Type.Primitive),
         NodeType("nodeType",Type.Primitive),
         LineNumber("lineNumber",Type.Primitive),
         NodeContent("nodeContent",Type.Primitive),
@@ -325,6 +326,8 @@ public abstract class TemplateNodeData
             case Key:
                 return instance.getKey();
             case Id:
+                return instance.getId();
+            case Id:
                 return instance.getId(mayInherit);
             case NodeType:
                 return instance.getNodeType(mayInherit);
@@ -350,6 +353,8 @@ public abstract class TemplateNodeData
                 return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
                 return instance.setId(gap.Objects.StringFromObject(value));
+            case Id:
+                return instance.setId(gap.Objects.StringFromObject(value));
             case NodeType:
                 return instance.setNodeType(gap.Objects.StringFromObject(value));
             case LineNumber:
@@ -362,6 +367,24 @@ public abstract class TemplateNodeData
                 return instance.setOffsetCloseRelative(gap.Objects.IntegerFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in TemplateNode");
+            }
+        }
+
+        public final static class List
+            extends gap.util.AbstractListPrimitive.Any<Field>
+        {
+            public List(){
+                super();
+            }
+            public List(Field[] fields){
+                super();
+                for (Field field : fields)
+                    this.add(field);
+            }
+            public List(Iterable<Field> fields){
+                super();
+                for (Field field : fields)
+                    this.add(field);
             }
         }
 
@@ -436,12 +459,12 @@ public abstract class TemplateNodeData
     private volatile transient TemplateNode inheritFrom;
 
 
-    private volatile String id;    // *unique
-    private volatile String nodeType;    // *hash-unique
-    private volatile Integer lineNumber;    // *hash-unique
-    private volatile Text nodeContent;    
-    private volatile Integer offset;    
-    private volatile Integer offsetCloseRelative;    
+    private volatile String id;
+    private volatile String nodeType;
+    private volatile Integer lineNumber;
+    private volatile Text nodeContent;
+    private volatile Integer offset;
+    private volatile Integer offsetCloseRelative;
 
 
     private volatile Key parentKey;
@@ -457,7 +480,6 @@ public abstract class TemplateNodeData
         this.setLineNumber(lineNumber);
         this.parentKey = ancestor;
         String id = IdFor(ancestor,  nodeType, lineNumber);
-        this.setId(id);
         Key key = KeyShortFor(ancestor,id);
         this.setKey(key);
     }
@@ -785,11 +807,8 @@ public abstract class TemplateNodeData
     public final String getClassName(){
         return ClassName;
     }
-    public final String getClassFieldUnique(){
-        return "id";
-    }
     public final List<gap.data.Field> getClassFields(){
-        return (new gap.data.Field.List(Field.values()));
+        return (new TemplateNode.Field.List(Field.values()));
     }
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
@@ -969,7 +988,7 @@ public abstract class TemplateNodeData
             super.setVariable(name,value);
         }
     }
-    public List<TemplateDataDictionary> getSection(TemplateName name){
+    public List.Short<TemplateDataDictionary> getSection(TemplateName name){
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){

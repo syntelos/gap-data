@@ -397,6 +397,9 @@ public final class Main
                     File webXml = Main.ProcessServlets(servlets);
                     System.out.println("Product: "+webXml.getPath());
                 }
+                catch (TemplateException exc){
+                    exc.printStackTrace();
+                }
                 catch (java.io.FileNotFoundException ignore){
                 }
                 /*
