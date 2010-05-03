@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-03T21:28:24.917Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-03T22:17:49.096Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -102,27 +102,6 @@ public abstract class TemplateData
         return template;
     }
 
-
-
-    public final static Key KeyLongFor(String id){
-        return KeyFactory.createKey(KIND.getName(),id);
-    }
-
-
-    public final static Template ForLongId(String id){
-        if (null != id){
-            Key key = KeyLongFor(id);
-            Template instance = (Template)gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return (Template)gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }
 
 
     public final static Template Get(Key key){
@@ -257,7 +236,6 @@ public abstract class TemplateData
         InheritFromKey("inheritFromKey",Type.Primitive),
         Key("key",Type.Primitive),
         Id("id",Type.Primitive),
-        Id("id",Type.Primitive),
         Name("name",Type.Primitive),
         LastModified("lastModified",Type.Primitive),
         TemplateSourceHapax("templateSourceHapax",Type.Primitive),
@@ -295,8 +273,6 @@ public abstract class TemplateData
                 return instance.getKey();
             case Id:
                 return instance.getId();
-            case Id:
-                return instance.getId(mayInherit);
             case Name:
                 return instance.getName(mayInherit);
             case LastModified:
@@ -315,8 +291,6 @@ public abstract class TemplateData
                 return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));
             case Key:
                 return instance.setKey(gap.Objects.KeyFromObject(value));
-            case Id:
-                return instance.setId(gap.Objects.StringFromObject(value));
             case Id:
                 return instance.setId(gap.Objects.StringFromObject(value));
             case Name:
@@ -421,7 +395,6 @@ public abstract class TemplateData
     private volatile transient Template inheritFrom;
 
 
-    private volatile String id;
     private volatile String name;
     private volatile Long lastModified;
     private volatile Text templateSourceHapax;
@@ -446,7 +419,6 @@ public abstract class TemplateData
     public void destroy(){
         this.inheritFrom = null;
         this.datastoreEntity = null;
-        this.id = null;
         this.name = null;
         this.lastModified = null;
         this.templateSourceHapax = null;
@@ -488,34 +460,6 @@ public abstract class TemplateData
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
-            return true;
-        }
-        else
-            return false;
-    }
-    public final boolean hasId(boolean mayInherit){
-        return (null != this.getId(mayInherit));
-    }
-    public final boolean hasNotId(boolean mayInherit){
-        return (null == this.getId(mayInherit));
-    }
-    public final boolean dropId(){
-        if (null != this.id){
-            this.id = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final String getId(){
-        return this.id;
-    }
-    public final String getId(boolean mayInherit){
-        return this.getId();
-    }
-    public final boolean setId(String id){
-        if (IsNotEqual(this.id,id)){
-            this.id = id;
             return true;
         }
         else
@@ -782,11 +726,6 @@ public abstract class TemplateData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Id:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.hasId(true);
             case Name:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -814,11 +753,6 @@ public abstract class TemplateData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Id:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return this.getId(true);
             case Name:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -847,8 +781,6 @@ public abstract class TemplateData
         if (null != field){
             if (name.has(1)){
                 switch (field){
-                case Id:
-                    throw new IllegalStateException(field.name());
                 case Name:
                     throw new IllegalStateException(field.name());
                 case LastModified:
@@ -870,8 +802,6 @@ public abstract class TemplateData
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
-            case Id:
-                return null;
             case Name:
                 return null;
             case LastModified:

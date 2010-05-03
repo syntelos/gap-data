@@ -31,7 +31,7 @@
     <clean bin="${bin}" this="."/>
   </target>
 
-  <target name="update" if="gap.data.types.update" depends="jar" description="Copy jar product to targets defined in '{user.home}/gd.properties' name 'gap.data.types.update'.">
+  <target name="update" if="gap.data.types.update" depends="jar" description="Copy jar product to targets defined in '../update.properties' name 'gap.data.types.update'.">
 
     <do-update src="${target.jar}" tgt="${gap.data.types.update}" />
   </target>
