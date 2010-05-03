@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-03-08T15:06:17.400Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-03T21:28:24.917Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -257,6 +257,7 @@ public abstract class TemplateData
         InheritFromKey("inheritFromKey",Type.Primitive),
         Key("key",Type.Primitive),
         Id("id",Type.Primitive),
+        Id("id",Type.Primitive),
         Name("name",Type.Primitive),
         LastModified("lastModified",Type.Primitive),
         TemplateSourceHapax("templateSourceHapax",Type.Primitive),
@@ -293,6 +294,8 @@ public abstract class TemplateData
             case Key:
                 return instance.getKey();
             case Id:
+                return instance.getId();
+            case Id:
                 return instance.getId(mayInherit);
             case Name:
                 return instance.getName(mayInherit);
@@ -314,6 +317,8 @@ public abstract class TemplateData
                 return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
                 return instance.setId(gap.Objects.StringFromObject(value));
+            case Id:
+                return instance.setId(gap.Objects.StringFromObject(value));
             case Name:
                 return instance.setName(gap.Objects.StringFromObject(value));
             case LastModified:
@@ -324,6 +329,24 @@ public abstract class TemplateData
                 return instance.setTemplateTargetHapax((List.Short<TemplateNode>)value);
             default:
                 throw new IllegalArgumentException(field.toString()+" in Template");
+            }
+        }
+
+        public final static class List
+            extends gap.util.AbstractListPrimitive.Any<Field>
+        {
+            public List(){
+                super();
+            }
+            public List(Field[] fields){
+                super();
+                for (Field field : fields)
+                    this.add(field);
+            }
+            public List(Iterable<Field> fields){
+                super();
+                for (Field field : fields)
+                    this.add(field);
             }
         }
 
@@ -398,10 +421,10 @@ public abstract class TemplateData
     private volatile transient Template inheritFrom;
 
 
-    private volatile String id;    // *unique
-    private volatile String name;    // *hash-unique
-    private volatile Long lastModified;    
-    private volatile Text templateSourceHapax;    
+    private volatile String id;
+    private volatile String name;
+    private volatile Long lastModified;
+    private volatile Text templateSourceHapax;
     private volatile List.Short<TemplateNode> templateTargetHapax;
 
 
@@ -414,7 +437,6 @@ public abstract class TemplateData
         super();
         this.setName(name);
         String id = IdFor( name);
-        this.setId(id);
         Key key = KeyLongFor(id);
         this.setKey(key);
     }
@@ -704,11 +726,8 @@ public abstract class TemplateData
     public final String getClassName(){
         return ClassName;
     }
-    public final String getClassFieldUnique(){
-        return "id";
-    }
     public final List<gap.data.Field> getClassFields(){
-        return (new gap.data.Field.List(Field.values()));
+        return (new Template.Field.List(Field.values()));
     }
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
@@ -847,7 +866,7 @@ public abstract class TemplateData
             super.setVariable(name,value);
         }
     }
-    public List<TemplateDataDictionary> getSection(TemplateName name){
+    public List.Short<TemplateDataDictionary> getSection(TemplateName name){
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
