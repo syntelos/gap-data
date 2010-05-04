@@ -37,13 +37,13 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-03T22:17:49.250Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T12:40:29.605Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
 {
 
-    private final static long serialVersionUID = 3;
+    private final static long serialVersionUID = 4;
 
     public final static Kind KIND = Kind.Create("TemplateNode","gap.hapax","TemplateNode","/template-nodes");
 
@@ -105,6 +105,26 @@ public abstract class TemplateNodeData
     }
 
 
+
+    public final static Key KeyShortFor(Key ancestor, String ){
+        return KeyFactory.createKey(ancestor,KIND.getName(),id);
+    }
+
+
+    public final static TemplateNode ForShort(Key ancestor, String ){
+        if (null != ancestor && ancestor.isComplete() && null != ){
+            Key key = KeyShortFor(ancestor,);
+            TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (TemplateNode)gap.data.Store.Query1(q);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
 
     public final static TemplateNode Get(Key key){
         if (null != key){

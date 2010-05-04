@@ -37,13 +37,13 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-03T22:17:48.584Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T12:40:28.867Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
 {
 
-    private final static long serialVersionUID = 3;
+    private final static long serialVersionUID = 4;
 
     public final static Kind KIND = Kind.Create("Person","oso.data","Person","/people");
 
@@ -101,6 +101,26 @@ public abstract class PersonData
     }
 
 
+
+    public final static Key KeyLongFor(String ){
+        return KeyFactory.createKey(KIND.getName(),id);
+    }
+
+
+    public final static Person ForLong(String ){
+        if (null != ){
+            Key key = KeyLongFor();
+            Person instance = (Person)gap.data.Store.Get(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = CreateQueryFor(key);
+                return (Person)gap.data.Store.Query1(q);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
 
     public final static Person Get(Key key){
         if (null != key){
