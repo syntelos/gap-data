@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T12:40:29.605Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T13:13:41.058Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -106,14 +106,14 @@ public abstract class TemplateNodeData
 
 
 
-    public final static Key KeyShortFor(Key ancestor, String ){
+    public final static Key KeyShortFor(Key ancestor, String id){
         return KeyFactory.createKey(ancestor,KIND.getName(),id);
     }
 
 
-    public final static TemplateNode ForShort(Key ancestor, String ){
-        if (null != ancestor && ancestor.isComplete() && null != ){
-            Key key = KeyShortFor(ancestor,);
+    public final static TemplateNode ForShortId(Key ancestor, String id){
+        if (null != ancestor && ancestor.isComplete() && null != id){
+            Key key = KeyShortFor(ancestor,id);
             TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
