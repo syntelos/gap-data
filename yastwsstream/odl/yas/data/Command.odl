@@ -1,6 +1,5 @@
 package yas.data;
 path /command;
 
-class Command version 1 {
-    *unique String id;
+class Command version 2 {
 }

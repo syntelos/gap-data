@@ -1,9 +1,8 @@
 package yas.data;
 path /target;
 
-class Target version 1 {
-    *unique String id;
-    *hash-unique String twitterId;
+class Target version 2 {
+    *unique String twitterId;
     String twitterKey;
     String twitterSecret;
     String logonId;

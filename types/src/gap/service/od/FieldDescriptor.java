@@ -59,28 +59,19 @@ public interface FieldDescriptor
     }
 
     /**
-     * A type class may have zero or one "unique" fields, and zero or
-     * more "hash unique" fields.  
+     * A type class may have zero or more "unique" fields.
      * 
-     * The unique field is the hash of the complete set of hash unique
-     * fields' values.
-     * 
-     * The complete set of hash unique fields values produces the
-     * unique field value as the hash of their values.
+     * The set of unique fields' values constitutes the identity of an
+     * instance object.
      */
     public interface Uniqueness 
         extends FieldDescriptor
     {
-        public enum Type {
-            Undefined, Unique, HashUnique;
-        }
-
         /**
-         * @return False is equivalent to "Undefined".
+         * @return True for unique fields, false for not unique or
+         * unknown.
          */
-        public boolean hasUniqueness();
-
-        public Type getUniqueness();
+        public boolean isUnique();
     }
     /**
      * 

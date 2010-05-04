@@ -61,7 +61,7 @@ public abstract class {{=class_name}}Data
         return ClassDescriptorFor({{=parent_class_name}}.class);
     }{{/class_re_child_or_group}}
 
-{{#field_hash_unique}}
+{{#field_unique}}
 
 {{#class_re_not_child_or_group}}
     public final static Key KeyLongIdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
@@ -164,8 +164,8 @@ public abstract class {{=class_name}}Data
         }
         return {{=class_nameDecamel}};
     }{{/class_re_childgroup}}
-{{/field_hash_unique}}
-{{#field_unique}}
+{{/field_unique}}
+
 {{#class_re_not_child_or_group}}
     public final static Key KeyLongFor(String {{=field_name}}){
         return KeyFactory.createKey(KIND.getName(),id);
@@ -220,7 +220,6 @@ public abstract class {{=class_name}}Data
         else
             throw new IllegalArgumentException();
     }{{/class_re_childgroup}}
-{{/field_unique}}
 
     public final static {{=class_name}} Get(Key key){
         if (null != key){
@@ -582,7 +581,7 @@ public abstract class {{=class_name}}Data
 
     protected {{=class_name}}Data() {
         super();
-    }{{#field_hash_unique}}{{#class_re_not_child_or_group}}
+    }{{#field_unique}}{{#class_re_not_child_or_group}}
     protected {{=class_name}}Data({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
@@ -599,7 +598,7 @@ public abstract class {{=class_name}}Data
         Key key = KeyLongFor(ancestor,id);{{/class_re_child}}
         this.setKey(key);
     }{{/class_re_child_or_group}}
-{{/field_hash_unique}}
+{{/field_unique}}
 
 
     public void destroy(){
@@ -933,7 +932,7 @@ public abstract class {{=class_name}}Data
         return Field.getField(name);
     }
     public boolean updateFrom(Request req) throws ValidationError {
-        boolean change = false;{{#pfield}}{{#field_is_primitive}}{{#field_is_not_unique}}{{#field_is_not_hash_unique}}
+        boolean change = false;{{#pfield}}{{#field_is_primitive}}{{#field_is_not_unique}}{{#field_is_not_unique}}
         String {{=field_name}}Request = req.getParameter("{{=field_name}}");
         try {
             {{=field_class}} {{=field_name}} = Strings.{{=field_class}}FromString({{=field_name}}Request);
@@ -943,7 +942,7 @@ public abstract class {{=class_name}}Data
         }
         catch (RuntimeException exc){
             throw new ValidationError(ClassName,"{{=field_name}}",{{=field_name}}Request,exc);
-        }{{/field_is_not_hash_unique}}{{/field_is_not_unique}}{{/field_is_primitive}}{{/pfield}}
+        }{{/field_is_not_unique}}{{/field_is_not_unique}}{{/field_is_primitive}}{{/pfield}}
         return change;
     }
     public final boolean updateFrom(BigTable proto){
@@ -951,11 +950,11 @@ public abstract class {{=class_name}}Data
     }
     public final boolean updateFrom({{=class_name}} proto){
         boolean mayInherit = (!this.hasInheritFromKey());
-        boolean change = false;{{#pfield}}{{#field_is_primitive}}{{#field_is_not_unique}}{{#field_is_not_hash_unique}}
+        boolean change = false;{{#pfield}}{{#field_is_primitive}}{{#field_is_not_unique}}{{#field_is_not_unique}}
         {{=field_class}} {{=field_name}} = proto.get{{=field_nameCamel}}(mayInherit);
         if (null != {{=field_name}} && this.set{{=field_nameCamel}}({{=field_name}})){
             change = true;
-        }{{/field_is_not_hash_unique}}{{/field_is_not_unique}}{{/field_is_primitive}}{{/pfield}}
+        }{{/field_is_not_unique}}{{/field_is_not_unique}}{{/field_is_primitive}}{{/pfield}}
         return change;
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){

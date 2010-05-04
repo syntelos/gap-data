@@ -1,7 +1,6 @@
 package oso.data;
 path /people;
 
-class Person version 3 {
-
-    *hash-unique String logonId;
+class Person version 4 {
+    *unique String logonId;
 }

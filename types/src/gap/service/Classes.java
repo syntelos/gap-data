@@ -468,31 +468,7 @@ public class Classes {
     public final static boolean IsFieldUnique(FieldDescriptor field){
         if (field instanceof FieldDescriptor.Uniqueness){
             FieldDescriptor.Uniqueness ufield = (FieldDescriptor.Uniqueness)field;
-            if (ufield.hasUniqueness()){
-                FieldDescriptor.Uniqueness.Type utype = ufield.getUniqueness();
-                if (FieldDescriptor.Uniqueness.Type.Unique.equals(utype))
-                    return true;
-                else
-                    return false;
-            }
-            else
-                return false;
-        }
-        else
-            return false;
-    }
-    public final static boolean IsFieldHashUnique(FieldDescriptor field){
-        if (field instanceof FieldDescriptor.Uniqueness){
-            FieldDescriptor.Uniqueness ufield = (FieldDescriptor.Uniqueness)field;
-            if (ufield.hasUniqueness()){
-                FieldDescriptor.Uniqueness.Type utype = ufield.getUniqueness();
-                if (FieldDescriptor.Uniqueness.Type.HashUnique.equals(utype))
-                    return true;
-                else
-                    return false;
-            }
-            else
-                return false;
+            return (ufield.isUnique());
         }
         else
             return false;

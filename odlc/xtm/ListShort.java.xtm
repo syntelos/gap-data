@@ -118,4 +118,7 @@ public final class ListShort{{=parent_class_name}}{{=child_class_name}}
         else
             throw new IllegalStateException("Missing ancestor key.");
     }
+    public List.Short<{{=child_class_name}}> clone(){
+        return super.clone();
+    }
 }

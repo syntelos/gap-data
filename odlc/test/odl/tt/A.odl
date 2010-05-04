@@ -1,0 +1,6 @@
+package tt;
+path /a;
+
+class A {
+ *unique String fieldString;
+}

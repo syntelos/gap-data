@@ -64,7 +64,7 @@ public final class OD
         public final static TemplateName FieldClassCleanClean = new TemplateName("field_classCleanClean");
         public final static TemplateName FieldImplClassName = new TemplateName("field_impl_class_name");
         public final static TemplateName FieldIsCollection = new TemplateName("field_is_collection");
-        public final static TemplateName FieldIsHashUnique = new TemplateName("field_is_hash_unique");
+
         public final static TemplateName FieldIsInheritable = new TemplateName("field_is_inheritable");
         public final static TemplateName FieldIsKey = new TemplateName("field_is_key");
         public final static TemplateName FieldIsList = new TemplateName("field_is_list");
@@ -82,7 +82,7 @@ public final class OD
         public final static TemplateName FieldIsMapPrimitive = new TemplateName("field_is_map_primitive");
         public final static TemplateName FieldIsMapShort = new TemplateName("field_is_map_short");
         public final static TemplateName FieldIsNotCollection = new TemplateName("field_is_not_collection");
-        public final static TemplateName FieldIsNotHashUnique = new TemplateName("field_is_not_hash_unique");
+
         public final static TemplateName FieldIsNotInheritable = new TemplateName("field_is_not_inheritable");
         public final static TemplateName FieldIsNotKey = new TemplateName("field_is_not_key");
         public final static TemplateName FieldIsNotList = new TemplateName("field_is_not_list");
@@ -475,7 +475,7 @@ public final class OD
         /*
          * Fields & data
          */
-        FieldDescriptor key = null, unique = null;
+        FieldDescriptor key = null;
 
         if (cd.hasFields()){
 
@@ -511,22 +511,21 @@ public final class OD
                     /*
                      * Populate 'pfield' section
                      */
-                    if (IsFieldHashUnique(field)){
+                    if (IsFieldUnique(field)){
                         isInheritable = false;
 
                         defaultSortByOpt = fieldName;
 
-                        dataField.addSection(TemplateNames.FieldIsNotUnique);
                         dataField.addSection(TemplateNames.FieldIsNotInheritable);
 
-                        TemplateDataDictionary field_is = dataField.addSection(TemplateNames.FieldIsHashUnique);
+                        TemplateDataDictionary field_is = dataField.addSection(TemplateNames.FieldIsUnique);
 
-                        field_is.setVariable(TemplateNames.DataModel,"*hash-unique");
+                        field_is.setVariable(TemplateNames.DataModel,"*unique");
 
                         /*
-                         * Global section 'field_hash_unique'
+                         * Global section 'field_unique'
                          */
-                        TemplateDataDictionary topDataFieldH = top.showSection(new TemplateName(prefix,"field_hash_unique")).get(0);
+                        TemplateDataDictionary topDataFieldH = top.showSection(new TemplateName(prefix,"field_unique")).get(0);
 
                         TemplateDataDictionary topDataFieldHF = topDataFieldH.addSection(TemplateNames.Field);
 
@@ -544,45 +543,8 @@ public final class OD
                             topDataFieldHF.setVariable(TemplateNames.FieldToStringSuffix,")");
                         }
                     }
-                    else if (IsFieldUnique(field)){
-                        isInheritable = false;
-
-                        dataField.addSection(TemplateNames.FieldIsNotHashUnique);
-                        dataField.addSection(TemplateNames.FieldIsNotInheritable);
-
-                        TemplateDataDictionary field_is = dataField.addSection(TemplateNames.FieldIsUnique);
-
-                        if (null == unique){
-
-                            unique = field;
-
-                            field_is.setVariable(TemplateNames.DataModel,"*unique");
-
-                            /*
-                             * Global section 'field_unique'
-                             */
-                            TemplateDataDictionary topDataFieldU = top.showSection(new TemplateName(prefix,"field_unique")).get(0);
-
-                            topDataFieldU.setVariable(TemplateNames.FieldName,fieldName);
-                            topDataFieldU.setVariable(TemplateNames.FieldNameCamel,fieldNameCamel);
-                            topDataFieldU.setVariable(TemplateNames.FieldClass,fieldType);
-                            topDataFieldU.setVariable(TemplateNames.FieldClassClean,fieldTypeClean);
-                            topDataFieldU.setVariable(TemplateNames.FieldClassCleanClean,fieldTypeCleanClean);
-
-                            /*
-                             * Global field 'unique' references
-                             */
-                            top.setVariable(new TemplateName(prefix,"field_unique_name"),fieldName);
-                            top.setVariable(new TemplateName(prefix,"field_unique_nameCamel"),fieldNameCamel);
-                            top.setVariable(new TemplateName(prefix,"field_unique_class"),fieldType);
-                            top.setVariable(new TemplateName(prefix,"field_unique_classClean"),fieldTypeClean);
-                        }
-                        else
-                            throw new ODStateException(field,"Model has more than one '*unique' field, '"+unique.getName()+"' and '"+fieldName+"'.");
-                    }
                     else {
                         dataField.addSection(TemplateNames.FieldIsNotUnique);
-                        dataField.addSection(TemplateNames.FieldIsNotHashUnique);
                     }
                 }
                 else if (IsTypeClassCollection(fieldTypeClass)){
@@ -594,7 +556,6 @@ public final class OD
                      * Populate 'cfield' section
                      */
                     dataField.addSection(TemplateNames.FieldIsNotUnique);
-                    dataField.addSection(TemplateNames.FieldIsNotHashUnique);
                 }
                 else if (IsFieldRelation(field)){
                     isRelation = true;
@@ -605,7 +566,6 @@ public final class OD
                      * Populate 'rfield' section
                      */
                     dataField.addSection(TemplateNames.FieldIsNotUnique);
-                    dataField.addSection(TemplateNames.FieldIsNotHashUnique);
 
                     if ((!IsTypeClassKey(fieldTypeClass)) && null != fieldTypeClass && IsNotTypeClassBigTable(fieldTypeClass))
                         throw new ODStateException(field,"Relation field '"+fieldName+"' is not a subclass of 'gap.data.BigTable'.");
@@ -620,7 +580,6 @@ public final class OD
                      * Populate 'tfield' section
                      */
                     dataField.addSection(TemplateNames.FieldIsNotUnique);
-                    dataField.addSection(TemplateNames.FieldIsNotHashUnique);
                     {
                         TemplateDataDictionary field_is = dataField.addSection(TemplateNames.FieldIsTransient);
                         field_is.setVariable(TemplateNames.DataModel,"*transient");

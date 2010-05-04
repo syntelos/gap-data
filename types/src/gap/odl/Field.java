@@ -50,7 +50,6 @@ public final class Field
     public enum Qualifier {
         Child("*child"),
         Unique("*unique"),
-        HashUnique("*hash-unique"),
         Transient("*transient"),
         DefaultSortBy("*sortby");
 
@@ -62,7 +61,7 @@ public final class Field
         }
 
 
-        private final static java.util.Map<String,Qualifier> Syntax = new java.util.HashMap<String,Qualifier>();
+        private final static lxl.Map<String,Qualifier> Syntax = new lxl.Map<String,Qualifier>();
         static {
             for (Qualifier qualifier: Qualifier.values()){
                 Syntax.put(qualifier.syntax,qualifier);
@@ -106,7 +105,7 @@ public final class Field
 
     public final Persistence.Type persistence;
 
-    public final Uniqueness.Type uniqueness;
+    public final boolean unique;
 
     public final Relation.Type relational;
 
@@ -123,7 +122,7 @@ public final class Field
             boolean isDefaultSortBy = false;
             String typeName = null, name = null;
             Persistence.Type persistence = null;
-            Uniqueness.Type uniqueness = null;
+            boolean unique = false;
             Relation.Type relational = null;
             StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
             while (strtok.hasMoreTokens()){
@@ -132,37 +131,26 @@ public final class Field
                 if (null != qualifier){
                     switch (qualifier){
                     case Child:
-                        if (null != uniqueness)
+                        if (unique)
                             throw new Syntax("Malformed ODL field statement '"+line+"'.");
                         else {
-                            uniqueness = Uniqueness.Type.Undefined;
                             persistence = Persistence.Type.Transient;
                             relational = Relation.Type.Child;
                         }
                         break;
                     case Unique:
-                        if (null != uniqueness)
+                        if (unique)
                             throw new Syntax("Malformed ODL field statement '"+line+"'.");
                         else {
-                            uniqueness = Uniqueness.Type.Unique;
-                            persistence = Persistence.Type.Persistent;
-                            relational = Relation.Type.None;
-                        }
-                        break;
-                    case HashUnique:
-                        if (null != uniqueness)
-                            throw new Syntax("Malformed ODL field statement '"+line+"'.");
-                        else {
-                            uniqueness = Uniqueness.Type.HashUnique;
+                            unique = true;
                             persistence = Persistence.Type.Persistent;
                             relational = Relation.Type.None;
                         }
                         break;
                     case Transient:
-                        if (null != uniqueness)
+                        if (unique)
                             throw new Syntax("Malformed ODL field statement '"+line+"'.");
                         else {
-                            uniqueness = Uniqueness.Type.Undefined;
                             persistence = Persistence.Type.Transient;
                             relational = Relation.Type.None;
                         }
@@ -186,7 +174,7 @@ public final class Field
 
             this.typeName = typeName;
             this.name = name;
-            this.uniqueness = uniqueness;
+            this.unique = unique;
             this.persistence = persistence;
             this.relational = relational;
             this.isDefaultSortBy = isDefaultSortBy;
@@ -208,11 +196,8 @@ public final class Field
     public Persistence.Type getPersistence(){
         return this.persistence;
     }
-    public boolean hasUniqueness(){
-        return (null != this.uniqueness);
-    }
-    public Uniqueness.Type getUniqueness(){
-        return this.uniqueness;
+    public boolean isUnique(){
+        return this.unique;
     }
     public boolean hasRelation(){
         return (null != this.relational);

@@ -1,8 +1,7 @@
 package yas.data;
 path /source;
 
-class Source version 1 {
-    *unique String id;
-    *hash-unique String twitterId;
+class Source version 2 {
+    *unique String twitterId;
     String logonId;
 }
