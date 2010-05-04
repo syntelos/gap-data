@@ -167,20 +167,20 @@ public abstract class {{=class_name}}Data
 {{/field_unique}}
 
 {{#class_re_not_child_or_group}}
-    public final static Key KeyLongFor(String {{=field_name}}){
+    public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND.getName(),id);
     }{{/class_re_not_child_or_group}}{{#class_re_childgroup}}
-    public final static Key KeyShortFor(Key ancestor, String {{=field_name}}){
+    public final static Key KeyShortFor(Key ancestor, String id){
         return KeyFactory.createKey(ancestor,KIND.getName(),id);
     }{{/class_re_childgroup}}{{#class_re_child}}
-    public final static Key KeyLongFor(Key ancestor, String {{=field_name}}){
+    public final static Key KeyLongFor(Key ancestor, String id){
         return KeyFactory.createKey(KIND.getName(),id);
     }{{/class_re_child}}
 
 {{#class_re_not_child_or_group}}
-    public final static {{=class_name}} ForLong{{=field_nameCamel}}(String {{=field_name}}){
-        if (null != {{=field_name}}){
-            Key key = KeyLongFor({{=field_name}});
+    public final static {{=class_name}} ForLongId(String id){
+        if (null != id){
+            Key key = KeyLongFor(id);
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -192,9 +192,9 @@ public abstract class {{=class_name}}Data
         else
             throw new IllegalArgumentException();
     }{{/class_re_not_child_or_group}}{{#class_re_child}}
-    public final static {{=class_name}} ForLong{{=field_nameCamel}}(Key ancestor, String {{=field_name}}){
-        if (null != ancestor && ancestor.isComplete() && null != {{=field_name}}){
-            Key key = KeyLongFor(ancestor,{{=field_name}});
+    public final static {{=class_name}} ForLongId(Key ancestor, String id){
+        if (null != ancestor && ancestor.isComplete() && null != id){
+            Key key = KeyLongFor(ancestor,id);
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -206,9 +206,9 @@ public abstract class {{=class_name}}Data
         else
             throw new IllegalArgumentException();
     }{{/class_re_child}}{{#class_re_childgroup}}
-    public final static {{=class_name}} ForShort{{=field_nameCamel}}(Key ancestor, String {{=field_name}}){
-        if (null != ancestor && ancestor.isComplete() && null != {{=field_name}}){
-            Key key = KeyShortFor(ancestor,{{=field_name}});
+    public final static {{=class_name}} ForShortId(Key ancestor, String id){
+        if (null != ancestor && ancestor.isComplete() && null != id){
+            Key key = KeyShortFor(ancestor,id);
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
