@@ -34,13 +34,13 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2010-05-03T22:17:49.237Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2010-05-04T12:40:29.592Z")
 public final class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>
 {
 
-    private final static long serialVersionUID = 3;
+    private final static long serialVersionUID = 4;
 
     public final static String ParentTypeName = "Template";
 
@@ -116,5 +116,8 @@ public final class ListShortTemplateTemplateNode
         }
         else
             throw new IllegalStateException("Missing ancestor key.");
+    }
+    public List.Short<TemplateNode> clone(){
+        return super.clone();
     }
 }
