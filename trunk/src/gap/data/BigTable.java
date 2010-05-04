@@ -221,6 +221,12 @@ public abstract class BigTable
         else
             return null;
     }
+    public boolean setId(String id){
+        /*
+         * TODO Generate code w/ "KeyFor(this,id)"
+         */
+        return false;
+    }
     /**
      * Data store reference to this instance.
      */
@@ -321,15 +327,7 @@ public abstract class BigTable
     public final String getClassKindPath(){
         return this.getClassKind().pathName;
     }
-    /**
-     * A static value naming the field employed for instance lookups,
-     * as from web interfaces.
-     */
-    public abstract String getClassFieldUnique();
 
-    public final Field getClassKeyField(){
-        return (this.getClassFieldByName("key"));
-    }
     /**
      * A key based shared system lock associated with this instance
      * may be employed for any suitable purpose.
@@ -443,13 +441,13 @@ public abstract class BigTable
 
     protected final Entity fillTo(Entity entity){
 
-        Field classKeyField = this.getClassKeyField();
-
         for (Field field: this.getClassFields()){
             String fieldName = field.getFieldName();
 
-            if (field != classKeyField){
+            if (IsNotKeyOrId(fieldName)){
+
                 if (field.isNotFieldTypeCollection()){
+
                     java.io.Serializable value = this.valueOf(field,MayNotInherit);
                     if (null != value){
 
@@ -523,5 +521,18 @@ public abstract class BigTable
             return true;
         else
             return (!a.equals(b));
+    }
+    public final static boolean IsNotKeyOrId(String name){
+        return (!IsKeyOrId(name));
+    }
+    public final static boolean IsKeyOrId(String name){
+        switch (name.charAt(0)){
+        case 'i':
+            return (2 == name.length() && 'd' == name.charAt(1));
+        case 'k':
+            return (3 == name.length() && 'e' == name.charAt(1) && 'y' == name.charAt(2));
+        default:
+            return false;
+        }
     }
 }

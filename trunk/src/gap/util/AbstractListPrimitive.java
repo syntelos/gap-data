@@ -35,21 +35,6 @@ public abstract class AbstractListPrimitive<V>
 {
     private final static long serialVersionUID = 1L;
 
-    /**
-     * List implementation used by {@link Store}
-     */
-    public static class Any<V>
-        extends AbstractListPrimitive<V>
-    {
-
-        public Any(){
-            super();
-        }
-
-        public final gap.Primitive getType(){
-            throw new java.lang.UnsupportedOperationException();
-        }
-    }
 
     public final class ArrayIterator<V>
         extends Object

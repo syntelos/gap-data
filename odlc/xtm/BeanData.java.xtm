@@ -220,7 +220,10 @@ public abstract class {{=class_name}}Data
         else
             throw new IllegalArgumentException();
     }{{/class_re_childgroup}}
-
+{{!
+    TODO Generate code  "KeyFor(this,id)"
+    for "setId(String)"
+}}
     public final static {{=class_name}} Get(Key key){
         if (null != key){
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
@@ -480,7 +483,7 @@ public abstract class {{=class_name}}Data
         }
 
         public final static class List
-            extends gap.util.AbstractListPrimitive.Any<Field>
+            extends gap.util.ArrayList<Field>
         {
             public List(){
                 super();

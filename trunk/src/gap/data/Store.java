@@ -96,7 +96,7 @@ public final class Store
             }
         }
         protected static List.Primitive<BigTable> Get(java.lang.Iterable<Key> keys){
-            List.Primitive<BigTable> list = new AbstractListPrimitive.Any<BigTable>();
+            List.Primitive<BigTable> list = new gap.util.ListPrimitiveKey<BigTable>();
             java.util.Map <Key,Entity> map = Get().get(keys);
             for (Entity entity : map.values()){
                 BigTable gdo = BigTable.From(entity);
@@ -293,10 +293,10 @@ public final class Store
                 return null;
             }
         }
-        protected static List.Primitive<BigTable> Get(java.lang.Iterable<Key> keys){
+        protected static gap.util.ArrayList<BigTable> Get(java.lang.Iterable<Key> keys){
             MemcacheService mc = Store.C.Get();
             DatastoreService ds = Store.P.Get();
-            List.Primitive<BigTable> list = new AbstractListPrimitive.Any<BigTable>();
+            gap.util.ArrayList<BigTable> list = new gap.util.ArrayList<BigTable>();
             for (Key key : keys){
                 
                 String ck = BigTable.ToString(key);

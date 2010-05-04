@@ -70,10 +70,6 @@ public interface TableClass
 
     public String getClassKindPath();
 
-    public String getClassFieldUnique();
-
-    public Field getClassKeyField();
-
     public List<Field> getClassFields();
 
     public Field getClassFieldByName(String name);
