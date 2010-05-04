@@ -95,8 +95,8 @@ public final class Store
                 return null;
             }
         }
-        protected static List.Primitive<BigTable> Get(java.lang.Iterable<Key> keys){
-            List.Primitive<BigTable> list = new gap.util.ListPrimitiveKey<BigTable>();
+        protected static gap.util.ArrayList<BigTable> Get(java.lang.Iterable<Key> keys){
+            gap.util.ArrayList<BigTable> list = new gap.util.ArrayList<BigTable>();
             java.util.Map <Key,Entity> map = Get().get(keys);
             for (Entity entity : map.values()){
                 BigTable gdo = BigTable.From(entity);
@@ -236,7 +236,7 @@ public final class Store
 
             Iterable<Entity> it = stmt.asIterable(page.createFetchOptions());
 
-            List.Primitive<Key> list = new AbstractListPrimitive.Any<Key>();
+            List.Primitive<Key> list = new gap.util.ListPrimitiveKey();
 
             for (Entity entity : it){
 
@@ -395,7 +395,7 @@ public final class Store
         else
             throw new IllegalArgumentException("Incomplete key '"+key+"'.");
     }
-    public static List.Primitive<BigTable> Get(Iterable<Key> keys){
+    public static gap.util.ArrayList<BigTable> Get(Iterable<Key> keys){
 
         return C.Get(keys);
     }

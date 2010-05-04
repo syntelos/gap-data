@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T13:13:40.914Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T17:45:09.708Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -251,7 +251,7 @@ public abstract class TemplateData
      * Persistent fields' binding for {@link Template}
      */
     public static enum Field
-        implements gap.data.Field<Field>
+        implements gap.data.Field<Template.Field>
     {
         InheritFromKey("inheritFromKey",Type.Primitive),
         Key("key",Type.Primitive),
@@ -327,15 +327,13 @@ public abstract class TemplateData
         }
 
         public final static class List
-            extends gap.util.AbstractListPrimitive.Any<Field>
+            extends gap.util.ArrayList<Template.Field>
         {
             public List(){
                 super();
             }
             public List(Field[] fields){
-                super();
-                for (Field field : fields)
-                    this.add(field);
+                super(fields);
             }
             public List(Iterable<Field> fields){
                 super();
@@ -690,8 +688,12 @@ public abstract class TemplateData
     public final String getClassName(){
         return ClassName;
     }
-    public final List<gap.data.Field> getClassFields(){
-        return (new Template.Field.List(Field.values()));
+    public final gap.data.List<gap.data.Field> getClassFields(){
+        gap.data.List re = new Template.Field.List(Field.values());
+        /*
+         * hack a compiler bug: has a Field type astigmatism
+         */
+        return (gap.data.List<gap.data.Field>)re;
     }
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);

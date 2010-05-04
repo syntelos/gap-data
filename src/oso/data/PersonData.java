@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T13:13:40.437Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T17:45:09.226Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -249,7 +249,7 @@ public abstract class PersonData
      * Persistent fields' binding for {@link Person}
      */
     public static enum Field
-        implements gap.data.Field<Field>
+        implements gap.data.Field<Person.Field>
     {
         InheritFromKey("inheritFromKey",Type.Primitive),
         Key("key",Type.Primitive),
@@ -310,15 +310,13 @@ public abstract class PersonData
         }
 
         public final static class List
-            extends gap.util.AbstractListPrimitive.Any<Field>
+            extends gap.util.ArrayList<Person.Field>
         {
             public List(){
                 super();
             }
             public List(Field[] fields){
-                super();
-                for (Field field : fields)
-                    this.add(field);
+                super(fields);
             }
             public List(Iterable<Field> fields){
                 super();
@@ -495,8 +493,12 @@ public abstract class PersonData
     public final String getClassName(){
         return ClassName;
     }
-    public final List<gap.data.Field> getClassFields(){
-        return (new Person.Field.List(Field.values()));
+    public final gap.data.List<gap.data.Field> getClassFields(){
+        gap.data.List re = new Person.Field.List(Field.values());
+        /*
+         * hack a compiler bug: has a Field type astigmatism
+         */
+        return (gap.data.List<gap.data.Field>)re;
     }
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
