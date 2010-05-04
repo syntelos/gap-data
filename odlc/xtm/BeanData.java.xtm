@@ -417,7 +417,7 @@ public abstract class {{=class_name}}Data
      * Persistent fields' binding for {@link {{=class_name}}}
      */
     public static enum Field
-        implements gap.data.Field<Field>
+        implements gap.data.Field<{{=class_name}}.Field>
     {
         InheritFromKey("inheritFromKey",Type.Primitive),{{#class_re_child_or_group}}
         ParentKey("parentKey",Type.Primitive),{{/class_re_child_or_group}}
@@ -483,15 +483,13 @@ public abstract class {{=class_name}}Data
         }
 
         public final static class List
-            extends gap.util.ArrayList<Field>
+            extends gap.util.ArrayList<{{=class_name}}.Field>
         {
             public List(){
                 super();
             }
             public List(Field[] fields){
-                super();
-                for (Field field : fields)
-                    this.add(field);
+                super(fields);
             }
             public List(Iterable<Field> fields){
                 super();
@@ -928,8 +926,12 @@ public abstract class {{=class_name}}Data
     public final String getClassName(){
         return ClassName;
     }
-    public final List<gap.data.Field> getClassFields(){
-        return (new {{=class_name}}.Field.List(Field.values()));
+    public final gap.data.List<gap.data.Field> getClassFields(){
+        gap.data.List re = new {{=class_name}}.Field.List(Field.values());
+        /*
+         * hack a compiler bug: has a Field type astigmatism
+         */
+        return (gap.data.List<gap.data.Field>)re;
     }
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);

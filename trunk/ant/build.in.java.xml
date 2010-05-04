@@ -83,7 +83,7 @@
     <element name="pack" optional="true"/>
     <sequential>
       <echo>Archive products</echo>
-      <jar jarfile="@{target}" manifest="@{manifest}">
+      <jar jarfile="@{target}"> <!-- manifest="@{manifest}" -->
         <fileset dir="@{bin}"/>
         <pack/>
       </jar>

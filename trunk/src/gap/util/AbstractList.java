@@ -227,7 +227,7 @@ public abstract class AbstractList<V extends BigTable>
         }
         throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
     }
-    public AbstractList<V> clone(){
+    public List<V> clone(){
         try {
             AbstractList<V> clone = (AbstractList<V>)super.clone();
             if (null != this.buffer)

@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T13:13:41.058Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T17:45:09.869Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -279,7 +279,7 @@ public abstract class TemplateNodeData
      * Persistent fields' binding for {@link TemplateNode}
      */
     public static enum Field
-        implements gap.data.Field<Field>
+        implements gap.data.Field<TemplateNode.Field>
     {
         InheritFromKey("inheritFromKey",Type.Primitive),
         ParentKey("parentKey",Type.Primitive),
@@ -365,15 +365,13 @@ public abstract class TemplateNodeData
         }
 
         public final static class List
-            extends gap.util.AbstractListPrimitive.Any<Field>
+            extends gap.util.ArrayList<TemplateNode.Field>
         {
             public List(){
                 super();
             }
             public List(Field[] fields){
-                super();
-                for (Field field : fields)
-                    this.add(field);
+                super(fields);
             }
             public List(Iterable<Field> fields){
                 super();
@@ -771,8 +769,12 @@ public abstract class TemplateNodeData
     public final String getClassName(){
         return ClassName;
     }
-    public final List<gap.data.Field> getClassFields(){
-        return (new TemplateNode.Field.List(Field.values()));
+    public final gap.data.List<gap.data.Field> getClassFields(){
+        gap.data.List re = new TemplateNode.Field.List(Field.values());
+        /*
+         * hack a compiler bug: has a Field type astigmatism
+         */
+        return (gap.data.List<gap.data.Field>)re;
     }
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);

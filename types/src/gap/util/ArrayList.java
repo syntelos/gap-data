@@ -19,13 +19,15 @@
  */
 package gap.util;
 
-import gap.data.*;
+import gap.data.Collection;
+import gap.data.Filter;
+import gap.data.List;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
 /**
- * A gap data list.
+ * A gap data list for standalone uses, not table class fields.
  * 
  * @author jdp
  */
@@ -77,6 +79,11 @@ public class ArrayList<V>
 
     public ArrayList(){
         super();
+    }
+    public ArrayList(V[] list){
+        super();
+        if (null != list)
+            this.buffer = (Object[])list.clone();
     }
 
 
