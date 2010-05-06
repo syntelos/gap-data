@@ -26,6 +26,44 @@
     </fileset>
   </path>
 
+  <property name="gd.sdk"      value="../trunk"/>
+  <property name="gae.sdk.top" value="${gd.sdk}/appengine-java-sdk"/>
+  <property file="${gae.sdk.top}/current.properties" />
+  <property name="gae.sdk"     value="${gae.sdk.top}/${appengine.sdk.version}"/>
+
+  <path id="test.path">
+
+    <fileset dir="${gd.sdk}">
+      <include name="**/gap-data-*.jar" />
+    </fileset>
+    <fileset dir="${gd.sdk}/lib">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${gae.sdk}/lib/shared">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${gae.sdk}/lib/user">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${gae.sdk}/lib/impl">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <target name="test" depends="jar" description="Compile odl to src under dir test.">
+
+    <java classname="gap.odl.Main" failonerror="true" fork="true">
+      <arg value="test/odl"/>
+      <arg value="test/src"/>
+      <classpath>
+        <path refid="lib.path"/>
+        <pathelement location="${target.jar}"/>
+      </classpath>
+    </java>
+    <compile src="test/src" ver="test/ver/src" bin="test/bin" classpath.id="test.path"/>
+
+  </target>
+
   <target name="clean" description="Delete all products: 'out', 'jar', etc..">
 
     <clean bin="${bin}" this="."/>

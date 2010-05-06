@@ -121,6 +121,7 @@ public final class OD
         public final static TemplateName MapKeyFieldName = new TemplateName("map_key_field_name");
         public final static TemplateName MapKeyFieldNameCamel = new TemplateName("map_key_field_nameCamel");
         public final static TemplateName MapKeyType = new TemplateName("map_key_type");
+        public final static TemplateName MapPValueType = new TemplateName("map_pvalue_type");
         public final static TemplateName MethodArguments = new TemplateName("method_arguments");
         public final static TemplateName MethodBody = new TemplateName("method_body");
         public final static TemplateName MethodName = new TemplateName("method_name");
@@ -282,22 +283,47 @@ public final class OD
 
             DefineClass(pkg,parent,imports,top,TemplateNames.PrefixParent);
 
-            ClassDescriptor child = Classes.For(childClassName);
-            if (null != child){
+            switch(listType){
+            case ListPrimitive:{
+                Primitive child = Primitive.For(childClassName);
+                if (null != child){
+                    DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
 
-                DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
+                    top.setVariable(TemplateNames.ListClassName,listClassName);
 
-                top.setVariable(TemplateNames.ListClassName,listClassName);
-
-                try {
-                    template.render(top,out); 
+                    try {
+                        template.render(top,out); 
+                    }
+                    catch (TemplateException exc){
+                        throw new TemplateException("In template '"+xtm.source+"'.",exc);
+                    }
                 }
-                catch (TemplateException exc){
-                    throw new TemplateException("In template '"+xtm.source+"'.",exc);
-                }
+                else
+                    throw new TemplateException("Primitive type not found for name '"+childClassName+"'.");
+  
             }
-            else 
-                throw new TemplateException("Child class descriptor not found for name '"+childClassName+"'.");
+                break;
+            case ListShort:
+            case ListLong:{
+                ClassDescriptor child = Classes.For(childClassName);
+                if (null != child){
+
+                    DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
+
+                    top.setVariable(TemplateNames.ListClassName,listClassName);
+
+                    try {
+                        template.render(top,out); 
+                    }
+                    catch (TemplateException exc){
+                        throw new TemplateException("In template '"+xtm.source+"'.",exc);
+                    }
+                }
+                else 
+                    throw new TemplateException("Child class descriptor not found for name '"+childClassName+"'.");
+            }
+                break;
+            }
         }
         else
             throw new IllegalArgumentException();
@@ -323,25 +349,51 @@ public final class OD
 
             DefineClass(pkg,parent,imports,top,TemplateNames.PrefixParent);
 
-            ClassDescriptor child = Classes.For(mapChild.childValueClassName);
-            if (null != child){
+            switch (mapType){
+            case MapPrimitive:{
+                Primitive child = Primitive.For(mapChild.childValueClassName);
+                if (null != child){
+                    DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
 
-                DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
+                    top.setVariable(TemplateNames.MapClassName,mapClassName);
+                    top.setVariable(TemplateNames.MapKeyType,mapChild.childKeyFieldType);
+                    top.setVariable(TemplateNames.MapPValueType,child.local);
 
-                top.setVariable(TemplateNames.MapClassName,mapClassName);
-                top.setVariable(TemplateNames.MapKeyType,mapChild.childKeyFieldType);
-                top.setVariable(TemplateNames.MapKeyFieldName,mapChild.childKeyFieldName);
-                top.setVariable(TemplateNames.MapKeyFieldNameCamel,Camel(mapChild.childKeyFieldName));
-
-                try {
-                    template.render(top,out); 
+                    try {
+                        template.render(top,out); 
+                    }
+                    catch (TemplateException exc){
+                        throw new TemplateException("In template '"+xtm.source+"'.",exc);
+                    }
                 }
-                catch (TemplateException exc){
-                    throw new TemplateException("In template '"+xtm.source+"'.",exc);
-                }
+                else
+                    throw new TemplateException("Primitive type not found for name '"+mapChild.childValueClassName+"'.");
             }
-            else 
-                throw new TemplateException("Child class descriptor not found for name '"+mapChild.childValueClassName+"'.");
+                break;
+            case MapShort: //(fall-through)
+            case MapLong:{
+                ClassDescriptor child = Classes.For(mapChild.childValueClassName);
+                if (null != child){
+
+                    DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
+
+                    top.setVariable(TemplateNames.MapClassName,mapClassName);
+                    top.setVariable(TemplateNames.MapKeyType,mapChild.childKeyFieldType);
+                    top.setVariable(TemplateNames.MapKeyFieldName,mapChild.childKeyFieldName);
+                    top.setVariable(TemplateNames.MapKeyFieldNameCamel,Camel(mapChild.childKeyFieldName));
+
+                    try {
+                        template.render(top,out); 
+                    }
+                    catch (TemplateException exc){
+                        throw new TemplateException("In template '"+xtm.source+"'.",exc);
+                    }
+                }
+                else 
+                    throw new TemplateException("Child class descriptor not found for name '"+mapChild.childValueClassName+"'.");
+            }
+                break;
+            }
         }
         else
             throw new IllegalArgumentException();
@@ -364,6 +416,22 @@ public final class OD
             primitive.setVariable(TemplateNames.NameDecamel,Decamel(type_name));
             primitive.addSection(new TemplateName(type_name));
         }
+    }
+    /**
+     * Used for the primitive children of collection types.
+     */
+    public final static void DefineClass(PackageDescriptor pkg, Primitive pd, lxl.List<ImportDescriptor> imports, TemplateDataDictionary top, TemplateName prefix)
+        throws ODStateException, IOException
+    {
+        String packageName = PackageName(pd);
+        String className = ClassName(pd);
+        String classNameDecamel = Decamel(className);
+        /*
+         * Class globals
+         */
+        top.setVariable(new TemplateName(prefix,"package_name"), packageName);
+        top.setVariable(new TemplateName(prefix,"class_name"), className);
+        top.setVariable(new TemplateName(prefix,"class_nameDecamel"), classNameDecamel);
     }
     public final static void DefineClass(PackageDescriptor pkg, ClassDescriptor cd, lxl.List<ImportDescriptor> imports, TemplateDataDictionary top)
         throws ODStateException, IOException

@@ -56,8 +56,15 @@ public enum Primitive {
 
     public final Class type;
 
+    public final String full, pkg, local;
+
+
     private Primitive(Class impl){
         this.type = impl;
+        this.full = impl.getName();
+        int idx = this.full.lastIndexOf('.');
+        this.pkg = this.full.substring(0,idx);
+        this.local = this.full.substring(idx+1);
     }
 
 

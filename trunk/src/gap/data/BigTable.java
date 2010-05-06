@@ -59,9 +59,8 @@ import java.io.File;
  */
 public abstract class BigTable
     extends gap.hapax.AbstractData
-    implements java.io.Serializable,
-               RequestCreateUpdate,
-               DataInheritance.Notation
+    implements gap.data.TableClass,
+               RequestCreateUpdate
 {
     /**
      * Initialize data bean classes, called in the class
@@ -223,7 +222,7 @@ public abstract class BigTable
     }
     public boolean setId(String id){
         /*
-         * TODO Generate code w/ "KeyFor(this,id)"
+         * TODO Generate "this.setKey(KeyFor(this,id))"
          */
         return false;
     }

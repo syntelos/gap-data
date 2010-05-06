@@ -153,8 +153,34 @@ public abstract class AbstractListPrimitive<V>
         else
             throw new IllegalArgumentException();
     }
+    protected final int append(V instance){
+        if (null != instance){
+            int idx = this.indexOf(instance);
+            if (-1 == idx){
+                Object[] list = this.list;
+                if (null == list){
+                    this.list = new Object[]{instance};
+                    return 0;
+                }
+                else {
+                    int len = list.length;
+                    Object[] copier = new Object[len+1];
+                    System.arraycopy(list,0,copier,0,len);
+                    copier[len] = instance;
+                    this.list = copier;
+                    return len;
+                }
+            }
+            else
+                return idx;
+        }
+        else
+            throw new IllegalArgumentException();
+    }
     public final List.Primitive<V> remove(V instance){
-        int index = this.indexOf(instance);
+        return this.remove(this.indexOf(instance));
+    }
+    public final List.Primitive<V> remove(int index){
         if (-1 != index){
             Object[] list = this.list;
             int len = list.length;
@@ -206,9 +232,9 @@ public abstract class AbstractListPrimitive<V>
     public final java.util.Iterator<V> iterator(){
         return new ArrayIterator<V>(this.list);
     }
-    public AbstractListPrimitive clone(){
+    public List<V> clone(){
         try {
-            AbstractListPrimitive clone = (AbstractListPrimitive)super.clone();
+            AbstractListPrimitive<V> clone = (AbstractListPrimitive<V>)super.clone();
             if (null != this.list)
                 clone.list = (Object[])this.list.clone();
             return clone;

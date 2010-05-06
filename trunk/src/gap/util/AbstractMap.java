@@ -30,7 +30,7 @@ import com.google.appengine.api.datastore.Query;
  * 
  * @author jdp
  */
-public abstract class AbstractMap<K,V extends BigTable>
+public abstract class AbstractMap<K extends Comparable,V extends BigTable>
     extends AbstractList<V>
     implements Map<K,V>
 {
@@ -46,10 +46,10 @@ public abstract class AbstractMap<K,V extends BigTable>
     protected void buffering(Page page){
         this.index = new Index(page);
     }
-    public AbstractMap clone(){
-        AbstractMap clone = (AbstractMap)super.clone();
+    public Map<K,V> clone(){
+        AbstractMap<K,V> clone = (AbstractMap<K,V>)super.clone();
         if (null != this.index)
-            clone.index = this.index.clone();
+            clone.index = (Index)this.index.clone();
         return clone;
     }
 }

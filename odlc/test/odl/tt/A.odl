@@ -2,5 +2,7 @@ package tt;
 path /a;
 
 class A {
- *unique String fieldString;
+ *unique String name;
+ List.Short<B> children;
+ Map.Primitive<String:name,Blob> content;
 }

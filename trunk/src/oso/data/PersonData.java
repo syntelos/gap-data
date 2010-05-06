@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T17:45:09.226Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-05T15:33:59.824Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -496,7 +496,7 @@ public abstract class PersonData
     public final gap.data.List<gap.data.Field> getClassFields(){
         gap.data.List re = new Person.Field.List(Field.values());
         /*
-         * hack a compiler bug: has a Field type astigmatism
+         * Compiler has a type astigmatism (parameterized interface gap.data.Field)
          */
         return (gap.data.List<gap.data.Field>)re;
     }

@@ -41,6 +41,8 @@ public interface TableClass
 
     public String getId();
 
+    public boolean setId(String id);
+
     public boolean hasKey();
 
     public boolean hasNotKey();

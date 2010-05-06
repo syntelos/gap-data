@@ -58,6 +58,7 @@ public final class Main
         public final static TemplateName BeanServlet = new TemplateName("BeanServlet.java");
         public final static TemplateName ListLong = new TemplateName("ListLong.java");
         public final static TemplateName ListShort = new TemplateName("ListShort.java");
+        public final static TemplateName MapPrimitive = new TemplateName("MapPrimitive.java");
         public final static TemplateName MapLong = new TemplateName("MapLong.java");
         public final static TemplateName MapShort = new TemplateName("MapShort.java");
         public final static TemplateName WebXml = new TemplateName("web.xml");
@@ -212,7 +213,23 @@ public final class Main
                     gap.data.Map.Type mapType = gap.data.Map.Type.For(typeName);
                     if (null != mapType){
                         switch(mapType){
-                        case MapPrimitive:
+                        case MapPrimitive:{
+                                OD.MapChild mapChild = new OD.MapChild(field);
+                                String mapClassName = OD.MapPrimitiveClassName(parentClassName,mapChild);
+                                if (null != mapClassName){
+                                    File mapFile = new File(packagePath,mapClassName+".java");
+                                    PrintWriter out = new PrintWriter(new FileWriter(mapFile));
+                                    try {
+                                        OD.GenerateMapSource(TemplateNames.MapPrimitive, pack, imports, clas, field,
+                                                             parentClassName, mapClassName, mapType,
+                                                             mapChild, out);
+                                        products.add(mapFile);
+                                    }
+                                    finally {
+                                        out.close();
+                                    }
+                                }
+                            }
                             break;
                         case MapShort:{
                                 OD.MapChild mapChild = new OD.MapChild(field);

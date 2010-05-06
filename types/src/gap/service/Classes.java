@@ -543,7 +543,8 @@ public class Classes {
     }
     public final static boolean IsTypeClassList(java.lang.Class fieldType){
         if (null != fieldType)
-            return (gap.data.List.class.isAssignableFrom(fieldType));
+            return ((!gap.data.Map.class.isAssignableFrom(fieldType)) &&
+                    gap.data.List.class.isAssignableFrom(fieldType));
         else
             return false;
     }
@@ -643,6 +644,9 @@ public class Classes {
         else 
             return object.toString();
     }
+    public final static String PackageName(Primitive pd){
+        return pd.pkg;
+    }
     public final static String PackageName(PackageDescriptor pkg)
         throws ODStateException
     {
@@ -651,6 +655,9 @@ public class Classes {
             throw new ODStateException(pkg,"The object data model requires a package name.");
 
         return Decamel(packageName);
+    }
+    public final static String ClassName(Primitive pd){
+        return pd.local;
     }
     public final static String ClassName(ClassDescriptor cd)
         throws ODStateException
@@ -704,20 +711,30 @@ public class Classes {
     }
     public final static String MapClassName(String fieldType, String parentClassName, String typeComponentFrom, String typeComponentTo){
         gap.data.Map.Type mapType = gap.data.Map.Type.For(fieldType);
-        switch(mapType){
-        case MapPrimitive:
-            return MapPrimitiveClassName(parentClassName,typeComponentFrom,typeComponentTo);
-        case MapShort:
-            return MapShortClassName(parentClassName,typeComponentFrom,typeComponentTo);
-        case MapLong:
-            return MapLongClassName(parentClassName,typeComponentFrom,typeComponentTo);
-        default:
-            throw new IllegalStateException("Unrecognized type '"+fieldType+"'.");
+        if (null != mapType){
+            switch(mapType){
+            case MapPrimitive:
+                return MapPrimitiveClassName(parentClassName,typeComponentFrom,typeComponentTo);
+            case MapShort:
+                return MapShortClassName(parentClassName,typeComponentFrom,typeComponentTo);
+            case MapLong:
+                return MapLongClassName(parentClassName,typeComponentFrom,typeComponentTo);
+            default:
+                throw new IllegalStateException("Unrecognized type '"+fieldType+"'.");
+            }
         }
+        else
+            throw new IllegalStateException("Type '"+fieldType+"' requires qualifier {Map.Primitive,Map.Short,Map.Long}.");
+    }
+    public final static String MapPrimitiveClassName(String parentClassName, Classes.MapChild mapChild){
+        if (null != parentClassName && null != mapChild)
+            return MapPrimitiveClassName(parentClassName,mapChild.childKeyFieldType,mapChild.childValueClassName);
+        else
+            throw new IllegalArgumentException();
     }
     public final static String MapPrimitiveClassName(String parentClassName, String typeComponentFrom, String typeComponentTo){
         if (null != typeComponentFrom && null != typeComponentTo)
-            return "MapPrimitive"+typeComponentFrom+typeComponentTo;
+            return "MapPrimitive"+parentClassName+typeComponentFrom+typeComponentTo;
         else
             return null;
     }

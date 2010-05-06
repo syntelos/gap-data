@@ -38,8 +38,7 @@ import java.io.File;
  */
 public abstract class BigTable
     extends gap.hapax.AbstractData
-    implements java.io.Serializable,
-               DataInheritance.Notation
+    implements gap.data.TableClass
 {
 
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(String kind){
