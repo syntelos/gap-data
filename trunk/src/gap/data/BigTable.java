@@ -445,7 +445,7 @@ public abstract class BigTable
 
             if (IsNotKeyOrId(fieldName)){
 
-                if (field.isNotFieldTypeCollection()){
+                if (field.isFieldTypePrimitive()){
 
                     java.io.Serializable value = this.valueOf(field,MayNotInherit);
                     if (null != value){
@@ -455,7 +455,7 @@ public abstract class BigTable
                         else 
                             entity.setUnindexedProperty(fieldName, value);
                     }
-                    else //if (null != entity.getProperty(fieldName))//(redundant)
+                    else
                         entity.removeProperty(fieldName);
                 }
             }

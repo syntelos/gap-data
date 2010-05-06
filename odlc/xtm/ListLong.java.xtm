@@ -24,6 +24,7 @@ import {{=import_spec}};{{/import}}
 import gap.data.*;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.*;
 
 import java.io.Serializable;
 import java.util.Date;

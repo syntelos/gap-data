@@ -51,7 +51,8 @@ public enum Primitive {
     PostalAddress(com.google.appengine.api.datastore.PostalAddress.class),
     Rating(com.google.appengine.api.datastore.Rating.class),
     ShortBlob(com.google.appengine.api.datastore.ShortBlob.class),
-    Text(com.google.appengine.api.datastore.Text.class);
+    Text(com.google.appengine.api.datastore.Text.class),
+    BlobKey(com.google.appengine.api.blobstore.BlobKey.class);
 
 
     public final Class type;

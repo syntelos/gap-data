@@ -31,7 +31,7 @@ public interface Field<E extends Enum>
 {
 
     public static enum Type {
-        Primitive, BigTable, Collection;
+        Primitive, BigTable, Collection, PrimitiveCollection;
     }
 
     /**

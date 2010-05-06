@@ -64,6 +64,8 @@ public final class OD
         public final static TemplateName FieldClassCleanClean = new TemplateName("field_classCleanClean");
         public final static TemplateName FieldImplClassName = new TemplateName("field_impl_class_name");
         public final static TemplateName FieldIsCollection = new TemplateName("field_is_collection");
+        public final static TemplateName FieldIsPrimitiveCollection = new TemplateName("field_is_primitive_collection");
+        public final static TemplateName FieldIsNotPrimitiveCollection = new TemplateName("field_is_not_primitive_collection");
 
         public final static TemplateName FieldIsInheritable = new TemplateName("field_is_inheritable");
         public final static TemplateName FieldIsKey = new TemplateName("field_is_key");
@@ -692,18 +694,21 @@ public final class OD
                         gap.data.List.Type listType = gap.data.List.Type.For(fieldTypeClean);
                         switch(listType){
                         case ListPrimitive:
+                            dataField.addSection(TemplateNames.FieldIsPrimitiveCollection);
                             dataField.addSection(TemplateNames.FieldIsListPrimitive);
                             dataField.addSection(TemplateNames.FieldIsNotListLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotListLong);
                             dataField.addSection(TemplateNames.FieldIsNotListShort);
                             break;
                         case ListShort:
+                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
                             dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
                             dataField.addSection(TemplateNames.FieldIsListLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotListLong);
                             dataField.addSection(TemplateNames.FieldIsListShort);
                             break;
                         case ListLong:
+                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
                             dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
                             dataField.addSection(TemplateNames.FieldIsListLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsListLong);
@@ -740,18 +745,21 @@ public final class OD
                         OD.MapChild mapChild = new OD.MapChild(field);
                         switch(mapChild.mapType){
                         case MapPrimitive:
+                            dataField.addSection(TemplateNames.FieldIsPrimitiveCollection);
                             dataField.addSection(TemplateNames.FieldIsMapPrimitive);
                             dataField.addSection(TemplateNames.FieldIsNotMapLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotMapLong);
                             dataField.addSection(TemplateNames.FieldIsNotMapShort);
                             break;
                         case MapShort:
+                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
                             dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
                             dataField.addSection(TemplateNames.FieldIsMapLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsNotMapLong);
                             dataField.addSection(TemplateNames.FieldIsMapShort);
                             break;
                         case MapLong:
+                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
                             dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
                             dataField.addSection(TemplateNames.FieldIsMapLongOrShort);
                             dataField.addSection(TemplateNames.FieldIsMapLong);

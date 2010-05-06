@@ -28,6 +28,7 @@ import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.BlobKey;
 
 import java.util.Date;
 
@@ -423,7 +424,7 @@ public abstract class {{=class_name}}Data
         ParentKey("parentKey",Type.Primitive),{{/class_re_child_or_group}}
         Key("key",Type.Primitive),
         Id("id",Type.Primitive){{#field}},
-        {{=field_nameCamel}}("{{=field_name}}",Type.{{#field_is_primitive}}Primitive{{/field_is_primitive}}{{#field_is_bigTable}}BigTable{{/field_is_bigTable}}{{#field_is_collection}}Collection{{/field_is_collection}}){{/field}};
+        {{=field_nameCamel}}("{{=field_name}}",Type.{{#field_is_primitive}}Primitive{{/field_is_primitive}}{{#field_is_bigTable}}BigTable{{/field_is_bigTable}}{{#field_is_primitive_collection}}Primitive{{/field_is_primitive_collection}}{{#field_is_collection}}Collection{{/field_is_collection}}){{/field}};
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
@@ -531,6 +532,11 @@ public abstract class {{=class_name}}Data
                 }
                 else if (Type.Collection == fieldType){
                     this.fieldTypePrimitive = false;
+                    this.fieldTypeBigTable = false;
+                    this.fieldTypeCollection = true;
+                }
+                else if (Type.PrimitiveCollection == fieldType){
+                    this.fieldTypePrimitive = true;
                     this.fieldTypeBigTable = false;
                     this.fieldTypeCollection = true;
                 }
