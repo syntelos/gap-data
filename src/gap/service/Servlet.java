@@ -128,7 +128,9 @@ public class Servlet
     }
 
 
-
+    public String getMimeType(String filename){
+        return this.getServletConfig().getServletContext().getMimeType(filename);
+    }
     @Override
     public final void init(ServletConfig config) throws ServletException {
 
