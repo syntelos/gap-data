@@ -29,6 +29,8 @@ public class AbstractData
     extends Object
     implements TemplateDataDictionary
 {
+    protected final static List.Short<TemplateDataDictionary> EmptySection = new ArrayList<TemplateDataDictionary>();
+
     protected transient TemplateDataDictionary parent;
     protected transient lxl.Map<String,String> variables;
     protected transient lxl.Map<String,List.Short<TemplateDataDictionary>> sections;

@@ -423,11 +423,11 @@ public class Request
             case path:
             case accept:
             case fileManager:
-                return null;
+                return EmptySection;
             case parameters:
                 return this.parameters.getSection(new TemplateName(name));
             case userReference:
-                return null;
+                return EmptySection;
             case logon:
                 return this.logon.getSection(new TemplateName(name));
             case logonUrl:
@@ -436,7 +436,7 @@ public class Request
             case isAdmin:
             case isMember:
             case version:
-                return null;
+                return EmptySection;
             default:
                 throw new IllegalStateException(field.name());
             }
