@@ -445,7 +445,12 @@ public abstract class {{=class_name}}Data
         public static Field For(String name) {
             Field field = FieldName.get(name);
             if (null == field)
-                return Field.valueOf(name);
+                try {
+                    return Field.valueOf(name);
+                }
+                catch (IllegalArgumentException notFound){
+                    return null;
+                }
             else
                 return field;
         }
