@@ -27,6 +27,7 @@ import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.BlobKey;
 
 import java.util.Date;
 
@@ -37,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-05T15:34:00.706Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-06T21:00:08.030Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -311,7 +312,12 @@ public abstract class TemplateNodeData
         public static Field For(String name) {
             Field field = FieldName.get(name);
             if (null == field)
-                return Field.valueOf(name);
+                try {
+                    return Field.valueOf(name);
+                }
+                catch (IllegalArgumentException notFound){
+                    return null;
+                }
             else
                 return field;
         }
@@ -408,6 +414,11 @@ public abstract class TemplateNodeData
                 }
                 else if (Type.Collection == fieldType){
                     this.fieldTypePrimitive = false;
+                    this.fieldTypeBigTable = false;
+                    this.fieldTypeCollection = true;
+                }
+                else if (Type.PrimitiveCollection == fieldType){
+                    this.fieldTypePrimitive = true;
                     this.fieldTypeBigTable = false;
                     this.fieldTypeCollection = true;
                 }
@@ -640,14 +651,14 @@ public abstract class TemplateNodeData
             return false;
     }
     public final Text getNodeContent(){
-        return this.getNodeContent(MayInherit);
+        return this.getNodeContent(Notation.MayInherit);
     }
     public final Text getNodeContent(boolean mayInherit){
         if (mayInherit){
             Text nodeContent = this.nodeContent;
             if (null == nodeContent && this.hasInheritFrom()){
                 TemplateNode inheritFrom = this.getInheritFrom();
-                return inheritFrom.getNodeContent(MayInherit);
+                return inheritFrom.getNodeContent(Notation.MayInherit);
             }
             return nodeContent;
         }
@@ -685,14 +696,14 @@ public abstract class TemplateNodeData
             return false;
     }
     public final Integer getOffset(){
-        return this.getOffset(MayInherit);
+        return this.getOffset(Notation.MayInherit);
     }
     public final Integer getOffset(boolean mayInherit){
         if (mayInherit){
             Integer offset = this.offset;
             if (null == offset && this.hasInheritFrom()){
                 TemplateNode inheritFrom = this.getInheritFrom();
-                return inheritFrom.getOffset(MayInherit);
+                return inheritFrom.getOffset(Notation.MayInherit);
             }
             return offset;
         }
@@ -730,14 +741,14 @@ public abstract class TemplateNodeData
             return false;
     }
     public final Integer getOffsetCloseRelative(){
-        return this.getOffsetCloseRelative(MayInherit);
+        return this.getOffsetCloseRelative(Notation.MayInherit);
     }
     public final Integer getOffsetCloseRelative(boolean mayInherit){
         if (mayInherit){
             Integer offsetCloseRelative = this.offsetCloseRelative;
             if (null == offsetCloseRelative && this.hasInheritFrom()){
                 TemplateNode inheritFrom = this.getInheritFrom();
-                return inheritFrom.getOffsetCloseRelative(MayInherit);
+                return inheritFrom.getOffsetCloseRelative(Notation.MayInherit);
             }
             return offsetCloseRelative;
         }
@@ -834,7 +845,7 @@ public abstract class TemplateNodeData
         return change;
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
-        return ClassDescriptorFor(this.getClass());
+        return ClassDescriptorFor();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorForParent(){
         return ClassDescriptorForParent();

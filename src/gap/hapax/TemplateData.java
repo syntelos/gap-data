@@ -27,6 +27,7 @@ import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.BlobKey;
 
 import java.util.Date;
 
@@ -37,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-05T15:34:00.509Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-06T21:00:07.881Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -281,7 +282,12 @@ public abstract class TemplateData
         public static Field For(String name) {
             Field field = FieldName.get(name);
             if (null == field)
-                return Field.valueOf(name);
+                try {
+                    return Field.valueOf(name);
+                }
+                catch (IllegalArgumentException notFound){
+                    return null;
+                }
             else
                 return field;
         }
@@ -370,6 +376,11 @@ public abstract class TemplateData
                 }
                 else if (Type.Collection == fieldType){
                     this.fieldTypePrimitive = false;
+                    this.fieldTypeBigTable = false;
+                    this.fieldTypeCollection = true;
+                }
+                else if (Type.PrimitiveCollection == fieldType){
+                    this.fieldTypePrimitive = true;
                     this.fieldTypeBigTable = false;
                     this.fieldTypeCollection = true;
                 }
@@ -526,14 +537,14 @@ public abstract class TemplateData
             return false;
     }
     public final Long getLastModified(){
-        return this.getLastModified(MayInherit);
+        return this.getLastModified(Notation.MayInherit);
     }
     public final Long getLastModified(boolean mayInherit){
         if (mayInherit){
             Long lastModified = this.lastModified;
             if (null == lastModified && this.hasInheritFrom()){
                 Template inheritFrom = this.getInheritFrom();
-                return inheritFrom.getLastModified(MayInherit);
+                return inheritFrom.getLastModified(Notation.MayInherit);
             }
             return lastModified;
         }
@@ -571,14 +582,14 @@ public abstract class TemplateData
             return false;
     }
     public final Text getTemplateSourceHapax(){
-        return this.getTemplateSourceHapax(MayInherit);
+        return this.getTemplateSourceHapax(Notation.MayInherit);
     }
     public final Text getTemplateSourceHapax(boolean mayInherit){
         if (mayInherit){
             Text templateSourceHapax = this.templateSourceHapax;
             if (null == templateSourceHapax && this.hasInheritFrom()){
                 Template inheritFrom = this.getInheritFrom();
-                return inheritFrom.getTemplateSourceHapax(MayInherit);
+                return inheritFrom.getTemplateSourceHapax(Notation.MayInherit);
             }
             return templateSourceHapax;
         }
@@ -618,7 +629,7 @@ public abstract class TemplateData
             return false;
     }
     public final List.Short<TemplateNode> getTemplateTargetHapax(){
-        return this.getTemplateTargetHapax(MayInherit);
+        return this.getTemplateTargetHapax(Notation.MayInherit);
     }
     public final List.Short<TemplateNode> getTemplateTargetHapax(boolean mayInherit){
         List.Short<TemplateNode> templateTargetHapax = this.templateTargetHapax;
@@ -626,7 +637,7 @@ public abstract class TemplateData
             if (mayInherit && this.hasInheritFrom()){
                 Template inheritFrom = this.getInheritFrom();
                 if (null != inheritFrom){
-                    templateTargetHapax = inheritFrom.getTemplateTargetHapax(MayInherit);
+                    templateTargetHapax = inheritFrom.getTemplateTargetHapax(Notation.MayInherit);
                     if (null != templateTargetHapax)
                         return templateTargetHapax;
                 }
@@ -661,7 +672,7 @@ public abstract class TemplateData
     }
     public final TemplateNode fetchTemplateTargetHapax(Filter filter){
         if (null != filter && KIND == filter.kind){
-            List.Short<TemplateNode> collection = this.getTemplateTargetHapax(MayInherit);
+            List.Short<TemplateNode> collection = this.getTemplateTargetHapax(Notation.MayInherit);
             return collection.fetch(filter);
         }
         else
@@ -669,7 +680,7 @@ public abstract class TemplateData
     }
     public final TemplateNode getTemplateTargetHapax(gap.data.ListFilter<TemplateNode> filter){
         if (null != filter){
-            List.Short<TemplateNode> list = this.getTemplateTargetHapax(MayInherit);
+            List.Short<TemplateNode> list = this.getTemplateTargetHapax(Notation.MayInherit);
             for (TemplateNode item : list){
                 if (filter.accept(item))
                     return item;
@@ -739,7 +750,7 @@ public abstract class TemplateData
         return change;
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
-        return ClassDescriptorFor(this.getClass());
+        return ClassDescriptorFor();
     }
     /*
      * Template Data Dictionary

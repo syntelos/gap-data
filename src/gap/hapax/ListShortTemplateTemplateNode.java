@@ -26,6 +26,7 @@ import gap.service.*;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -34,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2010-05-05T15:34:00.693Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2010-05-06T21:00:08.017Z")
 public final class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>

@@ -27,6 +27,7 @@ import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.BlobKey;
 
 import java.util.Date;
 
@@ -37,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-05T15:33:59.824Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-06T21:00:07.260Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -276,7 +277,12 @@ public abstract class PersonData
         public static Field For(String name) {
             Field field = FieldName.get(name);
             if (null == field)
-                return Field.valueOf(name);
+                try {
+                    return Field.valueOf(name);
+                }
+                catch (IllegalArgumentException notFound){
+                    return null;
+                }
             else
                 return field;
         }
@@ -353,6 +359,11 @@ public abstract class PersonData
                 }
                 else if (Type.Collection == fieldType){
                     this.fieldTypePrimitive = false;
+                    this.fieldTypeBigTable = false;
+                    this.fieldTypeCollection = true;
+                }
+                else if (Type.PrimitiveCollection == fieldType){
+                    this.fieldTypePrimitive = true;
                     this.fieldTypeBigTable = false;
                     this.fieldTypeCollection = true;
                 }
@@ -516,7 +527,7 @@ public abstract class PersonData
         return change;
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
-        return ClassDescriptorFor(this.getClass());
+        return ClassDescriptorFor();
     }
     /*
      * Template Data Dictionary
