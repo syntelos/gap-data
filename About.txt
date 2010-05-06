@@ -1,0 +1,14 @@
+
+The package in 'types' shares common code with 'odlc' and 'trunk'.
+
+The 'odlc' package is a command line / ant tool for generating JPL
+source code from the templates defined in 'odlc/xtm'.  This tool is
+copied (as a jar file containing xtm) to applications' 'ant' directory
+for generating code from ODL schemae.
+
+The 'trunk' package implements the Gap Data runtime.
+
+The 'yastwsstream' package is an example application.  May be rusty
+(out of sync) at times.
+
+The 'yusu' package is used by 'yastwsstream' for the twitter api.

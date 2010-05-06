@@ -1,5 +1,9 @@
                                                 -*-outline-*-
 
+* collection types (work remains)
+
+* template data interfaces for gap/service/Login
+
 * Integrate collection+bigtable type fields with get section in BeanData.java.xtm 
 
 * Type must be primitive or bigtable (class descriptor) or exception not pass

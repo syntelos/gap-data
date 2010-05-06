@@ -3,3 +3,6 @@
 * Move permissions and BigTable interfaces into types
 ** Admin*.java
 
+* Work remains for collections types, list and map
+** odlc/xtm
+** types & trunk 
