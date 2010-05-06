@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-04T17:45:09.869Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-05T15:34:00.706Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -772,7 +772,7 @@ public abstract class TemplateNodeData
     public final gap.data.List<gap.data.Field> getClassFields(){
         gap.data.List re = new TemplateNode.Field.List(Field.values());
         /*
-         * hack a compiler bug: has a Field type astigmatism
+         * Compiler has a type astigmatism (parameterized interface gap.data.Field)
          */
         return (gap.data.List<gap.data.Field>)re;
     }

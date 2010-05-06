@@ -24,12 +24,14 @@ import gap.data.*;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
+import java.io.Serializable;
+
 /**
  * 
  * 
  * @author jdp
  */
-public abstract class AbstractMapPrimitive<K,V>
+public abstract class AbstractMapPrimitive<K extends Comparable,V extends Serializable>
     extends AbstractListPrimitive<V>
     implements Map.Primitive<K,V>
 {
@@ -42,10 +44,10 @@ public abstract class AbstractMapPrimitive<K,V>
     }
 
 
-    public AbstractMapPrimitive clone(){
-        AbstractMapPrimitive clone = (AbstractMapPrimitive)super.clone();
+    public Map<K,V> clone(){
+        AbstractMapPrimitive<K,V> clone = (AbstractMapPrimitive<K,V>)super.clone();
         if (null != this.index)
-            clone.index = this.index.clone();
+            clone.index = (Index)this.index.clone();
         return clone;
     }
 }
