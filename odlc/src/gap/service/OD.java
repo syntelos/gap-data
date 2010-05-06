@@ -210,29 +210,7 @@ public final class OD
             TemplateRenderer template = Templates.GetTemplate(xtm);
             TemplateDataDictionary top = new gap.hapax.AbstractData();
             TemplateDataDictionary servlet;
-            /*
-             * Defaults
-             */
-            servlet = top.addSection(TemplateNames.WebXmlSection);
-            servlet.setVariable(TemplateNames.WebXmlSectionName,"Site");
-            servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Site");
-            servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/*");
-            servlet.setVariable(TemplateNames.WebXmlSectionLoad,"1");
 
-            servlet = top.addSection(TemplateNames.WebXmlSection);
-            servlet.setVariable(TemplateNames.WebXmlSectionName,"Source");
-            servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Source");
-            servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/src/*");
-            servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
-
-            servlet = top.addSection(TemplateNames.WebXmlSection);
-            servlet.setVariable(TemplateNames.WebXmlSectionName,"Inspect");
-            servlet.setVariable(TemplateNames.WebXmlSectionClass,"gap.servlet.Inspect");
-            servlet.setVariable(TemplateNames.WebXmlSectionUrl,"/inspect/*");
-            servlet.setVariable(TemplateNames.WebXmlSectionLoad,"-1");
-            /*
-             * Generated
-             */
             for (ClassName servletClassName : servlets){
                 ClassDescriptor cd = Classes.ForServlet(servletClassName.getName());
                 if (null != cd){
