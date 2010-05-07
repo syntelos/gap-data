@@ -433,8 +433,17 @@ public class Request
             case logonUrl:
             case logonText:
             case contentType:
+                return EmptySection;
             case isAdmin:
+                if (this.isAdmin)
+                    return EmptySection;
+                else
+                    return null;
             case isMember:
+                if (this.isMember)
+                    return EmptySection;
+                else
+                    return null;
             case version:
                 return EmptySection;
             default:
