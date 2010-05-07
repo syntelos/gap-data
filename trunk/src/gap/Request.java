@@ -154,6 +154,18 @@ public class Request
             this.logonUrl = logon.getLoginURL();
             this.logonText = "Sign-in";
         }
+        /* TODO
+         * 
+         * Prefer a pull on page.* and sort.* instead of the following
+         * push (on *).
+         * 
+         * As of this writing, parameters.page.* and parameters.sort.*
+         * are not hooked up.
+         * 
+         * Paging and Sorting should be hooked up via Store and
+         * BeanData.xtm Query methods on 'Request' or 'Parameters'.
+         */
+        this.parameters.dictionaryInto(this);
 
         RTL.set(this);
     }

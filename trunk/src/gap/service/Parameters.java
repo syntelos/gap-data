@@ -350,12 +350,12 @@ public final class Parameters
                     sortOrder = Query.SortDirection.valueOf(sortOrderP[0].toUpperCase());
 
                     if (null == sortOrder)
-                        this.sortOrder = Query.SortDirection.DESCENDING;
+                        this.sortOrder = Query.SortDirection.ASCENDING;
                     else
                         this.sortOrder = sortOrder;
                 }
                 else
-                    this.sortOrder = Query.SortDirection.DESCENDING;
+                    this.sortOrder = Query.SortDirection.ASCENDING;
             }
 
 
