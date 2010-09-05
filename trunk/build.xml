@@ -40,6 +40,11 @@
       <include name="**/*.jar" />
     </fileset>
   </path>
+  <path id="lib.path.types">
+    <fileset dir="${lib}">
+      <include name="**/gap-data-types-*.jar" />
+    </fileset>
+  </path>
 
   <path id="odl.path">
     <fileset dir="ant">
@@ -82,9 +87,7 @@
 
     <archive target="${target.jar}" bin="${bin}" manifest="${src}/Manifest.mf">
       <pack>
-        <zipfileset dir="${lib}">
-          <include name="**/gap-data-types-*.jar" />
-        </zipfileset>
+        <zipfileset src="${toString:lib.path.types}" />
       </pack>
     </archive>
 
