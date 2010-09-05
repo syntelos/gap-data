@@ -299,8 +299,24 @@ public final class OD
                         throw new TemplateException("In template '"+xtm.source+"'.",exc);
                     }
                 }
-                else 
-                    throw new TemplateException("Child class descriptor not found for name '"+childClassName+"'.");
+                else {
+                    Class uclass = FieldClass(PackageName(pkg),childClassName,imports);
+                    if (null != uclass){
+
+                        DefineClass(pkg,uclass,imports,top,TemplateNames.PrefixChild);
+
+                        top.setVariable(TemplateNames.ListClassName,listClassName);
+
+                        try {
+                            template.render(top,out); 
+                        }
+                        catch (TemplateException exc){
+                            throw new TemplateException("In template '"+xtm.source+"'.",exc);
+                        }
+                    }
+                    else
+                        throw new TemplateException("Child class descriptor not found for name '"+childClassName+"'.");
+                }
             }
                 break;
             }
@@ -369,8 +385,27 @@ public final class OD
                         throw new TemplateException("In template '"+xtm.source+"'.",exc);
                     }
                 }
-                else 
-                    throw new TemplateException("Child class descriptor not found for name '"+mapChild.childValueClassName+"'.");
+                else {
+                    Class uclass = FieldClass(PackageName(pkg),mapChild.childValueClassName,imports);
+                    if (null != uclass){
+
+                        DefineClass(pkg,uclass,imports,top,TemplateNames.PrefixChild);
+
+                        top.setVariable(TemplateNames.MapClassName,mapClassName);
+                        top.setVariable(TemplateNames.MapKeyType,mapChild.childKeyFieldType);
+                        top.setVariable(TemplateNames.MapKeyFieldName,mapChild.childKeyFieldName);
+                        top.setVariable(TemplateNames.MapKeyFieldNameCamel,Camel(mapChild.childKeyFieldName));
+
+                        try {
+                            template.render(top,out); 
+                        }
+                        catch (TemplateException exc){
+                            throw new TemplateException("In template '"+xtm.source+"'.",exc);
+                        }
+                    }
+                    else
+                        throw new TemplateException("Child class descriptor not found for name '"+mapChild.childValueClassName+"'.");
+                }
             }
                 break;
             }
@@ -405,6 +440,22 @@ public final class OD
     {
         String packageName = PackageName(pd);
         String className = ClassName(pd);
+        String classNameDecamel = Decamel(className);
+        /*
+         * Class globals
+         */
+        top.setVariable(new TemplateName(prefix,"package_name"), packageName);
+        top.setVariable(new TemplateName(prefix,"class_name"), className);
+        top.setVariable(new TemplateName(prefix,"class_nameDecamel"), classNameDecamel);
+    }
+    /**
+     * User class
+     */
+    public final static void DefineClass(PackageDescriptor pkg, Class uclass, lxl.List<ImportDescriptor> imports, TemplateDataDictionary top, TemplateName prefix)
+        throws ODStateException, IOException
+    {
+        String packageName = PackageName(uclass);
+        String className = ClassName(uclass);
         String classNameDecamel = Decamel(className);
         /*
          * Class globals

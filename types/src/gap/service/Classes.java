@@ -656,6 +656,16 @@ public class Classes {
 
         return Decamel(packageName);
     }
+    public final static String PackageName(Class uc)
+        throws ODStateException
+    {
+        String className = uc.getName();
+        int idx = className.lastIndexOf('.');
+        if (-1 != idx)
+            return className.substring(0,idx);
+        else
+            return null;
+    }
     public final static String ClassName(Primitive pd){
         return pd.local;
     }
@@ -665,6 +675,16 @@ public class Classes {
         String className = cd.getName();
         if (null == className || 0 == className.length())
             throw new ODStateException(cd,"The object data model requires a class name.");
+        else
+            return Camel(className);
+    }
+    public final static String ClassName(Class uc)
+        throws ODStateException
+    {
+        String className = uc.getName();
+        int idx = className.lastIndexOf('.');
+        if (-1 != idx)
+            return Camel(className.substring(idx+1));
         else
             return Camel(className);
     }

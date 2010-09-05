@@ -1,3 +1,5 @@
 #summary Principal elements of the future course of development
 
- The direction is for web based application development, with a commercial component to be developed.
+= TODO =
+* Documentation, esp ODL
+* Application installation
