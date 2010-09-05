@@ -313,7 +313,11 @@ public class Servlet
             return;
         }
     }
-
+    protected TemplateRenderer getTemplate(Request req)
+        throws TemplateException
+    {
+        return req.getTemplate();
+    }
     protected void doGet(Request req, Response rep)
         throws ServletException, IOException
     {
@@ -327,7 +331,7 @@ public class Servlet
         }
         else {
             try {
-                TemplateRenderer template = req.getTemplate();
+                TemplateRenderer template = this.getTemplate(req);
                 if (null != template){
                     this.render(req,rep,template);
                     return ;
