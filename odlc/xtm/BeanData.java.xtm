@@ -821,7 +821,7 @@ public abstract class {{=class_name}}Data
                         return {{=field_name}};
                 }
             }
-            {{=field_name}} = new {{=field_impl_class_name}}(({{=class_name}})this);
+            {{=field_name}} = ({{=field_class}})(new {{=field_impl_class_name}}(({{=class_name}})this));
             this.{{=field_name}} = {{=field_name}};
             {{=field_name}}.init();
         }
