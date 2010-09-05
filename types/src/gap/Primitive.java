@@ -119,4 +119,10 @@ public enum Primitive {
             }
         }
     }
+    public final static Primitive For(String name, Class type){
+        if (null != type)
+            return Primitive.For(type);
+        else
+            return Primitive.For(name);
+    }
 }
