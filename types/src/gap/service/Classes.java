@@ -289,6 +289,10 @@ public class Classes {
         String typeName = Classes.ToString(field.getType());
         return Classes.FieldClass(packageName,typeName,imports);
     }
+    public final static Class FieldClass(PackageDescriptor pkg, String typeName, lxl.List<ImportDescriptor> imports){
+        String packageName = Classes.PackageName(pkg);
+        return Classes.FieldClass(packageName,typeName,imports);
+    }
     public final static Class FieldClass(String pkg, String fieldType, lxl.List<ImportDescriptor> imports){
         String cleanTypeName = CleanTypeName(fieldType);
         Primitive primitive = Primitive.For(cleanTypeName);
@@ -688,22 +692,29 @@ public class Classes {
         else
             return Camel(className);
     }
-    public final static String ListClassName(String fieldType, String parentClassName, String childClassName){
+    /**
+     * Accepting user primitives enum and date by requiring child type
+     * to be Primitive or ClassDescriptor.
+     * @param fieldType
+     * @param parentClassName
+     * @param childType One of either gap.Primitive or gap.service.od.ClassDescriptor
+     */
+    public final static String ListClassName(String fieldType, String parentClassName, Object childType){
         gap.data.List.Type listType = gap.data.List.Type.For(fieldType);
         switch(listType){
         case ListPrimitive:
-            return ListPrimitiveClassName(childClassName);
+            return ListPrimitiveClassName((Primitive)childType);
         case ListShort:
-            return ListShortClassName(parentClassName,childClassName);
+            return ListShortClassName(parentClassName,((ClassDescriptor)childType).getName());
         case ListLong:
-            return ListLongClassName(parentClassName,childClassName);
+            return ListLongClassName(parentClassName,((ClassDescriptor)childType).getName());
         default:
             throw new IllegalStateException("Unrecognized type '"+fieldType+"'.");
         }
     }
-    public final static String ListPrimitiveClassName(String childClassName){
-        if (null != childClassName)
-            return "ListPrimitive"+childClassName;
+    public final static String ListPrimitiveClassName(Primitive childType){
+        if (null != childType)
+            return "ListPrimitive"+childType.name();
         else
             return null;
     }

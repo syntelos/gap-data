@@ -780,20 +780,32 @@ public final class OD
                             break;
                         }
 
-                        String typeComponent = fieldTypeParameters[0];
-                        dataField.setVariable(TemplateNames.FieldListComponent,typeComponent);
+                        String typeParameter = fieldTypeParameters[0];
+                        dataField.setVariable(TemplateNames.FieldListComponent,typeParameter);
 
-                        if (IsTypeOf(typeComponent,"HasName"))
+                        if (IsTypeOf(typeParameter,"HasName"))
                             dataField.addSection(TemplateNames.FieldListComponentNamed);
 
-                        ClassDescriptor component = Classes.For(typeComponent);
+                        ClassDescriptor component = Classes.For(typeParameter);
                         if (null != component){
                             String componentKind = ClassKind(component);
                             if (null != componentKind)
                                 dataField.setVariable(TemplateNames.FieldListComponentKind,componentKind);
-                        }
 
-                        dataField.setVariable(TemplateNames.FieldImplClassName,ListClassName(fieldTypeClean,className,typeComponent));
+                            dataField.setVariable(TemplateNames.FieldImplClassName,ListClassName(fieldTypeClean,className,component));
+                        }
+                        else {
+                            Class componentClass = FieldClass(pkg,typeParameter,imports);
+                            if (null != componentClass){
+                                Primitive primitive = Primitive.For(componentClass);
+                                if (null != primitive)
+                                    dataField.setVariable(TemplateNames.FieldImplClassName,ListClassName(fieldTypeClean,className,primitive));
+                                else
+                                    throw new ODStateException(field,"Field '"+fieldName+"' in '"+listType.name()+"' expected primitive component type '"+typeParameter+"'.");
+                            }
+                            else
+                                throw new ODStateException(field,"Field '"+fieldName+"' in '"+listType.name()+"' unable to resolve class of component type '"+typeParameter+"'.");
+                        }
                     }
                     else
                         throw new ODStateException(field,"Field '"+fieldName+"' type list missing type parameter.");

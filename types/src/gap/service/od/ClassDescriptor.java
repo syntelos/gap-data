@@ -176,7 +176,8 @@ public interface ClassDescriptor
     public lxl.List<MethodDescriptor> getMethods();
 
     /**
-     * field 'definitionClassName' is employed by the OD service.
+     * Field 'definitionClassName' is employed by the OD service for
+     * the fully qualified class name.
      */
     public boolean hasDefinitionClassName();
 
