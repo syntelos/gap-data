@@ -28,6 +28,10 @@ package gap;
  * context -- before being stored.  Stored incomplete keys have a name
  * component and are retrieved for a unique value.
  * 
+ * <h3>Extensible user types</h3>
+ * 
+ * User primitives include the extensible types enum and date.
+ * 
  * 
  * @author jdp
  */
@@ -41,6 +45,7 @@ public enum Primitive {
     Float(java.lang.Float.class),
     Double(java.lang.Double.class),
     Date(java.util.Date.class),
+    Enum(java.lang.Enum.class),
     Blob(com.google.appengine.api.datastore.Blob.class),
     Category(com.google.appengine.api.datastore.Category.class),
     Email(com.google.appengine.api.datastore.Email.class),
@@ -74,7 +79,14 @@ public enum Primitive {
         return (null != Primitive.For(name));
     }
     public final static boolean Is(Class type){
-        return (null != Primitive.For(type));
+        if (null != Primitive.For(type))
+            return true;
+        else if (Enum.type.isAssignableFrom(type))
+            return true;
+        else if (Date.type.isAssignableFrom(type))
+            return true;
+        else
+            return false;
     }
     private final static java.util.Map<String,Primitive> Map = new java.util.HashMap<String,Primitive>();
     static {
@@ -83,10 +95,16 @@ public enum Primitive {
         }
     }
     public final static Primitive For(Class type){
-        if (null != type)
-            return Map.get(type.getName());
-        else
-            return null;
+        if (null != type){
+            Primitive p = Map.get(type.getName());
+            if (null != p)
+                return p;
+            else if (Enum.type.isAssignableFrom(type))
+                return Primitive.Enum;
+            else if (Date.type.isAssignableFrom(type))
+                return Primitive.Date;
+        }
+        return null;
     }
     public final static Primitive For(String name){
         Primitive type = Map.get(name);
