@@ -26,6 +26,13 @@
     </fileset>
   </path>
 
+  <path id="lib.path.types">
+
+    <fileset dir="${lib}">
+      <include name="**/gap-data-types-*.jar" />
+    </fileset>
+  </path>
+
   <property name="gd.sdk"      value="../trunk"/>
   <property name="gae.sdk.top" value="${gd.sdk}/appengine-java-sdk"/>
   <property file="${gae.sdk.top}/current.properties" />
@@ -87,7 +94,9 @@
     </copy>
 
     <archive target="${target.jar}" bin="${bin}" manifest="${src}/Manifest.mf">
-      <pack/>
+      <pack>
+        <zipfileset src="${toString:lib.path.types}" />
+      </pack>
     </archive>
 
     <flush dir="${bin}" type="class"/>
