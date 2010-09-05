@@ -261,6 +261,8 @@ public final class OD
 
             DefinePrimitives(top);
 
+            DefineImports(top,imports);
+
             DefineClass(pkg,parent,imports,top,TemplateNames.PrefixParent);
 
             switch(listType){
@@ -342,6 +344,8 @@ public final class OD
             DefineDescription(xtm,top);
 
             DefinePrimitives(top);
+
+            DefineImports(top,imports);
 
             DefineClass(pkg,parent,imports,top,TemplateNames.PrefixParent);
 
@@ -430,6 +434,20 @@ public final class OD
             primitive.setVariable(TemplateNames.NameCamel,type_name);
             primitive.setVariable(TemplateNames.NameDecamel,Decamel(type_name));
             primitive.addSection(new TemplateName(type_name));
+        }
+    }
+    public final static void DefineImports(TemplateDataDictionary top, lxl.List<ImportDescriptor> imports){
+
+        DefineImports(top,imports,null);
+    }
+    public final static void DefineImports(TemplateDataDictionary top, lxl.List<ImportDescriptor> imports, TemplateName prefix){
+
+        for (ImportDescriptor imp : imports){
+            TemplateDataDictionary imd = top.addSection(new TemplateName(prefix,"import"));
+            if (imp.hasPackageSpec())
+                imd.setVariable(TemplateNames.ImportSpec,imp.getPackageSpec());
+            else if (imp.hasClassName())
+                imd.setVariable(TemplateNames.ImportSpec,imp.getClassName());
         }
     }
     /**
@@ -557,14 +575,11 @@ public final class OD
         /*
          * Imports
          */
-        for (ImportDescriptor imp : imports){
-            TemplateDataDictionary imd = top.addSection(new TemplateName(prefix,"import"));
-            if (imp.hasPackageSpec())
-                imd.setVariable(TemplateNames.ImportSpec,imp.getPackageSpec());
-            else if (imp.hasClassName())
-                imd.setVariable(TemplateNames.ImportSpec,imp.getClassName());
-        }
+        DefineImports(top,imports,prefix);
 
+        /*
+         * Interfaces
+         */
         String[] interfaces = ClassImplements(cd);
         for (String inf : interfaces){
             TemplateDataDictionary ind = top.addSection(new TemplateName(prefix,"implements"));
