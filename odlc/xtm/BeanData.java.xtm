@@ -821,7 +821,10 @@ public abstract class {{=class_name}}Data
                         return {{=field_name}};
                 }
             }
-            {{=field_name}} = ({{=field_class}})(new {{=field_impl_class_name}}(({{=class_name}})this));
+            {
+                Object tmp = new {{=field_impl_class_name}}(({{=class_name}})this);
+                {{=field_name}} = ({{=field_class}})tmp;
+            }
             this.{{=field_name}} = {{=field_name}};
             {{=field_name}}.init();
         }
