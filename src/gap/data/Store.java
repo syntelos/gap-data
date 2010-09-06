@@ -20,7 +20,6 @@
 package gap.data;
 
 import gap.service.Logon;
-import gap.util.AbstractListPrimitive;
 import gap.util.Page;
 
 import javax.cache.Cache;

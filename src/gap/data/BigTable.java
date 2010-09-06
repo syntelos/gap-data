@@ -447,16 +447,29 @@ public abstract class BigTable
 
                 if (field.isFieldTypePrimitive()){
 
-                    java.io.Serializable value = this.valueOf(field,MayNotInherit);
-                    if (null != value){
+                    if (field.isFieldTypeCollection()){
+                        java.io.Serializable value = this.valueOf(field,MayNotInherit);
+                        if (null != value){
 
-                        if (IsIndexed(value))
-                            entity.setProperty(fieldName, value);
-                        else 
+                            value = Serialize.To(field,value);
+
                             entity.setUnindexedProperty(fieldName, value);
+                        }
+                        else
+                            entity.removeProperty(fieldName);
                     }
-                    else
-                        entity.removeProperty(fieldName);
+                    else {
+                        java.io.Serializable value = this.valueOf(field,MayNotInherit);
+                        if (null != value){
+
+                            if (IsIndexed(value))
+                                entity.setProperty(fieldName, value);
+                            else 
+                                entity.setUnindexedProperty(fieldName, value);
+                        }
+                        else
+                            entity.removeProperty(fieldName);
+                    }
                 }
             }
             else
@@ -470,7 +483,19 @@ public abstract class BigTable
 
             java.io.Serializable object = (java.io.Serializable)entity.getProperty(field.getFieldName());
 
-            this.define(field,object);
+            if (field.isFieldTypePrimitive()){
+
+                if (field.isFieldTypeCollection()){
+
+                    object = Serialize.From(field, (Blob)object);
+
+                    this.define(field,object);
+                }
+                else
+                    this.define(field,object);
+            }
+            else
+                this.define(field,object);
         }
         this.setKey(entity.getKey());
         return entity;

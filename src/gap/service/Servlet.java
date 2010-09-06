@@ -322,30 +322,15 @@ public class Servlet
         throws ServletException, IOException
     {
         if (req.hasNotSource()){
-            if (req.acceptHtml()){
+
+            if (req.acceptHtml())
+
                 rep.sendRedirect("/index.html");
-                return;
-            }
             else
                 this.error(req,rep,404,"Not found");
         }
-        else {
-            try {
-                TemplateRenderer template = this.getTemplate(req);
-                if (null != template){
-                    this.render(req,rep,template);
-                    return ;
-                }
-            }
-            catch (TemplateException exc){
-                LogRecord rec = new LogRecord(Level.SEVERE,req.userReference);
-                rec.setThrown(exc);
-                Servlet.Log.log(rec);
-                this.error(req,rep,500,"Template error",exc);
-                return;
-            }
-            this.error(req,rep,404,"Not found");
-        }
+        else 
+            this.render(req,rep);
     }
     protected void doPost(Request req, Response rep)
         throws ServletException, IOException
@@ -460,6 +445,26 @@ public class Servlet
         throws ServletException, IOException
     {
         this.error(req,rep,HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+req.getMethod()+"' not implemented");
+    }
+    protected final void render(Request req, Response rep)
+        throws IOException, ServletException, TemplateException
+    {
+
+        try {
+            TemplateRenderer template = this.getTemplate(req);
+            if (null != template){
+                this.render(req,rep,template);
+            }
+            else {
+                this.error(req,rep,404,"Not found");
+            }
+        }
+        catch (TemplateException exc){
+            LogRecord rec = new LogRecord(Level.SEVERE,req.userReference);
+            rec.setThrown(exc);
+            Servlet.Log.log(rec);
+            this.error(req,rep,500,"Template error",exc);
+        }
     }
     protected final void render(Request req, Response rep, String templateName)
         throws IOException, ServletException, TemplateException
