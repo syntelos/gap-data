@@ -136,17 +136,15 @@ public abstract class AbstractListPrimitive<V>
     }
     public final List.Primitive<V> add(V instance){
         if (null != instance){
-            if (this.containsNot(instance)){
-                Object[] list = this.list;
-                if (null == list)
-                    this.list = new Object[]{instance};
-                else {
-                    int len = list.length;
-                    Object[] copier = new Object[len+1];
-                    System.arraycopy(list,0,copier,0,len);
-                    copier[len] = instance;
-                    this.list = copier;
-                }
+            Object[] list = this.list;
+            if (null == list)
+                this.list = new Object[]{instance};
+            else {
+                int len = list.length;
+                Object[] copier = new Object[len+1];
+                System.arraycopy(list,0,copier,0,len);
+                copier[len] = instance;
+                this.list = copier;
             }
             return this;
         }
