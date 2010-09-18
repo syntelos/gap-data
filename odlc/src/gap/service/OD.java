@@ -729,7 +729,7 @@ public final class OD
                 else {
                     dataField.addSection(TemplateNames.FieldIsNotPrimitive);
                     if (IsTypeClassBigTable(fieldTypeClassDescriptor,fieldTypeClass)){
-                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,fieldType+".FromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,FullClassName(fieldTypeClassDescriptor,fieldTypeClass)+".FromObject(");
                         dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
                         dataField.addSection(TemplateNames.FieldIsBigTable);
                     }

@@ -673,7 +673,7 @@ public class Servlet
 
     protected final static void VersionTxt(PrintWriter out){
 
-        out.printf("%s %s%n",gap.Version.Name,gap.Version.Long);
+        out.printf("%s/%s%n",gap.Version.Name,gap.Version.Long);
 
     }
     protected final static void SystemTxt(PrintWriter out){

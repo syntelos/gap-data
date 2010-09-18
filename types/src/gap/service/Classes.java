@@ -152,6 +152,10 @@ public class Classes {
         else
             return null;
     }
+    public final static PackageDescriptor PackageFor(ClassDescriptor gclass)
+    {
+        return PackageFor(gclass,null);
+    }
     public final static PackageDescriptor PackageFor(ClassDescriptor gclass, PackageDescriptor scope){
         if (gclass instanceof ClassDescriptor.WithPackage){
             ClassDescriptor.WithPackage pclass = (ClassDescriptor.WithPackage)gclass;
@@ -702,6 +706,15 @@ public class Classes {
         else
             return null;
     }
+    public final static String PackageName(ClassDescriptor cd)
+        throws ODStateException
+    {
+        PackageDescriptor pd = PackageFor(cd);
+        if (null != pd)
+            return pd.getName();
+        else
+            throw new ODStateException(cd,"The object data model requires a package name.");
+    }
     public final static String ClassName(Primitive pd){
         return pd.local;
     }
@@ -723,6 +736,14 @@ public class Classes {
             return Camel(className.substring(idx+1));
         else
             return Camel(className);
+    }
+    public final static String FullClassName(ClassDescriptor cd, java.lang.Class jclass){
+        if (null != jclass)
+            return jclass.getName();
+        else if (null != cd)
+            return PackageName(cd) +'.'+ ClassName(cd);
+        else
+            throw new IllegalStateException();
     }
     /**
      * Accepting user primitives enum and date by requiring child type
