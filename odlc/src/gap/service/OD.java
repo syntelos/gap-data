@@ -271,7 +271,7 @@ public final class OD
             case ListPrimitive:{
                 Primitive child = Primitive.For(childClassName,childClass);
                 if (null != child){
-                    DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
+                    DefineClass(PackageFor(child,childClass),child,ImportsFor(child,parent,imports),top,TemplateNames.PrefixChild);
 
                     top.setVariable(TemplateNames.ListClassName,listClassName);
 
@@ -292,7 +292,7 @@ public final class OD
                 ClassDescriptor child = Classes.For(childClassName);
                 if (null != child){
 
-                    DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
+                    DefineClass(PackageFor(child,pkg),child,ImportsFor(child,imports),top,TemplateNames.PrefixChild);
 
                     top.setVariable(TemplateNames.ListClassName,listClassName);
 
@@ -354,7 +354,7 @@ public final class OD
             case MapPrimitive:{
                 Primitive child = Primitive.For(mapChild.childValueClassName,childClass);
                 if (null != child){
-                    DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
+                    DefineClass(PackageFor(child,childClass),child,ImportsFor(child,parent,imports),top,TemplateNames.PrefixChild);
 
                     top.setVariable(TemplateNames.MapClassName,mapClassName);
                     top.setVariable(TemplateNames.MapKeyType,mapChild.childKeyFieldType);
@@ -376,7 +376,7 @@ public final class OD
                 ClassDescriptor child = Classes.For(mapChild.childValueClassName);
                 if (null != child){
 
-                    DefineClass(pkg,child,imports,top,TemplateNames.PrefixChild);
+                    DefineClass(PackageFor(child,pkg),child,ImportsFor(child,imports),top,TemplateNames.PrefixChild);
 
                     top.setVariable(TemplateNames.MapClassName,mapClassName);
                     top.setVariable(TemplateNames.MapKeyType,mapChild.childKeyFieldType);

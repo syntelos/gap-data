@@ -58,6 +58,15 @@ public final class Package
         else 
             throw new Syntax("Package statement not found.");
     }
+    public Package(java.lang.Class primitive){
+        super();
+        String name = primitive.getName();
+        int idx = name.lastIndexOf('.');
+        if (-1 != idx)
+            this.name = name.substring(0,idx);
+        else
+            this.name = "";
+    }
 
     public String getName(){
         return this.name;

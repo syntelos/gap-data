@@ -152,6 +152,36 @@ public class Classes {
         else
             return null;
     }
+    public final static PackageDescriptor PackageFor(ClassDescriptor gclass, PackageDescriptor scope){
+        if (gclass instanceof ClassDescriptor.WithPackage){
+            ClassDescriptor.WithPackage pclass = (ClassDescriptor.WithPackage)gclass;
+            if (pclass.hasPackage())
+                return pclass.getPackage();
+        }
+        return scope;
+    }
+    public final static PackageDescriptor PackageFor(Primitive gclass, Class pclass){
+        if (null != pclass)
+            return new gap.odl.Package(pclass);
+        else
+            return new gap.odl.Package(gclass.type);
+    }
+    public final static lxl.List<ImportDescriptor> ImportsFor(ClassDescriptor gclass, 
+                                                              lxl.List<ImportDescriptor> scope)
+    {
+        if (gclass instanceof ClassDescriptor.WithImports){
+            ClassDescriptor.WithImports iclass = (ClassDescriptor.WithImports)gclass;
+            if (iclass.hasImports())
+                return iclass.getImports();
+        }
+        return scope;
+    }
+    public final static lxl.List<ImportDescriptor> ImportsFor(Primitive field, 
+                                                              ClassDescriptor definer, 
+                                                              lxl.List<ImportDescriptor> scope)
+    {
+        return ImportsFor(definer,scope);
+    }
     /**
      * @param find Listing of odl files
      * @return Number of files found from listing
