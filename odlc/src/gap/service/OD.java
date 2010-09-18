@@ -598,6 +598,7 @@ public final class OD
                 String fieldType = OD.MapChild.Type(ToString(field.getType()));
                 String fieldTypeClean = CleanTypeName(fieldType);
                 String fieldTypeCleanClean = CleanCleanTypeName(fieldType);
+                ClassDescriptor fieldTypeClassDescriptor = Classes.For(fieldType);
                 Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
                 Primitive fieldTypePrimitive = Primitive.For(fieldTypeClass);
                 String[] fieldTypeParameters = FieldTypeParameters(ToString(field.getType()));
@@ -727,7 +728,7 @@ public final class OD
                 }
                 else {
                     dataField.addSection(TemplateNames.FieldIsNotPrimitive);
-                    if (IsTypeClassBigTable(fieldTypeClass)){
+                    if (IsTypeClassBigTable(fieldTypeClassDescriptor,fieldTypeClass)){
                         dataField.setVariable(TemplateNames.FieldFromObjectPrefix,fieldType+".FromObject(");
                         dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
                         dataField.addSection(TemplateNames.FieldIsBigTable);

@@ -582,8 +582,10 @@ public class Classes {
         else
             return false;
     }
-    public final static boolean IsTypeClassBigTable(java.lang.Class fieldType){
-        if (null != fieldType)
+    public final static boolean IsTypeClassBigTable(ClassDescriptor cd, java.lang.Class fieldType){
+        if (null != cd)
+            return true;
+        else if (null != fieldType)
             return (gap.data.TableClass.class.isAssignableFrom(fieldType));
         else
             return false;

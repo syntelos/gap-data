@@ -50,11 +50,6 @@ public final class Version {
 
     public final static java.lang.String Name = "gap-data";
 
-    public final static java.lang.String Target = "${project.application}";
-
-    public final static boolean IsTest = (Target.contains("-test"));
-
-    public final static boolean IsProd = (!IsTest);
 
     public final static java.lang.String ToStringLong(String name){
         return (name+'/'+Long);
@@ -86,7 +81,7 @@ public final class Version {
         Index.put("short",1);
         Index.put("number",2);
         Index.put("name",3);
-        Index.put("target",4);
+
     }
     public final static boolean HasVariable(TemplateName name){
         if (name.is(0)){
@@ -115,8 +110,7 @@ public final class Version {
                 return Version.Short;
             case 3:
                 return Version.Name;
-            case 4:
-                return Version.Target;
+
             default:
                 return null;
             }

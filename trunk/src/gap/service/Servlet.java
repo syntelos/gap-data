@@ -47,8 +47,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This core servlet is extended in {@link gap.servlet.Error} and
- * {@link gap.servlet.Site}.
+ * This core servlet extends the java http servlet with frequently
+ * used GAE/GD features.
+ * 
+ * It also serves the special files "/version.txt" (gap data version)
+ * and "/system.txt" (system properties).  System txt service may
+ * disabled by an override in a subclass, however version txt service
+ * is intended common to all instances.
  */
 public class Servlet
     extends javax.servlet.http.HttpServlet
@@ -190,6 +195,9 @@ public class Servlet
             Service.Routines.Exit();
         }
     }
+    protected boolean serviceSystemTxt(){
+        return true;
+    }
     /**
      * This is marked final for performance, and thinking it's
      * unlikely anyone would want to override it.  
@@ -226,7 +234,13 @@ public class Servlet
             }
             else if (req.isPath("/version.txt")){
                 PrintWriter out = rep.getWriter();
-                out.println(gap.Version.Target+' '+gap.Version.Name+' '+gap.Version.Long);
+                VersionTxt(out);
+                rep.setContentTypeText();
+                return;
+            }
+            else if (req.isPath("/system.txt") && this.serviceSystemTxt()){
+                PrintWriter out = rep.getWriter();
+                SystemTxt(out);
                 rep.setContentTypeText();
                 return;
             }
@@ -259,7 +273,12 @@ public class Servlet
                     servlet.doGet(req,rep);
                 else if (req.isPath("/version.txt")){
                     PrintWriter out = rep.getWriter();
-                    out.println(gap.Version.Name+' '+gap.Version.Target+' '+gap.Version.Long);
+                    VersionTxt(out);
+                    rep.setContentTypeText();
+                }
+                else if (req.isPath("/system.txt") && this.serviceSystemTxt()){
+                    PrintWriter out = rep.getWriter();
+                    SystemTxt(out);
                     rep.setContentTypeText();
                 }
                 else 
@@ -652,4 +671,24 @@ public class Servlet
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     };
 
+    protected final static void VersionTxt(PrintWriter out){
+
+        out.printf("%s %s%n",gap.Version.Name,gap.Version.Long);
+
+    }
+    protected final static void SystemTxt(PrintWriter out){
+        try {
+            for (java.util.Map.Entry ent: System.getProperties().entrySet()){
+
+                String key = (String)ent.getKey();
+                String value = (String)ent.getValue();
+
+                out.printf("%s: %s%n",key,value);
+            }
+        }
+        catch (Throwable t){
+            out.println();
+            t.printStackTrace(out);
+        }
+    }
 }
