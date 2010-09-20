@@ -13,7 +13,7 @@
   <property name="lib" value="lib"/>
   <property name="odl" value="odl"/>
 
-  <property file="../../update.properties"/>
+  <property file="../update.properties"/>
 
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.odl.xml"/>

@@ -13,7 +13,7 @@
   <property name="bin" value="bin"/>
 
   <property name="ver.src" value="ver/src"/>
-  <property file="../../update.properties"/>
+  <property file="../update.properties"/>
 
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.update.xml"/>
