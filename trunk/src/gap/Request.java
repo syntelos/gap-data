@@ -112,6 +112,7 @@ public class Request
     }
 
 
+    public final String ns;
     public final HttpServletRequest request;
     public final Method method;
     public final Protocol protocol;
@@ -126,10 +127,11 @@ public class Request
     public final boolean isAdmin, isMember;
 
 
-    public Request(HttpServletRequest req, Method method, Protocol protocol, Path path, 
+    public Request(String ns, HttpServletRequest req, Method method, Protocol protocol, Path path, 
                    Accept accept, FileManager fm, Logon logon, String uri, Parameters parameters)
     {
         super();
+        this.ns = ns;
         this.request = req;
         this.method = method;
         this.protocol = protocol;
@@ -183,6 +185,30 @@ public class Request
     public final String getUserId(){
         return this.logon.getUserId();
     }
+    /**
+     * @return May be null
+     */
+    public final String getAppsDomain(){
+        return this.ns;
+    }
+    /**
+     * @return May be null
+     */
+    public final String getUserDomain(){
+        return this.logon.getUserDomain();
+    }
+    /**
+     * @return May be null
+     */
+    public final String getUserEmail(){
+        return this.logon.getUserEmail();
+    }
+    /**
+     * @return May be null
+     */
+    public final String getUserNick(){
+        return this.logon.getUserNick();
+    }
     public final boolean isLoggedIn(){
         return this.logon.isLoggedIn();
     }
@@ -202,6 +228,12 @@ public class Request
      */
     public final String getLogonText(){
         return this.logonText;
+    }
+    public final boolean hasNamespace(){
+        return (null != this.ns);
+    }
+    public final String getNamespace(){
+        return this.ns;
     }
     public final boolean hasViewer(){
         return this.logon.hasPerson();

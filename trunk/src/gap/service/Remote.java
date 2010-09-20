@@ -40,7 +40,7 @@ public final class Remote
     public static void Init(){
         Log.info("[done]");
     }
-    static void Enter(){
+    static void Enter(String ns){
         URLFetchService ufs = UFS.get();
         if (null == ufs){
             ufs = URLFetchServiceFactory.getURLFetchService();

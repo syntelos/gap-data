@@ -136,6 +136,16 @@ public class Servlet
     public String getMimeType(String filename){
         return this.getServletConfig().getServletContext().getMimeType(filename);
     }
+    /**
+     * @return May be null
+     */
+    public final String getAppsDomain(){
+        String re = com.google.appengine.api.NamespaceManager.getGoogleAppsNamespace();
+        if (null == re || 0 == re.length())
+            return null;
+        else
+            return re;
+    }
     @Override
     public final void init(ServletConfig config) throws ServletException {
 
@@ -162,21 +172,26 @@ public class Servlet
     protected final void service(HttpServletRequest req, HttpServletResponse rep)
         throws IOException, ServletException
     {
-        Service.Routines.Enter();
+        final String ns = this.getAppsDomain();
+
+        Service.Routines.Enter(ns);
+
         Method method  = Method.Enter(req);
         Protocol protocol = Protocol.Enter(req);
         Path path = new Path(req);
         Accept accept = new Accept(req);
+
         FileManager fm = new FileManager(path.getComponent(0));
+
         String uri = req.getParameter("uri");
         if (null == uri){
             uri = req.getRequestURI();
         }
         Request request = null;
         try {
-            Logon logon = Logon.Enter(new Logon(req.getUserPrincipal(),uri,UserServiceFactory.getUserService()));
+            Logon logon = Logon.Enter(new Logon(ns,req.getUserPrincipal(),uri,UserServiceFactory.getUserService()));
 
-            request = this.createRequest(req,method,protocol,path,accept,fm,logon,uri);
+            request = this.createRequest(ns,req,method,protocol,path,accept,fm,logon,uri);
 
             Response response = this.createResponse(request,rep);
             if (null != response)
@@ -354,11 +369,6 @@ public class Servlet
     protected void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
-        /*
-         * TODO 
-         * Get create bean from path
-         * bean.updateFrom(req)
-         */
         this.undefined(req,rep);
     }
     protected void doPut(Request req, Response rep)
@@ -545,11 +555,11 @@ public class Servlet
      * the subsequent call to create response will return a null
      * value -- otherwise -- must not return a null value.
      */
-    protected Request createRequest(HttpServletRequest req, Method method, Protocol protocol, Path path, Accept accept,
-                                    FileManager fm, Logon logon, String uri)
+    protected Request createRequest(String ns, HttpServletRequest req, Method method, Protocol protocol, Path path, 
+                                    Accept accept, FileManager fm, Logon logon, String uri)
     {
         Parameters parameters = this.createParameters(req,path);
-        return new Request(req,method,protocol,path,accept,fm,logon,uri,parameters);
+        return new Request(ns,req,method,protocol,path,accept,fm,logon,uri,parameters);
     }
     /**
      * May return null to halt further processing.

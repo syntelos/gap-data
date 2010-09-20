@@ -41,7 +41,7 @@ public final class XMessaging
     public static void Init(){
         Log.info("[done]");
     }
-    static void Enter(){
+    static void Enter(String ns){
         XMPPService xms = XMS.get();
         if (null == xms){
             xms = XMPPServiceFactory.getXMPPService();
