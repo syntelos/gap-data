@@ -83,6 +83,7 @@ public final class Logon
     protected final static Logger Log = Logger.getLogger(Logon.class.getName());
 
 
+    public final String ns;
     public final Principal principal;
     public final UserService service;
     public final User serviceUser;
@@ -93,8 +94,9 @@ public final class Logon
     private String loginUrl, logoutUrl;
 
 
-    public Logon(Principal principal, String uri, UserService service){
+    public Logon(String ns, Principal principal, String uri, UserService service){
         super();
+        this.ns = ns;
         this.principal = principal;
         this.requestUrl = uri;
         this.service = service;
@@ -130,6 +132,12 @@ public final class Logon
     }
 
 
+    public boolean hasNamespace(){
+        return (null != this.ns);
+    }
+    public String getNamespace(){
+        return this.ns;
+    }
     public boolean hasPerson(){
         return (null != this.person);
     }
@@ -143,6 +151,27 @@ public final class Logon
         Person person = this.person;
         if (null != person)
             return person.getId();
+        else 
+            return null;
+    }
+    public String getUserEmail(){
+        User user = this.serviceUser;
+        if (null != user)
+            return user.getEmail();
+        else 
+            return null;
+    }
+    public String getUserDomain(){
+        User user = this.serviceUser;
+        if (null != user)
+            return user.getAuthDomain();
+        else 
+            return null;
+    }
+    public String getUserNick(){
+        User user = this.serviceUser;
+        if (null != user)
+            return user.getNickname();
         else 
             return null;
     }

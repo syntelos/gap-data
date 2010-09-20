@@ -57,7 +57,7 @@ public final class Store
         private final static ThreadLocal<DatastoreService> PTL = new ThreadLocal<DatastoreService>();
 
 
-        protected static void Enter(){
+        protected static void Enter(String ns){
             DatastoreService ds = PTL.get();
             if (null == ds){
                 ds = DatastoreServiceFactory.getDatastoreService();
@@ -253,7 +253,7 @@ public final class Store
         private final static ThreadLocal<MemcacheService> PTL = new ThreadLocal<MemcacheService>();
 
 
-        protected static void Enter(){
+        protected static void Enter(String ns){
             MemcacheService ds = PTL.get();
             if (null == ds){
                 ds = MemcacheServiceFactory.getMemcacheService();
@@ -372,9 +372,9 @@ public final class Store
     /**
      * Servlet enter
      */
-    public static void Enter(){
-        P.Enter();
-        C.Enter();
+    public static void Enter(String ns){
+        P.Enter(ns);
+        C.Enter(ns);
     }
     /**
      * Servlet exit

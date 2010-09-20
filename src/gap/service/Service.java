@@ -42,10 +42,10 @@ public interface Service {
 
     public final static class Routines {
 
-        public final static void Enter(){
-            Store.Enter();
-            Remote.Enter();
-            XMessaging.Enter();
+        public final static void Enter(String ns){
+            Store.Enter(ns);
+            Remote.Enter(ns);
+            XMessaging.Enter(ns);
         }
         public final static void Exit(){
             Store.Exit();

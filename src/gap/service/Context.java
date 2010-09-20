@@ -74,10 +74,17 @@ public class Context
     protected void contextDestroyed(ServletContext servletContext){
     }
     protected FileManager serviceEnter(){
-        Service.Routines.Enter();
+        Service.Routines.Enter(this.getAppsDomain());
         return (new FileManager(""));
     }
     protected void serviceExit(){
         Service.Routines.Exit();
+    }
+    public final String getAppsDomain(){
+        String re = com.google.appengine.api.NamespaceManager.getGoogleAppsNamespace();
+        if (null == re || 0 == re.length())
+            return null;
+        else
+            return re;
     }
 }
