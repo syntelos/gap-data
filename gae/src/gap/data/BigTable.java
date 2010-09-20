@@ -353,8 +353,18 @@ public abstract class BigTable
 
     public abstract Field getClassFieldByName(String name);
 
+    /**
+     * Principal dynamic binding operator (datastore, etc, except serialization)
+     *
+     * Persistent BigTable fields are represented by the string ID.
+     */
     public abstract java.io.Serializable valueOf(Field field, boolean mayInherit);
 
+    /**
+     * Principal dynamic binding operator (datastore, etc, except serialization)
+     *
+     * Persistent BigTable fields are represented by the string ID.
+     */
     public abstract void define(Field field, java.io.Serializable value);
 
     public final void define(String fieldName, java.io.Serializable value){
