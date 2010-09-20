@@ -1,10 +1,10 @@
 #summary Building a gap-data application
-#labels copy
+#labels Documentation
 
- * [AntBuild create] [http://code.google.com/p/hapax2/wiki/Language?tm=6 Hapax3] templates and [http://java.sun.com/ java] programming [http://code.google.com/p/gap-data/source/browse objects].
+ * [AntBuild create] [http://code.google.com/p/hapax2/wiki/Language?tm=6 Hapax3] templates and java programming objects.
 
  * [AntBuild test] your application at [http://localhost:8888/ localhost:8888]
 
- * edit [http://code.google.com/p/gap-data/source/browse/trunk/project.application project.application] with the name of your [http://appengine.google.com/ appengine] service space.
+ * edit [http://code.google.com/p/gap-data/source/browse/trunk/gae/project.application project.application] with the name of your [http://appengine.google.com/ appengine] service space.
 
  * [AppCfg upload] your application codebase, as tested, into [http://appengine.google.com/ appengine] with AppCfg.
