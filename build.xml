@@ -1,0 +1,11 @@
+<project name="gap-data" default="all">
+
+ <target name="all">
+
+   <ant dir="types" />
+
+   <ant dir="odlc" />
+
+   <ant dir="gae" />
+ </target>
+</project>
