@@ -1,0 +1,130 @@
+/*
+ * Gap Data
+ * Copyright (C) 2009 John Pritchard
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
+package {{=parent_package_name}};
+{{#import}}
+import {{=import_spec}};{{/import}}
+
+import gap.*;
+import gap.data.*;
+import gap.service.*;
+import gap.util.*;
+
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.*;
+
+import java.io.Serializable;
+import java.util.Date;
+import javax.annotation.Generated;
+
+/**
+ * Generated short list.
+ */
+@Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}")
+public final class ListShort{{=parent_class_name}}{{=child_class_name}}
+    extends gap.util.AbstractList<{{=child_class_name}}>
+    implements gap.data.List.Short<{{=child_class_name}}>
+{
+
+    private final static long serialVersionUID = {{=parent_class_version}};
+
+    public final static String ParentTypeName = "{{=parent_class_name}}";
+
+    public final static String ChildTypeName = "{{=child_class_name}}";
+
+    public final static Class ParentTypeClass = {{=parent_class_name}}.class;
+
+    public final static Class ChildTypeClass = {{=child_class_name}}.class;
+
+
+    protected transient {{=parent_class_name}} parent;
+
+
+    public ListShort{{=parent_class_name}}{{=child_class_name}}({{=parent_class_name}} parent) {
+        this();
+        if (null != parent){
+            this.parent = parent;
+            this.setValueClassAncestorKey();
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+    public ListShort{{=parent_class_name}}{{=child_class_name}}(){
+        super();
+        this.page = Page.Short;
+    }
+
+
+    public void destroy(){
+        this.parent = null;
+        this.clearBuffer();
+    }
+    public {{=parent_class_name}} getParent(){
+        {{=parent_class_name}} parent = this.parent;
+        if (null == parent){
+            Key parentKey = this.ancestorKey;
+            if (null != parentKey){
+                parent = {{=parent_class_name}}.Get(parentKey);
+                if (null != parent)
+                    this.parent = parent;
+                else
+                    throw new IllegalStateException("Missing parent, user employed wrong constructor (pre store).");
+            }
+            else
+                throw new IllegalStateException("Missing ancestor key.");
+        }
+        return parent;
+    }
+    public String getParentTypeName(){
+        return ParentTypeName;
+    }
+    public String getChildTypeName(){
+        return ChildTypeName;
+    }
+    public Class getParentTypeClass(){
+        return ParentTypeClass;
+    }
+    public Class getChildTypeClass(){
+        return ChildTypeClass;
+    }
+    public void setValueClassAncestorKey(){
+        Key key = this.getParent().getKey();
+        if (key != this.ancestorKey){
+            this.ancestorKey = key;
+            this.query = {{=child_class_name}}.CreateQueryFor(this.ancestorKey);
+        }
+    }
+    public {{=child_class_name}} fetch(Filter filter){
+        Key ancestor = this.ancestorKey;
+        if (null != ancestor){
+            Query query = {{=child_class_name}}.CreateQueryFor(ancestor,filter);
+            return {{=child_class_name}}.Query1(query);
+        }
+        else
+            throw new IllegalStateException("Missing ancestor key.");
+    }
+    public List.Short<{{=child_class_name}}> clone(){
+        List list = super.clone();
+        return (List.Short<{{=child_class_name}}>)list;
+    }
+    public List.Short<{{=child_class_name}}> add({{=child_class_name}} item){
+        super.add(item);
+        return this;
+    }
+}

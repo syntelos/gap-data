@@ -1,0 +1,8 @@
+
+Stand alone Gap Data ODL Compiler (ODLC) for Hapax3 templates (java
+source code).
+
+The GD data types are included in truncated forms, not including the
+GAE runtime and GD Store, for the benefit of ODLC typing.  
+
+This codebase is independent of, and incompatible with the GD runtime.

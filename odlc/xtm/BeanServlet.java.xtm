@@ -1,0 +1,29 @@
+
+package {{=package_name}};
+{{#import}}
+import {{=import_spec}};{{/import}}
+
+import gap.*;
+import gap.data.*;
+import gap.util.*;
+
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.*;
+
+import java.util.Date;
+
+/**
+ * Generated once.  This source file will not be overwritten
+ * unless deleted, so it can be edited.
+ *
+ * @see {{=class_name}}
+ */
+public final class {{=class_name}}Servlet
+    extends gap.service.Servlet
+{
+
+    public {{=class_name}}Servlet() {
+        super();
+    }
+
+}
