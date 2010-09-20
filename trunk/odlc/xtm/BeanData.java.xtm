@@ -737,7 +737,7 @@ public abstract class {{=class_name}}Data
         else
             return false;
     }{{#field_is_not_inheritable}}{{#field_is_bigTable}}
-    public final {{=field_class}} get{{=field_nameCamel}}Id(){
+    public final String get{{=field_nameCamel}}Id(){
         return this.{{=field_name}}Id;
     }{{/field_is_bigTable}}
     public final {{=field_class}} get{{=field_nameCamel}}(){{{#field_is_not_bigTable}}
@@ -762,10 +762,10 @@ public abstract class {{=class_name}}Data
     public final {{=field_class}} get{{=field_nameCamel}}(boolean mayInherit){
         return this.get{{=field_nameCamel}}();
     }{{/field_is_not_inheritable}}{{#field_is_inheritable}}{{#field_is_bigTable}}
-    public final {{=field_class}} get{{=field_nameCamel}}Id(){
+    public final String get{{=field_nameCamel}}Id(){
         return this.get{{=field_nameCamel}}Id(Notation.MayInherit);
     }
-    public final {{=field_class}} get{{=field_nameCamel}}Id(boolean mayInherit){
+    public final String get{{=field_nameCamel}}Id(boolean mayInherit){
         if (null != this.{{=field_name}}Id)
             return this.{{=field_name}}Id;
         else if (mayInherit && this.hasInheritFrom()){
