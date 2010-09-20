@@ -1,0 +1,5 @@
+
+Code common to odlc and runtime.
+
+Any JPL/JVM class found in this package must not be replicated elsewhere.
+
