@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-09-19T10:59:32.405Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-09-20T13:49:21.464Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -195,14 +195,12 @@ public abstract class TemplateNodeData
     }
 
     /**
-     * Drop the instance and any children of its key from the world,
-     * memcache and store.
+     * Drop the instance from memcache and datastore.
      */
     public final static void Delete(TemplateNode instance){
         if (null != instance){
-            Key key = instance.getKey();
-            gap.data.Store.DeleteCollection(KIND,new Query(key));
-            gap.data.Store.Delete(key);
+
+            gap.data.Store.Delete(instance.getKey());
         }
     }
     /**
@@ -321,6 +319,11 @@ public abstract class TemplateNodeData
             else
                 return field;
         }
+        /**
+         * Principal dynamic binding operator (datastore, etc, except serialization)
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
         public static Object Get(Field field, TemplateNode instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
@@ -345,6 +348,11 @@ public abstract class TemplateNodeData
                 throw new IllegalArgumentException(field.toString()+" in TemplateNode");
             }
         }
+        /**
+         * Principal dynamic binding operator (datastore, etc, except serialization)
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
         public static boolean Set(Field field, TemplateNode instance, Object value){
             switch(field){
             case InheritFromKey:
@@ -459,18 +467,18 @@ public abstract class TemplateNodeData
         }
     }
 
-    private volatile transient TemplateNode inheritFrom;
+    private transient TemplateNode inheritFrom;
 
 
-    private volatile String nodeType;
-    private volatile Integer lineNumber;
-    private volatile Text nodeContent;
-    private volatile Integer offset;
-    private volatile Integer offsetCloseRelative;
+    private String nodeType;
+    private Integer lineNumber;
+    private Text nodeContent;
+    private Integer offset;
+    private Integer offsetCloseRelative;
 
 
-    private volatile Key parentKey;
-    private volatile transient Template parent;
+    private Key parentKey;
+    private transient Template parent;
 
 
     protected TemplateNodeData() {

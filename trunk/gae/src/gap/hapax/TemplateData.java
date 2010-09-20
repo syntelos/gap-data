@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-09-19T10:59:32.252Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-09-20T13:49:21.559Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -167,14 +167,12 @@ public abstract class TemplateData
 
 
     /**
-     * Drop the instance and any children of its key from the world,
-     * memcache and store.
+     * Drop the instance from memcache and datastore.
      */
     public final static void Delete(Template instance){
         if (null != instance){
-            Key key = instance.getKey();
-            gap.data.Store.DeleteCollection(KIND,new Query(key));
-            gap.data.Store.Delete(key);
+
+            gap.data.Store.Delete(instance.getKey());
         }
     }
     /**
@@ -291,6 +289,11 @@ public abstract class TemplateData
             else
                 return field;
         }
+        /**
+         * Principal dynamic binding operator (datastore, etc, except serialization)
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
         public static Object Get(Field field, Template instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
@@ -311,6 +314,11 @@ public abstract class TemplateData
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }
         }
+        /**
+         * Principal dynamic binding operator (datastore, etc, except serialization)
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
         public static boolean Set(Field field, Template instance, Object value){
             switch(field){
             case InheritFromKey:
@@ -421,13 +429,13 @@ public abstract class TemplateData
         }
     }
 
-    private volatile transient Template inheritFrom;
+    private transient Template inheritFrom;
 
 
-    private volatile String name;
-    private volatile Long lastModified;
-    private volatile Text templateSourceHapax;
-    private volatile List.Short<TemplateNode> templateTargetHapax;
+    private String name;
+    private Long lastModified;
+    private Text templateSourceHapax;
+    private List.Short<TemplateNode> templateTargetHapax;
 
 
 

@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-09-19T10:59:31.680Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2010-09-20T13:49:20.843Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -165,14 +165,12 @@ public abstract class PersonData
 
 
     /**
-     * Drop the instance and any children of its key from the world,
-     * memcache and store.
+     * Drop the instance from memcache and datastore.
      */
     public final static void Delete(Person instance){
         if (null != instance){
-            Key key = instance.getKey();
-            gap.data.Store.DeleteCollection(KIND,new Query(key));
-            gap.data.Store.Delete(key);
+
+            gap.data.Store.Delete(instance.getKey());
         }
     }
     /**
@@ -286,6 +284,11 @@ public abstract class PersonData
             else
                 return field;
         }
+        /**
+         * Principal dynamic binding operator (datastore, etc, except serialization)
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
         public static Object Get(Field field, Person instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
@@ -300,6 +303,11 @@ public abstract class PersonData
                 throw new IllegalArgumentException(field.toString()+" in Person");
             }
         }
+        /**
+         * Principal dynamic binding operator (datastore, etc, except serialization)
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
         public static boolean Set(Field field, Person instance, Object value){
             switch(field){
             case InheritFromKey:
@@ -404,10 +412,10 @@ public abstract class PersonData
         }
     }
 
-    private volatile transient Person inheritFrom;
+    private transient Person inheritFrom;
 
 
-    private volatile String logonId;
+    private String logonId;
 
 
 
