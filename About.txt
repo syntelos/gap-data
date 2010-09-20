@@ -1,14 +1,23 @@
 
-The package in 'types' shares common code with 'odlc' and 'trunk'.
+  + /svn/
+  +-    /trunk/
+  +-+-        /types/
+  +-+-        /odlc/
+  +-+-        /gae/
+  +-    /yastwsstream/
+  +-    /yusu/
 
-The 'odlc' package is a command line / ant tool for generating JPL
-source code from the templates defined in 'odlc/xtm'.  This tool is
-copied (as a jar file containing xtm) to applications' 'ant' directory
-for generating code from ODL schemae.
+The package in 'svn/trunk/types' shares common code with
+'svn/trunk/odlc' and 'svn/trunk/gae'.
 
-The 'trunk' package implements the Gap Data runtime.
+    The 'odlc' package is a command line / ant tool for generating JPL
+    source code from the templates defined in 'odlc/xtm'.  This tool
+    is copied (as a jar file containing xtm) to applications' 'ant'
+    directory for generating code from ODL schemae.
 
-The 'yastwsstream' package is an example application.  May be rusty
-(out of sync) at times.
+    The 'gae' package implements the Gap Data runtime.
 
-The 'yusu' package is used by 'yastwsstream' for the twitter api.
+The 'svn/yastwsstream' package is an example application.  May be
+rusty (out of sync) at times.
+
+The 'svn/yusu' package is used by 'yastwsstream' for the twitter api.
