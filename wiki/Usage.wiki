@@ -7,7 +7,7 @@
 
  == Procedure ==
 
- || At the moment, constructing a gap-data application is a manual process.  One can take a copy of [http://cpi.googlecode.com/cpi cpi] and delete the application specific components.||
+ || At the moment, constructing a gap-data application is a manual process.  One can take a copy of [http://cpi.googlecode.com/ cpi] and delete the application specific components.||
 
  Edit "project.application" to point it to your own appengine name.
 
