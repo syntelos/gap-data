@@ -98,7 +98,7 @@ public class Request
         }
     }
     public static enum Field {
-        method, protocol, path, accept, fileManager, parameters, userReference, 
+        ns, method, protocol, path, accept, fileManager, parameters, userReference, 
             logon, logonUrl, logonText, contentType, isAdmin, isMember, version;
 
         public static Field For(String name){
@@ -341,6 +341,7 @@ public class Request
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
+            case ns:
             case method:
             case protocol:
             case path:
@@ -386,6 +387,11 @@ public class Request
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
+            case ns:
+                if (name.is(0))
+                    return this.ns;
+                else
+                    return null;
             case method:
                 if (name.is(0))
                     return this.method.name;
@@ -462,6 +468,7 @@ public class Request
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
+            case ns:
             case method:
             case protocol:
             case path:
