@@ -5,4 +5,9 @@
 
 * Work remains for collections types, list and map
 ** odlc/xtm
-** types & trunk 
+** types & gae 
+
+* Matrix ODL class and field definitions
+** Test jpl xtm templates for coverage and correctness
+** Refine matrix and ODL definition syntax
+

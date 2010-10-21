@@ -130,6 +130,16 @@ public class Classes {
         else
             throw new IllegalArgumentException();
     }
+    public final static ClassDescriptor For(Object type)
+        throws java.io.IOException, gap.odl.Syntax
+    {
+        if (type instanceof String)
+            return For((String)type);
+        else if (type instanceof ClassDescriptor)
+            return (ClassDescriptor)type;
+        else
+            return null;
+    }
     public final static ClassDescriptor ForData(String name)
         throws java.io.IOException, gap.odl.Syntax
     {
@@ -481,15 +491,24 @@ public class Classes {
     }
     public final static boolean IsFieldPersistent(FieldDescriptor field, Class fieldTypeClass){
 
-        if (IsTypeClassCollection(fieldTypeClass))
+        if (IsTypeClassBigTable(field,fieldTypeClass))
+
+            return IsFieldPersistent(field);
+
+        else if (IsTypeClassCollection(fieldTypeClass))
 
             return false;
 
         else if (IsFieldRelation(field)) /*(very template specific -- will change)
-                                     */
+                                          */
             return false;
 
-        else if (IsTypeClassIndexed(fieldTypeClass) && field instanceof FieldDescriptor.Persistence){
+        else 
+            return IsFieldPersistent(field);
+    }
+    public final static boolean IsFieldPersistent(FieldDescriptor field){
+
+        if (field instanceof FieldDescriptor.Persistence){
             FieldDescriptor.Persistence pfield = (FieldDescriptor.Persistence)field;
             if (pfield.hasPersistence()){
                 if (FieldDescriptor.Persistence.Type.Transient.equals(pfield.getPersistence()))
@@ -567,66 +586,78 @@ public class Classes {
         else
             return false;
     }
-    public final static boolean IsTypeClassKey(java.lang.Class fieldType){
-        if (null != fieldType)
-            return (com.google.appengine.api.datastore.Key.class.equals(fieldType));
+    public final static boolean IsTypeClassKey(java.lang.Class jclass){
+        if (null != jclass)
+            return (com.google.appengine.api.datastore.Key.class.equals(jclass));
         else
             return false;
     }
-    public final static boolean IsTypeClassIndexed(java.lang.Class fieldType){
-        if (null != fieldType)
-            return DataTypeUtils.isSupportedType(fieldType);
+    public final static boolean IsTypeClassIndexed(java.lang.Class jclass){
+        if (null != jclass)
+            return DataTypeUtils.isSupportedType(jclass);
         else
             return false;
     }
-    public final static boolean IsTypeClassList(java.lang.Class fieldType){
-        if (null != fieldType)
-            return ((!gap.data.Map.class.isAssignableFrom(fieldType)) &&
-                    gap.data.List.class.isAssignableFrom(fieldType));
+    public final static boolean IsTypeClassList(java.lang.Class jclass){
+        if (null != jclass)
+            return ((!gap.data.Map.class.isAssignableFrom(jclass)) &&
+                    gap.data.List.class.isAssignableFrom(jclass));
         else
             return false;
     }
-    public final static boolean IsTypeClassBigTable(ClassDescriptor cd, java.lang.Class fieldType){
+    public final static boolean IsTypeClassBigTable(FieldDescriptor fd, java.lang.Class fieldType){
+        if (null != fieldType)
+            return (gap.data.TableClass.class.isAssignableFrom(fieldType));
+        else {
+            try {
+                return (null != Classes.For(fd.getType()));
+            }
+            catch (java.io.IOException exc){
+                throw new RuntimeException(exc);
+            }
+        }
+    }
+    public final static boolean IsTypeClassBigTable(ClassDescriptor cd, java.lang.Class jclass){
         if (null != cd)
             return true;
-        else if (null != fieldType)
-            return (gap.data.TableClass.class.isAssignableFrom(fieldType));
+        else if (null != jclass)
+            return (gap.data.TableClass.class.isAssignableFrom(jclass));
         else
             return false;
     }
-    public final static boolean IsNotTypeClassBigTable(java.lang.Class fieldType){
-        if (null != fieldType)
-            return (!(gap.data.TableClass.class.isAssignableFrom(fieldType)));
+    public final static boolean IsNotTypeClassBigTable(java.lang.Class jclass){
+        if (null != jclass)
+            return (!(gap.data.TableClass.class.isAssignableFrom(jclass)));
         else
             return true;
     }
-    public final static boolean IsTypeClassMap(java.lang.Class fieldType){
-        if (null != fieldType)
-            return (gap.data.Map.class.isAssignableFrom(fieldType));
+    public final static boolean IsTypeClassMap(java.lang.Class jclass){
+        if (null != jclass)
+            return (gap.data.Map.class.isAssignableFrom(jclass));
         else
             return false;
     }
-    public final static boolean IsTypeClassString(java.lang.Class fieldType){
-        if (null != fieldType)
-            return (java.lang.String.class.equals(fieldType));
+    public final static boolean IsTypeClassString(java.lang.Class jclass){
+        if (null != jclass)
+            return (java.lang.String.class.equals(jclass));
         else
             return false;
     }
-    public final static boolean IsTypeClassDate(java.lang.Class fieldType){
-        if (null != fieldType)
-            return (java.util.Date.class.isAssignableFrom(fieldType));
+    public final static boolean IsTypeClassDate(java.lang.Class jclass){
+        if (null != jclass)
+            return (java.util.Date.class.isAssignableFrom(jclass));
         else
             return false;
     }
-    public final static boolean IsTypeClassCollection(java.lang.Class fieldType){
-        if (null != fieldType)
-            return (gap.data.Collection.class.isAssignableFrom(fieldType));
+    public final static boolean IsTypeClassCollection(java.lang.Class jclass){
+        if (null != jclass)
+            return (gap.data.Collection.class.isAssignableFrom(jclass));
         else
             return true;
     }
-    public final static boolean IsNotTypeClassCollection(java.lang.Class fieldType){
-        if (null != fieldType)
-            return (!(gap.data.Collection.class.isAssignableFrom(fieldType)));
+    public final static boolean IsNotTypeClassCollection(java.lang.Class jclass){
+        if (null != jclass)
+            return (!(gap.data.Collection.class.isAssignableFrom(jclass)));
         else
             return true;
     }
