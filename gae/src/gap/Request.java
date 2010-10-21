@@ -98,7 +98,7 @@ public class Request
         }
     }
     public static enum Field {
-        ns, method, protocol, path, accept, fileManager, parameters, userReference, 
+        ns, hostname, method, protocol, path, accept, fileManager, parameters, userReference, 
             logon, logonUrl, logonText, contentType, isAdmin, isMember, version;
 
         public static Field For(String name){
@@ -112,7 +112,7 @@ public class Request
     }
 
 
-    public final String ns;
+    public final String ns, hostname;
     public final HttpServletRequest request;
     public final Method method;
     public final Protocol protocol;
@@ -132,6 +132,7 @@ public class Request
     {
         super();
         this.ns = ns;
+        this.hostname = req.getHeader("Host");
         this.request = req;
         this.method = method;
         this.protocol = protocol;
@@ -234,6 +235,12 @@ public class Request
     }
     public final String getNamespace(){
         return this.ns;
+    }
+    public final boolean hasHostname(){
+        return (null != this.hostname);
+    }
+    public final String getHostname(){
+        return this.hostname;
     }
     public final boolean hasViewer(){
         return this.logon.hasPerson();
@@ -342,6 +349,7 @@ public class Request
         if (null != field){
             switch (field){
             case ns:
+            case hostname:
             case method:
             case protocol:
             case path:
@@ -390,6 +398,11 @@ public class Request
             case ns:
                 if (name.is(0))
                     return this.ns;
+                else
+                    return null;
+            case hostname:
+                if (name.is(0))
+                    return this.hostname;
                 else
                     return null;
             case method:
@@ -469,6 +482,7 @@ public class Request
         if (null != field){
             switch (field){
             case ns:
+            case hostname:
             case method:
             case protocol:
             case path:
