@@ -64,70 +64,39 @@ import java.util.regex.Pattern;
  * <li> Each field is a class name, space, field name.  Optionally
  * terminated by semicolon.
  *
- * A few primary unique fields may be qualified with one of the
- * keywords <code>"*hash-unique"</code> or <code>"*unique"</code>.
- * These fields have type String.
+ * A primary unique field may be qualified with the keyword
+ * <code>"*unique"</code>.  These fields have type String.
  * 
- * The latter causes the field to be employed as a primary lookup
- * identifier, and the former causes the hash of the field to be
- * employed as a primary lookup identifier.
+ * The unique qualifier causes the field to be employed as a primary
+ * lookup identifier.
  * 
- * Each class is expected to have one (and only one) of each.  The
- * value of the hash of the <code>"*hash-unique"</code> field is
- * assumed identical to the value of the <code>"*unique"</code>
- * field. </li>
+ * Each class is expected to have one (and only one) of each.  </li>
  * 
  * </ul>
  * 
  * <h3>Example</h3>
  * 
  * <pre>
- * /# gap odl 'class Bar'
- *  #/
  * package foo;
  * path /barz;
  * 
  * import java.io.*;
  * 
- * class Bar version 2
+ * class Bar version 1
  *   implements AnInterface
  *   implements AndAnotherInterface
  * {
- *   *unique String uniqueId;
- *   *hash-unique String uniqueName;
- *   Serializable fieldValue;
- *   List<String> aChangeSinceVersionOne;
+ *   *unique String name;
+ *   Serializable value;
  * }
  * </pre>
- * 
- * In this example, the value of 'uniqueId' is the gap data hash of
- * 'uniqueName'.
- * 
- * <pre>
- * /# gap odl 'class Whiz'
- *  #/
- * package gee;
- * path /wizards;
- * 
- * child Whiz version 1
- *   parent foo.Bar
- *   implements SomeInterface
- * {
- *   *unique String uniqueId;
- *   *hash-unique String uniqueName;
- * }
- * </pre>
- * 
- * This example shows the child class declaration.  The parent must be
- * declared before any interface, and on another line following the
- * class name and version.
  * 
  * <h3>Notes</h3>
  * 
  * Field types must resolve at runtime to serializable types.  It's
  * poor style, but not incorrect, to employ the the java lang Object
- * type.  Better style would be to employ the Serializable type,
- * instead.
+ * type.  A more precise specification would employ the Serializable
+ * type.
  * 
  * 
  * @author jdp
