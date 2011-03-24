@@ -26,7 +26,7 @@
 
 
   <path id="lib.path">
-    <pathelement path="${out.bin}" />
+    <pathelement path="${bin}" />
     <fileset dir="${lib}">
       <include name="**/*.jar" />
     </fileset>
@@ -59,14 +59,14 @@
   </path>
 
 
-  <target name="clean" description="Delete all products: 'out', 'jar', etc..">
+  <target name="clean" description="Delete all products: 'bin', 'jar', etc..">
 
-    <clean bin="${out}" this="."/>
+    <clean bin="${bin}" this="."/>
   </target>
 
   <target name="cleanb" description="Delete classes, then compile, then package.">
 
-    <flush dir="${out.bin}" type="class"/>
+    <flush dir="${bin}" type="class"/>
 
     <antcall target="update"/>
   </target>

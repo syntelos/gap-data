@@ -8,4 +8,14 @@
 
    <ant dir="gae" />
  </target>
+
+ <target name="clean">
+
+   <ant dir="types" target="clean"/>
+
+   <ant dir="odlc" target="clean"/>
+
+   <ant dir="gae" target="clean"/>
+ </target>
+
 </project>
