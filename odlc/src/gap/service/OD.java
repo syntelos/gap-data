@@ -651,6 +651,13 @@ public final class OD
                             topDataFieldHF.setVariable(TemplateNames.FieldToStringPrefix,"");
                             topDataFieldHF.setVariable(TemplateNames.FieldToStringSuffix,"");
                         }
+			else if (IsTypeClassBigTable(field,fieldTypeClass)){
+                            topDataFieldHF.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
+                            topDataFieldHF.setVariable(TemplateNames.FieldToStringSuffix,")");
+			}
+                        else if (IsTypeClassCollection(field,fieldTypeClass)){
+			    throw new ODStateException(field,"Unique field '"+fieldName+"' of type collection.");
+			}
                         else {
                             topDataFieldHF.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
                             topDataFieldHF.setVariable(TemplateNames.FieldToStringSuffix,")");
@@ -660,7 +667,7 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotUnique);
                     }
                 }
-                else if (IsTypeClassCollection(fieldTypeClass)){
+                else if (IsTypeClassCollection(field,fieldTypeClass)){
                     isCollection = true;
 
                     dataField = top.addSection(new TemplateName(prefix,"cfield"));
@@ -716,6 +723,16 @@ public final class OD
                     dataField.setVariable(TemplateNames.FieldToStringPrefix,"");
                     dataField.setVariable(TemplateNames.FieldToStringSuffix,"");
                 }
+		else if (IsTypeClassBigTable(field,fieldTypeClass)){
+		    dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
+		    dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+		}
+		else if (IsTypeClassCollection(field,fieldTypeClass)){
+		    /*
+		     * [TODO] Is the missing case encountered?
+		     */
+		    //throw new ODStateException(field,"Field '"+fieldName+"' of type collection.");
+		}
                 else {
                     dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
                     dataField.setVariable(TemplateNames.FieldToStringSuffix,")");

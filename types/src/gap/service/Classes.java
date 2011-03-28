@@ -494,7 +494,7 @@ public class Classes {
 
             return IsFieldPersistent(field);
 
-        else if (IsTypeClassCollection(fieldTypeClass))
+        else if (IsTypeClassCollection(field,fieldTypeClass))
 
             return false;
 
@@ -648,9 +648,13 @@ public class Classes {
         else
             return false;
     }
-    public final static boolean IsTypeClassCollection(java.lang.Class jclass){
+    public final static boolean IsTypeClassCollection(FieldDescriptor field, java.lang.Class jclass){
         if (null != jclass)
             return (gap.data.Collection.class.isAssignableFrom(jclass));
+	else if (null != field){
+	    String type = ToString(field.getType());
+	    return (gap.data.List.Type.Is(type) || gap.data.Map.Type.Is(type));
+	}
         else
             return true;
     }

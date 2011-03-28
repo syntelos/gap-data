@@ -58,11 +58,8 @@ public class Request
      * Request content type
      */
     public static enum ContentType {
-        Nil,
-        Form,
-        Multipart,
-        Json,
-        Xml;
+
+        Nil, Form, Multipart, Json, Xml;
 
         private final static java.util.Map<String,ContentType> Map = new java.util.HashMap<String,ContentType>();
         static {
@@ -525,16 +522,16 @@ public class Request
      */
     public Object getAttribute(String name) {
         return this.request.getAttribute(name);
-	}
+    }
     public java.util.Enumeration getAttributeNames() {
         return this.request.getAttributeNames();
-	}    
+    }    
     public String getCharacterEncoding() {
         return this.request.getCharacterEncoding();
-	}
+    }
     public void setCharacterEncoding(String enc) throws java.io.UnsupportedEncodingException {
         this.request.setCharacterEncoding(enc);
-	}
+    }
     public int getContentLength() {
         return this.request.getContentLength();
     }
@@ -543,7 +540,7 @@ public class Request
     }
     public javax.servlet.ServletInputStream getInputStream() throws java.io.IOException {
         return this.request.getInputStream();
-	}
+    }
     public java.util.Map getParameterMap() {
         return this.request.getParameterMap();
     }
@@ -552,22 +549,22 @@ public class Request
     }
     public String[] getParameterValues(String name) {
         return this.request.getParameterValues(name);
-	}
+    }
     public String getProtocol() {
         return this.request.getProtocol();
-	}
+    }
     public String getScheme() {
         return this.request.getScheme();
-	}
+    }
     public String getServerName() {
         return this.request.getServerName();
-	}
+    }
     public int getServerPort() {
         return this.request.getServerPort();
-	}
+    }
     public java.io.BufferedReader getReader() throws java.io.IOException {
         return this.request.getReader();
-	}
+    }
     public String getRemoteAddr() {
         return this.request.getRemoteAddr();
     }

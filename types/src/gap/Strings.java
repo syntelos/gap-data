@@ -104,7 +104,12 @@ public abstract class Strings {
             case GeoPt:
                 return GeoPtToString((com.google.appengine.api.datastore.GeoPt)instance);
             case Key:
-                return KeyToString((com.google.appengine.api.datastore.Key)instance);
+		if (instance instanceof com.google.appengine.api.datastore.Key)
+		    return KeyToString((com.google.appengine.api.datastore.Key)instance);
+		else if (instance instanceof gap.data.TableClass)
+		    return KeyToString((gap.data.TableClass)instance);
+		else
+		    throw new java.lang.IllegalStateException("Unrecognized type for key "+instance.getClass().getName());
             case Link:
                 return LinkToString((com.google.appengine.api.datastore.Link)instance);
             case PhoneNumber:
@@ -294,6 +299,12 @@ public abstract class Strings {
             return com.google.appengine.api.datastore.KeyFactory.stringToKey(string);
         else
             return null;
+    }
+    public final static java.lang.String KeyToString(gap.data.TableClass table){
+	if (null != table)
+	    return KeyToString(table.getKey());
+	else
+	    return null;
     }
     public final static java.lang.String KeyToString(com.google.appengine.api.datastore.Key instance){
         if (null != instance)
