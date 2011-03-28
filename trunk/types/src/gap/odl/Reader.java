@@ -19,7 +19,9 @@
  */
 package gap.odl;
 
-import gap.util.Resource;
+import jauk.Resource;
+import jauk.Match;
+import jauk.Pattern;
 
 import java.io.File;
 import java.io.InputStream;
@@ -29,9 +31,6 @@ import java.math.BigInteger;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.util.Locale;
-import java.util.Scanner;
-import java.util.regex.MatchResult;
-import java.util.regex.Pattern;
 
 /**
  * 
@@ -39,41 +38,55 @@ import java.util.regex.Pattern;
  * @author jdp
  */
 public final class Reader
-    extends gap.util.Scanner
+    extends jauk.Scanner
 {
 
     private Comment comment;
 
 
-    public Reader(Resource source){
+    public Reader(Resource source)
+	throws IOException
+    {
         super(source);
     }
-    public Reader(Readable source){
+    public Reader(Readable source)
+	throws IOException
+    {
         super(source);
     }
-    public Reader(InputStream source){
+    public Reader(InputStream source)
+	throws IOException
+    {
         super(source);
     }
-    public Reader(InputStream source, Charset cs){
+    public Reader(InputStream source, Charset cs)
+	throws IOException
+    {
         super(source,cs);
     }
     public Reader(File source)
-        throws java.io.FileNotFoundException
+	throws IOException
     {
         super(source);
     }
     public Reader(File source, Charset cs)
-        throws java.io.FileNotFoundException
+	throws IOException
     {
         super(source,cs);
     }
-    public Reader(String source){
+    public Reader(String source)
+	throws IOException
+    {
         super(source);
     }
-    public Reader(ReadableByteChannel source){
+    public Reader(ReadableByteChannel source)
+	throws IOException
+    {
         super(source);
     }
-    public Reader(ReadableByteChannel source, Charset cs){
+    public Reader(ReadableByteChannel source, Charset cs)
+	throws IOException
+    {
         super(source,cs);
     }
 
@@ -98,12 +111,12 @@ public final class Reader
         }
         return comment;
     }
-    public String getNext(Pattern pattern){
+    public String next(Pattern pattern){
         this.comment = null;
-        return super.getNext(pattern);
+        return super.next(pattern);
     }
-    public MatchResult getNextResult(Pattern pattern){
+    public Match match(Pattern pattern){
         this.comment = null;
-        return super.getNextResult(pattern);
+        return super.match(pattern);
     }
 }

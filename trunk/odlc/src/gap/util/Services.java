@@ -19,8 +19,6 @@
  */
 package gap.util;
 
-import gap.util.Resource;
-
 import java.io.Closeable;
 import java.io.BufferedReader;
 import java.io.File;
@@ -105,7 +103,7 @@ public class Services
 
     private final ClassName service;
 
-    private final Resource resource;
+    private final jauk.Resource resource;
 
 
     public Services(File dir, String className){
@@ -115,7 +113,7 @@ public class Services
         super();
         if (null != service){
             this.service = service;
-            this.resource = new Resource(dir,(NamePrefix+service.getName()));
+            this.resource = new jauk.Resource(dir,(NamePrefix+service.getName()));
             try {
                 InputStream in = resource.openStream();
                 if (null != in){
@@ -143,7 +141,7 @@ public class Services
         super();
         if (null != service){
             this.service = service;
-            this.resource = new Resource(NamePrefix+service.getName());
+            this.resource = new jauk.Resource(NamePrefix+service.getName());
             try {
                 Enumeration<URL> resources = this.resource.scanfor();
                 while (resources.hasMoreElements()){
@@ -178,7 +176,7 @@ public class Services
     public final ClassName getService(){
         return this.service;
     }
-    public final Resource getResource(){
+    public final jauk.Resource getResource(){
         return this.resource;
     }
     public final String getServiceName(){

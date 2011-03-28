@@ -27,6 +27,7 @@ import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.BlobKey;
 
 import java.util.Date;
 
@@ -37,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see B
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-05T20:00:35.633Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-03-28T13:04:07.022Z")
 public abstract class BData
     extends gap.data.BigTable
     implements DataInheritance<B>
@@ -121,14 +122,12 @@ public abstract class BData
 
 
     /**
-     * Drop the instance and any children of its key from the world,
-     * memcache and store.
+     * Drop the instance from memcache and datastore.
      */
     public final static void Delete(B instance){
         if (null != instance){
-            Key key = instance.getKey();
-            gap.data.Store.DeleteCollection(KIND,new Query(key));
-            gap.data.Store.Delete(key);
+
+            gap.data.Store.Delete(instance.getKey());
         }
     }
     /**
@@ -232,10 +231,20 @@ public abstract class BData
         public static Field For(String name) {
             Field field = FieldName.get(name);
             if (null == field)
-                return Field.valueOf(name);
+                try {
+                    return Field.valueOf(name);
+                }
+                catch (IllegalArgumentException notFound){
+                    return null;
+                }
             else
                 return field;
         }
+        /**
+         * Principal dynamic binding operator (datastore, etc, except serialization)
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
         public static Object Get(Field field, B instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
@@ -248,6 +257,11 @@ public abstract class BData
                 throw new IllegalArgumentException(field.toString()+" in B");
             }
         }
+        /**
+         * Principal dynamic binding operator (datastore, etc, except serialization)
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
         public static boolean Set(Field field, B instance, Object value){
             switch(field){
             case InheritFromKey:
@@ -308,6 +322,11 @@ public abstract class BData
                     this.fieldTypeBigTable = false;
                     this.fieldTypeCollection = true;
                 }
+                else if (Type.PrimitiveCollection == fieldType){
+                    this.fieldTypePrimitive = true;
+                    this.fieldTypeBigTable = false;
+                    this.fieldTypeCollection = true;
+                }
                 else
                     throw new IllegalStateException("Unimplemented field type "+fieldType);
             }
@@ -345,7 +364,7 @@ public abstract class BData
         }
     }
 
-    private volatile transient B inheritFrom;
+    private transient B inheritFrom;
 
 
 

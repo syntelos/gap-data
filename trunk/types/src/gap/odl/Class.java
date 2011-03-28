@@ -19,6 +19,8 @@
  */
 package gap.odl;
 
+import jauk.Pattern;
+
 import gap.service.Classes;
 import gap.service.od.ClassDescriptor;
 import static gap.service.od.ClassDescriptor.Relation.Type.*;
@@ -30,7 +32,6 @@ import gap.service.od.PackageDescriptor;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 /**
  * <h3>Purpose</h3>
@@ -43,8 +44,8 @@ import java.util.regex.Pattern;
  * 
  * <ul>
  * 
- * <li> Prefix line comment starting with '#'.  (No suffix line
- * comments).  </li>
+ * <li> Line comments starting with '#' and '//'.  C/Java style
+ * multiline comments.  </li>
  * 
  * <li> Package statement from JPL.  Optionally terminated by
  * semicolon. </li>
@@ -93,10 +94,10 @@ import java.util.regex.Pattern;
  * 
  * <h3>Notes</h3>
  * 
- * Field types must resolve at runtime to serializable types.  It's
- * poor style, but not incorrect, to employ the the java lang Object
- * type.  A more precise specification would employ the Serializable
- * type.
+ * Field types must resolve at runtime to serializable types.  
+ * 
+ * It's not incorrect to employ the java lang Object type, however
+ * it's more precise to employ the Serializable type in such a case.
  * 
  * 
  * @author jdp
@@ -110,15 +111,34 @@ public final class Class
                ClassDescriptor.WithPackage,
                ClassDescriptor.WithImports
 {
-    public final static Pattern Open = Pattern.compile("^(class|parent|child).*");
-    public final static Pattern Open2 = Pattern.compile("\\s*\\{",Pattern.MULTILINE);
+    public final static Pattern Open = new jauk.Re("<_>(class|parent|child) [^{]*\\{<Newline>");
 
+
+    public enum Attribute {
+	VERSION, IMPLEMENTS, PARENT, CHILD, UNKNOWN;
+
+	public final static Attribute For(String name){
+	    if (null == name)
+		return Attribute.UNKNOWN;
+	    else {
+		try {
+		    return Attribute.valueOf(name.toUpperCase());
+		}
+		catch (RuntimeException exc){
+		    
+		    return Attribute.UNKNOWN;
+		}
+	    }
+	}
+    }
 
     public final gap.odl.Package pack;
 
     public final gap.odl.Path path;
 
     public final gap.odl.Parent parent;
+
+    public final gap.odl.Child child;
 
     public final String name, nameDecamel;
 
@@ -148,9 +168,9 @@ public final class Class
         String spec = null, name = null;
         gap.odl.Import imp = null;
         gap.odl.Field field = null;
-        gap.odl.Method method = null;
         long version = 1L;
         gap.odl.Parent parent = null;
+        gap.odl.Child child = null;
 
         while (true){
             try {
@@ -166,42 +186,29 @@ public final class Class
                     catch (Jump local){
                         reader.comment(local);
                         this.comment = reader.comment();
-                        String line = reader.getNext(Open);
-                        if (null != line){
-                            StringTokenizer strtok = new StringTokenizer(line, " \t\r\n{");
-                            switch (strtok.countTokens()){
-                            case 2:
-                                spec = strtok.nextToken();
-                                name = strtok.nextToken();
-                                break;
-                            case 4:
-                                spec = strtok.nextToken();
-                                name = strtok.nextToken();
-                                if ("version".equals(strtok.nextToken()))
-                                    version = Long.parseLong(strtok.nextToken());
-                                else
-                                    throw new Syntax("Malformed ODL class declaration in '"+line+"'.");
-                                break;
-                            default:
-                                throw new Syntax("Malformed ODL class declaration in '"+line+"'.");
-                            }
-                            if (!line.endsWith("{")){
-                                try {
-                                    parent = new gap.odl.Parent(reader);
-                                }
-                                catch (Jump to){
-                                    reader.comment(to);
-                                }
-                                try {
-                                    while (true){
-                                        Interface inf = new gap.odl.Interface(reader, pack, this.imports);
-                                        this.interfaces.add(inf);
-                                    }
-                                }
-                                catch (Jump to){
-                                    reader.comment(to);
-                                }
-                                String open2 = reader.getNext(Open2);
+                        String open = reader.next(Open);
+                        if (null != open){
+                            StringTokenizer strtok = new StringTokenizer(open, " \t\r\n{");
+			    spec = strtok.nextToken();
+			    name = strtok.nextToken();
+			    while(strtok.hasMoreTokens()){
+				String token = strtok.nextToken();
+				switch(Attribute.For(token)){
+				case VERSION:
+                                    version = Long.decode(strtok.nextToken());
+				    break;
+				case IMPLEMENTS:
+				    this.interfaces.add(new gap.odl.Interface(strtok.nextToken(), pack, this.imports));
+				    break;
+				case PARENT:
+				    parent = new gap.odl.Parent(strtok.nextToken());
+				    break;
+				case CHILD:
+				    child = new gap.odl.Child(strtok.nextToken());
+				    break;
+				case UNKNOWN:
+                                    throw new Syntax("Malformed ODL class declaration in '"+open+"' at '"+token+"'.");
+				}
                             }
                         }
                         else
@@ -209,16 +216,8 @@ public final class Class
                     }
                 }
                 else {
-                    try {
-                        method = new gap.odl.Method(reader);
-                        this.methods.add(method);
-                    }
-                    catch (Jump to){
-                        reader.comment(to);
-
-                        field = new gap.odl.Field(reader);
-                        this.fields.add(field);
-                    }
+		    field = new gap.odl.Field(reader);
+		    this.fields.add(field);
                 }
             }
             catch (Jump terminal){
@@ -233,7 +232,7 @@ public final class Class
             throw new Syntax("Syntax error missing package.");
 
         this.parent = parent;
-
+        this.child = child;
         this.path = path;
 
         if (null != spec && null != name){
@@ -241,13 +240,16 @@ public final class Class
             this.name = name;
             this.nameDecamel = Decamel(name);
 
-            if ("parent".equals(spec))
+            if ("parent".equals(spec) || (null != child))
+
                 this.relation = Relation.Type.Parent;
-            else if ("child".equals(spec)){
+
+            else if ("child".equals(spec) || (null != parent)){
 
                 ClassDescriptor parentClass = Classes.For(parent);
 
                 if (Classes.IsFieldShortIn(parentClass,this))
+
                     this.relation = Relation.Type.ChildGroup;
                 else
                     this.relation = Relation.Type.Child;
@@ -322,7 +324,7 @@ public final class Class
         return this.fields;
     }
     public boolean hasMethods(){
-        return (!this.methods.isEmpty());
+        return false;
     }
     public lxl.List<MethodDescriptor> getMethods(){
         return this.methods;

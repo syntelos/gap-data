@@ -35,7 +35,7 @@ public final class ClassName
     public final boolean qualified;
 
 
-    public ClassName(Resource resource){
+    public ClassName(jauk.Resource resource){
         this(resource.file);
     }
     public ClassName(File odl){

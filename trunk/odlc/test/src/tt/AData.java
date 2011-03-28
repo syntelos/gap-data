@@ -27,6 +27,7 @@ import gap.hapax.TemplateName;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.BlobKey;
 
 import java.util.Date;
 
@@ -37,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see A
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-05-05T20:00:35.049Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-03-28T13:04:05.631Z")
 public abstract class AData
     extends gap.data.BigTable
     implements DataInheritance<A>
@@ -164,14 +165,12 @@ public abstract class AData
 
 
     /**
-     * Drop the instance and any children of its key from the world,
-     * memcache and store.
+     * Drop the instance from memcache and datastore.
      */
     public final static void Delete(A instance){
         if (null != instance){
-            Key key = instance.getKey();
-            gap.data.Store.DeleteCollection(KIND,new Query(key));
-            gap.data.Store.Delete(key);
+
+            gap.data.Store.Delete(instance.getKey());
         }
     }
     /**
@@ -256,7 +255,7 @@ public abstract class AData
         Id("id",Type.Primitive),
         Name("name",Type.Primitive),
         Children("children",Type.Collection),
-        Content("content",Type.Collection);
+        Content("content",Type.PrimitiveCollection);
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
@@ -278,10 +277,20 @@ public abstract class AData
         public static Field For(String name) {
             Field field = FieldName.get(name);
             if (null == field)
-                return Field.valueOf(name);
+                try {
+                    return Field.valueOf(name);
+                }
+                catch (IllegalArgumentException notFound){
+                    return null;
+                }
             else
                 return field;
         }
+        /**
+         * Principal dynamic binding operator (datastore, etc, except serialization)
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
         public static Object Get(Field field, A instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
@@ -300,6 +309,11 @@ public abstract class AData
                 throw new IllegalArgumentException(field.toString()+" in A");
             }
         }
+        /**
+         * Principal dynamic binding operator (datastore, etc, except serialization)
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
         public static boolean Set(Field field, A instance, Object value){
             switch(field){
             case InheritFromKey:
@@ -366,6 +380,11 @@ public abstract class AData
                     this.fieldTypeBigTable = false;
                     this.fieldTypeCollection = true;
                 }
+                else if (Type.PrimitiveCollection == fieldType){
+                    this.fieldTypePrimitive = true;
+                    this.fieldTypeBigTable = false;
+                    this.fieldTypeCollection = true;
+                }
                 else
                     throw new IllegalStateException("Unimplemented field type "+fieldType);
             }
@@ -403,12 +422,12 @@ public abstract class AData
         }
     }
 
-    private volatile transient A inheritFrom;
+    private transient A inheritFrom;
 
 
-    private volatile String name;
-    private volatile List.Short<B> children;
-    private volatile Map.Primitive<String,Blob> content;
+    private String name;
+    private List.Short<B> children;
+    private Map.Primitive<String,Blob> content;
 
 
 
@@ -536,7 +555,13 @@ public abstract class AData
                         return children;
                 }
             }
-            children = new ListShortAB((A)this);
+            /*
+             * Collection type coersion
+             */
+            {
+                Object tmp = new ListShortAB((A)this);
+                children = (List.Short<B>)tmp;
+            }
             this.children = children;
             children.init();
         }
@@ -614,7 +639,13 @@ public abstract class AData
                         return content;
                 }
             }
-            content = new MapPrimitiveAStringBlob((A)this);
+            /*
+             * Collection type coersion
+             */
+            {
+                Object tmp = new MapPrimitiveAStringBlob((A)this);
+                content = (Map.Primitive<String,Blob>)tmp;
+            }
             this.content = content;
             content.init();
         }

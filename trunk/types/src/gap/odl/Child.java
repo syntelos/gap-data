@@ -19,41 +19,36 @@
  */
 package gap.odl;
 
-import jauk.Pattern;
-
-import gap.service.od.ImportDescriptor;
-
 import java.io.IOException;
-
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 /**
  * 
  * @see Class
  * @author jdp
  */
-public final class Comment
+public final class Child
     extends Object
+    implements gap.data.HasName
 {
-    private final static String ReLine1 = "#<Line>";
-    private final static String ReLine2 = "//<Line>";
-    private final static String ReMultiline = "<CComment>";
 
-    public final static Pattern Re = new jauk.Re("<_>("+ReLine1+"|"+ReLine2+"|"+ReMultiline+")<_>");
+    public final String name;
 
 
-
-    public final String text;
-
-
-    public Comment(Reader reader)
+    public Child(String name)
         throws IOException, Syntax
     {
         super();
-        String text = reader.next(Re);
-        if (null != text)
-            this.text = text;
+        if (null != name){
+	    this.name = name;
+        }
         else 
             throw new Jump();
     }
 
+
+    public String getName(){
+        return this.name;
+    }
 }

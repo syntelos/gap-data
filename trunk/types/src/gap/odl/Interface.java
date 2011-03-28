@@ -27,7 +27,6 @@ import com.google.appengine.api.datastore.Key;
 import java.lang.reflect.TypeVariable;
 import java.io.IOException;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 /**
  * 
@@ -37,46 +36,34 @@ import java.util.regex.Pattern;
 public final class Interface
     extends Object
 {
-    public final static Pattern Statement = Pattern.compile("^\\s*implements [\\w\\._]+[;\\s]*");
-
-
-    private Comment comment;
 
     public final String typeName;
 
     public final java.lang.Class typeClass;
 
 
-    public Interface(Reader reader, Package pkg, lxl.List<ImportDescriptor> imports)
+    public Interface(String typeName, Package pkg, lxl.List<ImportDescriptor> imports)
         throws IOException, Syntax
     {
         super();
-        this.comment = reader.comment();
-        String line = reader.getNext(Statement);
-        if (null != line){
-            StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
-            if (2 == strtok.countTokens()){
-                strtok.nextToken();
+        if (null != typeName){
 
-                this.typeName = strtok.nextToken();
+	    this.typeName = typeName;
 
-                this.typeClass = Import.Find(pkg,imports,this.typeName);
+	    this.typeClass = Import.Find(pkg,imports,this.typeName);
 
-                if (null == this.typeClass)
+	    if (null == this.typeClass)
 
-                    throw new Syntax("Unrecognized class not found '"+this.typeName+"' in '"+line+"'.");
+		throw new Syntax("Unrecognized class not found '"+this.typeName+"'.");
 
-                else if (!this.typeClass.isInterface())
+	    else if (!this.typeClass.isInterface())
 
-                    throw new Syntax("Class '"+this.typeClass.getName()+"' is not an interface in '"+line+"'.");
-                else
-                    return;
-            }
-            else
-                throw new Syntax("Malformed statement '"+line+"'.");
+		throw new Syntax("Class '"+this.typeClass.getName()+"' is not an interface.");
+	    else
+		return;
         }
         else
-            throw new Jump(this.comment);
+            throw new Jump();
     }
 
 
@@ -91,11 +78,5 @@ public final class Interface
     }
     public String toString(){
         return this.typeName;
-    }
-    public boolean hasComment(){
-        return (null != this.comment);
-    }
-    public Comment getComment(){
-        return this.comment;
     }
 }

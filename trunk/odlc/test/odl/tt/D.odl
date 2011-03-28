@@ -1,0 +1,9 @@
+package tt;
+path /D;
+
+child D
+      version 1
+      parent C
+{
+    *unique String identifier;
+}

@@ -15,6 +15,8 @@
 
   <property file="../update.properties"/>
 
+  <property file="${user.home}/update.properties"/>
+
   <import file="ant/build.in.java.xml"/>
   <import file="ant/build.in.odl.xml"/>
   <import file="ant/build.in.update.xml"/>
@@ -77,9 +79,14 @@
 
   </target>
 
-  <target name="update" if="gap.data.update" depends="jar" description="Copy jar product to targets defined in '../update.properties' name 'gap.data.update'.">
+  <target name="update" if="gap.data.update" depends="local.update" description="Copy jar product to targets defined in '{user.home}/update.properties' name 'gap.data.update'.">
 
     <do-update src="${target.jar}" tgt="${gap.data.update}" />
+  </target>
+
+  <target name="local.update" if="local.gap.data.update" depends="jar">
+
+    <do-update src="${target.jar}" tgt="${local.gap.data.update}" />
   </target>
 
   <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">
@@ -124,6 +131,9 @@
   <target name="minor" description="Increment project version minor number.">
     <version-minor/>
     <version/>
+  </target>
+
+  <target name="test" depends="version" description="">
   </target>
 
 </project>
