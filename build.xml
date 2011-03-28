@@ -18,4 +18,40 @@
    <ant dir="gae" target="clean"/>
  </target>
 
+ <target name="test">
+
+   <ant dir="types" target="test"/>
+
+   <ant dir="odlc" target="test"/>
+
+   <ant dir="gae" target="test"/>
+ </target>
+
+ <target name="build">
+
+   <ant dir="types" target="build"/>
+
+   <ant dir="odlc" target="build"/>
+
+   <ant dir="gae" target="build"/>
+ </target>
+
+ <target name="minor">
+
+   <ant dir="types" target="minor"/>
+
+   <ant dir="odlc" target="minor"/>
+
+   <ant dir="gae" target="minor"/>
+ </target>
+
+ <target name="major">
+
+   <ant dir="types" target="major"/>
+
+   <ant dir="odlc" target="major"/>
+
+   <ant dir="gae" target="major"/>
+ </target>
+
 </project>

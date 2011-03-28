@@ -19,9 +19,10 @@
  */
 package gap.odl;
 
+import jauk.Pattern;
+
 import java.io.IOException;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 /**
  * 
@@ -32,7 +33,7 @@ public final class Path
     extends Object
     implements gap.data.HasName
 {
-    public final static Pattern Statement = Pattern.compile("^path [\\w\\./-]+[;\\s]*");
+    public final static Pattern Statement = new jauk.Re("<_>path [^;]*;<Newline>");
 
 
     private Comment comment;
@@ -44,7 +45,7 @@ public final class Path
     {
         super();
         this.comment = reader.comment();
-        String line = reader.getNext(Statement);
+        String line = reader.next(Statement);
         if (null != line){
             StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
             if (2 == strtok.countTokens()){

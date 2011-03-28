@@ -32,40 +32,23 @@ public final class Parent
     extends Object
     implements gap.data.HasName
 {
-    public final static Pattern Statement = Pattern.compile("^\\s*parent [\\w\\.]+[;\\s]*");
-
-
-    private Comment comment;
 
     public final String name;
 
-    public Parent(Reader reader)
+
+    public Parent(String name)
         throws IOException, Syntax
     {
         super();
-        this.comment = reader.comment();
-        String line = reader.getNext(Statement);
-        if (null != line){
-            StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
-            if (2 == strtok.countTokens()){
-                strtok.nextToken();
-                this.name = strtok.nextToken();
-                return;
-            }
-            else
-                throw new Syntax("Malformed ODL parent statement '"+line+"'.");
+        if (null != name){
+	    this.name = name;
         }
         else 
-            throw new Jump(this.comment);
+            throw new Jump();
     }
+
 
     public String getName(){
         return this.name;
-    }
-    public boolean hasComment(){
-        return (null != this.comment);
-    }
-    public Comment getComment(){
-        return this.comment;
     }
 }

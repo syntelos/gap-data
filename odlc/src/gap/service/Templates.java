@@ -23,7 +23,6 @@ import gap.hapax.Template;
 import gap.hapax.TemplateException;
 import gap.hapax.TemplateName;
 import gap.hapax.TemplateRenderer;
-import gap.util.Resource;
 
 import com.google.appengine.api.datastore.Text;
 
@@ -39,7 +38,7 @@ import java.nio.charset.Charset;
  * @author jdp
  */
 public final class Templates
-    extends lxl.Map<Resource,Template>
+    extends lxl.Map<jauk.Resource,Template>
     implements gap.data.DataInheritance.Notation,
                gap.hapax.TemplateLoader
 {
@@ -68,7 +67,7 @@ public final class Templates
         return Instance.getTemplate(pathname);
     }
 
-    public static String ReadToString(Resource resource)
+    public static String ReadToString(jauk.Resource resource)
         throws IOException
     {
         InputStream file = resource.openStream();
@@ -105,11 +104,11 @@ public final class Templates
     private TemplateRenderer getTemplate(String path)
         throws TemplateException
     {
-        Resource templateResource = new Resource(path,ResourcePrefix,ResourceSuffix);
+        jauk.Resource templateResource = new jauk.Resource(path,ResourcePrefix,ResourceSuffix);
         Template template = this.get(templateResource);
         if (null == template){
             template = new Template(path);
-            Resource templateFileResource = new Resource(ResourceDir,templateResource);
+            jauk.Resource templateFileResource = new jauk.Resource(ResourceDir,templateResource);
             try {
                 template.setTemplateSourceHapax(gap.Strings.TextFromString(ReadToString(templateFileResource)));
                 template.setLastModified(templateFileResource.getLastModified());

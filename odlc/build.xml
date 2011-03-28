@@ -6,6 +6,7 @@
   <property name="compiler.optimize" value="false"/>
   <property name="compiler.debug" value="true"/>
   <property name="compiler.deprecation" value="false"/>
+  <property name="compiler.encoding" value="UTF-8"/>
 
   <property name="src" value="src"/>
   <property name="lib" value="lib"/>
@@ -15,8 +16,10 @@
   <property name="ver.src" value="ver/src"/>
 
   <property file="../update.properties"/>
+  <property file="${user.home}/update.properties"/>
 
   <import file="ant/build.in.java.xml"/>
+  <import file="ant/build.in.update.xml"/>
   <import file="ant/build.in.version.xml"/>
 
   <path id="lib.path">
@@ -57,7 +60,7 @@
     </fileset>
   </path>
 
-  <target name="test" depends="jar" description="Compile odl to src under dir test.">
+  <target name="test" depends="version" description="Compile odl to src under dir test.">
 
     <java classname="gap.odl.Main" failonerror="true" fork="true">
       <arg value="test/odl"/>
@@ -76,12 +79,14 @@
     <clean bin="${bin}" this="."/>
   </target>
 
-  <target name="update" if="gap.data.odlc.update" depends="jar" description="Copy jar product to targets defined in '{user.home}/gd.properties' name 'gap.data.odlc.update'.">
+  <target name="update" if="gap.data.odlc.update" depends="local.update" description="Copy jar product to targets defined in '{user.home}/update.properties' name 'gap.data.odlc.update'.">
 
-    <java classname="Update" classpath="ant" fork="true" failonerror="true">
-      <arg value="${target.jar}"/>
-      <arg value="${gap.data.odlc.update}"/>
-    </java>
+    <do-update src="${target.jar}" tgt="${gap.data.odlc.update}" />
+  </target>
+
+  <target name="local.update" if="local.gap.data.odlc.update" depends="jar">
+
+    <do-update src="${target.jar}" tgt="${local.gap.data.odlc.update}" />
   </target>
 
   <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">

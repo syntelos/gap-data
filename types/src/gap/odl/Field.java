@@ -19,6 +19,8 @@
  */
 package gap.odl;
 
+import jauk.Pattern;
+
 import gap.service.od.FieldDescriptor;
 import gap.service.od.ImportDescriptor;
 
@@ -27,7 +29,6 @@ import com.google.appengine.api.datastore.Key;
 import java.lang.reflect.TypeVariable;
 import java.io.IOException;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 /**
  * Normal field types are either {@link gap.Primitive primitives} or
@@ -45,7 +46,7 @@ public final class Field
                FieldDescriptor.Relation,
                FieldDescriptor.DefaultSortBy
 {
-    public final static Pattern Statement = Pattern.compile("\\s*[\\w\\.\\*\\-<:>,\\s]+\\s*[\\w]+\\s*[;\\s]*");
+    public final static Pattern Statement = new jauk.Re("<_>[^;]*;<Newline>");
 
     public enum Qualifier {
         Child("*child"),
@@ -117,7 +118,7 @@ public final class Field
     {
         super();
         this.comment = reader.comment();
-        String line = reader.getNext(Statement);
+        String line = reader.next(Statement);
         if (null != line){
             boolean isDefaultSortBy = false;
             String typeName = null, name = null;

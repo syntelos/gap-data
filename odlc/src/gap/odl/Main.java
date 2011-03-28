@@ -27,7 +27,6 @@ import gap.service.OD;
 import gap.service.od.FieldDescriptor;
 import gap.service.od.ImportDescriptor;
 import gap.service.od.ODStateException;
-import gap.util.Resource;
 import gap.util.Services;
 import gap.util.ClassName;
 
@@ -289,7 +288,7 @@ public final class Main
     {
         lxl.List<File> products = new lxl.ArrayList<File>();
 
-        for (Resource odlFile: Classes.Resources()){
+        for (jauk.Resource odlFile: Classes.Resources()){
 
             if (odlFile.hasFile() && (!odlFile.getPath().startsWith("lib/"))){
                 try {

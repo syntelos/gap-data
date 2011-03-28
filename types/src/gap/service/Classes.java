@@ -29,7 +29,6 @@ import gap.service.od.ImportDescriptor;
 import gap.service.od.PackageDescriptor;
 import gap.service.od.ODStateException;
 import gap.util.ClassName;
-import gap.util.Resource;
 
 import alto.io.u.Find;
 
@@ -45,11 +44,11 @@ import java.util.StringTokenizer;
  */
 public class Classes {
 
-    private final static lxl.Map<ClassName,Resource> R = new lxl.Map<ClassName,Resource>();
+    private final static lxl.Map<ClassName,jauk.Resource> R = new lxl.Map<ClassName,jauk.Resource>();
 
     private final static lxl.Map<ClassName,ClassDescriptor> C = new lxl.Map<ClassName,ClassDescriptor>();
 
-    public final static Iterable<Resource> Resources(){
+    public final static Iterable<jauk.Resource> Resources(){
         return R.values();
     }
     public final static Iterable<ClassDescriptor> Classes(){
@@ -64,7 +63,7 @@ public class Classes {
             cd = C.get(name);
         }
         if (null == cd){
-            Resource resource = R.get(name);
+            jauk.Resource resource = R.get(name);
             if (null != resource){
                 gap.odl.Reader rdr = new gap.odl.Reader(resource);
                 try {
@@ -83,7 +82,7 @@ public class Classes {
     public final static ClassDescriptor For(File file)
         throws java.io.IOException, gap.odl.Syntax
     {
-        Resource resource = new Resource(file);
+        jauk.Resource resource = new jauk.Resource(file);
         ClassName name = new ClassName(file);
         synchronized(R){
             R.put(name,resource);
@@ -203,7 +202,7 @@ public class Classes {
     public final static int Resources(Find find){
         int count = 0;
         while (find.hasNext()){
-            Resource file = new Resource(find.next());
+            jauk.Resource file = new jauk.Resource(find.next());
             ClassName name = new ClassName(file);
             synchronized(R){
                 R.put(name,file);

@@ -19,12 +19,13 @@
  */
 package gap.odl;
 
+import jauk.Pattern;
+
 import gap.service.od.ImportDescriptor;
 
 import java.io.IOException;
 
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 /**
  * 
@@ -35,7 +36,7 @@ public final class Import
     extends Object
     implements ImportDescriptor
 {
-    public final static Pattern Statement = Pattern.compile("^import [\\w\\.\\*]+[;\\s]*");
+    public final static Pattern Statement = new jauk.Re("<_>import [^;]*;<Newline>");
 
 
     public final static java.lang.Class Find(Package pkg, lxl.List<ImportDescriptor> imports, String type){
@@ -78,7 +79,7 @@ public final class Import
     {
         super();
         this.comment = reader.comment();
-        String line = reader.getNext(Statement);
+        String line = reader.next(Statement);
         if (null != line){
             StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
             if (2 == strtok.countTokens()){
