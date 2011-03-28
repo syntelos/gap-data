@@ -21,6 +21,10 @@ package gap.service;
 
 import oso.data.Person;
 
+import gap.data.List;
+import gap.hapax.TemplateDataDictionary;
+import gap.hapax.TemplateName;
+
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 
@@ -81,6 +85,19 @@ public final class Logon
      * <code>"gap.service.Logon.Log"</code>.
      */
     protected final static Logger Log = Logger.getLogger(Logon.class.getName());
+
+    public static enum Field {
+        ns, person, loginUrl, logoutUrl, logon, admin, member;
+
+        public static Field For(String name){
+            try {
+                return Field.valueOf(name);
+            }
+            catch (IllegalArgumentException exc){
+                return null;
+            }
+        }
+    }
 
 
     public final String ns;
@@ -196,5 +213,32 @@ public final class Logon
             this.logoutUrl = logoutUrl;
         }
         return logoutUrl;
+    }
+    /*
+     * From gap.Request "logon" is aliased to "person".
+     */
+    public boolean hasVariable(TemplateName name){
+	if (null != this.person){
+	    if (name.has(1))
+		return this.person.hasVariable(new TemplateName(name));
+	    else
+		return true;
+	}
+	else
+            return super.hasVariable(name);
+    }
+    public String getVariable(TemplateName name){
+	if (name.is(0))
+	    return this.serviceLogon;
+	else if (null != this.person)
+	    return this.person.getVariable(new TemplateName(name));
+	else
+	    return super.getVariable(name);
+    }
+    public List.Short<TemplateDataDictionary> getSection(TemplateName name){
+	if (null != this.person)
+	    return this.person.getSection(new TemplateName(name));
+	else
+            return super.getSection(name);
     }
 }

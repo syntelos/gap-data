@@ -1080,8 +1080,9 @@ public abstract class {{=class_name}}Data
                     else
                         return null;
                 }
-                else
-                    return this.get{{=field_nameCamel}}Id(Notation.MayInherit);{{/field_is_bigTable}}{{#field_is_not_bigTable}}
+                else{{#field_is_unique}}
+                    return this.get{{=field_nameCamel}}Id();{{/field_is_unique}}{{#field_is_not_unique}}
+                    return this.get{{=field_nameCamel}}Id(Notation.MayInherit);{{/field_is_not_unique}}{{/field_is_bigTable}}{{#field_is_not_bigTable}}
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
