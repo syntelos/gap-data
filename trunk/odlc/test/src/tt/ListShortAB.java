@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2011-03-28T13:04:06.760Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2011-03-29T18:50:44.464Z")
 public final class ListShortAB
     extends gap.util.AbstractList<B>
     implements gap.data.List.Short<B>
