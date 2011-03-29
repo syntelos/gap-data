@@ -39,6 +39,8 @@ public abstract class Strings {
                 return BooleanFromString(string);
             case Byte:
                 return ByteFromString(string);
+            case Character:
+                return CharacterFromString(string);
             case Short:
                 return ShortFromString(string);
             case Integer:
@@ -85,6 +87,8 @@ public abstract class Strings {
                 return BooleanToString((java.lang.Boolean)instance);
             case Byte:
                 return ByteToString((java.lang.Byte)instance);
+            case Character:
+                return CharacterToString((java.lang.Character)instance);
             case Short:
                 return ShortToString((java.lang.Short)instance);
             case Integer:
@@ -157,6 +161,18 @@ public abstract class Strings {
             return null;
     }
     public final static java.lang.String ByteToString(java.lang.Byte instance){
+        if (null != instance)
+            return instance.toString();
+        else
+            return null;
+    }
+    public final static java.lang.Character CharacterFromString(java.lang.String string){
+        if (null != string && 0 < string.length())
+            return new java.lang.Character(string.charAt(0));
+        else
+            return null;
+    }
+    public final static java.lang.String CharacterToString(java.lang.Character instance){
         if (null != instance)
             return instance.toString();
         else

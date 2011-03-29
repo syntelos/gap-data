@@ -69,6 +69,18 @@ public abstract class Objects {
         else
             throw new ClassCastException(object.getClass().getName());
     }
+    public final static java.lang.Character CharacterFromObject(java.lang.Object object){
+        if (object instanceof java.lang.Character)
+            return (java.lang.Character)object;
+        else if (object instanceof java.lang.String)
+            return Strings.CharacterFromString( (java.lang.String)object);
+        else if (object instanceof java.lang.Number)
+            return new java.lang.Character( (char)((java.lang.Number)object).intValue());
+        else if (null == object)
+            return null;
+        else
+            throw new ClassCastException(object.getClass().getName());
+    }
     public final static java.lang.Short ShortFromObject(java.lang.Object object){
         if (object instanceof java.lang.Short)
             return (java.lang.Short)object;
