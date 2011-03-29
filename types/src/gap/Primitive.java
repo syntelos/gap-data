@@ -39,6 +39,7 @@ public enum Primitive {
     String(java.lang.String.class),
     Boolean(java.lang.Boolean.class),
     Byte(java.lang.Byte.class),
+    Character(java.lang.Character.class),
     Short(java.lang.Short.class),
     Integer(java.lang.Integer.class), 
     Long(java.lang.Long.class),
