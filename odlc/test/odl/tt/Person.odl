@@ -1,0 +1,15 @@
+//                      -*-java-*-
+package tt;
+path /people;
+
+class Person 
+       version 5
+{
+    *unique String logonId;
+    String nameLast;
+    String nameMiddle;
+    String nameFirst;
+    String title;
+    PhoneNumber telephone;
+    Boolean present;
+}

@@ -92,31 +92,28 @@ public final class Reader
 
 
     public void comment(Jump jump){
-        if (null == this.comment)
-            this.comment = jump.comment;
+
+	this.comment = jump.comment;
     }
     public Comment comment()
         throws IOException, Syntax
     {
-        Comment comment = this.comment;
-        if (null != comment)
-            this.comment = null;
-        else {
-            try {
-                comment = new Comment(this);
-                this.comment = comment;
-            }
-            catch (Jump to){
-            }
+	Comment comment = this.comment;
+
+	this.comment = null;
+
+	try {
+	    return new Comment(this);
+	}
+	catch (Jump to){
+
+	    return comment;
         }
-        return comment;
     }
     public String next(Pattern pattern){
+
         this.comment = null;
+
         return super.next(pattern);
-    }
-    public Match match(Pattern pattern){
-        this.comment = null;
-        return super.match(pattern);
     }
 }
