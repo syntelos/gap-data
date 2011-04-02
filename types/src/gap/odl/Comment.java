@@ -34,7 +34,7 @@ import java.io.IOException;
 public final class Comment
     extends Object
 {
-    private final static String ReLine1 = "#<Line>";
+    private final static String ReLine1 = "\\#<Line>";
     private final static String ReLine2 = "//<Line>";
     private final static String ReMultiline = "<CComment>";
 

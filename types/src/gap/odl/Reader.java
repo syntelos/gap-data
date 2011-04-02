@@ -41,73 +41,36 @@ public final class Reader
     extends jauk.Scanner
 {
 
+    public final String sourcepath;
+
     private Comment comment;
 
 
     public Reader(Resource source)
-	throws IOException
+        throws IOException
     {
         super(source);
-    }
-    public Reader(Readable source)
-	throws IOException
-    {
-        super(source);
-    }
-    public Reader(InputStream source)
-	throws IOException
-    {
-        super(source);
-    }
-    public Reader(InputStream source, Charset cs)
-	throws IOException
-    {
-        super(source,cs);
-    }
-    public Reader(File source)
-	throws IOException
-    {
-        super(source);
-    }
-    public Reader(File source, Charset cs)
-	throws IOException
-    {
-        super(source,cs);
-    }
-    public Reader(String source)
-	throws IOException
-    {
-        super(source);
-    }
-    public Reader(ReadableByteChannel source)
-	throws IOException
-    {
-        super(source);
-    }
-    public Reader(ReadableByteChannel source, Charset cs)
-	throws IOException
-    {
-        super(source,cs);
+	this.sourcepath = source.path;
     }
 
 
     public void comment(Jump jump){
 
-	this.comment = jump.comment;
+        this.comment = jump.comment;
     }
     public Comment comment()
         throws IOException, Syntax
     {
-	Comment comment = this.comment;
+        Comment comment = this.comment;
 
-	this.comment = null;
+        this.comment = null;
 
-	try {
-	    return new Comment(this);
-	}
-	catch (Jump to){
+        try {
+            return new Comment(this);
+        }
+        catch (Jump to){
 
-	    return comment;
+            return comment;
         }
     }
     public String next(Pattern pattern){

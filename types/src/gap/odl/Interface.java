@@ -48,19 +48,19 @@ public final class Interface
         super();
         if (null != typeName){
 
-	    this.typeName = typeName;
+            this.typeName = typeName;
 
-	    this.typeClass = Import.Find(pkg,imports,this.typeName);
+            this.typeClass = Import.Find(pkg,imports,this.typeName);
 
-	    if (null == this.typeClass)
+            if (null == this.typeClass)
 
-		throw new Syntax("Unrecognized class not found '"+this.typeName+"'.");
+                throw new Syntax("Unrecognized class not found '"+this.typeName+"'.");
 
-	    else if (!this.typeClass.isInterface())
+            else if (!this.typeClass.isInterface())
 
-		throw new Syntax("Class '"+this.typeClass.getName()+"' is not an interface.");
-	    else
-		return;
+                throw new Syntax("Class '"+this.typeClass.getName()+"' is not an interface.");
+            else
+                return;
         }
         else
             throw new Jump();

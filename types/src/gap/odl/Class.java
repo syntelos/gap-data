@@ -115,21 +115,21 @@ public final class Class
 
 
     public enum Attribute {
-	VERSION, IMPLEMENTS, PARENT, CHILD, UNKNOWN;
+        VERSION, IMPLEMENTS, PARENT, CHILD, UNKNOWN;
 
-	public final static Attribute For(String name){
-	    if (null == name)
-		return Attribute.UNKNOWN;
-	    else {
-		try {
-		    return Attribute.valueOf(name.toUpperCase());
-		}
-		catch (RuntimeException exc){
-		    
-		    return Attribute.UNKNOWN;
-		}
-	    }
-	}
+        public final static Attribute For(String name){
+            if (null == name)
+                return Attribute.UNKNOWN;
+            else {
+                try {
+                    return Attribute.valueOf(name.toUpperCase());
+                }
+                catch (RuntimeException exc){
+                    
+                    return Attribute.UNKNOWN;
+                }
+            }
+        }
     }
 
     public final gap.odl.Package pack;
@@ -189,35 +189,35 @@ public final class Class
                         String open = reader.next(Open);
                         if (null != open){
                             StringTokenizer strtok = new StringTokenizer(open, " \t\r\n{");
-			    spec = strtok.nextToken();
-			    name = strtok.nextToken();
-			    while(strtok.hasMoreTokens()){
-				String token = strtok.nextToken();
-				switch(Attribute.For(token)){
-				case VERSION:
+                            spec = strtok.nextToken();
+                            name = strtok.nextToken();
+                            while(strtok.hasMoreTokens()){
+                                String token = strtok.nextToken();
+                                switch(Attribute.For(token)){
+                                case VERSION:
                                     version = Long.decode(strtok.nextToken());
-				    break;
-				case IMPLEMENTS:
-				    this.interfaces.add(new gap.odl.Interface(strtok.nextToken(), pack, this.imports));
-				    break;
-				case PARENT:
-				    parent = new gap.odl.Parent(strtok.nextToken());
-				    break;
-				case CHILD:
-				    child = new gap.odl.Child(strtok.nextToken());
-				    break;
-				case UNKNOWN:
-                                    throw new Syntax("Malformed ODL class declaration in '"+open+"' at '"+token+"'.");
-				}
+                                    break;
+                                case IMPLEMENTS:
+                                    this.interfaces.add(new gap.odl.Interface(strtok.nextToken(), pack, this.imports));
+                                    break;
+                                case PARENT:
+                                    parent = new gap.odl.Parent(strtok.nextToken());
+                                    break;
+                                case CHILD:
+                                    child = new gap.odl.Child(strtok.nextToken());
+                                    break;
+                                case UNKNOWN:
+                                    throw new Syntax("Malformed ODL class declaration in '"+open+"' at '"+token+"' in '"+reader.sourcepath+"'.");
+                                }
                             }
                         }
                         else
-                            throw new Syntax("ODL class declaration not found.");
+                            throw new Syntax("ODL class declaration not found in '"+reader.sourcepath+"'.");
                     }
                 }
                 else {
-		    field = new gap.odl.Field(reader);
-		    this.fields.add(field);
+                    field = new gap.odl.Field(reader);
+                    this.fields.add(field);
                 }
             }
             catch (Jump terminal){
@@ -229,7 +229,7 @@ public final class Class
         if (null != pack)
             this.pack = pack;
         else
-            throw new Syntax("Syntax error missing package.");
+            throw new Syntax("Syntax error missing package in '"+reader.sourcepath+"'.");
 
         this.parent = parent;
         this.child = child;
@@ -258,7 +258,7 @@ public final class Class
                 this.relation = Relation.Type.None;
         }
         else
-            throw new Syntax("Syntax error missing class declaration.");
+            throw new Syntax("Syntax error missing class declaration in '"+reader.sourcepath+"'.");
 
         this.version = String.valueOf(version);
 

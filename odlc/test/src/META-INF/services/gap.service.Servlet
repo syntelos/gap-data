@@ -1,4 +1,5 @@
 tt.AServlet
+tt.PersonServlet
+tt.ChannelServlet
 tt.BServlet
 tt.CServlet
-tt.PersonServlet
