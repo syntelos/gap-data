@@ -87,6 +87,11 @@ public final class Templates
     {
         return Instance.getTemplate(name);
     }
+    public static TemplateRenderer GetRenderer(Template template)
+        throws TemplateException
+    {
+        return Instance.getRenderer(template);
+    }
     public static TemplateRenderer GetTemplate(String pathname)
         throws TemplateException
     {
@@ -133,6 +138,14 @@ public final class Templates
         throws TemplateException
     {
         return this.getTemplate(name.getSource());
+    }
+    public TemplateRenderer getRenderer(Template template)
+        throws TemplateException
+    {
+        if (null != template)
+            return new TemplateRendererImpl(this,template);
+	else
+	    return null;
     }
     private TemplateRenderer getTemplate(Request request)
         throws TemplateException

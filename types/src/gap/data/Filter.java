@@ -34,6 +34,7 @@ public final class Filter
     extends Object
     implements java.io.Serializable,
                java.lang.Comparable<Filter>,
+	       java.lang.Cloneable,
                java.lang.Iterable<Filter.Term>
 {
     private final static long serialVersionUID = 1;
@@ -215,6 +216,18 @@ public final class Filter
     }
 
 
+    public Filter clone(){
+	try {
+	    Filter clone = (Filter)super.clone();
+	    if (null != clone.list)
+		clone.list = clone.list.clone();
+
+	    return clone;
+	}
+	catch (CloneNotSupportedException exc){
+	    throw new InternalError();
+	}
+    }
     public Kind getKind(){
         return this.kind;
     }
