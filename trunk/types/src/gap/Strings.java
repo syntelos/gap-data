@@ -388,6 +388,21 @@ public abstract class Strings {
         else
             return null;
     }
-
+    public final static java.lang.String[] Add(java.lang.String[] list, Primitive type, java.lang.Object instance){
+	return Add(list,ToString(type,instance));
+    }
+    public final static java.lang.String[] Add(java.lang.String[] list, java.lang.String item){
+	if (null == item)
+	    return list;
+	else if (null == list)
+	    return new java.lang.String[]{item};
+	else {
+	    int len = list.length;
+	    java.lang.String[] copier = new java.lang.String[len+1];
+	    java.lang.System.arraycopy(list,0,copier,0,len);
+	    copier[len] = item;
+	    return copier;
+	}
+    }
 
 }

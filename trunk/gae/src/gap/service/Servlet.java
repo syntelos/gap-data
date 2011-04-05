@@ -396,6 +396,16 @@ public class Servlet
     {
         this.undefined(req,rep);
     }
+    protected final void ok(HttpServletRequest req, HttpServletResponse rep)
+        throws IOException, ServletException
+    {
+	rep.setStatus(200,"Ok");
+    }
+    protected final void er(HttpServletRequest req, HttpServletResponse rep, int status, String message)
+        throws IOException, ServletException
+    {
+	rep.setStatus(status,message);
+    }
     protected final void error(HttpServletRequest req, HttpServletResponse rep)
         throws IOException, ServletException
     {
