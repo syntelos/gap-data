@@ -155,7 +155,16 @@ public class ArrayList<V>
         return (-1 == this.indexInBuffer(instance));
     }
     public List.Short<V> add(V instance){
+
         return this.addToBuffer(instance);
+    }
+    public int indexOf(V instance){
+
+        return this.indexInBuffer(instance);
+    }
+    public V remove (V instance) {
+
+        return this.removeFromBuffer(instance);
     }
     public V get(int index){
         if (-1 < index){
@@ -206,6 +215,33 @@ public class ArrayList<V>
             }
         }
         return -1;
+    }
+    public final V removeFromBuffer (V item) {
+
+        int index = this.indexInBuffer(item);
+        if (0 > index) {
+            return null;
+        }
+        else {
+            Object[] buffer = this.buffer;
+            int len = buffer.length;
+            int term = (len-1);
+            Object[] copy = new Object[term];
+
+            if (0 == index){
+                System.arraycopy(buffer,1,copy,0,term);
+            }
+            else if (term == index){
+                System.arraycopy(buffer,0,copy,0,term);
+            }
+            else {
+                System.arraycopy(buffer,0,copy,0,index);
+                System.arraycopy(buffer,(index+1),copy,index,(term-index));
+            }
+            this.buffer = copy;
+
+            return item;
+        }
     }
     public final int compareTo(Collection<V> collection){
         if (null == collection)

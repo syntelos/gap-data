@@ -111,6 +111,14 @@ public interface List<V>
             throws java.lang.InterruptedException;
 
         public List.Short<V> clone();
+        /**
+         * In memory operation
+         */
+        public int indexOf(V value);
+        /**
+         * In memory operation
+         */
+        public V remove(V value);
     }
 
     public interface Long<V>
@@ -138,4 +146,5 @@ public interface List<V>
     public V set(int index, V value);
 
     public List<V> clone();
+
 }
