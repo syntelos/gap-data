@@ -2,53 +2,17 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
 
   <display-name>@ProjectTarget@</display-name>
-
+{{#servlet}}
   <servlet>
-    <servlet-name>A</servlet-name>
-    <servlet-class>tt.AServlet</servlet-class>
-    <load-on-startup>-1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>Person</servlet-name>
-    <servlet-class>tt.PersonServlet</servlet-class>
-    <load-on-startup>-1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>Channel</servlet-name>
-    <servlet-class>tt.ChannelServlet</servlet-class>
-    <load-on-startup>-1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>B</servlet-name>
-    <servlet-class>tt.BServlet</servlet-class>
-    <load-on-startup>-1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>C</servlet-name>
-    <servlet-class>tt.CServlet</servlet-class>
-    <load-on-startup>-1</load-on-startup>
-  </servlet>
-
+    <servlet-name>{{=name}}</servlet-name>
+    <servlet-class>{{=class_name}}</servlet-class>
+    <load-on-startup>{{=load_on}}</load-on-startup>
+  </servlet>{{/servlet}}
+{{#servlet}}
   <servlet-mapping>
-    <servlet-name>A</servlet-name>
-    <url-pattern>/a/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Person</servlet-name>
-    <url-pattern>/people/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Channel</servlet-name>
-    <url-pattern>/channel/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>B</servlet-name>
-    <url-pattern>/b/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>C</servlet-name>
-    <url-pattern>/C/*</url-pattern>
-  </servlet-mapping>
+    <servlet-name>{{=name}}</servlet-name>
+    <url-pattern>{{=url_pattern}}</url-pattern>
+  </servlet-mapping>{{/servlet}}
 
   <error-page>
     <error-code>400</error-code>
