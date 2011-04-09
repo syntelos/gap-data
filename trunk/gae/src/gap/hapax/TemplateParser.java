@@ -41,6 +41,18 @@ import java.text.MessageFormat;
 public final class TemplateParser
     extends Object
 {
+    /**
+     * Concurrent access conflict should be resolved 
+     */
+    public static class Retry
+        extends TemplateParserException
+    {
+
+        public Retry(){
+            super("Unable to save template node list.");
+        }
+    }
+
 
     public static List.Short<TemplateNode> Parse(Template source, List.Short<TemplateNode> list)
         throws TemplateParserException
@@ -75,7 +87,7 @@ public final class TemplateParser
                         if (list.save(3000))
                             return list;
                         else
-                            throw new TemplateParserException("Unable to save template node list.");
+                            throw new Retry();
                     }
                     catch (InterruptedException exc){
                         throw new TemplateParserException("Unable to save template node list.",exc);
