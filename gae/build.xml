@@ -42,6 +42,7 @@
       <include name="**/*.jar" />
     </fileset>
   </path>
+
   <path id="lib.path.types">
     <fileset dir="${lib}">
       <include name="**/gap-data-types-*.jar" />
@@ -92,7 +93,7 @@
   <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">
     <archive.cleanly/>
 
-    <archive target="${target.jar}" bin="${bin}" manifest="${src}/Manifest.mf">
+    <archive target="${target.jar}" bin="${bin}">
       <pack>
         <zipfileset src="${toString:lib.path.types}" />
       </pack>
