@@ -79,14 +79,14 @@
   <macrodef name="archive">
     <attribute name="target"/>
     <attribute name="bin"/>
-    <attribute name="manifest"/>
     <element name="pack" optional="true"/>
     <sequential>
-      <echo>Archive products</echo>
-      <jar jarfile="@{target}"> <!-- manifest="@{manifest}" -->
-        <fileset dir="@{bin}"/>
+      <echo>Archiving products</echo>
+
+      <jar destfile="@{target}" basedir="@{bin}" compress="false" duplicate="preserve">
         <pack/>
       </jar>
+
       <checksum file="@{target}" forceOverwrite="yes" fileext=".md5"/>
 
     </sequential>
