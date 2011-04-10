@@ -1024,4 +1024,27 @@ public class Classes {
         else
             throw new IllegalStateException("Missing path for class '"+cd.getName()+"'");
     }
+    private final static lxl.Map<String,Boolean> DisallowedFieldNames = new lxl.Map<String,Boolean>();
+    static {
+        DisallowedFieldNames.put("id",Boolean.FALSE);
+        DisallowedFieldNames.put("key",Boolean.FALSE);
+        DisallowedFieldNames.put("fromDatastore",Boolean.FALSE);
+        DisallowedFieldNames.put("fromMemcache",Boolean.FALSE);
+        DisallowedFieldNames.put("datastoreEntity",Boolean.FALSE);
+        DisallowedFieldNames.put("inheritFromKey",Boolean.FALSE);
+        DisallowedFieldNames.put("lock",Boolean.FALSE);
+        DisallowedFieldNames.put("dirty",Boolean.FALSE);
+        DisallowedFieldNames.put("clean",Boolean.FALSE);
+    }
+    /**
+     * Disallowed field names include "id", "key", "fromDatastore",
+     * "datastoreEntity", "dirty", "clean", and "lock".
+     * @see gap.data.BigTable
+     */
+    public final static boolean IsFieldNameIllegal(String name){
+        if (null != name && 0 < name.length())
+            return (null != DisallowedFieldNames.get(name));
+        else
+            return true;
+    }
 }

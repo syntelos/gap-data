@@ -61,4 +61,8 @@ public interface Field<E extends Enum>
 
     public boolean isNotFieldTypeCollection();
 
+    public boolean isFieldNameKeyOrId();
+
+    public boolean isNotFieldNameKeyOrId();
+
 }
