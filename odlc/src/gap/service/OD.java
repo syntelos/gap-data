@@ -594,6 +594,9 @@ public final class OD
             for (FieldDescriptor field : cd.getFields()){
 
                 String fieldName = field.getName();
+                if (IsFieldNameIllegal(fieldName))
+                    throw new ODStateException(field,String.format("Reserved field name '%s'",fieldName));
+
                 String fieldNameCamel = Camel(fieldName);
                 String fieldType = OD.MapChild.Type(ToString(field.getType()));
                 String fieldTypeClean = CleanTypeName(fieldType);

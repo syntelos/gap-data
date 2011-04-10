@@ -190,6 +190,13 @@ public abstract class BigTable
     protected volatile Key key;
 
     private transient volatile Lock lock;
+    /**
+     * Mark instance dirty on changes to non transient fields.
+     * 
+     * When the instance is clean, the datastore entity is not
+     * refilled on the datastore write.
+     */
+    protected transient boolean dirty;
 
 
     protected BigTable(){
@@ -197,6 +204,12 @@ public abstract class BigTable
     }
 
 
+    public final boolean isDirty(){
+        return this.dirty;
+    }
+    public final boolean isClean(){
+        return (!this.dirty);
+    }
     public final boolean hasId(){
         return (null != this.key);
     }
@@ -328,8 +341,8 @@ public abstract class BigTable
     }
 
     /**
-     * A key based shared system lock associated with this instance
-     * may be employed for any suitable purpose.
+     * A global- cloud- system lock associated with this instance may
+     * be employed for any suitable purpose.
      * 
      * Operations over individual datastore entities have atomicity
      * while operations over multiple datastore entities do not.  When
@@ -377,9 +390,15 @@ public abstract class BigTable
     public final void clearDatastoreEntity(){
         this.datastoreEntity = null;        
     }
+    /**
+     * Get/create an entity for this instance.  The returned entity
+     * may or may not have data.
+     * @see #fillToDatastoreEntity
+     */
     public final Entity getDatastoreEntity(){
         Entity datastoreEntity = this.datastoreEntity;
         if (null == datastoreEntity){
+            this.dirty = true;
             Key key = this.key;
             if (null != key){
                 try {
@@ -398,8 +417,16 @@ public abstract class BigTable
         }
         return datastoreEntity;
     }
+    /**
+     * Get/create an entity with current data for this instance.
+     */
     public final Entity fillToDatastoreEntity(){
-        return this.fillTo(this.getDatastoreEntity());
+        Entity entity = this.getDatastoreEntity();
+        if (this.dirty){
+            this.fillTo(entity);
+            this.dirty = false;
+        }
+        return entity;
     }
     public final Entity fillFromDatastoreEntity(Entity entity){
         return (this.datastoreEntity = this.fillFrom(entity));
@@ -453,7 +480,7 @@ public abstract class BigTable
         for (Field field: this.getClassFields()){
             String fieldName = field.getFieldName();
 
-            if (IsNotKeyOrId(fieldName)){
+            if (field.isNotFieldNameKeyOrId()){
 
                 if (field.isFieldTypePrimitive()){
 

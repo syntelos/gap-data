@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-09-20T13:49:21.559Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-10T17:00:23.594Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -363,11 +363,14 @@ public abstract class TemplateData
 
         private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
 
+        private final boolean fieldNameKeyOrId;
+
 
         Field(String fieldName, Type fieldType){
             if (null != fieldName && null != fieldType){
                 this.fieldName = fieldName;
                 this.fieldType = fieldType;
+                this.fieldNameKeyOrId = BigTable.IsKeyOrId(fieldName);
                 /*
                  * Using a switch here causes a null pointer
                  * initializing the switch map.
@@ -424,6 +427,12 @@ public abstract class TemplateData
         public boolean isNotFieldTypeCollection(){
             return (!this.fieldTypeCollection);
         }
+        public boolean isFieldNameKeyOrId(){
+            return this.fieldNameKeyOrId;
+        }
+        public boolean isNotFieldNameKeyOrId(){
+            return (!this.fieldNameKeyOrId);
+        }
         public String toString(){
             return this.fieldName;
         }
@@ -435,7 +444,7 @@ public abstract class TemplateData
     private String name;
     private Long lastModified;
     private Text templateSourceHapax;
-    private List.Short<TemplateNode> templateTargetHapax;
+    private transient List.Short<TemplateNode> templateTargetHapax;
 
 
 
@@ -484,6 +493,7 @@ public abstract class TemplateData
     }
     public final boolean setInheritFrom(Template ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.dirty = true;
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -494,6 +504,7 @@ public abstract class TemplateData
     }
     public final boolean inheritFrom(Template ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.dirty = true;
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -510,6 +521,7 @@ public abstract class TemplateData
     }
     public final boolean dropName(){
         if (null != this.name){
+            this.dirty = true;
             this.name = null;
             return true;
         }
@@ -524,6 +536,7 @@ public abstract class TemplateData
     }
     public final boolean setName(String name){
         if (IsNotEqual(this.name,name)){
+            this.dirty = true;
             this.name = name;
             return true;
         }
@@ -538,6 +551,7 @@ public abstract class TemplateData
     }
     public final boolean dropLastModified(){
         if (null != this.lastModified){
+            this.dirty = true;
             this.lastModified = null;
             return true;
         }
@@ -561,6 +575,7 @@ public abstract class TemplateData
     }
     public final boolean setLastModified(Long lastModified, boolean withInheritance){
         if (IsNotEqual(this.lastModified,this.getLastModified(withInheritance))){
+            this.dirty = true;
             this.lastModified = lastModified;
             return true;
         }
@@ -569,6 +584,7 @@ public abstract class TemplateData
     }
     public final boolean setLastModified(Long lastModified){
         if (IsNotEqual(this.lastModified,lastModified)){
+            this.dirty = true;
             this.lastModified = lastModified;
             return true;
         }
@@ -583,6 +599,7 @@ public abstract class TemplateData
     }
     public final boolean dropTemplateSourceHapax(){
         if (null != this.templateSourceHapax){
+            this.dirty = true;
             this.templateSourceHapax = null;
             return true;
         }
@@ -606,6 +623,7 @@ public abstract class TemplateData
     }
     public final boolean setTemplateSourceHapax(Text templateSourceHapax, boolean withInheritance){
         if (IsNotEqual(this.templateSourceHapax,this.getTemplateSourceHapax(withInheritance))){
+            this.dirty = true;
             this.templateSourceHapax = templateSourceHapax;
             return true;
         }
@@ -614,6 +632,7 @@ public abstract class TemplateData
     }
     public final boolean setTemplateSourceHapax(Text templateSourceHapax){
         if (IsNotEqual(this.templateSourceHapax,templateSourceHapax)){
+            this.dirty = true;
             this.templateSourceHapax = templateSourceHapax;
             return true;
         }
@@ -650,6 +669,9 @@ public abstract class TemplateData
                         return templateTargetHapax;
                 }
             }
+            /*
+             * Collection type coersion
+             */
             {
                 Object tmp = new ListShortTemplateTemplateNode((Template)this);
                 templateTargetHapax = (List.Short<TemplateNode>)tmp;
@@ -661,6 +683,7 @@ public abstract class TemplateData
     }
     public final boolean setTemplateTargetHapax(List.Short<TemplateNode> templateTargetHapax){
         if (IsNotEqual(this.templateTargetHapax,templateTargetHapax)){
+            this.dirty = true;
             this.templateTargetHapax = templateTargetHapax;
             return true;
         }

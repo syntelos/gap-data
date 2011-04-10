@@ -523,11 +523,14 @@ public abstract class {{=class_name}}Data
 
         private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
 
+        private final boolean fieldNameKeyOrId;
+
 
         Field(String fieldName, Type fieldType){
             if (null != fieldName && null != fieldType){
                 this.fieldName = fieldName;
                 this.fieldType = fieldType;
+                this.fieldNameKeyOrId = BigTable.IsKeyOrId(fieldName);
                 /*
                  * Using a switch here causes a null pointer
                  * initializing the switch map.
@@ -583,6 +586,12 @@ public abstract class {{=class_name}}Data
         }
         public boolean isNotFieldTypeCollection(){
             return (!this.fieldTypeCollection);
+        }
+        public boolean isFieldNameKeyOrId(){
+            return this.fieldNameKeyOrId;
+        }
+        public boolean isNotFieldNameKeyOrId(){
+            return (!this.fieldNameKeyOrId);
         }
         public String toString(){
             return this.fieldName;
@@ -657,6 +666,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean setInheritFrom({{=class_name}} ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.dirty = true;
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -667,6 +677,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean inheritFrom({{=class_name}} ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.dirty = true;
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -687,6 +698,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean setParentKey(Key ancestor){
         if (IsNotEqual(this.parentKey,ancestor)){
+            this.dirty = true;
             this.parentKey = ancestor;
             return true;
         }
@@ -712,6 +724,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean setParent({{=parent_class_name}} ancestor){
         if (IsNotEqual(this.parent,ancestor)){
+            this.dirty = true;
             this.parent = ancestor;
             if (null != ancestor)
                 this.parentKey = ancestor.getKey();
@@ -730,6 +743,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean drop{{=field_nameCamel}}(){
         if (null != this.{{=field_name}}){
+            this.dirty = true;
             this.{{=field_name}} = null;{{#field_is_bigTable}}
             this.{{=field_name}}Id = null;
             this.{{=field_name}}Key = null;{{/field_is_bigTable}}
@@ -835,6 +849,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}, boolean withInheritance){
         if (IsNotEqual(this.{{=field_name}},this.get{{=field_nameCamel}}(withInheritance))){
+            this.dirty = true;
             this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
             if (null != {{=field_name}}){
                 this.{{=field_name}}Id = {{=field_name}}.getId();
@@ -851,6 +866,7 @@ public abstract class {{=class_name}}Data
     }{{/field_is_inheritable}}{{#field_is_bigTable}}
     public final boolean set{{=field_nameCamel}}Id(String {{=field_name}}Id){
         if (IsNotEqual(this.{{=field_name}}Id,{{=field_name}}Id)){
+            this.dirty = true;
             this.{{=field_name}}Id = {{=field_name}}Id;
             this.{{=field_name}}Key = null;
             this.{{=field_name}} = null;
@@ -861,6 +877,7 @@ public abstract class {{=class_name}}Data
     }{{/field_is_bigTable}}
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
+            this.dirty = true;
             this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
             if (null != {{=field_name}}){
                 this.{{=field_name}}Id = {{=field_name}}.getId();
@@ -920,6 +937,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
+            this.dirty = true;
             this.{{=field_name}} = {{=field_name}};
             return true;
         }
@@ -1003,6 +1021,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
+            this.dirty = true;
             this.{{=field_name}} = {{=field_name}};
             return true;
         }

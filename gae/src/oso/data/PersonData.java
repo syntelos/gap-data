@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-09-20T13:49:20.843Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-10T17:00:22.929Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -346,11 +346,14 @@ public abstract class PersonData
 
         private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
 
+        private final boolean fieldNameKeyOrId;
+
 
         Field(String fieldName, Type fieldType){
             if (null != fieldName && null != fieldType){
                 this.fieldName = fieldName;
                 this.fieldType = fieldType;
+                this.fieldNameKeyOrId = BigTable.IsKeyOrId(fieldName);
                 /*
                  * Using a switch here causes a null pointer
                  * initializing the switch map.
@@ -407,6 +410,12 @@ public abstract class PersonData
         public boolean isNotFieldTypeCollection(){
             return (!this.fieldTypeCollection);
         }
+        public boolean isFieldNameKeyOrId(){
+            return this.fieldNameKeyOrId;
+        }
+        public boolean isNotFieldNameKeyOrId(){
+            return (!this.fieldNameKeyOrId);
+        }
         public String toString(){
             return this.fieldName;
         }
@@ -457,6 +466,7 @@ public abstract class PersonData
     }
     public final boolean setInheritFrom(Person ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.dirty = true;
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -467,6 +477,7 @@ public abstract class PersonData
     }
     public final boolean inheritFrom(Person ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.dirty = true;
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -483,6 +494,7 @@ public abstract class PersonData
     }
     public final boolean dropLogonId(){
         if (null != this.logonId){
+            this.dirty = true;
             this.logonId = null;
             return true;
         }
@@ -497,6 +509,7 @@ public abstract class PersonData
     }
     public final boolean setLogonId(String logonId){
         if (IsNotEqual(this.logonId,logonId)){
+            this.dirty = true;
             this.logonId = logonId;
             return true;
         }

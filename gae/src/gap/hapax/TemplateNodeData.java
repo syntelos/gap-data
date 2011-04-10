@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2010-09-20T13:49:21.464Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-10T17:00:23.787Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -401,11 +401,14 @@ public abstract class TemplateNodeData
 
         private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
 
+        private final boolean fieldNameKeyOrId;
+
 
         Field(String fieldName, Type fieldType){
             if (null != fieldName && null != fieldType){
                 this.fieldName = fieldName;
                 this.fieldType = fieldType;
+                this.fieldNameKeyOrId = BigTable.IsKeyOrId(fieldName);
                 /*
                  * Using a switch here causes a null pointer
                  * initializing the switch map.
@@ -461,6 +464,12 @@ public abstract class TemplateNodeData
         }
         public boolean isNotFieldTypeCollection(){
             return (!this.fieldTypeCollection);
+        }
+        public boolean isFieldNameKeyOrId(){
+            return this.fieldNameKeyOrId;
+        }
+        public boolean isNotFieldNameKeyOrId(){
+            return (!this.fieldNameKeyOrId);
         }
         public String toString(){
             return this.fieldName;
@@ -525,6 +534,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setInheritFrom(TemplateNode ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.dirty = true;
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -535,6 +545,7 @@ public abstract class TemplateNodeData
     }
     public final boolean inheritFrom(TemplateNode ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
+            this.dirty = true;
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -554,6 +565,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setParentKey(Key ancestor){
         if (IsNotEqual(this.parentKey,ancestor)){
+            this.dirty = true;
             this.parentKey = ancestor;
             return true;
         }
@@ -579,6 +591,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setParent(Template ancestor){
         if (IsNotEqual(this.parent,ancestor)){
+            this.dirty = true;
             this.parent = ancestor;
             if (null != ancestor)
                 this.parentKey = ancestor.getKey();
@@ -596,6 +609,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropNodeType(){
         if (null != this.nodeType){
+            this.dirty = true;
             this.nodeType = null;
             return true;
         }
@@ -610,6 +624,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setNodeType(String nodeType){
         if (IsNotEqual(this.nodeType,nodeType)){
+            this.dirty = true;
             this.nodeType = nodeType;
             return true;
         }
@@ -624,6 +639,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropLineNumber(){
         if (null != this.lineNumber){
+            this.dirty = true;
             this.lineNumber = null;
             return true;
         }
@@ -638,6 +654,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setLineNumber(Integer lineNumber){
         if (IsNotEqual(this.lineNumber,lineNumber)){
+            this.dirty = true;
             this.lineNumber = lineNumber;
             return true;
         }
@@ -652,6 +669,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropNodeContent(){
         if (null != this.nodeContent){
+            this.dirty = true;
             this.nodeContent = null;
             return true;
         }
@@ -675,6 +693,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setNodeContent(Text nodeContent, boolean withInheritance){
         if (IsNotEqual(this.nodeContent,this.getNodeContent(withInheritance))){
+            this.dirty = true;
             this.nodeContent = nodeContent;
             return true;
         }
@@ -683,6 +702,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setNodeContent(Text nodeContent){
         if (IsNotEqual(this.nodeContent,nodeContent)){
+            this.dirty = true;
             this.nodeContent = nodeContent;
             return true;
         }
@@ -697,6 +717,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropOffset(){
         if (null != this.offset){
+            this.dirty = true;
             this.offset = null;
             return true;
         }
@@ -720,6 +741,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffset(Integer offset, boolean withInheritance){
         if (IsNotEqual(this.offset,this.getOffset(withInheritance))){
+            this.dirty = true;
             this.offset = offset;
             return true;
         }
@@ -728,6 +750,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffset(Integer offset){
         if (IsNotEqual(this.offset,offset)){
+            this.dirty = true;
             this.offset = offset;
             return true;
         }
@@ -742,6 +765,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropOffsetCloseRelative(){
         if (null != this.offsetCloseRelative){
+            this.dirty = true;
             this.offsetCloseRelative = null;
             return true;
         }
@@ -765,6 +789,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffsetCloseRelative(Integer offsetCloseRelative, boolean withInheritance){
         if (IsNotEqual(this.offsetCloseRelative,this.getOffsetCloseRelative(withInheritance))){
+            this.dirty = true;
             this.offsetCloseRelative = offsetCloseRelative;
             return true;
         }
@@ -773,6 +798,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffsetCloseRelative(Integer offsetCloseRelative){
         if (IsNotEqual(this.offsetCloseRelative,offsetCloseRelative)){
+            this.dirty = true;
             this.offsetCloseRelative = offsetCloseRelative;
             return true;
         }
