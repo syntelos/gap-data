@@ -595,8 +595,9 @@ public abstract class {{=class_name}}Data
     private {{=field_class}} {{=field_name}};{{/field_is_primitive}}{{#field_is_bigTable}}
     private String {{=field_name}}Id;
     private transient Key {{=field_name}}Key;
-    private transient {{=field_class}} {{=field_name}};{{/field_is_bigTable}}{{/pfield}}{{#cfield}}
-    private {{=field_class}} {{=field_name}};{{/cfield}}{{#tfield}}
+    private transient {{=field_class}} {{=field_name}};{{/field_is_bigTable}}{{/pfield}}{{#cfield}}{{#field_is_primitive_collection}}
+    private {{=field_class}} {{=field_name}};{{/field_is_primitive_collection}}{{#field_is_not_primitive_collection}}
+    private transient {{=field_class}} {{=field_name}};{{/field_is_not_primitive_collection}}{{/cfield}}{{#tfield}}
     private transient {{=field_class}} {{=field_name}};{{/tfield}}
 
 {{#class_re_child_or_group}}
