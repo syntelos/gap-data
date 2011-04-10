@@ -95,7 +95,7 @@ public class Request
         }
     }
     public static enum Field {
-        ns, hostname, method, protocol, path, accept, fileManager, parameters, userReference, 
+        body, ns, hostname, method, protocol, path, accept, fileManager, parameters, userReference, 
             logon, logonUrl, logonText, contentType, isAdmin, isMember, version;
 
         public static Field For(String name){
@@ -122,6 +122,7 @@ public class Request
     public final String logonUrl, logonText;
     public final ContentType contentType;
     public final boolean isAdmin, isMember;
+    private String bodyString;
 
 
     public Request(String ns, HttpServletRequest req, Method method, Protocol protocol, Path path, 
@@ -337,6 +338,21 @@ public class Request
         else
             return null;
     }
+    public final String getBodyString(){
+        String body = this.bodyString;
+        if (null == body){
+            try {
+                alto.io.u.Bbuf buf = new alto.io.u.Bbuf(this.getInputStream());
+                body = buf.toString();
+                this.bodyString = body;
+            }
+            catch (Exception drop){
+
+                this.bodyString = "";
+            }
+        }
+        return body;
+    }
 
     /*
      * Template Data Dictionary
@@ -345,6 +361,8 @@ public class Request
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
+            case body:
+                return (null != this.getBodyString());
             case ns:
             case hostname:
             case method:
@@ -392,6 +410,11 @@ public class Request
         Field field = Field.For(name.getComponent(0));
         if (null != field){
             switch (field){
+            case body:
+                if (name.is(0))
+                    return this.getBodyString();
+                else
+                    return null;
             case ns:
                 if (name.is(0))
                     return this.ns;
