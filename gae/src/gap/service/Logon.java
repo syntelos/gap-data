@@ -220,7 +220,7 @@ public final class Logon
     public boolean hasVariable(TemplateName name){
 	if (null != this.person){
 	    if (name.has(1))
-		return this.person.hasVariable(new TemplateName(name));
+		return this.person.hasVariable(name);
 	    else
 		return true;
 	}
@@ -231,13 +231,13 @@ public final class Logon
 	if (name.is(0))
 	    return this.serviceLogon;
 	else if (null != this.person)
-	    return this.person.getVariable(new TemplateName(name));
+	    return this.person.getVariable(name);
 	else
 	    return super.getVariable(name);
     }
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
 	if (null != this.person)
-	    return this.person.getSection(new TemplateName(name));
+	    return this.person.getSection(name);
 	else
             return super.getSection(name);
     }
