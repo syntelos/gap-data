@@ -96,7 +96,7 @@ public class Request
     }
     public static enum Field {
         body, ns, hostname, method, protocol, path, accept, fileManager, parameters, userReference, 
-            logon, logonUrl, logonText, contentType, isAdmin, isMember, version;
+            logon, logonUrl, logonText, contentType, isAdmin, isMember, isNotAdmin, isNotMember, version;
 
         public static Field For(String name){
             try {
@@ -393,6 +393,10 @@ public class Request
                 return (name.is(0) && this.isAdmin);
             case isMember:
                 return (name.is(0) && this.isMember);
+            case isNotAdmin:
+                return (name.is(0) && this.isAdmin);
+            case isNotMember:
+                return (name.is(0) && this.isMember);
             case version:
                 if (name.has(1))
                     return gap.Version.HasVariable(new TemplateName(name));
@@ -478,6 +482,16 @@ public class Request
                     return "Member";
                 else
                     return null;
+            case isNotAdmin:
+                if (name.is(0) && this.isAdmin)
+                    return null;
+                else
+                    return "NotAdmin";
+            case isNotMember:
+                if (name.is(0) && this.isMember)
+                    return null;
+                else
+                    return "NotMember";
 
             case version:
                 if (name.has(1))
