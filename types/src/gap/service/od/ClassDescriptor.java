@@ -100,12 +100,11 @@ public interface ClassDescriptor
         extends ClassDescriptor
     {
         /**
-         * The child relation employs the parent key in its identity,
-         * while the child group relation employs the parent key in
-         * its key.
+         * The child relation employs the parent key in its key -- it
+         * is the short relation.
          */
         public enum Type {
-            None, Parent, Child, ChildGroup;
+            None, Parent, Child;
         }
 
         public boolean hasRelation();
@@ -116,7 +115,7 @@ public interface ClassDescriptor
          */
         public boolean isRelationPrimary();
         /**
-         * @return Relation is type child or child-group
+         * @return Relation is type child 
          */
         public boolean isRelationSecondary();
 
@@ -166,6 +165,10 @@ public interface ClassDescriptor
     public boolean hasFields();
 
     public lxl.List<FieldDescriptor> getFields();
+    /**
+     * @return Class knows this field to be short
+     */
+    public boolean isFieldShort(FieldDescriptor field);
 
     /**
      * Methods of the data bean class bind into a template (bean, bean

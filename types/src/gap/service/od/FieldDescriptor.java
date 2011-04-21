@@ -80,12 +80,11 @@ public interface FieldDescriptor
         extends FieldDescriptor
     {
         /**
-         * The child relation employs the parent key in its identity,
-         * while the child group relation employs the parent key in
-         * its key.
+         * The child (lang) relation employs the parent key in its key
+         * -- it is the "short" (data) relation.
          */
         public enum Type {
-            None, Parent, Child, ChildGroup;
+            None, Parent, Child;
         }
 
         public boolean hasRelation();
@@ -96,7 +95,8 @@ public interface FieldDescriptor
 
     /**
      * @return An object for toString
-     * @see HasName
+     * @see gap.data.HasName
+     * @see gap.Objects#StringFromObject(java.lang.Object)
      */
     public Object getType();
 

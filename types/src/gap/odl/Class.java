@@ -138,7 +138,7 @@ public final class Class
 
     public final gap.odl.Parent parent;
 
-    public final gap.odl.Child child;
+    public final lxl.List<Child> children = new lxl.ArrayList<Child>();
 
     public final String name, nameDecamel;
 
@@ -170,7 +170,6 @@ public final class Class
         gap.odl.Field field = null;
         long version = 1L;
         gap.odl.Parent parent = null;
-        gap.odl.Child child = null;
 
         while (true){
             try {
@@ -204,7 +203,7 @@ public final class Class
                                     parent = new gap.odl.Parent(strtok.nextToken());
                                     break;
                                 case CHILD:
-                                    child = new gap.odl.Child(strtok.nextToken());
+                                    this.children.add(new gap.odl.Child(strtok.nextToken()));
                                     break;
                                 case UNKNOWN:
                                     throw new Syntax("Malformed ODL class declaration in '"+open+"' at '"+token+"' in '"+reader.sourcepath+"'.");
@@ -232,7 +231,6 @@ public final class Class
             throw new Syntax("Syntax error missing package in '"+reader.sourcepath+"'.");
 
         this.parent = parent;
-        this.child = child;
         this.path = path;
 
         if (null != spec && null != name){
@@ -240,19 +238,13 @@ public final class Class
             this.name = name;
             this.nameDecamel = Decamel(name);
 
-            if ("parent".equals(spec) || (null != child))
+            if ("parent".equals(spec) || (0 < this.children.size()))
 
                 this.relation = Relation.Type.Parent;
 
             else if ("child".equals(spec) || (null != parent)){
 
-                ClassDescriptor parentClass = Classes.For(parent);
-
-                if (Classes.IsFieldShortIn(parentClass,this))
-
-                    this.relation = Relation.Type.ChildGroup;
-                else
-                    this.relation = Relation.Type.Child;
+                this.relation = Relation.Type.Child;
             }
             else
                 this.relation = Relation.Type.None;
@@ -287,7 +279,6 @@ public final class Class
         case Parent:
             return true;
         case Child:
-        case ChildGroup:
             return false;
         default:
             throw new IllegalStateException();
@@ -299,7 +290,6 @@ public final class Class
         case Parent:
             return false;
         case Child:
-        case ChildGroup:
             return true;
         default:
             throw new IllegalStateException();
@@ -322,6 +312,19 @@ public final class Class
     }
     public lxl.List<FieldDescriptor> getFields(){
         return this.fields;
+    }
+    public boolean isFieldShort(FieldDescriptor field){
+        String fieldType = gap.Objects.StringFromObject(field.getType());
+        if (null != fieldType){
+            for (gap.odl.Child child: this.children){
+                String childName = child.getName();
+                if (null != childName && childName.equals(fieldType))
+                    return true;
+            }
+            return false;
+        }
+        else
+            throw new IllegalStateException(String.format("Missing type for field '%s'",field.getName()));
     }
     public boolean hasMethods(){
         return false;

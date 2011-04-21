@@ -24,7 +24,7 @@ package gap.data;
  * An object type for 'toString' conversion may implement this
  * interface for 'getName' conversion to string.
  * 
- * 
+ * @see gap.Objects#StringFromObject(java.lang.Object)
  * @author jdp
  */
 public interface HasName {

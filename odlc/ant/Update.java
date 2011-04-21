@@ -497,7 +497,7 @@ public class Update
         }
         return list;
     }
-    private final static Pattern DeletesBasenameRe = Pattern.compile("-[0-9.]+\\.jar");
+    private final static Pattern DeletesBasenameRe = Pattern.compile("-([kK][0-9]{2}[A-L][0-9]{2}|[0-9.]+)\\.jar");
 
     private final static File[] ListDeletes(File src, File tgt){
 	File tgtd = tgt.getParentFile();

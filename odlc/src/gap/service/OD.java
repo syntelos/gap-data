@@ -74,6 +74,8 @@ public final class OD
         public final static TemplateName FieldIsNotPrimitive = new TemplateName("field_is_not_primitive");
         public final static TemplateName FieldIsBigTable = new TemplateName("field_is_bigTable");
         public final static TemplateName FieldIsNotBigTable = new TemplateName("field_is_not_bigTable");
+        public final static TemplateName FieldIsLong = new TemplateName("field_is_long");
+        public final static TemplateName FieldIsShort = new TemplateName("field_is_short");
         public final static TemplateName FieldIsListLong = new TemplateName("field_is_list_long");
         public final static TemplateName FieldIsListLongOrShort = new TemplateName("field_is_list_long_or_short");
         public final static TemplateName FieldIsListPrimitive = new TemplateName("field_is_list_primitive");
@@ -515,45 +517,24 @@ public final class OD
             classRelationParent = cdr.getParent();
         }
         if (null == classRelation || ClassDescriptor.Relation.Type.None.equals(classRelation)){
-            top.addSection(new TemplateName(prefix,"class_re_none"));
+
             top.addSection(new TemplateName(prefix,"class_re_not_parent"));
             top.addSection(new TemplateName(prefix,"class_re_not_child"));
-            top.addSection(new TemplateName(prefix,"class_re_not_childgroup"));
-            top.addSection(new TemplateName(prefix,"class_re_not_child_or_group"));
+
         }
         else if (ClassDescriptor.Relation.Type.Parent.equals(classRelation)){
-            top.addSection(new TemplateName(prefix,"class_re_not_none"));
+
             top.addSection(new TemplateName(prefix,"class_re_parent"));
             top.addSection(new TemplateName(prefix,"class_re_not_child"));
-            top.addSection(new TemplateName(prefix,"class_re_not_childgroup"));
-            top.addSection(new TemplateName(prefix,"class_re_not_child_or_group"));
+
         }
         else if (ClassDescriptor.Relation.Type.Child.equals(classRelation)){
-            top.addSection(new TemplateName(prefix,"class_re_not_none"));
+
             top.addSection(new TemplateName(prefix,"class_re_not_parent"));
-            top.addSection(new TemplateName(prefix,"class_re_not_childgroup"));
-            top.addSection(new TemplateName(prefix,"class_re_child_or_group"));
+
 
             TemplateDataDictionary child = top.addSection(new TemplateName(prefix,"class_re_child"));
 
-            if (null == classRelationParent)
-                throw new ODStateException(cd,"The object data model requires a parent class name.");
-            else {
-
-                top.setVariable(new TemplateName(prefix,"parent_class_name"),classRelationParent);
-
-                parent = Classes.For(classRelationParent);
-                if (null == parent)
-                    throw new ODStateException(cd,"Parent class not found.");
-            }
-        }
-        else if (ClassDescriptor.Relation.Type.ChildGroup.equals(classRelation)){
-            top.addSection(new TemplateName(prefix,"class_re_not_none"));
-            top.addSection(new TemplateName(prefix,"class_re_not_parent"));
-            top.addSection(new TemplateName(prefix,"class_re_not_child"));
-            top.addSection(new TemplateName(prefix,"class_re_child_or_group"));
-
-            top.addSection(new TemplateName(prefix,"class_re_childgroup"));
             if (null == classRelationParent)
                 throw new ODStateException(cd,"The object data model requires a parent class name.");
             else {
@@ -752,6 +733,12 @@ public final class OD
                         dataField.setVariable(TemplateNames.FieldFromObjectPrefix,FullClassName(fieldTypeClassDescriptor,fieldTypeClass)+".FromObject(");
                         dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
                         dataField.addSection(TemplateNames.FieldIsBigTable);
+                        /*
+                         */
+                        if (IsFieldShort(cd,field,fieldTypeClassDescriptor))
+                            dataField.addSection(TemplateNames.FieldIsShort);
+                        else
+                            dataField.addSection(TemplateNames.FieldIsLong);
                     }
                     else {
                         dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+')');

@@ -42,6 +42,8 @@ public abstract class Objects {
     public final static java.lang.String StringFromObject(java.lang.Object object){
         if (object instanceof java.lang.String)
             return (java.lang.String)object;
+        else if (object instanceof gap.data.HasName)
+            return ((gap.data.HasName)object).getName();
         else if (null == object)
             return null;
         else
