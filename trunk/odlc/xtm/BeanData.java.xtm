@@ -57,28 +57,24 @@ public abstract class {{=class_name}}Data
 
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
         return ClassDescriptorFor({{=class_name}}.class);
-    }{{#class_re_child_or_group}}
+    }{{#class_re_child}}
     public final static gap.service.od.ClassDescriptor ClassDescriptorForParent(){
         return ClassDescriptorFor({{=parent_class_name}}.class);
-    }{{/class_re_child_or_group}}
+    }{{/class_re_child}}
 
 {{#field_unique}}
 
-{{#class_re_not_child_or_group}}
+{{#class_re_not_child}}
     public final static Key KeyLongIdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         String id = IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
         return KeyLongFor(id);
-    }{{/class_re_not_child_or_group}}{{#class_re_child}}
-    public final static Key KeyLongIdFor(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        String id = IdFor(ancestor,{{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
-        return KeyLongFor(ancestor,id);
-    }{{/class_re_child}}{{#class_re_childgroup}}
+    }{{/class_re_not_child}}{{#class_re_child}}
     public final static Key KeyShortIdFor(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         String id = IdFor(ancestor,{{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
         return KeyShortFor(ancestor,id);
-    }{{/class_re_childgroup}}
+    }{{/class_re_child}}
 
-{{#class_re_not_child_or_group}}
+{{#class_re_not_child}}
     public final static String IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
             String {{=field_name}}String = {{=field_to_string_prefix}}{{=field_name}}{{=field_to_string_suffix}};{{/field}}
@@ -86,7 +82,7 @@ public abstract class {{=class_name}}Data
         }
         else
             throw new IllegalArgumentException();
-    }{{/class_re_not_child_or_group}}{{#class_re_child_or_group}}
+    }{{/class_re_not_child}}{{#class_re_child}}
     public final static String IdFor(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if (ancestor.isComplete() && {{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
             String {{=field_name}}String = {{=field_to_string_prefix}}{{=field_name}}{{=field_to_string_suffix}};{{/field}}
@@ -94,9 +90,9 @@ public abstract class {{=class_name}}Data
         }
         else
             throw new IllegalArgumentException();
-    }{{/class_re_child_or_group}}
+    }{{/class_re_child}}
 
-{{#class_re_not_child_or_group}}
+{{#class_re_not_child}}
     public final static {{=class_name}} ForLong{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
             Key key = KeyLongIdFor({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
@@ -110,21 +106,7 @@ public abstract class {{=class_name}}Data
         }
         else
             throw new IllegalArgumentException();
-    }{{/class_re_not_child_or_group}}{{#class_re_child}}
-    public final static {{=class_name}} ForLong{{#field}}{{=field_nameCamel}}{{/field}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
-            Key key = KeyLongIdFor(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return ({{=class_name}})gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }{{/class_re_child}}{{#class_re_childgroup}}
+    }{{/class_re_not_child}}{{#class_re_child}}
     public final static {{=class_name}} ForShort{{#field}}{{=field_nameCamel}}{{/field}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
             Key key = KeyShortIdFor(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
@@ -138,9 +120,9 @@ public abstract class {{=class_name}}Data
         }
         else
             throw new IllegalArgumentException();
-    }{{/class_re_childgroup}}
+    }{{/class_re_child}}
 
-{{#class_re_not_child_or_group}}
+{{#class_re_not_child}}
     public final static {{=class_name}} GetCreateLong({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         {{=class_name}} {{=class_nameDecamel}} = ForLong{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
@@ -148,15 +130,7 @@ public abstract class {{=class_name}}Data
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
-    }{{/class_re_not_child_or_group}}{{#class_re_child}}
-    public final static {{=class_name}} GetCreateLong(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        {{=class_name}} {{=class_nameDecamel}} = ForLong{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-        if (null == {{=class_nameDecamel}}){
-            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
-            {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
-        }
-        return {{=class_nameDecamel}};
-    }{{/class_re_child}}{{#class_re_childgroup}}
+    }{{/class_re_not_child}}{{#class_re_child}}
     public final static {{=class_name}} GetCreateShort(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         {{=class_name}} {{=class_nameDecamel}} = ForShort{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         if (null == {{=class_nameDecamel}}){
@@ -164,21 +138,18 @@ public abstract class {{=class_name}}Data
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
-    }{{/class_re_childgroup}}
+    }{{/class_re_child}}
 {{/field_unique}}
 
-{{#class_re_not_child_or_group}}
+{{#class_re_not_child}}
     public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND.getName(),id);
-    }{{/class_re_not_child_or_group}}{{#class_re_childgroup}}
+    }{{/class_re_not_child}}{{#class_re_child}}
     public final static Key KeyShortFor(Key ancestor, String id){
         return KeyFactory.createKey(ancestor,KIND.getName(),id);
-    }{{/class_re_childgroup}}{{#class_re_child}}
-    public final static Key KeyLongFor(Key ancestor, String id){
-        return KeyFactory.createKey(KIND.getName(),id);
     }{{/class_re_child}}
 
-{{#class_re_not_child_or_group}}
+{{#class_re_not_child}}
     public final static {{=class_name}} ForLongId(String id){
         if (null != id){
             Key key = KeyLongFor(id);
@@ -192,21 +163,7 @@ public abstract class {{=class_name}}Data
         }
         else
             throw new IllegalArgumentException();
-    }{{/class_re_not_child_or_group}}{{#class_re_child}}
-    public final static {{=class_name}} ForLongId(Key ancestor, String id){
-        if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyLongFor(ancestor,id);
-            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
-            if (null != instance)
-                return instance;
-            else {
-                Query q = CreateQueryFor(key);
-                return ({{=class_name}})gap.data.Store.Query1(q);
-            }
-        }
-        else
-            throw new IllegalArgumentException();
-    }{{/class_re_child}}{{#class_re_childgroup}}
+    }{{/class_re_not_child}}{{#class_re_child}}
     public final static {{=class_name}} ForShortId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
             Key key = KeyShortFor(ancestor,id);
@@ -220,7 +177,7 @@ public abstract class {{=class_name}}Data
         }
         else
             throw new IllegalArgumentException();
-    }{{/class_re_childgroup}}
+    }{{/class_re_child}}
 {{!
     TODO Generate code  "KeyFor(this,id)"
     for "setId(String)"
@@ -264,33 +221,28 @@ public abstract class {{=class_name}}Data
             throw new IllegalArgumentException(value.getClass().getName());
     }
 
-{{#class_re_child}}
+{{#class_re_not_child}}
     /**
      * Test for uniqueness and iterate under collisions.
      */
-    public final static Key NewRandomKeyLong(Key ancestor){
-        if (null != ancestor){
-            /*
-             * Source matter for data local uniqueness
-             */
-            String source = gap.data.BigTable.ToString(ancestor);
-            long matter = gap.data.Hash.Djb64(source);
-            /*
-             * Random matter for network global uniqueness
-             */
-            java.util.Random random = new java.util.Random();
-            do {
-                matter ^= random.nextLong();
-                String idString = gap.data.Hash.Hex(matter);
-                Key key = KeyFactory.createKey(KIND.getName(),idString);
-                if (null == GetKey(key))
-                    return key;
-            }
-            while (true);
+    public final static Key NewRandomKeyLong(){
+        /*
+         * Source matter for data local uniqueness
+         */
+        long matter = (gap.data.Hash.Djb64(ClassName) ^ (serialVersionUID<<3) ^ serialVersionUID);
+        /*
+         * Random matter for network global uniqueness
+         */
+        java.util.Random random = new java.util.Random();
+        do {
+            matter ^= random.nextLong();
+            String idString = gap.data.Hash.Hex(matter);
+            Key key = KeyFactory.createKey(KIND.getName(),idString);
+            if (null == GetKey(key))
+                return key;
         }
-        else
-            throw new IllegalArgumentException();
-    }{{/class_re_child}}{{#class_re_childgroup}}
+        while (true);
+    }{{/class_re_not_child}}{{#class_re_child}}
     /**
      * Test for uniqueness and iterate under collisions.
      */
@@ -299,8 +251,7 @@ public abstract class {{=class_name}}Data
             /*
              * Source matter for data local uniqueness
              */
-            String source = gap.data.BigTable.ToString(ancestor);
-            long matter = gap.data.Hash.Djb64(source);
+            long matter = gap.data.Hash.Djb64(gap.data.BigTable.ToString(ancestor));
             /*
              * Random matter for network global uniqueness
              */
@@ -316,7 +267,7 @@ public abstract class {{=class_name}}Data
         }
         else
             throw new IllegalArgumentException();
-    }{{/class_re_childgroup}}
+    }{{/class_re_child}}
 
     /**
      * Drop the instance from memcache and datastore.
@@ -363,30 +314,22 @@ public abstract class {{=class_name}}Data
      */
     public final static Query CreateQueryFor(Key key){
         return new Query(KIND.getName(),key).addSort(DefaultSortBy);
-    }{{#class_re_not_child_or_group}}
+    }{{#class_re_not_child}}
     /**
      * Filter ops
      */
     public final static Query CreateQueryFor(Filter filter){
         Query query = new Query(KIND.getName());
         return filter.update(query);
-    }{{/class_re_not_child_or_group}}
+    }{{/class_re_not_child}}
     {{#class_re_child}}
-    /**
-     * Filter ops
-     */
-    public final static Query CreateQueryFor(Filter filter){
-        Query query = new Query(KIND.getName());
-        return filter.update(query);
-    }{{/class_re_child}}
-    {{#class_re_childgroup}}
     /**
      * Filter ops
      */
     public final static Query CreateQueryFor(Key ancestor, Filter filter){
         Query query = new Query(KIND.getName(),ancestor);
         return filter.update(query);
-    }{{/class_re_childgroup}}
+    }{{/class_re_child}}
     public final static {{=class_name}} Query1(Query query){
         if (null != query)
             return ({{=class_name}})gap.data.Store.Query1(query);
@@ -418,8 +361,8 @@ public abstract class {{=class_name}}Data
     public static enum Field
         implements gap.data.Field<{{=class_name}}.Field>
     {
-        InheritFromKey("inheritFromKey",Type.Primitive),{{#class_re_child_or_group}}
-        ParentKey("parentKey",Type.Primitive),{{/class_re_child_or_group}}
+        InheritFromKey("inheritFromKey",Type.Primitive),{{#class_re_child}}
+        ParentKey("parentKey",Type.Primitive),{{/class_re_child}}
         Key("key",Type.Primitive),
         Id("id",Type.Primitive){{#field}},
         {{=field_nameCamel}}("{{=field_name}}",Type.{{#field_is_primitive}}Primitive{{/field_is_primitive}}{{#field_is_bigTable}}BigTable{{/field_is_bigTable}}{{#field_is_primitive_collection}}Primitive{{/field_is_primitive_collection}}{{#field_is_collection}}Collection{{/field_is_collection}}){{/field}};
@@ -461,9 +404,9 @@ public abstract class {{=class_name}}Data
         public static Object Get(Field field, {{=class_name}} instance, boolean mayInherit){
             switch(field){
             case InheritFromKey:
-                return instance.getInheritFromKey();{{#class_re_child_or_group}}
+                return instance.getInheritFromKey();{{#class_re_child}}
             case ParentKey:
-                return instance.getParentKey();{{/class_re_child_or_group}}
+                return instance.getParentKey();{{/class_re_child}}
             case Key:
                 return instance.getKey();
             case Id:
@@ -484,9 +427,9 @@ public abstract class {{=class_name}}Data
         public static boolean Set(Field field, {{=class_name}} instance, Object value){
             switch(field){
             case InheritFromKey:
-                return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));{{#class_re_child_or_group}}
+                return instance.setInheritFromKey(gap.Objects.KeyFromObject(value));{{#class_re_child}}
             case ParentKey:
-                return instance.setParentKey(gap.Objects.KeyFromObject(value));{{/class_re_child_or_group}}
+                return instance.setParentKey(gap.Objects.KeyFromObject(value));{{/class_re_child}}
             case Key:
                 return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
@@ -609,30 +552,29 @@ public abstract class {{=class_name}}Data
     private transient {{=field_class}} {{=field_name}};{{/field_is_not_primitive_collection}}{{/cfield}}{{#tfield}}
     private transient {{=field_class}} {{=field_name}};{{/tfield}}
 
-{{#class_re_child_or_group}}
+{{#class_re_child}}
     private Key parentKey;
-    private transient {{=parent_class_name}} parent;{{/class_re_child_or_group}}
+    private transient {{=parent_class_name}} parent;{{/class_re_child}}
 
 
     protected {{=class_name}}Data() {
         super();
-    }{{#field_unique}}{{#class_re_not_child_or_group}}
+    }{{#field_unique}}{{#class_re_not_child}}
     protected {{=class_name}}Data({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
         String id = IdFor({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
         Key key = KeyLongFor(id);
         this.setKey(key);
-    }{{/class_re_not_child_or_group}}{{#class_re_child_or_group}}
+    }{{/class_re_not_child}}{{#class_re_child}}
     protected {{=class_name}}Data(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super();{{#field}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
         this.parentKey = ancestor;
-        String id = IdFor(ancestor, {{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});{{#class_re_childgroup}}
-        Key key = KeyShortFor(ancestor,id);{{/class_re_childgroup}}{{#class_re_child}}
-        Key key = KeyLongFor(ancestor,id);{{/class_re_child}}
+        String id = IdFor(ancestor, {{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});{{#class_re_child}}
+        Key key = KeyShortFor(ancestor,id);{{/class_re_child}}
         this.setKey(key);
-    }{{/class_re_child_or_group}}
+    }{{/class_re_child}}
 {{/field_unique}}
 
 
@@ -644,8 +586,8 @@ public abstract class {{=class_name}}Data
         if (null != {{=field_name}}){
             this.{{=field_name}} = null;
             {{=field_name}}.destroy();
-        }{{/cfield}}{{#class_re_child_or_group}}
-        this.parent = null;{{/class_re_child_or_group}}
+        }{{/cfield}}{{#class_re_child}}
+        this.parent = null;{{/class_re_child}}
     }
     public final boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -686,7 +628,7 @@ public abstract class {{=class_name}}Data
         else
             return false;
     }{{!
-}}{{#class_re_child_or_group}}
+}}{{#class_re_child}}
     public final boolean hasParentKey(){
         return (null != this.parentKey);
     }
@@ -733,7 +675,7 @@ public abstract class {{=class_name}}Data
         else
             return false;
     }
-{{/class_re_child_or_group}}{{!
+{{/class_re_child}}{{!
 }}{{#pfield}}
     public final boolean has{{=field_nameCamel}}(boolean mayInherit){
         return (null != this.get{{=field_nameCamel}}(mayInherit));
@@ -751,40 +693,40 @@ public abstract class {{=class_name}}Data
         }
         else
             return false;
-    }{{#field_is_not_inheritable}}{{#field_is_bigTable}}
+    }{{#field_is_bigTable}}
     public final String get{{=field_nameCamel}}Id(){
         return this.{{=field_name}}Id;
-    }{{/field_is_bigTable}}
-    public final {{=field_class}} get{{=field_nameCamel}}(){{{#field_is_not_bigTable}}
-        return this.{{=field_name}};{{/field_is_not_bigTable}}{{#field_is_bigTable}}
-        {{=field_class}} {{=field_name}} = this.{{=field_name}};
-        if (null == {{=field_name}}){
-            /*
-             * Long BigTable dereference
-             */
-            if (null == this.{{=field_name}}Key){
-                if (null != this.{{=field_name}}Id){
-                    this.{{=field_name}}Key = {{=field_class}}.KeyLongFor(this.{{=field_name}}Id);
-                }
-            }
-            if (null != this.{{=field_name}}Key){
-                {{=field_name}} = {{=field_class}}.Get(this.{{=field_name}}Key);
-                this.{{=field_name}} = {{=field_name}};
-            }
-        }
-        return {{=field_name}};{{/field_is_bigTable}}
     }
-    public final {{=field_class}} get{{=field_nameCamel}}(boolean mayInherit){
-        return this.get{{=field_nameCamel}}();
-    }{{/field_is_not_inheritable}}{{#field_is_inheritable}}{{#field_is_bigTable}}
+    public final boolean set{{=field_nameCamel}}Id(String {{=field_name}}Id){
+        if (IsNotEqual(this.{{=field_name}}Id,{{=field_name}}Id)){
+            this.dirty = true;
+            this.{{=field_name}}Id = {{=field_name}}Id;
+            this.{{=field_name}}Key = null;
+            this.{{=field_name}} = null;
+            return true;
+        }
+        else
+            return false;
+    }
     public final Key get{{=field_nameCamel}}Key(){
         if (null == this.{{=field_name}}Key){
 
-            if (null != this.{{=field_name}}Id){
-                this.{{=field_name}}Key = {{=field_class}}.KeyLongFor(this.{{=field_name}}Id);
+            if (null != this.{{=field_name}}Id){{{#field_is_long}}
+                    this.{{=field_name}}Key = {{=field_class}}.KeyLongFor(this.{{=field_name}}Id);{{/field_is_long}}{{#field_is_short}}
+                    this.{{=field_name}}Key = {{=field_class}}.KeyShortFor(this.getKey(),this.{{=field_name}}Id);{{/field_is_short}}
             }
         }
         return this.{{=field_name}}Key;
+    }{{#field_is_inheritable}}
+    public final String get{{=field_nameCamel}}Id(boolean mayInherit){
+        if (null != this.{{=field_name}}Id)
+            return this.{{=field_name}}Id;
+        else if (mayInherit && this.hasInheritFrom()){
+            {{=class_name}} inheritFrom = this.getInheritFrom();
+            return inheritFrom.get{{=field_nameCamel}}Id(mayInherit);
+        }
+        else
+            return null;
     }
     public final Key get{{=field_nameCamel}}Key(boolean mayInherit){
         Key {{=field_name}}Key = this.get{{=field_nameCamel}}Key();
@@ -796,20 +738,26 @@ public abstract class {{=class_name}}Data
         }
         else
             return null;
-    }
-    public final String get{{=field_nameCamel}}Id(){
-        return this.{{=field_name}}Id;
-    }
-    public final String get{{=field_nameCamel}}Id(boolean mayInherit){
-        if (null != this.{{=field_name}}Id)
-            return this.{{=field_name}}Id;
-        else if (mayInherit && this.hasInheritFrom()){
-            {{=class_name}} inheritFrom = this.getInheritFrom();
-            return inheritFrom.get{{=field_nameCamel}}Id(mayInherit);
+    }{{/field_is_inheritable}}{{/field_is_bigTable}}{{#field_is_not_inheritable}}
+    public final {{=field_class}} get{{=field_nameCamel}}(){{{#field_is_not_bigTable}}
+        return this.{{=field_name}};{{/field_is_not_bigTable}}{{#field_is_bigTable}}
+        {{=field_class}} {{=field_name}} = this.{{=field_name}};
+        if (null == {{=field_name}}){
+            /*
+             * BigTable dereference
+             */
+            Key {{=field_name}}Key = this.get{{=field_nameCamel}}Key();
+
+            if (null != {{=field_name}}Key){
+                {{=field_name}} = {{=field_class}}.Get({{=field_name}}Key);
+                this.{{=field_name}} = {{=field_name}};
+            }
         }
-        else
-            return null;
-    }{{/field_is_bigTable}}
+        return {{=field_name}};{{/field_is_bigTable}}
+    }
+    public final {{=field_class}} get{{=field_nameCamel}}(boolean mayInherit){
+        return this.get{{=field_nameCamel}}();
+    }{{/field_is_not_inheritable}}{{#field_is_inheritable}}
     public final {{=field_class}} get{{=field_nameCamel}}(){
         return this.get{{=field_nameCamel}}(Notation.MayInherit);
     }
@@ -827,15 +775,12 @@ public abstract class {{=class_name}}Data
         {{=field_class}} {{=field_name}} = this.{{=field_name}};
         if (null == {{=field_name}}){
             /*
-             * Long BigTable dereference
+             * BigTable dereference
              */
-            if (null == this.{{=field_name}}Key){
-                if (null != this.{{=field_name}}Id){
-                    this.{{=field_name}}Key = {{=field_class}}.KeyLongFor(this.{{=field_name}}Id);
-                }
-            }
-            if (null != this.{{=field_name}}Key){
-                {{=field_name}} = {{=field_class}}.Get(this.{{=field_name}}Key);
+            Key {{=field_name}}Key = this.get{{=field_nameCamel}}Key(mayInherit);
+
+            if (null != {{=field_name}}Key){
+                {{=field_name}} = {{=field_class}}.Get({{=field_name}}Key);
                 this.{{=field_name}} = {{=field_name}};
             }
         }
@@ -863,18 +808,7 @@ public abstract class {{=class_name}}Data
         }
         else
             return false;
-    }{{/field_is_inheritable}}{{#field_is_bigTable}}
-    public final boolean set{{=field_nameCamel}}Id(String {{=field_name}}Id){
-        if (IsNotEqual(this.{{=field_name}}Id,{{=field_name}}Id)){
-            this.dirty = true;
-            this.{{=field_name}}Id = {{=field_name}}Id;
-            this.{{=field_name}}Key = null;
-            this.{{=field_name}} = null;
-            return true;
-        }
-        else
-            return false;
-    }{{/field_is_bigTable}}
+    }{{/field_is_inheritable}}
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
             this.dirty = true;
@@ -1075,10 +1009,10 @@ public abstract class {{=class_name}}Data
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor();
-    }{{#class_re_child_or_group}}
+    }{{#class_re_child}}
     public final gap.service.od.ClassDescriptor getClassDescriptorForParent(){
         return ClassDescriptorForParent();
-    }{{/class_re_child_or_group}}
+    }{{/class_re_child}}
     /*
      * Template Data Dictionary
      */

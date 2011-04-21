@@ -25,13 +25,13 @@ public final class {{=class_name}}
 
     public {{=class_name}}() {
         super();
-    }{{#field_unique}}{{#class_re_not_child_or_group}}
+    }{{#field_unique}}{{#class_re_not_child}}
     public {{=class_name}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
-    }{{/class_re_not_child_or_group}}{{#class_re_child_or_group}}
+    }{{/class_re_not_child}}{{#class_re_child}}
     public {{=class_name}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
         super(ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
-    }{{/class_re_child_or_group}}
+    }{{/class_re_child}}
 {{/field_unique}}
 
 

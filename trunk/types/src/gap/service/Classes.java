@@ -377,6 +377,29 @@ public class Classes {
             }
         }
     }
+    public final static boolean IsFieldShort(ClassDescriptor container, 
+                                             FieldDescriptor field, ClassDescriptor fieldType)
+    {
+        boolean isShort = false;
+        if (fieldType instanceof ClassDescriptor.Relation){
+            ClassDescriptor.Relation fieldTypeR = (ClassDescriptor.Relation)fieldType;
+            if (fieldTypeR.isRelationSecondary())
+                isShort = true;
+        }
+        if (container.isFieldShort(field)){
+
+            if (isShort)
+                return true;
+            else
+                throw new ODStateException(field,"Field class '"+gap.Objects.StringFromObject(field.getType())+"' is used in a short relation from class '"+container.getName()+"', but is not declared 'child'.  This redundancy is required for type integrity.");
+        }
+        else if (isShort){
+
+            throw new ODStateException(field,"Field class '"+gap.Objects.StringFromObject(field.getType())+"' is declared 'child' but not declared 'child' in class '"+container.getClass()+"'.  This redundancy is required for type integrity.");
+        }
+        else
+            return false;
+    }
     public final static String ListChildClassName(FieldDescriptor field){
         String typeName = Classes.ToString(field.getType());
         String[] parameters = FieldTypeParameters(typeName);
