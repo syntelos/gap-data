@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-10T17:00:23.594Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-21T00:32:53.794Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -165,6 +165,27 @@ public abstract class TemplateData
     }
 
 
+    /**
+     * Test for uniqueness and iterate under collisions.
+     */
+    public final static Key NewRandomKeyLong(){
+        /*
+         * Source matter for data local uniqueness
+         */
+        long matter = (gap.data.Hash.Djb64(ClassName) ^ (serialVersionUID<<3) ^ serialVersionUID);
+        /*
+         * Random matter for network global uniqueness
+         */
+        java.util.Random random = new java.util.Random();
+        do {
+            matter ^= random.nextLong();
+            String idString = gap.data.Hash.Hex(matter);
+            Key key = KeyFactory.createKey(KIND.getName(),idString);
+            if (null == GetKey(key))
+                return key;
+        }
+        while (true);
+    }
 
     /**
      * Drop the instance from memcache and datastore.
@@ -219,7 +240,6 @@ public abstract class TemplateData
         Query query = new Query(KIND.getName());
         return filter.update(query);
     }
-    
     
     public final static Template Query1(Query query){
         if (null != query)
