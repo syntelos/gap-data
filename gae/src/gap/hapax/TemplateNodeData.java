@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-10T17:00:23.787Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-21T00:32:54.176Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -175,8 +175,7 @@ public abstract class TemplateNodeData
             /*
              * Source matter for data local uniqueness
              */
-            String source = gap.data.BigTable.ToString(ancestor);
-            long matter = gap.data.Hash.Djb64(source);
+            long matter = gap.data.Hash.Djb64(gap.data.BigTable.ToString(ancestor));
             /*
              * Random matter for network global uniqueness
              */
@@ -240,7 +239,6 @@ public abstract class TemplateNodeData
     public final static Query CreateQueryFor(Key key){
         return new Query(KIND.getName(),key).addSort(DefaultSortBy);
     }
-    
     
     /**
      * Filter ops

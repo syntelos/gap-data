@@ -9,6 +9,11 @@
    <ant dir="gae" />
  </target>
 
+ <target name="odl">
+
+   <ant dir="gae" target="odl"/>
+ </target>
+
  <target name="clean">
 
    <ant dir="types" target="clean"/>
@@ -52,6 +57,15 @@
    <ant dir="odlc" target="major"/>
 
    <ant dir="gae" target="major"/>
+ </target>
+
+ <target name="version">
+
+   <ant dir="types" target="version"/>
+
+   <ant dir="odlc" target="version"/>
+
+   <ant dir="gae" target="version"/>
  </target>
 
 </project>
