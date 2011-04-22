@@ -538,11 +538,21 @@ public class Request
                     return EmptySection;
                 else
                     return null;
+            case isNotAdmin:
+                if (this.isAdmin)
+                    return null;
+                else
+                    return EmptySection;
             case isMember:
                 if (this.isMember)
                     return EmptySection;
                 else
                     return null;
+            case isNotMember:
+                if (this.isMember)
+                    return null;
+                else
+                    return EmptySection;
             case version:
                 return EmptySection;
             default:
