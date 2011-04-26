@@ -80,6 +80,9 @@ public interface TemplateDataDictionary
         public TemplateDataDictionary getParent(){
             return this.parent;
         }
+        public void setParent(TemplateDataDictionary p){
+            this.parent = p;
+        }
         public boolean hasVariable(TemplateName name){
             if (null != this.parent)
                 return this.parent.hasVariable(name);
@@ -226,6 +229,10 @@ public interface TemplateDataDictionary
      * @return First most immediate ancestor.
      */
     public TemplateDataDictionary getParent();
+    /**
+     * @return First most immediate ancestor.
+     */
+    public void setParent(TemplateDataDictionary p);
     /**
      * @return Get variable would be not null
      */
