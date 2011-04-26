@@ -88,6 +88,10 @@ public abstract class AbstractListPrimitive<V>
     public void destroy(){
         this.list = null;
     }
+    public List.Primitive<V> clear(){
+        this.list = null;
+        return this;
+    }
     public abstract gap.Primitive getType();
 
     public final Key getValueClassAncestorKey(){
@@ -146,10 +150,13 @@ public abstract class AbstractListPrimitive<V>
                 copier[len] = instance;
                 this.list = copier;
             }
-            return this;
+            return this.added();
         }
         else
             throw new IllegalArgumentException();
+    }
+    protected List.Primitive<V> added(){
+        return this;
     }
     protected final int append(V instance){
         if (null != instance){
@@ -158,7 +165,7 @@ public abstract class AbstractListPrimitive<V>
                 Object[] list = this.list;
                 if (null == list){
                     this.list = new Object[]{instance};
-                    return 0;
+                    return this.appended(0);
                 }
                 else {
                     int len = list.length;
@@ -166,7 +173,7 @@ public abstract class AbstractListPrimitive<V>
                     System.arraycopy(list,0,copier,0,len);
                     copier[len] = instance;
                     this.list = copier;
-                    return len;
+                    return this.appended(len);
                 }
             }
             else
@@ -174,6 +181,9 @@ public abstract class AbstractListPrimitive<V>
         }
         else
             throw new IllegalArgumentException();
+    }
+    protected int appended(int idx){
+        return idx;
     }
     public final List.Primitive<V> remove(V instance){
         return this.remove(this.indexOf(instance));
@@ -197,7 +207,11 @@ public abstract class AbstractListPrimitive<V>
                 System.arraycopy(list,(index+1),copier,index,term-index);
                 this.list = copier;
             }
+            return this.removed(index);
         }
+        return this;
+    }
+    protected List.Primitive<V> removed(int idx){
         return this;
     }
     public final boolean has(int index){
@@ -222,10 +236,13 @@ public abstract class AbstractListPrimitive<V>
             Object[] list = this.list;
             if (null != list && index < list.length){
                 list[index] = value;
-                return value;
+                return this.updated(value);
             }
         }
         throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
+    }
+    protected V updated(V value){
+        return value;
     }
     public final java.util.Iterator<V> iterator(){
         return new ArrayIterator<V>(this.list);
@@ -274,12 +291,12 @@ public abstract class AbstractListPrimitive<V>
                 return Compares.NoIntersection;
         }
     }
-    protected final int indexOf(V instance){
+    public int indexOf(V instance){
         Object[] list = this.list;
         if (null != list){
             for (int cc = 0, count = list.length; cc < count; cc++){
                 Object item = list[cc];
-                if (instance == item || item.equals(instance))
+                if (item.equals(instance))
                     return cc;
             }
         }

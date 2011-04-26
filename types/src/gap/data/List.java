@@ -95,6 +95,8 @@ public interface List<V>
         public List.Primitive<V> add(V instance);
 
         public List.Primitive<V> remove(V instance);
+
+        public List.Primitive<V> clear();
     }
 
     public interface Short<V>

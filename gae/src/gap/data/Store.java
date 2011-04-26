@@ -235,7 +235,7 @@ public final class Store
 
             Iterable<Entity> it = stmt.asIterable(page.createFetchOptions());
 
-            List.Primitive<Key> list = new gap.util.ListPrimitiveKey();
+            List.Primitive<Key> list = new gap.util.ListPrimitiveKey(query.getKind());
 
             for (Entity entity : it){
 

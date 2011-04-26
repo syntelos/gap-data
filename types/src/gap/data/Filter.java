@@ -274,13 +274,13 @@ public final class Filter
             for (Filter.Term term : list){
                 switch (term.op){
                 case asc:
-                    query.addSort(term.field.name(),Query.SortDirection.ASCENDING);
+                    query.addSort(term.field.getFieldName(),Query.SortDirection.ASCENDING);
                     break;
                 case dsc:
-                    query.addSort(term.field.name(),Query.SortDirection.DESCENDING);
+                    query.addSort(term.field.getFieldName(),Query.SortDirection.DESCENDING);
                     break;
                 default:
-                    query.addFilter(term.field.name(),term.op.rel,term.value);
+                    query.addFilter(term.field.getFieldName(),term.op.rel,term.value);
                     break;
                 }
             }

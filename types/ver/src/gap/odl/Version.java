@@ -85,7 +85,7 @@ public final class Version {
     }
     public final static boolean HasVariable(TemplateName name){
         if (name.is(0)){
-            switch(Index.get(name.getComponent(0))){
+            switch(Index.get(name.getName())){
             case 0:
             case 1:
             case 2:
@@ -100,7 +100,7 @@ public final class Version {
     }
     public final static String GetVariable(TemplateName name){
         if (name.is(0)){
-            switch(Index.get(name.getComponent(0))){
+            switch(Index.get(name.getName())){
             case 0:
                 return Version.Long;
             case 1:

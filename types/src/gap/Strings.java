@@ -21,6 +21,8 @@ package gap;
 
 import static gap.Primitive.* ;
 
+import jauk.Re;
+
 /**
  * String conversions for {@link Primitive} types.
  * 
@@ -142,9 +144,28 @@ public abstract class Strings {
         else
             return null;
     }
+    /*
+     * Java native values
+     */
+    public final static Re BooleanRE = new Re("(\"true\"|\"false\")");
+    /*
+     * HTML checkbox values
+     */
+    public final static Re BooleanRE2 = new Re("(\"on\"|\"off\")");
+
     public final static java.lang.Boolean BooleanFromString(java.lang.String string){
-        if (null != string)
-            return new Boolean(string);
+        if (null != string){
+            if (BooleanRE.matches(string))
+                return new Boolean(string);
+            else if (BooleanRE2.matches(string)){
+                if ("on".equals(string))
+                    return java.lang.Boolean.TRUE;
+                else
+                    return java.lang.Boolean.FALSE;
+            }
+            else
+                throw new IllegalArgumentException(string);
+        }
         else
             return null;
     }
@@ -154,9 +175,10 @@ public abstract class Strings {
         else
             return null;
     }
+
     public final static java.lang.Byte ByteFromString(java.lang.String string){
         if (null != string)
-            return new java.lang.Byte(string);
+            return java.lang.Byte.decode(string);
         else
             return null;
     }
@@ -180,7 +202,7 @@ public abstract class Strings {
     }
     public final static java.lang.Short ShortFromString(java.lang.String string){
         if (null != string)
-            return new java.lang.Short(string);
+            return java.lang.Short.decode(string);
         else
             return null;
     }
@@ -192,7 +214,7 @@ public abstract class Strings {
     }
     public final static java.lang.Integer IntegerFromString(java.lang.String string){
         if (null != string)
-            return new java.lang.Integer(string);
+            return java.lang.Integer.decode(string);
         else
             return null;
     }
@@ -204,7 +226,7 @@ public abstract class Strings {
     }
     public final static java.lang.Long LongFromString(java.lang.String string){
         if (null != string)
-            return new java.lang.Long(string);
+            return java.lang.Long.decode(string);
         else
             return null;
     }
@@ -276,9 +298,16 @@ public abstract class Strings {
         else
             return null;
     }
+
+    public final static Re EmailRE = new Re("<EmailAddress>");
+
     public final static com.google.appengine.api.datastore.Email EmailFromString(java.lang.String string){
-        if (null != string)
-            return new com.google.appengine.api.datastore.Email(string);
+        if (null != string){
+            if (EmailRE.matches(string))
+                return new com.google.appengine.api.datastore.Email(string);
+            else
+                throw new IllegalArgumentException(string);
+        }
         else
             return null;
     }
@@ -328,9 +357,16 @@ public abstract class Strings {
         else
             return null;
     }
+
+    public final static Re LinkRE = new Re("<LinkUrl>");
+
     public final static com.google.appengine.api.datastore.Link LinkFromString(java.lang.String string){
-        if (null != string)
-            return new com.google.appengine.api.datastore.Link(string);
+        if (null != string){
+            if (LinkRE.matches(string))
+                return new com.google.appengine.api.datastore.Link(string);
+            else
+                throw new IllegalArgumentException(string);
+        }
         else
             return null;
     }
@@ -340,9 +376,16 @@ public abstract class Strings {
         else
             return null;
     }
+
+    public final static Re PhoneNumberRE = new Re("<TelephoneNumber>");
+
     public final static com.google.appengine.api.datastore.PhoneNumber PhoneNumberFromString(java.lang.String string){
-        if (null != string)
-            return new com.google.appengine.api.datastore.PhoneNumber(string);
+        if (null != string){
+            if (PhoneNumberRE.matches(string))
+                return new com.google.appengine.api.datastore.PhoneNumber(string);
+            else
+                throw new IllegalArgumentException(string);
+        }
         else
             return null;
     }

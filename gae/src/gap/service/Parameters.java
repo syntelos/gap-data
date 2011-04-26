@@ -479,12 +479,12 @@ public final class Parameters
         if (name.has(1))
             return super.hasVariable(name);
         else
-            return this.has(name.getComponent(0));
+            return this.has(name.getTerm());
     }
     public String getVariable(TemplateName name){
         if (name.has(1))
             return super.getVariable(name);
         else
-            return this.valueOf(name.getComponent(0)," ");
+            return this.valueOf(name.getTerm()," ");
     }
 }
