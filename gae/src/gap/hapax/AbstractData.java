@@ -80,6 +80,9 @@ public class AbstractData
     public TemplateDataDictionary getParent(){
         return this.parent;
     }
+    public void setParent(TemplateDataDictionary p){
+        this.parent = p;
+    }
     public boolean hasVariable(TemplateName name){
 
         lxl.Map<String,String> variables = this.variables;
@@ -220,6 +223,11 @@ public class AbstractData
             }
 
             name.reference(sections,data);
+            try {
+                data.setParent(this);
+            }
+            catch (RuntimeException exc){
+            }
 
             if (name.is(0))
                 return data;
