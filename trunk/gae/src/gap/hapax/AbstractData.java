@@ -59,22 +59,22 @@ public class AbstractData
             sections.clear();
         }
     }
-    public TemplateDataDictionary clone(){
+    public AbstractData clone(){
         try {
-            return (TemplateDataDictionary)super.clone();
+            return (AbstractData)super.clone();
         }
         catch (java.lang.CloneNotSupportedException exc){
-            throw new java.lang.Error(exc);
+            throw new InternalError();
         }
     }
-    public TemplateDataDictionary clone(TemplateDataDictionary parent){
+    public AbstractData clone(TemplateDataDictionary parent){
         try {
             AbstractData clone = (AbstractData)super.clone();
             clone.parent = parent;
             return clone;
         }
         catch (java.lang.CloneNotSupportedException exc){
-            throw new java.lang.Error(exc);
+            throw new InternalError();
         }
     }
     public TemplateDataDictionary getParent(){
@@ -118,10 +118,12 @@ public class AbstractData
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
 
         lxl.Map<String,List.Short<TemplateDataDictionary>> sections = this.sections;
+
         List.Short<TemplateDataDictionary> section = null;
         if (null != sections){
-            section = sections.get(name.getComponent(0));
+            section = name.dereferenceC(sections);
         }
+
         if (null == section){
             /*
              * Inherit
@@ -129,21 +131,33 @@ public class AbstractData
             TemplateDataDictionary parent = this.parent;
             if (null != parent){
                 section = parent.getSection(name);
+                /*
+                 * parent implements name polarity
+                 */
                 if (null != section){
 
-                    section = SectionClone(this,section);
+                    section = Abstract.SectionClone(this,section);
 
-                    sections.put(name.getComponent(0),section);
+                    if (null == sections){
+                        sections = new lxl.Map<String,List.Short<TemplateDataDictionary>>();
+                        this.sections = sections;
+                    }
+                    name.reference(sections,section);
                 }
             }
             if (null == section){
                 /*
                  * Synthetic
                  */
-                if (this.hasVariable(name))
-                    section = this.showSection(name);
-                else
-                    return null;
+                if (this.hasVariable(name)){
+
+                    if (!name.complement)
+                        section = this.showSection(name);
+                }
+                else {
+                    if (name.complement)
+                        section = this.showSection(name);
+                }
             }
         }
         /*
@@ -151,9 +165,14 @@ public class AbstractData
          */
         if (name.is(0))
             return section;
+        else if (null == section)
+            return null;
         else {
-            TemplateDataDictionary sectionData = name.dereference(0,section);
-            return sectionData.getSection(new TemplateName(name));
+            TemplateDataDictionary sectionData = name.dereferenceC(this,section);
+            if (null != sectionData)
+                return sectionData.getSection(new TemplateName(name));
+            else
+                return null;
         }
     }
     public List.Short<TemplateDataDictionary> showSection(TemplateName name){
@@ -162,92 +181,51 @@ public class AbstractData
         if (null == sections){
             sections = new lxl.Map<String,List.Short<TemplateDataDictionary>>();
             this.sections = sections;
+        }
 
-            TemplateDataDictionary newSection = new AbstractData(this);
-            List.Short<TemplateDataDictionary> newSectionList = Add(null,newSection);
-            sections.put(name.getComponent(0),newSectionList);
+        List.Short<TemplateDataDictionary> section = name.dereferenceT(sections);
+        if (null != section){
             if (name.is(0))
-                return newSectionList;
-            else
-                return newSection.showSection(new TemplateName(name));
-        }
-        else {
-            List.Short<TemplateDataDictionary> section = sections.get(name.getComponent(0));
-            if (null != section){
-                if (name.is(0))
-                    return section;
-                else {
-                    TemplateDataDictionary sectionData = name.dereference(0,section);
-                    return sectionData.showSection(new TemplateName(name));
-                }
-            }
+                return section;
             else {
-                TemplateDataDictionary newSection = new AbstractData(this);
-                section = Add(section,newSection);
-                this.sections.put(name.getComponent(0),section);
-                if (name.is(0))
-                    return section;
-                else
-                    return newSection.showSection(new TemplateName(name));
+                TemplateDataDictionary data = name.dereferenceT(this,section);
+                if (null != data)
+                    return data.showSection(new TemplateName(name));
             }
         }
+
+        TemplateDataDictionary data = new AbstractData(this);
+
+        section = name.reference(sections,data);
+
+        if (name.is(0))
+            return section;
+        else
+            return data.showSection(new TemplateName(name));
     }
     public TemplateDataDictionary addSection(TemplateName name){
 
-        TemplateDataDictionary newSection = new AbstractData(this);
+        TemplateDataDictionary data = new AbstractData(this);
 
-        return this.addSection(name,newSection);
+        return this.addSection(name,data);
     }
-
-    public TemplateDataDictionary addSection(TemplateName name, TemplateDataDictionary newSection){
-        if (null == name || null == newSection)
+    public TemplateDataDictionary addSection(TemplateName name, TemplateDataDictionary data){
+        if (null == name || null == data)
             throw new IllegalArgumentException();
         else {
             lxl.Map<String,List.Short<TemplateDataDictionary>> sections = this.sections;
             if (null == sections){
                 sections = new lxl.Map<String,List.Short<TemplateDataDictionary>>();
                 this.sections = sections;
-                List.Short<TemplateDataDictionary> section = Add(null,newSection);
-                sections.put(name.getComponent(0),section);
             }
-            else {
-                List.Short<TemplateDataDictionary> section = sections.get(name.getComponent(0));
-                if (null == section){
-                    section = Add(section,newSection);
-                    sections.put(name.getComponent(0),section);
-                }
-                else
-                    section = Add(section,newSection);
-            }
+
+            name.reference(sections,data);
+
             if (name.is(0))
-                return newSection;
+                return data;
             else
-                return newSection.addSection(new TemplateName(name));
+                return data.addSection(new TemplateName(name));
         }
-    }
-    public final static List.Short<TemplateDataDictionary> Add(List.Short<TemplateDataDictionary> list, TemplateDataDictionary data){
-        if (null == list){
-            List.Short<TemplateDataDictionary> newSectionList = new ArrayList<TemplateDataDictionary>();
-            newSectionList.add(data);
-            return newSectionList;
-        }
-        else {
-            List.Short<TemplateDataDictionary> shortSectionList = (List.Short<TemplateDataDictionary>)list;
-            shortSectionList.add(data);
-            return shortSectionList;
-        }
-    }
-    public final static List.Short<TemplateDataDictionary> SectionClone(TemplateDataDictionary parent, List.Short<TemplateDataDictionary> section){
-
-        List.Short<TemplateDataDictionary> sectionClone = section.clone();
-
-        for (int sectionIndex = 0, sectionCount = sectionClone.size(); sectionIndex < sectionCount; sectionIndex++){
-            TemplateDataDictionary sectionItem = sectionClone.get(sectionIndex);
-            TemplateDataDictionary sectionItemClone = sectionItem.clone(parent);
-            sectionClone.set(sectionIndex,sectionItemClone);
-        }
-
-        return sectionClone;
     }
 
 }

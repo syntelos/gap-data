@@ -31,11 +31,185 @@ import gap.data.List;
  * The implementation of {@link TemplateDictionary} as consumed by
  * {@link Template} is the specification of this interface.
  * 
+ * The nominal implementation is {@link gap.hapax.AbstractData} in the
+ * "gae" subproject.
+ * 
  * @author jdp
  */
 public interface TemplateDataDictionary
     extends java.lang.Cloneable
 {
+    /**
+     * Degenerate case of an in- memory Data Dictionary to implement
+     * "complement" in {@link TemplateName}.  This implementation has
+     * no variables.
+     */
+    public static class Abstract
+        extends lxl.Map<String,List.Short<TemplateDataDictionary>>
+        implements TemplateDataDictionary
+    {
+        public final static List.Short<TemplateDataDictionary> EmptySection = 
+            new gap.util.ArrayList<TemplateDataDictionary>();
+
+        public final static Abstract EmptyDictionary = new Abstract();
+
+
+        protected TemplateDataDictionary parent;
+
+
+        public Abstract(){
+            super();
+        }
+        public Abstract(TemplateDataDictionary parent){
+            super();
+            this.parent = parent;
+        }
+
+
+        public void renderComplete(){
+        }
+        public Abstract clone(){
+
+            return (Abstract)super.clone();
+        }
+        public Abstract clone(TemplateDataDictionary parent){
+            Abstract clone = this.clone();
+            clone.parent = parent;
+            return clone;
+        }
+        public TemplateDataDictionary getParent(){
+            return this.parent;
+        }
+        public boolean hasVariable(TemplateName name){
+            if (null != this.parent)
+                return this.parent.hasVariable(name);
+            else
+                return false;
+        }
+        public String getVariable(TemplateName name){
+            if (null != this.parent)
+                return this.parent.getVariable(name);
+            else
+                return null;
+        }
+        public void setVariable(TemplateName name, String value){
+
+            throw new UnsupportedOperationException();
+        }
+        public List.Short<TemplateDataDictionary> getSection(TemplateName name){
+
+            List.Short<TemplateDataDictionary> section = name.dereferenceC(this);
+
+            if (null == section){
+                /*
+                 * Inherit
+                 */
+                TemplateDataDictionary parent = this.parent;
+                if (null != parent){
+                    section = parent.getSection(name);
+                    /*
+                     * parent implements name polarity
+                     */
+                    if (null != section){
+
+                        section = Abstract.SectionClone(this,section);
+
+                        name.reference(this,section);
+                    }
+                }
+                if (null == section){
+                    /*
+                     * Synthetic
+                     */
+                    if (this.hasVariable(name)){
+
+                        if (!name.complement)
+                            section = this.showSection(name);
+                    }
+                    else {
+                        if (name.complement)
+                            section = this.showSection(name);
+                    }
+                }
+            }
+            /*
+             * Section name resolution
+             */
+            if (name.is(0))
+                return section;
+            else if (null == section)
+                return null;
+            else {
+                TemplateDataDictionary sectionData = name.dereferenceC(this,section);
+                if (null != sectionData)
+                    return sectionData.getSection(new TemplateName(name));
+                else
+                    return null;
+            }
+        }
+        public List.Short<TemplateDataDictionary> showSection(TemplateName name){
+
+            List.Short<TemplateDataDictionary> section = name.dereferenceT(this);
+            if (null != section){
+                if (name.is(0))
+                    return section;
+                else {
+                    TemplateDataDictionary data = name.dereferenceT(this,section);
+                    if (null != data)
+                        return data.showSection(new TemplateName(name));
+                }
+            }
+
+            TemplateDataDictionary data = new Abstract(this);
+
+            section = name.reference(this,data);
+
+            if (name.is(0))
+                return section;
+            else
+                return data.showSection(new TemplateName(name));
+        }
+        public TemplateDataDictionary addSection(TemplateName name){
+
+            return this.addSection(name,new Abstract(this));
+        }
+        public TemplateDataDictionary addSection(TemplateName name, TemplateDataDictionary data){
+            if (null == name || null == data)
+                throw new IllegalArgumentException();
+            else {
+
+                name.reference(this,data);
+
+                if (name.is(0))
+                    return data;
+                else
+                    return data.addSection(new TemplateName(name));
+            }
+        }
+        public final static List.Short<TemplateDataDictionary> Add(List.Short<TemplateDataDictionary> list, 
+                                                                   TemplateDataDictionary data)
+        {
+            if (null == list){
+                list = new gap.util.ArrayList<TemplateDataDictionary>();
+            }
+            list.add(data);
+            return list;
+        }
+        public final static List.Short<TemplateDataDictionary> SectionClone(TemplateDataDictionary parent, List.Short<TemplateDataDictionary> section){
+
+            List.Short<TemplateDataDictionary> sectionClone = section.clone();
+
+            for (int sectionIndex = 0, sectionCount = sectionClone.size(); sectionIndex < sectionCount; sectionIndex++){
+                TemplateDataDictionary sectionItem = sectionClone.get(sectionIndex);
+                TemplateDataDictionary sectionItemClone = sectionItem.clone(parent);
+                sectionClone.set(sectionIndex,sectionItemClone);
+            }
+
+            return sectionClone;
+        }
+    }
+
+
     /**
      * Consumption complete.
      */
@@ -67,15 +241,15 @@ public interface TemplateDataDictionary
     /**
      * @return Child, child from ancestry, or synthetic on variable.
      */
-    public List.Short<TemplateDataDictionary> getSection(TemplateName sectionName);
+    public List.Short<TemplateDataDictionary> getSection(TemplateName name);
     /**
      * @return Existing section, or with no existing section create new.
      */
-    public List.Short<TemplateDataDictionary> showSection(TemplateName sectionName);
+    public List.Short<TemplateDataDictionary> showSection(TemplateName name);
     /**
      * @return New section.
      */
-    public TemplateDataDictionary addSection(TemplateName sectionName);
+    public TemplateDataDictionary addSection(TemplateName name);
     /**
      * Intended to permit the reflection of a section element within
      * multiple named sections.

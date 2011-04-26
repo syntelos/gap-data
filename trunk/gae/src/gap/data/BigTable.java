@@ -216,29 +216,10 @@ public abstract class BigTable
     public final boolean hasNotId(){
         return (null == this.key);
     }
-    public final String getId(){
-        Key key = this.key;
-        if (null != key){
-            String n = key.getName();
-            if (null != n && 0 != n.length())
-                return n;
-            else {
-                long num = key.getId();
-                if (0L != num)
-                    return String.valueOf(num);
-                else
-                    throw new IllegalArgumentException("Key is incomplete '"+key+"'.");
-            }
-        }
-        else
-            return null;
-    }
-    public boolean setId(String id){
-        /*
-         * TODO Generate "this.setKey(KeyFor(this,id))"
-         */
-        return false;
-    }
+    public abstract String getId();
+
+    public abstract boolean setId(String id);
+
     /**
      * Data store reference to this instance.
      */
@@ -482,9 +463,9 @@ public abstract class BigTable
 
             if (field.isNotFieldNameKeyOrId()){
 
-                if (field.isFieldTypePrimitive()){
+                if (field.isFieldTypeCollection()){
 
-                    if (field.isFieldTypeCollection()){
+                    if (field.isFieldTypePrimitive()){
                         java.io.Serializable value = this.valueOf(field,MayNotInherit);
                         if (null != value){
 
@@ -495,18 +476,18 @@ public abstract class BigTable
                         else
                             entity.removeProperty(fieldName);
                     }
-                    else {
-                        java.io.Serializable value = this.valueOf(field,MayNotInherit);
-                        if (null != value){
+                }
+                else {
+                    java.io.Serializable value = this.valueOf(field,MayNotInherit);
+                    if (null != value){
 
-                            if (IsIndexed(value))
-                                entity.setProperty(fieldName, value);
-                            else 
-                                entity.setUnindexedProperty(fieldName, value);
-                        }
-                        else
-                            entity.removeProperty(fieldName);
+                        if (IsIndexed(value))
+                            entity.setProperty(fieldName, value);
+                        else 
+                            entity.setUnindexedProperty(fieldName, value);
                     }
+                    else
+                        entity.removeProperty(fieldName);
                 }
             }
             else
@@ -520,9 +501,9 @@ public abstract class BigTable
 
             java.io.Serializable object = (java.io.Serializable)entity.getProperty(field.getFieldName());
 
-            if (field.isFieldTypePrimitive()){
+            if (field.isFieldTypeCollection()){
 
-                if (field.isFieldTypeCollection()){
+                if (field.isFieldTypePrimitive()){
 
                     object = Serialize.From(field, (Blob)object);
 
@@ -566,9 +547,7 @@ public abstract class BigTable
     public final static boolean IsEqual(Object a, Object b){
         if (a == b)
             return true;
-        else if (null == a)
-            return (null == b);
-        else if (null == b)
+        else if (null == a || null == b)
             return false;
         else
             return (a.equals(b));
@@ -576,9 +555,7 @@ public abstract class BigTable
     public final static boolean IsNotEqual(Object a, Object b){
         if (a == b)
             return false;
-        else if (null == a)
-            return (null != b);
-        else if (null == b)
+        else if (null == a || null == b)
             return true;
         else
             return (!a.equals(b));

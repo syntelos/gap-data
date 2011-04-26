@@ -41,7 +41,7 @@ public final class Version {
     /**
      * Build sequence number.
      */
-    public final static int Build = 1;
+    public final static int Build = 2;
     /**
      * HTTP Product Token plus comment build date and time.  
      * As in <code>" Major '.' Minor '.' Build "</code>.
@@ -85,7 +85,7 @@ public final class Version {
     }
     public final static boolean HasVariable(TemplateName name){
         if (name.is(0)){
-            switch(Index.get(name.getComponent(0))){
+            switch(Index.get(name.getTerm())){
             case 0:
             case 1:
             case 2:
@@ -101,7 +101,7 @@ public final class Version {
     }
     public final static String GetVariable(TemplateName name){
         if (name.is(0)){
-            switch(Index.get(name.getComponent(0))){
+            switch(Index.get(name.getTerm())){
             case 0:
                 return Version.Long;
             case 1:

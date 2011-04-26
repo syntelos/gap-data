@@ -90,6 +90,10 @@ public final class Kind
 
     public final int hashCode;
 
+    private Class<? extends TableClass> tableClass;
+
+    private Method tableFunctionGet, tableFunctionKeyIdFor;
+
 
     private Kind(String name, String packageName, String className, String path){
         super();
@@ -110,21 +114,31 @@ public final class Kind
         return this.name;
     }
     public Class<? extends TableClass> getTableClass(){
-        try {
-            return (Class<? extends TableClass>)Class.forName(this.fullClassName);
+        Class<? extends TableClass> tableClass = this.tableClass;
+        if (null == tableClass){
+            try {
+                tableClass = (Class<? extends TableClass>)Class.forName(this.fullClassName);
+                this.tableClass = tableClass;
+            }
+            catch (ClassNotFoundException exc){
+                throw new IllegalStateException(this.name,exc);
+            }
         }
-        catch (ClassNotFoundException exc){
-            throw new IllegalStateException(this.name,exc);
-        }
+        return tableClass;
     }
     public Method getTableGetter(){
-        Class<? extends TableClass> table = this.getTableClass();
-        try {
-            return table.getMethod("Get",Key.class);
+        Method tableFunctionGet = this.tableFunctionGet;
+        if (null == tableFunctionGet){
+            Class<? extends TableClass> table = this.getTableClass();
+            try {
+                tableFunctionGet = table.getMethod("Get",Key.class);
+                this.tableFunctionGet = tableFunctionGet;
+            }
+            catch (Exception any){
+                throw new IllegalStateException(this.fullClassName,any);
+            }
         }
-        catch (Exception any){
-            throw new IllegalStateException(this.fullClassName,any);
-        }
+        return tableFunctionGet;
     }
     public TableClass get(Key key){
         Method getter = this.getTableGetter();
@@ -132,7 +146,37 @@ public final class Kind
             return (TableClass)getter.invoke(null,key);
         }
         catch (Exception any){
-            throw new IllegalStateException(this.fullClassName,any);
+            throw new IllegalStateException(this.fullClassName+'#'+getter.getName(),any);
+        }
+    }
+    public Method getTableKeyIdForFunction(){
+        Method tableFunctionKeyIdFor = this.tableFunctionKeyIdFor;
+        if (null == tableFunctionKeyIdFor){
+            Class<? extends TableClass> table = this.getTableClass();
+            try {
+                for (Method method : table.getMethods()){
+                    if (method.getName().equals("KeyIdFor")){
+
+                        tableFunctionKeyIdFor = method;
+                        this.tableFunctionKeyIdFor = tableFunctionKeyIdFor;
+                        return tableFunctionKeyIdFor;
+                    }
+                }
+            }
+            catch (Exception any){
+                throw new IllegalStateException(this.fullClassName,any);
+            }
+        }
+        return tableFunctionKeyIdFor;
+    }
+    public Key keyIdFor(Object... args){
+        Method getter = this.getTableKeyIdForFunction();
+        try {
+            Object[] argv = new Object[]{args};
+            return (Key)getter.invoke(null,argv);
+        }
+        catch (Exception any){
+            throw new IllegalArgumentException(this.fullClassName+'#'+getter.getName(),any);
         }
     }
     public String toString(){

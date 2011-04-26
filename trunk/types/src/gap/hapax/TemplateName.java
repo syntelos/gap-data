@@ -25,29 +25,61 @@
  */
 package gap.hapax;
 
+import gap.data.HasName;
 import gap.data.List;
 
 import java.util.StringTokenizer;
 
 /**
- * A section or variable name parsed into a list of components
+ * <h3>Syntax</h3>
+ * 
+ * A name is a string that identifies a section or variable in a
+ * template data dictionary.  A name is employed in templates within
+ * the '{{' and '}}' brackets.  It is parsed by instances of this
+ * class for special data dictionary referencing and dereferencing
+ * features.
+ * 
+ * <h4>Path</h4>
+ * 
+ * A section or variable name parsed into a path - list of components
  * delimited by solidus '/' (slash).
  * 
- * The user implements path interpretation, as demonstrated in {@link
- * AbstractData}.
+ * <h4>Index</h4>
  * 
  * A path component accepts an optional index suffix enclosed in
- * square brackets for names identifying lists.  A negative list index
- * is added to list size.  In this way, negative one refers to the
- * last element of the list.  The component dereference method is
- * provided to handle lists.
+ * square brackets for names identifying lists -- for index from head
+ * or tail.  A negative list index is added to list size for index
+ * from tail.  For these indeces negative one refers to the last
+ * element of the list.
  * 
+ * <h4>Complement</h4>
+ * 
+ * A path is boolean - complemented with a '~' (tilde) prefix to any
+ * of its components.  The complement operator is intended for the
+ * first component, and carries through path interpretation.
+ * 
+ * Therefore the first component complemented is necessarily
+ * equivalent to all components (or any component) complemented.
+ * 
+ * Complement is employed exclusively for template sections, for
+ * "exists" and "not exists" sections.  The "variable", "add", and
+ * "show" methods ignore the complementarity (polarity) of the name.
+ * 
+ * <h3>Usage</h3>
+ * 
+ * The user implements path interpretation (demonstrated in {@link
+ * gap.hapax.TemplateDataDictionary$Abstract} and {@link
+ * gap.util.AbstractData}) using the dereference and reference
+ * methods.
+ * 
+ * 
+ * @see TemplateDataDictionary$Abstract
  * @see AbstractData
  * @author jdp
  */
 public final class TemplateName 
     extends Object
-    implements Iterable<TemplateName.Component>
+    implements HasName, Iterable<TemplateName.Component>
 {
 
     /**
@@ -68,47 +100,157 @@ public final class TemplateName
 
         public final int index;
 
+        public final boolean complement;
 
-        public Component(String source){
+        /**
+         * Copies syntactically cleaned information to "this.source"
+         * except any complement operator.  See also TemplateName
+         * constructors and Cat function.
+         */
+        public Component(boolean complement, String source){
             super();
             StringTokenizer strtok = new StringTokenizer(source,"][");
             switch (strtok.countTokens()){
-            case 1:
-                this.term = strtok.nextToken();
+            case 1:{
+                String term = strtok.nextToken().trim();
+                boolean thisComplement = ('~' == term.charAt(0));
+                if (thisComplement)
+                    this.term = term.substring(1);
+                else
+                    this.term = term;
+
+                this.complement = (complement || thisComplement);
                 this.index = 0;
-                this.source = source;
+                this.source = this.term;
                 break;
-            case 2:
-                this.term = strtok.nextToken();
-                String term = strtok.nextToken();
+            }
+            case 2:{
+                String term = strtok.nextToken().trim();
+                boolean thisComplement = ('~' == term.charAt(0));
+                if (thisComplement)
+                    this.term = term.substring(1);
+                else
+                    this.term = term;
+
+                String arg = strtok.nextToken().trim();
                 int index;
                 try {
-                    index = Integer.parseInt(term);
-                    source = term+'['+index+']';
+                    index = Integer.decode(arg);
+
+                    source = (this.term+'['+arg+']');
                 }
                 catch (NumberFormatException exc){
                     throw new IllegalArgumentException(source,exc);
                 }
+                this.complement = (complement || thisComplement);
                 this.index = index;
                 this.source = source;
                 break;
+            }
             default:
                 throw new IllegalArgumentException(source);
             }
         }
 
 
-        public TemplateDataDictionary dereference(List<TemplateDataDictionary> list){
+        public List.Short<TemplateDataDictionary> dereferenceC(lxl.Map<String,List.Short<TemplateDataDictionary>> dict)
+        {
+            List.Short<TemplateDataDictionary> section = dict.get(this.term);
+            if (this.complement){
+
+                if (null == section)
+                    return TemplateDataDictionary.Abstract.EmptySection.clone();
+                else
+                    return null;
+            }
+            else
+                return section;
+        }
+        public TemplateDataDictionary dereferenceC(TemplateDataDictionary p, 
+                                                  List<TemplateDataDictionary> list)
+        {
             int idx = this.index;
-            if (-1 < idx)
-                return list.get(idx);
+            if (-1 < idx){
+                /*
+                 * Zero-Positive values index from the start of the list
+                 */
+                TemplateDataDictionary dict = list.get(idx);
+                if (this.complement){
+
+                    if (null == dict)
+                        return TemplateDataDictionary.Abstract.EmptyDictionary.clone(p);
+                    else
+                        return null;
+                }
+                else
+                    return dict;
+            }
             else {
+                /*
+                 * Negative values index from the end of the list
+                 */
+                idx += list.size();
+                if (-1 < idx){
+                    TemplateDataDictionary dict = list.get(idx);
+
+                    if (this.complement){
+                        if (null == dict)
+                            return TemplateDataDictionary.Abstract.EmptyDictionary.clone(p);
+                        else
+                            return null;
+                    }
+                    else
+                        return dict;
+                }
+                else
+                    throw new ArrayIndexOutOfBoundsException("In '"+this.source+"' at list size '"+list.size()+"'.");
+            }
+        }
+
+        public List.Short<TemplateDataDictionary> dereferenceT(lxl.Map<String,List.Short<TemplateDataDictionary>> dict)
+        {
+            return dict.get(this.term);
+        }
+        public TemplateDataDictionary dereferenceT(TemplateDataDictionary p, 
+                                                   List<TemplateDataDictionary> list)
+        {
+            int idx = this.index;
+            if (-1 < idx){
+                /*
+                 * Zero-Positive values index from the start of the list
+                 */
+                return list.get(idx);
+            }
+            else {
+                /*
+                 * Negative values index from the end of the list
+                 */
                 idx += list.size();
                 if (-1 < idx)
                     return list.get(idx);
                 else
                     throw new ArrayIndexOutOfBoundsException("In '"+this.source+"' at list size '"+list.size()+"'.");
             }
+        }
+        public List.Short<TemplateDataDictionary> reference(lxl.Map<String,List.Short<TemplateDataDictionary>> dict, 
+                                                            TemplateDataDictionary data)
+        {
+            List.Short<TemplateDataDictionary> section = this.dereferenceT(dict);
+            if (null == section){
+                section = TemplateDataDictionary.Abstract.Add(section,data);
+                dict.put(this.term,section);
+            }
+            else
+                section = TemplateDataDictionary.Abstract.Add(section,data);
+
+            return section;
+        }
+        public List.Short<TemplateDataDictionary> reference(lxl.Map<String,List.Short<TemplateDataDictionary>> dict, 
+                                                            List.Short<TemplateDataDictionary> list)
+        {
+            dict.put(this.term,list);
+
+            return list;
         }
         public int hashCode(){
             return this.source.hashCode();
@@ -193,6 +335,8 @@ public final class TemplateName
 
     public final int count;
 
+    public final boolean complement;
+
 
     public TemplateName(String base, String name){
         this(Cat(base,name));
@@ -201,20 +345,29 @@ public final class TemplateName
         super();
         this.from = null;
         if (null != source){
+            boolean complement = false;
+
             StringBuilder strbuf = new StringBuilder();
             StringTokenizer strtok = new StringTokenizer(source,"/");
             int count = strtok.countTokens();
             Component[] path = new Component[count];
             for (int cc = 0; cc < count; cc++){
-                Component el = new Component(strtok.nextToken());
+                Component el = new Component(complement,strtok.nextToken());
+                complement = (complement || el.complement);
                 path[cc] = el;
                 if (0 != cc)
                     strbuf.append('/');
                 strbuf.append(el.source);
             }
+            /*
+             */
+            if (complement)
+                strbuf.insert(0,'~');
+
             this.source = strbuf.toString();
             this.path = path;
             this.count = count;
+            this.complement = complement;
         }
         else
             throw new IllegalArgumentException();
@@ -238,6 +391,7 @@ public final class TemplateName
                 this.count = 0;
                 this.path = new Component[0];
             }
+            this.complement = shift.complement;
         }
         else
             throw new IllegalArgumentException();
@@ -246,6 +400,9 @@ public final class TemplateName
 
     public String getSource(){
         return this.source;
+    }
+    public boolean isComplement(){
+        return this.complement;
     }
     public boolean isIdentity(){
         return (1 == this.count);
@@ -268,22 +425,6 @@ public final class TemplateName
         else
             return null;
     }
-    public String getComponent(int idx){
-        if (-1 < idx && idx < this.count)
-            return this.path[idx].term;
-        else
-            return null;
-    }
-    public TemplateDataDictionary dereference(int idx, List<TemplateDataDictionary> list){
-        Component c = this.get(idx);
-        if (null != c)
-            return c.dereference(list);
-        else
-            throw new ArrayIndexOutOfBoundsException("In '"+this.source+"' at index '"+idx+"'.");
-    }
-    public TemplateDataDictionary dereference(List<TemplateDataDictionary> list){
-        return this.dereference(0,list);
-    }
     /**
      * @return Head
      */
@@ -301,19 +442,19 @@ public final class TemplateName
             return null;
     }
     /**
-     * @return May be first
+     * @return Last or first
      */
     public Component tail(){
         return this.get(this.count-1);
     }
     /**
-     * A negative index is added to list size.
+     * @return A negative index is added to list size.
      */
     public int getIndex(int idx){
         if (-1 < idx && idx < this.count)
             return this.path[idx].index;
         else
-            return -1;
+            throw new IllegalArgumentException(String.valueOf(idx));
     }
     public boolean hasNotBase(){
         return (2 > this.count);
@@ -321,16 +462,33 @@ public final class TemplateName
     public boolean hasBase(){
         return (1 < this.count);
     }
+    /**
+     * @return Base prefix, related to name
+     * @see #getName()
+     */
     public String getBase(){
+
+        return this.getBaseBuffer().toString();
+    }
+    public StringBuilder getBaseBuffer(){
         StringBuilder strbuf = new StringBuilder();
-        Component el, path[] = this.path;
-        for (int cc = 0, count = path.length, term = (count-1); cc < term; cc++){
-            el = path[cc];
+
+        final Component path[] = this.path;
+        final int count = this.count, term = (count-1);
+
+        for (int cc = 0; cc < term; cc++){
+            Component el = path[cc];
             if (0 != strbuf.length())
                 strbuf.append('/');
             strbuf.append(el.source);
         }
-        return strbuf.toString();
+        /*
+         */
+        if (this.complement){
+            if (0 < term)
+                strbuf.insert(0,'~');
+        }
+        return strbuf;
     }
     public boolean hasNotName(){
         return (1 > this.count);
@@ -338,6 +496,10 @@ public final class TemplateName
     public boolean hasName(){
         return (0 < this.count);
     }
+    /**
+     * @return Tail term (component name), related to base
+     * @see #getBase()
+     */
     public String getName(){
         if (0 < this.count){
             Component[] components = this.path;
@@ -345,6 +507,52 @@ public final class TemplateName
         }
         else
             return "";
+    }
+    /**
+     * @return First term (component name) at the current path depth
+     */
+    public String getTerm(){
+        if (0 < this.count){
+            Component[] components = this.path;
+            return components[0].term;
+        }
+        else
+            return "";
+    }
+    /**
+     * Use polarity
+     */
+    public TemplateDataDictionary dereferenceC(TemplateDataDictionary p, List<TemplateDataDictionary> list){
+
+        return this.first().dereferenceC(p,list);
+    }
+    public List.Short<TemplateDataDictionary> dereferenceC(lxl.Map<String,List.Short<TemplateDataDictionary>> map){
+
+        return this.first().dereferenceC(map);
+    }
+    /**
+     * Ignore polarity
+     */
+    public TemplateDataDictionary dereferenceT(TemplateDataDictionary p, List<TemplateDataDictionary> list){
+
+        return this.first().dereferenceT(p,list);
+    }
+    public List.Short<TemplateDataDictionary> dereferenceT(lxl.Map<String,List.Short<TemplateDataDictionary>> map){
+
+        return this.first().dereferenceT(map);
+    }
+    /**
+     * Ignore polarity
+     */
+    public List.Short<TemplateDataDictionary> reference(lxl.Map<String,List.Short<TemplateDataDictionary>> map, 
+                                                        TemplateDataDictionary data)
+    {
+        return this.first().reference(map, data);
+    }
+    public List.Short<TemplateDataDictionary> reference(lxl.Map<String,List.Short<TemplateDataDictionary>> map,
+                                                        List.Short<TemplateDataDictionary> list)
+    {
+        return this.first().reference(map, list);
     }
     public int hashCode(){
         return this.source.hashCode();
@@ -363,6 +571,10 @@ public final class TemplateName
     public java.util.Iterator<Component> iterator(){
         return new Iterator(this.path);
     }
+
+    /**
+     * Path cat: "a+'/'+b"
+     */
     public final static String Cat(String base, String name){
         if (null == base || 0 == base.length())
             return name;
@@ -373,17 +585,23 @@ public final class TemplateName
         else
             return base+'/'+name;
     }
+    /**
+     * Name cat: "base(a)+'/'+(tail(a)+b)+index(a)"
+     */
     public final static String Cat(TemplateName prefix, String suffix){
         if (null == prefix)
             return suffix;
         else {
             Component tail = prefix.tail();
             if (0 != tail.index){
-                StringBuilder strbuf = new StringBuilder();
+                StringBuilder strbuf;
                 if (prefix.hasBase()){
-                    strbuf.append(prefix.getBase());
+                    strbuf = prefix.getBaseBuffer();
                     strbuf.append('/');
                 }
+                else
+                    strbuf = new StringBuilder();
+
                 strbuf.append(tail.term);
                 strbuf.append(suffix);
                 strbuf.append('[');

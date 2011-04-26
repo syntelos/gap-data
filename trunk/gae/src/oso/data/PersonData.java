@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-21T00:32:52.804Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-26T19:55:37.763Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -63,6 +63,22 @@ public abstract class PersonData
     public final static Key KeyLongIdFor(String logonId){
         String id = IdFor( logonId);
         return KeyLongFor(id);
+    }
+    /**
+     * Used by gap.data.Kind
+     *
+     * Calls {@link #KeyLongIdFor}
+     */
+    public final static Key KeyIdFor(Object... args){
+        return KeyLongIdFor((String)args[0]);
+    }
+    /**
+     * Used by setId
+     *
+     * Calls {@link #KeyLongFor}
+     */
+    public final static Key KeyFor(Object... args){
+        return KeyLongFor( (String)args[0]);
     }
 
 
@@ -123,6 +139,9 @@ public abstract class PersonData
             throw new IllegalArgumentException();
     }
 
+    /**
+     * Used by gap.data.Kind
+     */
     public final static Person Get(Key key){
         if (null != key){
             Person instance = (Person)gap.data.Store.Get(key);
@@ -455,9 +474,11 @@ public abstract class PersonData
     protected PersonData(String logonId) {
         super();
         this.setLogonId(logonId);
-        String id = IdFor( logonId);
-        Key key = KeyLongFor(id);
-        this.setKey(key);
+        {
+            final String id = IdFor(logonId);
+            final Key key = KeyLongFor(id);
+            this.setKey(key);
+        }
     }
 
 
@@ -466,6 +487,44 @@ public abstract class PersonData
         this.inheritFrom = null;
         this.datastoreEntity = null;
         this.logonId = null;
+    }
+    public final String getId(){
+        Key key = this.key;
+        if (null != key){
+            String id = key.getName();
+            if (null != id)
+                return id;
+            else {
+                Key pk = key.getParent();
+                if (null != pk && KIND.name.equals(pk.getKind())){
+                    id = pk.getName();
+                    if (null != id)
+                        return id;
+                    else
+                        throw new IllegalStateException("Key missing name"); //(named key structure)
+                }
+                else
+                    throw new IllegalStateException("Key missing name");
+            }
+        }
+        else
+            return null;
+    }
+    public final boolean setId(String id){
+        if (null == id){
+            if (null != this.key){
+                this.key = null;
+                return true;
+            }
+            else
+                return false;
+        }
+        else if (null == this.key){
+            this.key = KeyLongFor(id);
+            return true;
+        }
+        else
+            return false;
     }
     public final boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -574,9 +633,16 @@ public abstract class PersonData
      * Template Data Dictionary
      */
     public boolean hasVariable(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             switch (field){
+            case Id:
+                if (name.is(0)){
+                    String id = this.getId();
+                    return (null != id);
+                }
+                else
+                    return false;
             case LogonId:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -591,9 +657,14 @@ public abstract class PersonData
         }
     }
     public String getVariable(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             switch (field){
+            case Id:
+                if (name.is(0))
+                    return this.getId();
+                else
+                    return null;
             case LogonId:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -608,10 +679,12 @@ public abstract class PersonData
         }
     }
     public void setVariable(TemplateName name, String value){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             if (name.has(1)){
                 switch (field){
+                case Id:
+                    throw new UnsupportedOperationException(field.name());
                 case LogonId:
                     throw new IllegalStateException(field.name());
                 default:
@@ -626,7 +699,7 @@ public abstract class PersonData
         }
     }
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case LogonId:

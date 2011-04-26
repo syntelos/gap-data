@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-21T00:32:54.176Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-26T19:55:39.318Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -66,6 +66,22 @@ public abstract class TemplateNodeData
     public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer lineNumber){
         String id = IdFor(ancestor, nodeType,  lineNumber);
         return KeyShortFor(ancestor,id);
+    }
+    /**
+     * Used by gap.data.Kind
+     *
+     * Calls {@link #KeyShortIdFor}
+     */
+    public final static Key KeyIdFor(Object... args){
+        return KeyShortIdFor( (Key)args[0], (String)args[1], (Integer)args[2]);
+    }
+    /**
+     * Used by setId
+     *
+     * Calls {@link #KeyShortFor}
+     */
+    public final static Key KeyFor(Object... args){
+        return KeyShortFor( (Key)args[0], (String)args[1]);
     }
 
 
@@ -127,6 +143,9 @@ public abstract class TemplateNodeData
             throw new IllegalArgumentException();
     }
 
+    /**
+     * Used by gap.data.Kind
+     */
     public final static TemplateNode Get(Key key){
         if (null != key){
             TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
@@ -496,9 +515,11 @@ public abstract class TemplateNodeData
         this.setNodeType(nodeType);
         this.setLineNumber(lineNumber);
         this.parentKey = ancestor;
-        String id = IdFor(ancestor,  nodeType, lineNumber);
-        Key key = KeyShortFor(ancestor,id);
-        this.setKey(key);
+        {
+            final String id = IdFor(ancestor, nodeType, lineNumber);
+            final Key key = KeyShortFor(ancestor,id);
+            this.setKey(key);
+        }
     }
 
 
@@ -512,6 +533,46 @@ public abstract class TemplateNodeData
         this.offset = null;
         this.offsetCloseRelative = null;
         this.parent = null;
+    }
+    public final String getId(){
+        Key key = this.key;
+        if (null != key){
+            String id = key.getName();
+            if (null != id)
+                return id;
+            else {
+                final Key pk = key.getParent();
+                if (null != pk && KIND.name.equals(pk.getKind())){
+                    id = pk.getName();
+                    if (null != id)
+                        return id;
+                    else
+                        throw new IllegalStateException("Key missing name"); //(this structure is named)
+                }
+                else {
+                    final long num = key.getId();
+                    if (0L != num)
+                        return String.valueOf(num);
+                    else
+                        throw new IllegalArgumentException("Key is incomplete");
+                }
+            }
+        }
+        else
+            return null;
+    }
+    public final boolean setId(String id){
+        if (null == id){
+            if (null != this.key){
+                this.key = null;
+                return true;
+            }
+            else
+                return false;
+        }
+        else {
+            return false;
+        }
     }
     public final boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -825,34 +886,40 @@ public abstract class TemplateNodeData
     public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;
         String nodeContentRequest = req.getParameter("nodeContent");
-        try {
-            Text nodeContent = Strings.TextFromString(nodeContentRequest);
-            if (this.setNodeContent(nodeContent)){
-                change = true;
+        if (null != nodeContentRequest && 0 < nodeContentRequest.length()){
+            try {
+                Text nodeContent = Strings.TextFromString(nodeContentRequest);
+                if (this.setNodeContent(nodeContent)){
+                    change = true;
+                }
             }
-        }
-        catch (RuntimeException exc){
-            throw new ValidationError(ClassName,"nodeContent",nodeContentRequest,exc);
+            catch (RuntimeException exc){
+                throw new ValidationError(ClassName,"nodeContent",nodeContentRequest,exc);
+            }
         }
         String offsetRequest = req.getParameter("offset");
-        try {
-            Integer offset = Strings.IntegerFromString(offsetRequest);
-            if (this.setOffset(offset)){
-                change = true;
+        if (null != offsetRequest && 0 < offsetRequest.length()){
+            try {
+                Integer offset = Strings.IntegerFromString(offsetRequest);
+                if (this.setOffset(offset)){
+                    change = true;
+                }
             }
-        }
-        catch (RuntimeException exc){
-            throw new ValidationError(ClassName,"offset",offsetRequest,exc);
+            catch (RuntimeException exc){
+                throw new ValidationError(ClassName,"offset",offsetRequest,exc);
+            }
         }
         String offsetCloseRelativeRequest = req.getParameter("offsetCloseRelative");
-        try {
-            Integer offsetCloseRelative = Strings.IntegerFromString(offsetCloseRelativeRequest);
-            if (this.setOffsetCloseRelative(offsetCloseRelative)){
-                change = true;
+        if (null != offsetCloseRelativeRequest && 0 < offsetCloseRelativeRequest.length()){
+            try {
+                Integer offsetCloseRelative = Strings.IntegerFromString(offsetCloseRelativeRequest);
+                if (this.setOffsetCloseRelative(offsetCloseRelative)){
+                    change = true;
+                }
             }
-        }
-        catch (RuntimeException exc){
-            throw new ValidationError(ClassName,"offsetCloseRelative",offsetCloseRelativeRequest,exc);
+            catch (RuntimeException exc){
+                throw new ValidationError(ClassName,"offsetCloseRelative",offsetCloseRelativeRequest,exc);
+            }
         }
         return change;
     }
@@ -886,9 +953,16 @@ public abstract class TemplateNodeData
      * Template Data Dictionary
      */
     public boolean hasVariable(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             switch (field){
+            case Id:
+                if (name.is(0)){
+                    String id = this.getId();
+                    return (null != id);
+                }
+                else
+                    return false;
             case NodeType:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -923,9 +997,14 @@ public abstract class TemplateNodeData
         }
     }
     public String getVariable(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             switch (field){
+            case Id:
+                if (name.is(0))
+                    return this.getId();
+                else
+                    return null;
             case NodeType:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -960,10 +1039,12 @@ public abstract class TemplateNodeData
         }
     }
     public void setVariable(TemplateName name, String value){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             if (name.has(1)){
                 switch (field){
+                case Id:
+                    throw new UnsupportedOperationException(field.name());
                 case NodeType:
                     throw new IllegalStateException(field.name());
                 case LineNumber:
@@ -986,7 +1067,7 @@ public abstract class TemplateNodeData
         }
     }
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case NodeType:

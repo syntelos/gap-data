@@ -134,7 +134,49 @@
     <version/>
   </target>
 
-  <target name="test" depends="version" description="">
+  <target name="test.compile" depends="version" description="">
+
+    <path id="test.path">
+      <pathelement location="${target.jar}" />
+      <pathelement path="test/bin" />
+      <fileset dir="${lib}">
+        <include name="**/*.jar" />
+      </fileset>
+      <fileset dir="${appengine.sdk.home}/lib/shared">
+        <include name="**/*.jar" />
+      </fileset>
+      <fileset dir="${appengine.sdk.home}/lib/user">
+        <include name="**/*.jar" />
+      </fileset>
+      <fileset dir="${appengine.sdk.home}/lib/impl">
+        <include name="**/*.jar" />
+      </fileset>
+      <fileset dir="${appengine.sdk.home}/lib/testing">
+        <include name="**/*.jar" />
+      </fileset>
+    </path>
+
+    <compile src="test/src" ver="test/ver" bin="test/bin" classpath.id="test.path"/>
+
+  </target>
+
+  <target name="test" depends="test.compile" description="">
+
+    <java classname="Selection" fork="true" failOnError="true">
+
+      <classpath refid="test.path"/>
+      <arg value="ax@by.cz"/>
+      <arg value="bx@cy.dz"/>
+      <arg value="cx@dy.ez"/>
+      <arg value="dx@ey.fz"/>
+      <arg value="ex@fy.gz"/>
+      <arg value="fx@gy.hz"/>
+      <arg value="gx@hy.iz"/>
+      <arg value="hx@iy.jz"/>
+      <arg value="ix@jy.kz"/>
+      <arg value="jx@ky.lz"/>
+    </java>
+
   </target>
 
 </project>

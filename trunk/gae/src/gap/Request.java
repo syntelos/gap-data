@@ -28,6 +28,7 @@ import gap.service.*;
 import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by {@link gap.service.Servlet}.
@@ -353,12 +354,21 @@ public class Request
         }
         return body;
     }
+    public final Selection getSelection(Kind kind){
+        HttpSession session = this.request.getSession();
+        Selection selection = (Selection)session.getValue(Selection.SessionKey(kind));
+        if (null == selection){
+            selection = new Selection(kind);
+            session.putValue(selection.sessionKey,selection);
+        }
+        return selection;
+    }
 
     /*
      * Template Data Dictionary
      */
     public boolean hasVariable(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case body:
@@ -411,7 +421,7 @@ public class Request
         }
     }
     public String getVariable(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case body:
@@ -512,7 +522,7 @@ public class Request
         super.setVariable(new TemplateName(name),value);
     }
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case ns:
