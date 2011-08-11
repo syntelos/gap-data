@@ -218,19 +218,13 @@ public final class Logon
      * From gap.Request "logon" is aliased to "person".
      */
     public boolean hasVariable(TemplateName name){
-	if (null != this.person){
-	    if (name.has(1))
-		return this.person.hasVariable(name);
-	    else
-		return true;
-	}
+	if (null != this.person)
+            return this.person.hasVariable(name);
 	else
             return super.hasVariable(name);
     }
     public String getVariable(TemplateName name){
-	if (name.is(0))
-	    return this.serviceLogon;
-	else if (null != this.person)
+        if (null != this.person)
 	    return this.person.getVariable(name);
 	else
 	    return super.getVariable(name);
