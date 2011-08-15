@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-26T19:55:38.826Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-15T19:48:44.914Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -979,5 +979,8 @@ public abstract class TemplateData
         else {
             return super.getSection(name);
         }
+    }
+    public Template clone(){
+        return (Template)super.clone();
     }
 }

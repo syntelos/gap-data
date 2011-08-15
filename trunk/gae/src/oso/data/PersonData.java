@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-26T19:55:37.763Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-15T19:48:43.922Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -711,5 +711,8 @@ public abstract class PersonData
         else {
             return super.getSection(name);
         }
+    }
+    public Person clone(){
+        return (Person)super.clone();
     }
 }

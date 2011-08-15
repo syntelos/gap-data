@@ -1213,4 +1213,7 @@ public abstract class {{=class_name}}Data
             return super.getSection(name);
         }
     }
+    public {{=class_name}} clone(){
+        return ({{=class_name}})super.clone();
+    }
 }
