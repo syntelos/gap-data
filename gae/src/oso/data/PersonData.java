@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-15T19:48:43.922Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-16T21:22:27.954Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -55,6 +55,9 @@ public abstract class PersonData
 
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
         return ClassDescriptorFor(Person.class);
+    }
+    public final static String PathTo(String subpath){
+        return KIND.pathto(subpath);
     }
 
 
