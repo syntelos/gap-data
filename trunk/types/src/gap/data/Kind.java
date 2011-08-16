@@ -113,6 +113,17 @@ public final class Kind
     public String getName(){
         return this.name;
     }
+    public String pathto(String subpath){
+        StringBuilder string = new StringBuilder();
+        string.append('/');
+        string.append(this.pathName);
+        string.append('/');
+
+        if (null != subpath)
+            string.append(subpath);
+
+        return string.toString();
+    }
     public Class<? extends TableClass> getTableClass(){
         Class<? extends TableClass> tableClass = this.tableClass;
         if (null == tableClass){
