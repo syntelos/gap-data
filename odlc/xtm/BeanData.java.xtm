@@ -1219,4 +1219,17 @@ public abstract class {{=class_name}}Data
     public {{=class_name}} clone(){
         return ({{=class_name}})super.clone();
     }
+    public String pathto(){
+        return KIND.pathto(this.getId());
+    }
+    public String pathto(String subpath){
+        StringBuilder string = new StringBuilder();
+        string.append(this.getId());
+        if (null != subpath){
+            if (0 == subpath.length() || '/' != subpath.charAt(0))
+                string.append('/');
+            string.append(subpath);
+        }
+        return KIND.pathto(string.toString());
+    }
 }

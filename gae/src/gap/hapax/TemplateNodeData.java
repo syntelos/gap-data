@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-16T21:22:29.169Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-16T23:29:15.849Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -1093,5 +1093,18 @@ public abstract class TemplateNodeData
     }
     public TemplateNode clone(){
         return (TemplateNode)super.clone();
+    }
+    public String pathto(){
+        return KIND.pathto(this.getId());
+    }
+    public String pathto(String subpath){
+        StringBuilder string = new StringBuilder();
+        string.append(this.getId());
+        if (null != subpath){
+            if (0 == subpath.length() || '/' != subpath.charAt(0))
+                string.append('/');
+            string.append(subpath);
+        }
+        return KIND.pathto(string.toString());
     }
 }
