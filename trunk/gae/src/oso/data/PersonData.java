@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-16T21:22:27.954Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-16T23:29:14.322Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -717,5 +717,18 @@ public abstract class PersonData
     }
     public Person clone(){
         return (Person)super.clone();
+    }
+    public String pathto(){
+        return KIND.pathto(this.getId());
+    }
+    public String pathto(String subpath){
+        StringBuilder string = new StringBuilder();
+        string.append(this.getId());
+        if (null != subpath){
+            if (0 == subpath.length() || '/' != subpath.charAt(0))
+                string.append('/');
+            string.append(subpath);
+        }
+        return KIND.pathto(string.toString());
     }
 }
