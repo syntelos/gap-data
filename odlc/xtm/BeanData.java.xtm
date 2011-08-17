@@ -61,6 +61,12 @@ public abstract class {{=class_name}}Data
     public final static gap.service.od.ClassDescriptor ClassDescriptorForParent(){
         return ClassDescriptorFor({{=parent_class_name}}.class);
     }{{/class_re_child}}
+    /**
+     * @see gap.data.Kind#pathto()
+     */
+    public final static String PathTo(){
+        return KIND.pathto();
+    }
     public final static String PathTo(String subpath){
         return KIND.pathto(subpath);
     }
@@ -1232,7 +1238,7 @@ public abstract class {{=class_name}}Data
         return ({{=class_name}})super.clone();
     }
     public String pathto(){
-        return KIND.pathto(this.getId());
+        return PathTo(this.getId());
     }
     public String pathto(String subpath){
         StringBuilder string = new StringBuilder();
@@ -1242,6 +1248,6 @@ public abstract class {{=class_name}}Data
                 string.append('/');
             string.append(subpath);
         }
-        return KIND.pathto(string.toString());
+        return PathTo(string.toString());
     }
 }

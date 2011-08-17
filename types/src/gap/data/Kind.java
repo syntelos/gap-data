@@ -113,6 +113,9 @@ public final class Kind
     public String getName(){
         return this.name;
     }
+    public String pathto(){
+        return this.pathto(null);
+    }
     public String pathto(String subpath){
         StringBuilder string = new StringBuilder();
         string.append('/');
