@@ -89,10 +89,23 @@ public enum Primitive {
         else
             return false;
     }
+    /**
+     * @see gap.odl.Field#GetType
+     */
     private final static java.util.Map<String,Primitive> Map = new java.util.HashMap<String,Primitive>();
     static {
         for (Primitive type : Primitive.values()){
-            Map.put(type.type.getName(),type);
+            String name = type.type.getName();
+            Map.put(name,type);
+            Map.put(name.toLowerCase(),type);
+            switch(type){
+            case Boolean:
+                Map.put("bool",type);
+                break;
+            case Integer:
+                Map.put("int",type);
+                break;
+            }
         }
     }
     public final static Primitive For(Class type){

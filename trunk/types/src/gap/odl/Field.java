@@ -99,6 +99,38 @@ public final class Field
             }
         }
     }
+    /**
+     * Get Type Equivalents
+     */
+    private final static lxl.Map<String,String> GetTypeEq = new lxl.Map<String,String>();
+    static {
+        GetTypeEq.put("bool","Boolean");
+        GetTypeEq.put("boolean","Boolean");
+        GetTypeEq.put("byte","Byte");
+        GetTypeEq.put("short","Short");
+        GetTypeEq.put("int","Integer");
+        GetTypeEq.put("integer","Integer");
+        GetTypeEq.put("long","Long");
+        GetTypeEq.put("float","Float");
+        GetTypeEq.put("double","Double");
+        GetTypeEq.put("string","String");
+        GetTypeEq.put("key","Key");
+        GetTypeEq.put("enum","Enum"); //(for completeness)
+        GetTypeEq.put("date","Date");
+    }
+    /**
+     * Map type equivalents, <i>e.g. "int" = "Integer", or "bool" =
+     * "Boolean"</i>.
+     * @see gap.Primitive#For(java.lang.String)
+     */
+    public final static String GetType(String type){
+        String equiv = GetTypeEq.get(type);
+        if (null != equiv)
+            return equiv;
+        else
+            return type;
+    }
+
 
     private Comment comment;
 
@@ -189,7 +221,7 @@ public final class Field
         return this.name;
     }
     public Object getType(){
-        return this.typeName;
+        return Field.GetType(this.typeName);
     }
     public boolean hasPersistence(){
         return (null != this.persistence);
