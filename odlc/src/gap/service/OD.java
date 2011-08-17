@@ -69,6 +69,7 @@ public final class OD
 
         public final static TemplateName FieldIsInheritable = new TemplateName("field_is_inheritable");
         public final static TemplateName FieldIsKey = new TemplateName("field_is_key");
+        public final static TemplateName FieldIsBoolean = new TemplateName("field_is_boolean");
         public final static TemplateName FieldIsList = new TemplateName("field_is_list");
         public final static TemplateName FieldIsPrimitive = new TemplateName("field_is_primitive");
         public final static TemplateName FieldIsNotPrimitive = new TemplateName("field_is_not_primitive");
@@ -89,6 +90,7 @@ public final class OD
 
         public final static TemplateName FieldIsNotInheritable = new TemplateName("field_is_not_inheritable");
         public final static TemplateName FieldIsNotKey = new TemplateName("field_is_not_key");
+        public final static TemplateName FieldIsNotBoolean = new TemplateName("field_is_not_boolean");
         public final static TemplateName FieldIsNotList = new TemplateName("field_is_not_list");
         public final static TemplateName FieldIsNotListLong = new TemplateName("field_is_not_list_long");
         public final static TemplateName FieldIsNotListLongOrShort = new TemplateName("field_is_not_list_long_or_short");
@@ -726,9 +728,16 @@ public final class OD
                     dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
                     dataField.addSection(TemplateNames.FieldIsPrimitive);
                     dataField.addSection(TemplateNames.FieldIsNotBigTable);
+
+                    if (Primitive.Boolean == fieldTypePrimitive)
+                        dataField.addSection(TemplateNames.FieldIsBoolean);
+                    else
+                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
                 }
                 else {
                     dataField.addSection(TemplateNames.FieldIsNotPrimitive);
+                    dataField.addSection(TemplateNames.FieldIsNotBoolean);
+
                     if (IsTypeClassBigTable(fieldTypeClassDescriptor,fieldTypeClass)){
                         dataField.setVariable(TemplateNames.FieldFromObjectPrefix,FullClassName(fieldTypeClassDescriptor,fieldTypeClass)+".FromObject(");
                         dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");

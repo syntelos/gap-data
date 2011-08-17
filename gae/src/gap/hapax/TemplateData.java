@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-16T23:29:15.400Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-17T18:06:33.233Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -889,18 +889,30 @@ public abstract class TemplateData
             case Name:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
-                else
+                else {
+                    /*
+                     * Synthesize section for Field (EXISTS)
+                     */
                     return this.hasName(true);
+                }
             case LastModified:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
-                else
+                else {
+                    /*
+                     * Synthesize section for Field (EXISTS)
+                     */
                     return this.hasLastModified(true);
+                }
             case TemplateSourceHapax:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
-                else
+                else {
+                    /*
+                     * Synthesize section for Field (EXISTS)
+                     */
                     return this.hasTemplateSourceHapax(true);
+                }
             default:
                 throw new IllegalStateException(field.name());
             }

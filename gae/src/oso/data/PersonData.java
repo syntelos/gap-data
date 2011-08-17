@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-16T23:29:14.322Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-17T18:06:32.235Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -649,8 +649,12 @@ public abstract class PersonData
             case LogonId:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
-                else
+                else {
+                    /*
+                     * Synthesize section for Field (EXISTS)
+                     */
                     return this.hasLogonId(true);
+                }
             default:
                 throw new IllegalStateException(field.name());
             }
