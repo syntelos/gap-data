@@ -26,6 +26,7 @@ import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -65,5 +66,19 @@ public final class Template
     }
     public void store(){
         Store(this);
+    }
+    public void parse(){
+        this.setLastModified(System.currentTimeMillis());
+        this.save();
+
+        List.Short<TemplateNode> templateNodes = this.getTemplateTargetHapax();
+        try {
+            TemplateParser.Parse(this,templateNodes);
+        }
+        catch (IOException parserConflict){
+            /*
+             * Safe to ignore as the template node set has been dropped
+             */
+        }
     }
 }
