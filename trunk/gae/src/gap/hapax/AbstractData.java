@@ -84,11 +84,32 @@ public class AbstractData
         this.parent = p;
     }
     public boolean hasVariable(TemplateName name){
-
+        /*
+         * direct variable
+         */
         lxl.Map<String,String> variables = this.variables;
         if (null != variables && variables.containsKey(name.getName())){
             return true;
         }
+        /*
+         * indirect variable via section
+         */
+        lxl.Map<String,List.Short<TemplateDataDictionary>> sections = this.sections;
+        if (null != sections){
+            List.Short<TemplateDataDictionary> sectionL = name.dereferenceC(sections);
+            if (null != sectionL){
+                TemplateDataDictionary sectionD = sectionL.get(0);
+                if (null != sectionD){
+                    if (name.has(1))
+                        return sectionD.hasVariable(new TemplateName(name));
+                    else
+                        return false;
+                }
+            }
+        }
+        /*
+         * indirect variable inherited from ancestor
+         */
         TemplateDataDictionary parent = this.parent;
         if (null != parent){
             return parent.hasVariable(name);
@@ -96,13 +117,34 @@ public class AbstractData
         return false;
     }
     public String getVariable(TemplateName name){
-
+        /*
+         * direct variable
+         */
         lxl.Map<String,String> variables = this.variables;
         if (null != variables){
             String value = variables.get(name.getName());
             if (null != value)
                 return value;
         }
+        /*
+         * indirect variable via section
+         */
+        lxl.Map<String,List.Short<TemplateDataDictionary>> sections = this.sections;
+        if (null != sections){
+            List.Short<TemplateDataDictionary> sectionL = name.dereferenceC(sections);
+            if (null != sectionL){
+                TemplateDataDictionary sectionD = sectionL.get(0);
+                if (null != sectionD){
+                    if (name.has(1))
+                        return sectionD.getVariable(new TemplateName(name));
+                    else
+                        return null;
+                }
+            }
+        }
+        /*
+         * indirect variable inherited from ancestor
+         */
         TemplateDataDictionary parent = this.parent;
         if (null != parent){
             return parent.getVariable(name);
