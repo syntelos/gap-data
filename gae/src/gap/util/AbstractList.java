@@ -385,4 +385,69 @@ public abstract class AbstractList<V extends BigTable>
 
         return this.removeFromBuffer(instance);
     }
+    /**
+     * @see gap.data.List$Short#nhead(int)
+     */
+    public V[] nhead(int count){
+        final Object[] buffer = this.buffer;
+        if (null != buffer){
+            final int size = buffer.length;
+            if (0 > count){
+                count += size;
+                if (0 > count)
+                    return (V[])(new Object[0]);
+            }
+
+            if (count < size){
+                V[] re = (V[])(new Object[count]);
+                System.arraycopy(buffer,0,re,0,count);
+                return re;
+            }
+            else
+                return (V[])buffer;
+        }
+        else
+            return (V[])(new Object[0]);
+    }
+    /**
+     * @see gap.data.List$Short#ntail(int)
+     */
+    public V[] ntail(int count){
+        final Object[] buffer = this.buffer;
+        if (null != buffer){
+            final int size = buffer.length;
+            if (0 > count){
+                count += size;
+                if (0 > count)
+                    return (V[])(new Object[0]);
+            }
+
+            if (count < size){
+                final int x = (size-count);
+                if (x < size){
+                    V[] re = (V[])(new Object[count]);
+                    System.arraycopy(buffer,x,re,0,count);
+                    return re;
+                }
+                else
+                    return (V[])(new Object[0]);
+            }
+            else
+                return (V[])buffer;
+        }
+        else
+            return (V[])(new Object[0]);
+    }
+    /**
+     * @see gap.data.List$Short#xhead(int)
+     */
+    public V[] xhead(int count){
+        return this.nhead(this.size()-count);
+    }
+    /**
+     * @see gap.data.List$Short#xtail(int)
+     */
+    public V[] xtail(int count){
+        return this.ntail(this.size()-count);
+    }
 }

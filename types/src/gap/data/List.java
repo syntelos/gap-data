@@ -24,7 +24,7 @@ import com.google.appengine.api.datastore.Query;
 
 /**
  * A list has features of a set, it should never contain an element
- * twice.
+ * twice.  
  * 
  * Short and long lists are defined by parent (containing) class and
  * key, list type, and child class (list class parameter type).  A
@@ -88,22 +88,35 @@ public interface List<V>
         }
     }
 
+    /**
+     * This list is a serialized object (value blob)
+     */
     public interface Primitive<V>
         extends List<V>, Collection.PrimitiveC<V>
     {
-
+        /**
+         * Add to list
+         */
         public List.Primitive<V> add(V instance);
-
+        /**
+         * Remove from list
+         */
         public List.Primitive<V> remove(V instance);
 
         public List.Primitive<V> clear();
     }
 
+    /**
+     * This list is a buffer for a query result
+     */
     public interface Short<V>
         extends List<V>, Collection.ShortC<V>
     {
         public void drop();
 
+        /**
+         * Add to buffer, no persistent effect 
+         */
         public List.Short<V> add(V instance);
 
         /**
@@ -118,11 +131,34 @@ public interface List<V>
          */
         public int indexOf(V value);
         /**
-         * In memory operation
+         * Remove from buffer, no persistent effect
          */
         public V remove(V value);
+        /**
+         * Inclusive head
+         * @return First count members of buffer, or array of size zero
+         */
+        public V[] nhead(int count);
+        /**
+         * Inclusive tail
+         * @return Last count members of buffer, or array of size zero
+         */
+        public V[] ntail(int count);
+        /**
+         * Exclusive head
+         * @return First (size-count) members of buffer, or array of size zero
+         */
+        public V[] xhead(int count);
+        /**
+         * Exclusive tail
+         * @return Last (size-count) members of buffer, or array of size zero
+         */
+        public V[] xtail(int count);
     }
 
+    /**
+     * This list is a buffer for a query result
+     */
     public interface Long<V>
         extends List<V>, Collection.LongC<V>
     {
