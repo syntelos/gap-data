@@ -1,5 +1,5 @@
 
-package {{=package_name}};
+package {{=parent_package_name}};
 {{#import}}
 import {{=import_spec}};{{/import}}
 

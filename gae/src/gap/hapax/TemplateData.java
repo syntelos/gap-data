@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-08-17T20:11:28.323Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-09-09T17:10:41.918Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -761,7 +761,7 @@ public abstract class TemplateData
              * Collection type coersion
              */
             {
-                Object tmp = new ListShortTemplateTemplateNode((Template)this);
+                Object tmp = new ListTemplateTemplateNode((Template)this);
                 templateTargetHapax = (List.Short<TemplateNode>)tmp;
             }
             this.templateTargetHapax = templateTargetHapax;
