@@ -92,7 +92,7 @@ public abstract class AbstractList<V extends BigTable>
     }
 
 
-    public final void init(){
+    public void init(){
         this.fill();
     }
     /**

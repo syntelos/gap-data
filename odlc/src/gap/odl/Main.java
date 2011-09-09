@@ -57,6 +57,7 @@ public final class Main
         public final static TemplateName BeanServlet = new TemplateName("BeanServlet.java");
         public final static TemplateName ListLong = new TemplateName("ListLong.java");
         public final static TemplateName ListShort = new TemplateName("ListShort.java");
+        public final static TemplateName ListUser = new TemplateName("ListUser.java");
         public final static TemplateName MapPrimitive = new TemplateName("MapPrimitive.java");
         public final static TemplateName MapLong = new TemplateName("MapLong.java");
         public final static TemplateName MapShort = new TemplateName("MapShort.java");
@@ -163,16 +164,32 @@ public final class Main
                                 String childClassName = OD.ListChildClassName(field);
                                 String listClassName = OD.ListShortClassName(parentClassName,childClassName);
                                 if (null != listClassName){
-                                    File listFile = new File(packagePath,listClassName+".java");
-                                    PrintWriter out = new PrintWriter(new FileWriter(listFile));
+                                    File beanFile = new File(packagePath,listClassName+".java");
+                                    PrintWriter out = new PrintWriter(new FileWriter(beanFile));
                                     try {
                                         OD.GenerateListSource(TemplateNames.ListShort, pack, imports, clas, field,
                                                               parentClassName, childClassName, listClassName, listType,
                                                               out);
-                                        products.add(listFile);
+                                        products.add(beanFile);
                                     }
                                     finally {
                                         out.close();
+                                    }
+                                }
+                                String userClassName = OD.ListUserClassName(parentClassName,childClassName);
+                                if (null != userClassName){
+                                    File userFile = new File(packagePath,userClassName+".java");
+                                    if (!userFile.exists()){
+                                        PrintWriter out = new PrintWriter(new FileWriter(userFile));
+                                        try {
+                                            OD.GenerateListSource(TemplateNames.ListUser, pack, imports, clas, field,
+                                                                  parentClassName, childClassName, listClassName, listType,
+                                                                  out);
+                                            products.add(userFile);
+                                        }
+                                        finally {
+                                            out.close();
+                                        }
                                     }
                                 }
                             }
@@ -181,16 +198,32 @@ public final class Main
                                 String childClassName = OD.ListChildClassName(field);
                                 String listClassName = OD.ListLongClassName(parentClassName,childClassName);
                                 if (null != listClassName){
-                                    File listFile = new File(packagePath,listClassName+".java");
-                                    PrintWriter out = new PrintWriter(new FileWriter(listFile));
+                                    File beanFile = new File(packagePath,listClassName+".java");
+                                    PrintWriter out = new PrintWriter(new FileWriter(beanFile));
                                     try {
                                         OD.GenerateListSource(TemplateNames.ListLong, pack, imports, clas, field,
                                                               parentClassName, childClassName, listClassName, listType, 
                                                               out);
-                                        products.add(listFile);
+                                        products.add(beanFile);
                                     }
                                     finally {
                                         out.close();
+                                    }
+                                }
+                                String userClassName = OD.ListUserClassName(parentClassName,childClassName);
+                                if (null != userClassName){
+                                    File userFile = new File(packagePath,userClassName+".java");
+                                    if (!userFile.exists()){
+                                        PrintWriter out = new PrintWriter(new FileWriter(userFile));
+                                        try {
+                                            OD.GenerateListSource(TemplateNames.ListUser, pack, imports, clas, field,
+                                                                  parentClassName, childClassName, listClassName, listType,
+                                                                  out);
+                                            products.add(userFile);
+                                        }
+                                        finally {
+                                            out.close();
+                                        }
                                     }
                                 }
                             }

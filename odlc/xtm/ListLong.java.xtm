@@ -34,7 +34,7 @@ import javax.annotation.Generated;
  * Generated long list.
  */
 @Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}")
-public final class ListLong{{=parent_class_name}}{{=child_class_name}}
+public abstract class ListLong{{=parent_class_name}}{{=child_class_name}}
     extends gap.util.AbstractList<{{=child_class_name}}>
     implements gap.data.List.Long<{{=child_class_name}}>
 {
