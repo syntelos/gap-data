@@ -37,7 +37,7 @@ import javax.annotation.Generated;
  * Generated short list.
  */
 @Generated(value={"{{=odl_gen_class}}","{{=odl_gen_xtm_src}}"},date="{{=odl_gen_timestamp}}")
-public final class ListShort{{=parent_class_name}}{{=child_class_name}}
+public abstract class ListShort{{=parent_class_name}}{{=child_class_name}}
     extends gap.util.AbstractList<{{=child_class_name}}>
     implements gap.data.List.Short<{{=child_class_name}}>
 {

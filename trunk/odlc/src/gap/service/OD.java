@@ -123,6 +123,7 @@ public final class OD
         public final static TemplateName ImportSpec = new TemplateName("import_spec");
         public final static TemplateName InterfaceClass = new TemplateName("interface_class");
         public final static TemplateName ListClassName = new TemplateName("list_class_name");
+        public final static TemplateName ListType = new TemplateName("list_type");
         public final static TemplateName MapClassName = new TemplateName("map_class_name");
         public final static TemplateName MapKeyFieldName = new TemplateName("map_key_field_name");
         public final static TemplateName MapKeyFieldNameCamel = new TemplateName("map_key_field_nameCamel");
@@ -278,6 +279,7 @@ public final class OD
                     DefineClass(PackageFor(child,childClass),child,ImportsFor(child,parent,imports),top,TemplateNames.PrefixChild);
 
                     top.setVariable(TemplateNames.ListClassName,listClassName);
+                    top.setVariable(TemplateNames.ListType,"Primitive");
 
                     try {
                         template.render(top,out); 
@@ -299,6 +301,10 @@ public final class OD
                     DefineClass(PackageFor(child,pkg),child,ImportsFor(child,imports),top,TemplateNames.PrefixChild);
 
                     top.setVariable(TemplateNames.ListClassName,listClassName);
+                    if (gap.data.List.Type.ListShort == listType)
+                        top.setVariable(TemplateNames.ListType,"Short");
+                    else
+                        top.setVariable(TemplateNames.ListType,"Long");
 
                     try {
                         template.render(top,out); 
@@ -312,6 +318,10 @@ public final class OD
                     DefineClass(pkg,childClass,imports,top,TemplateNames.PrefixChild);
 
                     top.setVariable(TemplateNames.ListClassName,listClassName);
+                    if (gap.data.List.Type.ListShort == listType)
+                        top.setVariable(TemplateNames.ListType,"Short");
+                    else
+                        top.setVariable(TemplateNames.ListType,"Long");
 
                     try {
                         template.render(top,out); 
@@ -809,14 +819,14 @@ public final class OD
                             if (null != componentKind)
                                 dataField.setVariable(TemplateNames.FieldListComponentKind,componentKind);
 
-                            dataField.setVariable(TemplateNames.FieldImplClassName,ListClassName(fieldTypeClean,className,component));
+                            dataField.setVariable(TemplateNames.FieldImplClassName,ListImplClassName(fieldTypeClean,className,component));
                         }
                         else {
                             Class componentClass = FieldClass(pkg,typeParameter,imports);
                             if (null != componentClass){
                                 Primitive primitive = Primitive.For(componentClass);
                                 if (null != primitive)
-                                    dataField.setVariable(TemplateNames.FieldImplClassName,ListClassName(fieldTypeClean,className,primitive));
+                                    dataField.setVariable(TemplateNames.FieldImplClassName,ListImplClassName(fieldTypeClean,className,primitive));
                                 else
                                     throw new ODStateException(field,"Field '"+fieldName+"' in '"+listType.name()+"' expected primitive component type '"+typeParameter+"'.");
                             }

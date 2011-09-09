@@ -809,18 +809,9 @@ public class Classes {
      * @param parentClassName
      * @param childType One of either gap.Primitive or gap.service.od.ClassDescriptor
      */
-    public final static String ListClassName(String fieldType, String parentClassName, Object childType){
-        gap.data.List.Type listType = gap.data.List.Type.For(fieldType);
-        switch(listType){
-        case ListPrimitive:
-            return ListPrimitiveClassName((Primitive)childType);
-        case ListShort:
-            return ListShortClassName(parentClassName,((ClassDescriptor)childType).getName());
-        case ListLong:
-            return ListLongClassName(parentClassName,((ClassDescriptor)childType).getName());
-        default:
-            throw new IllegalStateException("Unrecognized type '"+fieldType+"'.");
-        }
+    public final static String ListImplClassName(String fieldType, String parentClassName, Object childType){
+
+        return ListUserClassName(parentClassName,((ClassDescriptor)childType).getName());
     }
     public final static String ListPrimitiveClassName(Primitive childType){
         if (null != childType)
@@ -847,6 +838,12 @@ public class Classes {
     public final static String ListLongClassName(String parentClassName, String childClassName){
         if (null != parentClassName && null != childClassName)
             return "ListLong"+parentClassName+childClassName;
+        else
+            return null;
+    }
+    public final static String ListUserClassName(String parentClassName, String childClassName){
+        if (null != parentClassName && null != childClassName)
+            return "List"+parentClassName+childClassName;
         else
             return null;
     }
