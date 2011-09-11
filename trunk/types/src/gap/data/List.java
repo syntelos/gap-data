@@ -138,22 +138,22 @@ public interface List<V>
          * Inclusive head
          * @return First count members of buffer, or array of size zero
          */
-        public V[] nhead(int count);
+        public Iterable<V> nhead(int count);
         /**
          * Inclusive tail
          * @return Last count members of buffer, or array of size zero
          */
-        public V[] ntail(int count);
+        public Iterable<V> ntail(int count);
         /**
          * Exclusive head
          * @return First (size-count) members of buffer, or array of size zero
          */
-        public V[] xhead(int count);
+        public Iterable<V> xhead(int count);
         /**
          * Exclusive tail
          * @return Last (size-count) members of buffer, or array of size zero
          */
-        public V[] xtail(int count);
+        public Iterable<V> xtail(int count);
     }
 
     /**
