@@ -40,18 +40,25 @@ public abstract class AbstractList<V extends BigTable>
      */
     public final class BufferIterator<V>
         extends Object
-        implements java.util.Iterator<V>
+        implements java.lang.Iterable<V>,
+                   java.util.Iterator<V>
     {
         private final BigTable[] buffer;
         private final int count;
         private int index;
 
 
+        public BufferIterator(){
+            super();
+            this.buffer = null;
+            this.count = 0;
+        }
         public BufferIterator(BigTable[] buffer){
             super();
             this.buffer = buffer;
             this.count = ((null == buffer)?(0):(buffer.length));
         }
+
 
         public boolean hasNext(){
             return (this.index < this.count);
@@ -69,6 +76,9 @@ public abstract class AbstractList<V extends BigTable>
         public void remove(){
             throw new java.lang.UnsupportedOperationException();
         }
+        public java.util.Iterator<V> iterator(){
+            return this;
+        }
     }
 
 
@@ -82,9 +92,9 @@ public abstract class AbstractList<V extends BigTable>
 
     protected transient boolean fillable = true;
 
-    private transient int gross;
+    protected transient int gross;
 
-    private transient boolean hitEnd;
+    protected transient boolean hitEnd;
 
 
     protected AbstractList(){
@@ -139,11 +149,17 @@ public abstract class AbstractList<V extends BigTable>
     public abstract Class getChildTypeClass();
 
     /**
-     * Get value from datastore without adding into the list buffer,
-     * and without disturbing the relationship between the page and
-     * the buffer.
+     * Get value from datastore without adding into this list buffer,
+     * and without disturbing the relationship between this page and
+     * this buffer.
      */
     public abstract V fetch(Filter filter);
+    /**
+     * List values from datastore without touch this list buffer, and
+     * without disturbing the relationship between this page and this
+     * buffer.
+     */
+    public abstract Iterable<V> list(Filter filter, Page page);
 
     public final Query getQuery(){
         return this.query;
@@ -388,66 +404,21 @@ public abstract class AbstractList<V extends BigTable>
     /**
      * @see gap.data.List$Short#nhead(int)
      */
-    public V[] nhead(int count){
-        final Object[] buffer = this.buffer;
-        if (null != buffer){
-            final int size = buffer.length;
-            if (0 > count){
-                count += size;
-                if (0 > count)
-                    return (V[])(new Object[0]);
-            }
-
-            if (count < size){
-                V[] re = (V[])(new Object[count]);
-                System.arraycopy(buffer,0,re,0,count);
-                return re;
-            }
-            else
-                return (V[])buffer;
-        }
-        else
-            return (V[])(new Object[0]);
-    }
+    public abstract Iterable<V> nhead(int count);
     /**
      * @see gap.data.List$Short#ntail(int)
      */
-    public V[] ntail(int count){
-        final Object[] buffer = this.buffer;
-        if (null != buffer){
-            final int size = buffer.length;
-            if (0 > count){
-                count += size;
-                if (0 > count)
-                    return (V[])(new Object[0]);
-            }
-
-            if (count < size){
-                final int x = (size-count);
-                if (x < size){
-                    V[] re = (V[])(new Object[count]);
-                    System.arraycopy(buffer,x,re,0,count);
-                    return re;
-                }
-                else
-                    return (V[])(new Object[0]);
-            }
-            else
-                return (V[])buffer;
-        }
-        else
-            return (V[])(new Object[0]);
-    }
+    public abstract Iterable<V> ntail(int count);
     /**
      * @see gap.data.List$Short#xhead(int)
      */
-    public V[] xhead(int count){
-        return this.nhead(this.size()-count);
+    public Iterable<V> xhead(int count){
+        return this.nhead(this.gross-count);
     }
     /**
      * @see gap.data.List$Short#xtail(int)
      */
-    public V[] xtail(int count){
-        return this.ntail(this.size()-count);
+    public Iterable<V> xtail(int count){
+        return this.ntail(this.gross-count);
     }
 }

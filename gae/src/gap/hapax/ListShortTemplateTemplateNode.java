@@ -20,9 +20,7 @@
 package gap.hapax;
 
 
-import gap.*;
 import gap.data.*;
-import gap.service.*;
 import gap.util.*;
 
 import com.google.appengine.api.datastore.*;
@@ -35,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2011-09-09T17:10:42.209Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2011-09-11T18:11:40.262Z")
 public abstract class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>
@@ -118,6 +116,15 @@ public abstract class ListShortTemplateTemplateNode
         else
             throw new IllegalStateException("Missing ancestor key.");
     }
+    public Iterable<TemplateNode> list(Filter filter, Page page){
+        Key ancestor = this.ancestorKey;
+        if (null != ancestor){
+            Query query = TemplateNode.CreateQueryFor(ancestor,filter);
+            return TemplateNode.QueryN(query,page);
+        }
+        else
+            throw new IllegalStateException("Missing ancestor key.");
+    }
     public List.Short<TemplateNode> clone(){
         List list = super.clone();
         return (List.Short<TemplateNode>)list;
@@ -126,4 +133,66 @@ public abstract class ListShortTemplateTemplateNode
         super.add(item);
         return this;
     }
+    /**
+     * @see gap.data.List$Short#nhead(int)
+     */
+    public Iterable<TemplateNode> nhead(int count){
+        final BigTable[] buffer = this.buffer;
+        if (null != buffer){
+            final int size = this.gross;
+            if (0 > count){
+                return (Iterable<TemplateNode>)(new BufferIterator());
+            }
+            else if (size == buffer.length || count < buffer.length){
+                if (count < size){
+                    TemplateNode[] re = (TemplateNode[])(new BigTable[count]);
+                    System.arraycopy(buffer,0,re,0,count);
+                    return (Iterable<TemplateNode>)(new BufferIterator(re));
+                }
+                else
+                    return (Iterable<TemplateNode>)(new BufferIterator(buffer));
+            }
+            else {
+                Query q = new Query(TemplateNode.KIND.getName(),this.ancestorKey).addSort(TemplateNode.DefaultSortBy,Query.SortDirection.ASCENDING);
+                Page p = new Page(0,count);
+                return Store.QueryN(q,p);
+            }
+        }
+        else
+            return (Iterable<TemplateNode>)(new BufferIterator());
+    }
+    /**
+     * @see gap.data.List$Short#ntail(int)
+     */
+    public Iterable<TemplateNode> ntail(int count){
+        final BigTable[] buffer = this.buffer;
+        if (null != buffer){
+            final int size = this.gross;
+            if (0 > count){
+                return (Iterable<TemplateNode>)(new BufferIterator());
+            }
+            else if (size == buffer.length){
+                if (count < size){
+                    final int x = (size-count);
+                    if (x < buffer.length){
+                        TemplateNode[] re = (TemplateNode[])(new BigTable[count]);
+                        System.arraycopy(buffer,x,re,0,count);
+                        return (Iterable<TemplateNode>)(new BufferIterator(re));
+                    }
+                    else
+                        return (Iterable<TemplateNode>)(new BufferIterator());
+                }
+                else
+                    return (Iterable<TemplateNode>)(new BufferIterator(buffer));
+            }
+            else {
+                Query q = new Query(TemplateNode.KIND.getName(),this.ancestorKey).addSort(TemplateNode.DefaultSortBy,Query.SortDirection.DESCENDING);
+                Page p = new Page(0,count);
+                return Store.QueryN(q,p);
+            }
+        }
+        else
+            return (Iterable<TemplateNode>)(new BufferIterator());
+    }
+
 }
