@@ -174,7 +174,7 @@ public abstract class ListShort{{=parent_class_name}}{{=child_class_name}}
             }
             else if (size == buffer.length){
                 if (count < size){
-                    final int x = (size-count);
+                    final int x = (size-count-1);
                     if (x < buffer.length){
                         {{=child_class_name}}[] re = ({{=child_class_name}}[])(new BigTable[count]);
                         System.arraycopy(buffer,x,re,0,count);

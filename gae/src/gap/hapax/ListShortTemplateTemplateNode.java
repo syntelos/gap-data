@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2011-09-11T18:11:40.262Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2011-09-12T14:54:50.061Z")
 public abstract class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>
@@ -173,7 +173,7 @@ public abstract class ListShortTemplateTemplateNode
             }
             else if (size == buffer.length){
                 if (count < size){
-                    final int x = (size-count);
+                    final int x = (size-count-1);
                     if (x < buffer.length){
                         TemplateNode[] re = (TemplateNode[])(new BigTable[count]);
                         System.arraycopy(buffer,x,re,0,count);

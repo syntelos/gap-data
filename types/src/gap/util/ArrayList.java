@@ -329,7 +329,7 @@ public class ArrayList<V>
             }
 
             if (count < size){
-                final int x = (size-count);
+                final int x = (size-count-1);
                 if (x < size){
                     V[] re = (V[])(new Object[count]);
                     System.arraycopy(buffer,x,re,0,count);
