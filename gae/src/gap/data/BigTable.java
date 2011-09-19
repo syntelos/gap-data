@@ -483,7 +483,14 @@ public abstract class BigTable
 
                         if (IsIndexed(value))
                             entity.setProperty(fieldName, value);
-                        else 
+
+                        else if (value instanceof Character){
+
+                            Integer safe = new Integer( ((Character)value).charValue());
+
+                            entity.setUnindexedProperty(fieldName, safe);
+                        }
+                        else
                             entity.setUnindexedProperty(fieldName, value);
                     }
                     else

@@ -70,6 +70,7 @@ public final class OD
         public final static TemplateName FieldIsInheritable = new TemplateName("field_is_inheritable");
         public final static TemplateName FieldIsKey = new TemplateName("field_is_key");
         public final static TemplateName FieldIsBoolean = new TemplateName("field_is_boolean");
+        public final static TemplateName FieldIsCharacter = new TemplateName("field_is_character");
         public final static TemplateName FieldIsList = new TemplateName("field_is_list");
         public final static TemplateName FieldIsPrimitive = new TemplateName("field_is_primitive");
         public final static TemplateName FieldIsNotPrimitive = new TemplateName("field_is_not_primitive");
@@ -91,6 +92,7 @@ public final class OD
         public final static TemplateName FieldIsNotInheritable = new TemplateName("field_is_not_inheritable");
         public final static TemplateName FieldIsNotKey = new TemplateName("field_is_not_key");
         public final static TemplateName FieldIsNotBoolean = new TemplateName("field_is_not_boolean");
+        public final static TemplateName FieldIsNotCharacter = new TemplateName("field_is_not_character");
         public final static TemplateName FieldIsNotList = new TemplateName("field_is_not_list");
         public final static TemplateName FieldIsNotListLong = new TemplateName("field_is_not_list_long");
         public final static TemplateName FieldIsNotListLongOrShort = new TemplateName("field_is_not_list_long_or_short");
@@ -741,12 +743,20 @@ public final class OD
 
                     if (Primitive.Boolean == fieldTypePrimitive)
                         dataField.addSection(TemplateNames.FieldIsBoolean);
-                    else
+                    else {
                         dataField.addSection(TemplateNames.FieldIsNotBoolean);
+
+                        if (Primitive.Character == fieldTypePrimitive)
+                            dataField.addSection(TemplateNames.FieldIsCharacter);
+                        else {
+                            dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                        }
+                    }
                 }
                 else {
                     dataField.addSection(TemplateNames.FieldIsNotPrimitive);
                     dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                    dataField.addSection(TemplateNames.FieldIsNotCharacter);
 
                     if (IsTypeClassBigTable(fieldTypeClassDescriptor,fieldTypeClass)){
                         dataField.setVariable(TemplateNames.FieldFromObjectPrefix,FullClassName(fieldTypeClassDescriptor,fieldTypeClass)+".FromObject(");
