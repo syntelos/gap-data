@@ -74,10 +74,13 @@ public abstract class Objects {
     public final static java.lang.Character CharacterFromObject(java.lang.Object object){
         if (object instanceof java.lang.Character)
             return (java.lang.Character)object;
-        else if (object instanceof java.lang.String)
-            return Strings.CharacterFromString( (java.lang.String)object);
+        /*
+         * Special storage type is Integer
+         */
         else if (object instanceof java.lang.Number)
             return new java.lang.Character( (char)((java.lang.Number)object).intValue());
+        else if (object instanceof java.lang.String)
+            return Strings.CharacterFromString( (java.lang.String)object);
         else if (null == object)
             return null;
         else
@@ -150,6 +153,40 @@ public abstract class Objects {
             return Strings.DateFromString( (java.lang.String)object);
         else if (object instanceof java.lang.Number)
             return new java.util.Date( ((java.lang.Number)object).longValue());
+        else if (null == object)
+            return null;
+        else
+            throw new ClassCastException(object.getClass().getName());
+    }
+    public final static java.math.BigInteger BigIntegerFromObject(java.lang.Object object){
+        if (object instanceof java.math.BigInteger)
+            return (java.math.BigInteger)object;
+        /*
+         * Special storage type is ShortBlob
+         */
+        else if (object instanceof com.google.appengine.api.datastore.ShortBlob){
+            com.google.appengine.api.datastore.ShortBlob blob = (com.google.appengine.api.datastore.ShortBlob)object;
+            return new java.math.BigInteger(1,blob.getBytes());
+        }
+        else if (object instanceof java.lang.String)
+            return Strings.BigIntegerFromString( (java.lang.String)object);
+        else if (object instanceof java.lang.Number)
+            return new java.math.BigInteger( java.lang.Long.toString(((java.lang.Number)object).longValue(),16),16);
+        else if (null == object)
+            return null;
+        else
+            throw new ClassCastException(object.getClass().getName());
+    }
+    public final static java.math.BigDecimal BigDecimalFromObject(java.lang.Object object){
+        if (object instanceof java.math.BigDecimal)
+            return (java.math.BigDecimal)object;
+        /*
+         * Special storage type is String
+         */
+        else if (object instanceof java.lang.String)
+            return Strings.BigDecimalFromString( (java.lang.String)object);
+        else if (object instanceof java.lang.Number)
+            return new java.math.BigDecimal( ((java.lang.Number)object).doubleValue());
         else if (null == object)
             return null;
         else

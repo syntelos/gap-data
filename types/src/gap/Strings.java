@@ -55,6 +55,10 @@ public abstract class Strings {
                 return DoubleFromString(string);
             case Date:
                 return DateFromString(string);
+            case BigInteger:
+                return BigIntegerFromString(string);
+            case BigDecimal:
+                return BigDecimalFromString(string);
             case Category:
                 return CategoryFromString(string);
             case Email:
@@ -103,6 +107,10 @@ public abstract class Strings {
                 return DoubleToString((java.lang.Double)instance);
             case Date:
                 return DateToString((java.util.Date)instance);
+            case BigInteger:
+                return BigIntegerToString((java.math.BigInteger)instance);
+            case BigDecimal:
+                return BigDecimalToString((java.math.BigDecimal)instance);
             case Category:
                 return CategoryToString((com.google.appengine.api.datastore.Category)instance);
             case Email:
@@ -269,6 +277,30 @@ public abstract class Strings {
     public final static java.lang.String DateToString(java.util.Date instance){
         if (null != instance)
             return gap.Date.FormatRFC1123(instance);
+        else
+            return null;
+    }
+    public final static java.math.BigInteger BigIntegerFromString(java.lang.String string){
+        if (null != string)
+            return new java.math.BigInteger(alto.io.u.Hex.decode(string));
+        else
+            return null;
+    }
+    public final static java.lang.String BigIntegerToString(java.math.BigInteger instance){
+        if (null != instance)
+            return alto.io.u.Hex.encode(instance.toByteArray());
+        else
+            return null;
+    }
+    public final static java.math.BigDecimal BigDecimalFromString(java.lang.String string){
+        if (null != string)
+            return new java.math.BigDecimal(string);
+        else
+            return null;
+    }
+    public final static java.lang.String BigDecimalToString(java.math.BigDecimal instance){
+        if (null != instance)
+            return instance.toString();
         else
             return null;
     }
