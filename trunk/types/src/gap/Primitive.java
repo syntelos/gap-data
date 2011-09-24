@@ -47,6 +47,8 @@ public enum Primitive {
     Double(java.lang.Double.class),
     Date(java.util.Date.class),
     Enum(java.lang.Enum.class),
+    BigInteger(java.math.BigInteger.class),
+    BigDecimal(java.math.BigDecimal.class),
     Blob(com.google.appengine.api.datastore.Blob.class),
     Category(com.google.appengine.api.datastore.Category.class),
     Email(com.google.appengine.api.datastore.Email.class),

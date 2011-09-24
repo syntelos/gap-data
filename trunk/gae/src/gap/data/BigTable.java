@@ -30,6 +30,8 @@ import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.datastore.ShortBlob;
 
 import java.io.File;
+import java.math.BigInteger;
+import java.math.BigDecimal;
 
 /**
  * The gap data object handled by the {@link Store} API for memcache
@@ -480,16 +482,36 @@ public abstract class BigTable
                 else {
                     java.io.Serializable value = this.valueOf(field,MayNotInherit);
                     if (null != value){
-
+                        /*
+                         * Indexed types storage
+                         */
                         if (IsIndexed(value))
                             entity.setProperty(fieldName, value);
 
+                        /*
+                         * Special type conversions for storage
+                         */
                         else if (value instanceof Character){
 
                             Integer safe = new Integer( ((Character)value).charValue());
 
+                            entity.setProperty(fieldName, safe);
+                        }
+                        else if (value instanceof BigInteger){
+
+                            ShortBlob safe = new ShortBlob( ((BigInteger)value).toByteArray());
+
                             entity.setUnindexedProperty(fieldName, safe);
                         }
+                        else if (value instanceof BigDecimal){
+
+                            String safe = value.toString();
+
+                            entity.setProperty(fieldName, safe);
+                        }
+                        /*
+                         * Unindexed types storage
+                         */
                         else
                             entity.setUnindexedProperty(fieldName, value);
                     }
