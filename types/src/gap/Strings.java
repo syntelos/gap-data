@@ -23,6 +23,8 @@ import static gap.Primitive.* ;
 
 import jauk.Re;
 
+import java.lang.reflect.Method;
+
 /**
  * String conversions for {@link Primitive} types.
  * 
@@ -107,6 +109,8 @@ public abstract class Strings {
                 return DoubleToString((java.lang.Double)instance);
             case Date:
                 return DateToString((java.util.Date)instance);
+            case Enum:
+                return EnumToString((java.lang.Enum)instance);
             case BigInteger:
                 return BigIntegerToString((java.math.BigInteger)instance);
             case BigDecimal:
@@ -277,6 +281,31 @@ public abstract class Strings {
     public final static java.lang.String DateToString(java.util.Date instance){
         if (null != instance)
             return gap.Date.FormatRFC1123(instance);
+        else
+            return null;
+    }
+    public final static java.lang.Enum EnumFromString(java.lang.String string){
+        if (null != string){
+            int parse = string.indexOf('#');
+            if (-1 < parse){
+                try {
+                    Class clas = Class.forName(string.substring(0,parse));
+                    Method valueOf = clas.getMethod("valueOf",String.class);
+                    return (java.lang.Enum)valueOf.invoke(null,string.substring(parse+1));
+                }
+                catch (Exception any){
+                    throw new IllegalArgumentException(string,any);
+                }
+            }
+            else
+                throw new IllegalArgumentException(string);
+        }
+        else
+            return null;
+    }
+    public final static java.lang.String EnumToString(java.lang.Enum instance){
+        if (null != instance)
+            return instance.getClass().getName()+'#'+instance.name();
         else
             return null;
     }
