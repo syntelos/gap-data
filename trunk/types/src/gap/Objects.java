@@ -158,6 +158,16 @@ public abstract class Objects {
         else
             throw new ClassCastException(object.getClass().getName());
     }
+    public final static java.lang.Enum EnumFromObject(java.lang.Object object){
+        if (object instanceof java.lang.Enum)
+            return (java.lang.Enum)object;
+        else if (object instanceof java.lang.String)
+            return Strings.EnumFromString( (java.lang.String)object);
+        else if (null == object)
+            return null;
+        else
+            throw new ClassCastException(object.getClass().getName());
+    }
     public final static java.math.BigInteger BigIntegerFromObject(java.lang.Object object){
         if (object instanceof java.math.BigInteger)
             return (java.math.BigInteger)object;
