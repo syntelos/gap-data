@@ -79,7 +79,7 @@ public abstract class {{=class_name}}Data
         return KeyLongFor(id);
     }{{/class_re_not_child}}{{#class_re_child}}
     public final static Key KeyShortIdFor(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        String id = IdFor(ancestor,{{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
+        String id = IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
         return KeyShortFor(ancestor,id);
     }{{/class_re_child}}
     /**
@@ -101,7 +101,6 @@ public abstract class {{=class_name}}Data
         return KeyShortFor( (Key)args[0], (String)args[1]);{{/class_re_child}}
     }
 
-{{#class_re_not_child}}
     public final static String IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
         if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
             String {{=field_name}}String = {{=field_to_string_prefix}}{{=field_name}}{{=field_to_string_suffix}};{{/field}}
@@ -109,15 +108,7 @@ public abstract class {{=class_name}}Data
         }
         else
             throw new IllegalArgumentException();
-    }{{/class_re_not_child}}{{#class_re_child}}
-    public final static String IdFor(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        if (ancestor.isComplete() && {{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
-            String {{=field_name}}String = {{=field_to_string_prefix}}{{=field_name}}{{=field_to_string_suffix}};{{/field}}
-            return gap.data.Hash.For(ToString(ancestor)+'/'+{{#field}}{{#field_it_NotFirst}}+'/'+{{/field_it_NotFirst}}{{=field_name}}String{{/field}});
-        }
-        else
-            throw new IllegalArgumentException();
-    }{{/class_re_child}}
+    }
 
 {{#class_re_not_child}}
     public final static {{=class_name}} ForLong{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
@@ -601,7 +592,7 @@ public abstract class {{=class_name}}Data
         this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
         this.parentKey = ancestor;
         {
-            final String id = IdFor(ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_name}}{{/field}});{{#class_re_child}}
+            final String id = IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_name}}{{/field}});{{#class_re_child}}
             final Key key = KeyShortFor(ancestor,id);{{/class_re_child}}
             this.setKey(key);
         }

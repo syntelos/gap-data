@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-09-12T14:54:49.715Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-10-01T15:00:15.574Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -91,7 +91,6 @@ public abstract class TemplateData
     public final static Key KeyFor(Object... args){
         return KeyLongFor( (String)args[0]);
     }
-
 
     public final static String IdFor(String name){
         if (null != name){
