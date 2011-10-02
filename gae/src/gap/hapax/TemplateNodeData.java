@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-09-12T14:54:50.113Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-10-01T15:00:16.091Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -73,7 +73,7 @@ public abstract class TemplateNodeData
 
 
     public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer lineNumber){
-        String id = IdFor(ancestor, nodeType,  lineNumber);
+        String id = IdFor( nodeType,  lineNumber);
         return KeyShortFor(ancestor,id);
     }
     /**
@@ -93,12 +93,11 @@ public abstract class TemplateNodeData
         return KeyShortFor( (Key)args[0], (String)args[1]);
     }
 
-
-    public final static String IdFor(Key ancestor, String nodeType, Integer lineNumber){
-        if (ancestor.isComplete() && null != nodeType && null != lineNumber){
+    public final static String IdFor(String nodeType, Integer lineNumber){
+        if (null != nodeType && null != lineNumber){
             String nodeTypeString = nodeType;
             String lineNumberString = gap.Strings.IntegerToString(lineNumber);
-            return gap.data.Hash.For(ToString(ancestor)+'/'+nodeTypeString+'/'+lineNumberString);
+            return gap.data.Hash.For(nodeTypeString+'/'+lineNumberString);
         }
         else
             throw new IllegalArgumentException();
@@ -525,7 +524,7 @@ public abstract class TemplateNodeData
         this.setLineNumber(lineNumber);
         this.parentKey = ancestor;
         {
-            final String id = IdFor(ancestor, nodeType, lineNumber);
+            final String id = IdFor(nodeType, lineNumber);
             final Key key = KeyShortFor(ancestor,id);
             this.setKey(key);
         }
