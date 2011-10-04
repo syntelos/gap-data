@@ -584,7 +584,10 @@ public final class OD
          */
         FieldDescriptor key = null;
 
+        TemplateDataDictionary field_unique = null;
+
         if (cd.hasFields()){
+
 
             for (FieldDescriptor field : cd.getFields()){
 
@@ -636,29 +639,30 @@ public final class OD
                         /*
                          * Global section 'field_unique'
                          */
-                        TemplateDataDictionary topDataFieldH = top.showSection(new TemplateName(prefix,"field_unique")).get(0);
+                        if (null == field_unique)
+                            field_unique = top.showSection(new TemplateName(prefix,"field_unique")).get(0);
 
-                        TemplateDataDictionary topDataFieldHF = topDataFieldH.addSection(TemplateNames.Field);
+                        TemplateDataDictionary field_uniqueF = field_unique.addSection(TemplateNames.Field);
 
-                        topDataFieldHF.setVariable(TemplateNames.FieldName,fieldName);
-                        topDataFieldHF.setVariable(TemplateNames.FieldNameCamel,fieldNameCamel);
-                        topDataFieldHF.setVariable(TemplateNames.FieldClass,fieldType);
-                        topDataFieldHF.setVariable(TemplateNames.FieldClassClean,fieldTypeClean);
-                        topDataFieldHF.setVariable(TemplateNames.FieldClassCleanClean,fieldTypeCleanClean);
+                        field_uniqueF.setVariable(TemplateNames.FieldName,fieldName);
+                        field_uniqueF.setVariable(TemplateNames.FieldNameCamel,fieldNameCamel);
+                        field_uniqueF.setVariable(TemplateNames.FieldClass,fieldType);
+                        field_uniqueF.setVariable(TemplateNames.FieldClassClean,fieldTypeClean);
+                        field_uniqueF.setVariable(TemplateNames.FieldClassCleanClean,fieldTypeCleanClean);
                         if (IsTypeClassString(fieldTypeClass)){
-                            topDataFieldHF.setVariable(TemplateNames.FieldToStringPrefix,"");
-                            topDataFieldHF.setVariable(TemplateNames.FieldToStringSuffix,"");
+                            field_uniqueF.setVariable(TemplateNames.FieldToStringPrefix,"");
+                            field_uniqueF.setVariable(TemplateNames.FieldToStringSuffix,"");
                         }
 			else if (IsTypeClassBigTable(field,fieldTypeClass)){
-                            topDataFieldHF.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
-                            topDataFieldHF.setVariable(TemplateNames.FieldToStringSuffix,")");
+                            field_uniqueF.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
+                            field_uniqueF.setVariable(TemplateNames.FieldToStringSuffix,")");
 			}
                         else if (IsTypeClassCollection(field,fieldTypeClass)){
 			    throw new ODStateException(field,"Unique field '"+fieldName+"' of type collection.");
 			}
                         else {
-                            topDataFieldHF.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
-                            topDataFieldHF.setVariable(TemplateNames.FieldToStringSuffix,")");
+                            field_uniqueF.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
+                            field_uniqueF.setVariable(TemplateNames.FieldToStringSuffix,")");
                         }
                     }
                     else {
@@ -912,6 +916,10 @@ public final class OD
                 }
             }
         }
+
+        if (null == field_unique)
+            top.showSection(new TemplateName(prefix,"not_field_unique"));
+
 
         if (null != defaultSortBy)
             top.setVariable(new TemplateName(prefix,"class_defaultSortBy"), defaultSortBy);

@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-10-01T15:00:14.592Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-10-04T00:11:41.531Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -497,26 +497,12 @@ public abstract class PersonData
         this.logonId = null;
     }
     public final String getId(){
-        Key key = this.key;
-        if (null != key){
-            String id = key.getName();
-            if (null != id)
-                return id;
-            else {
-                Key pk = key.getParent();
-                if (null != pk && KIND.name.equals(pk.getKind())){
-                    id = pk.getName();
-                    if (null != id)
-                        return id;
-                    else
-                        throw new IllegalStateException("Key missing name"); //(named key structure)
-                }
-                else
-                    throw new IllegalStateException("Key missing name");
-            }
-        }
-        else
-            return null;
+
+        String id = IdFor(KIND.name, this.key);
+        if (null != id)
+            return id;
+        else 
+            return IdFor(this.logonId);
     }
     public final boolean setId(String id){
         if (null == id){
