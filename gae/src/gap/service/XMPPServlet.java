@@ -230,4 +230,60 @@ public class XMPPServlet
 	    }
 	}
     }
+
+    public final static String From(Message m){
+        if (null != m){
+            JID from = m.getFromJid();
+            if (null != from)
+                return from.getId();
+        }
+        return null;
+    }
+    public final static String From(Subscription s){
+        if (null != s){
+            JID from = s.getFromJid();
+            if (null != from)
+                return from.getId();
+        }
+        return null;
+    }
+    public final static String From(Presence p){
+        if (null != p){
+            JID from = p.getFromJid();
+            if (null != from)
+                return from.getId();
+        }
+        return null;
+    }
+    public final static String To(Message m){
+        if (null != m){
+            JID[] to = m.getRecipientJids();
+            if (null != to && 0 < to.length)
+                return to[0].getId();
+        }
+        return null;
+    }
+    public final static String To(Subscription s){
+        if (null != s){
+            JID to = s.getToJid();
+            if (null != to)
+                return to.getId();
+        }
+        return null;
+    }
+    public final static String To(Presence p){
+        if (null != p){
+            JID to = p.getToJid();
+            if (null != to)
+                return to.getId();
+        }
+        return null;
+    }
+    public final static String Body(Message m){
+        if (null != m)
+            return m.getBody();
+        else
+            return null;
+    }
+
 }
