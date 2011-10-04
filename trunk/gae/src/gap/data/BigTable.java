@@ -25,6 +25,7 @@ import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DataTypeUtils;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.datastore.ShortBlob;
@@ -118,43 +119,113 @@ public abstract class BigTable
         else
             throw new IllegalArgumentException();
     }
+    public final static String IdFor(String kind, Key key){
 
+        while (null != key && kind.equals(key.getKind())){
+            String id = key.getName();
+            if (null != id)
+                return id;
+            else
+                key = key.getParent();
+        }
+        return null;
+    }
     /**
      * An independent "key to string" ensures that any upstream code
      * changes won't kill our database.
      */
     public final static String ToString(Key key){
-        StringBuilder strbuf = ToStringBuilder(key);
-        return strbuf.toString();
+
+        String s = ToStringBuilder(key).toString();
+        if (0 < s.length())
+            return s;
+        else
+            throw new IllegalArgumentException("Incomplete key ("+key+")");
     }
     public final static StringBuilder ToStringBuilder(Key key){
-        if (null != key){
-            StringBuilder strbuf = new StringBuilder();
-            ToString(key,strbuf,key);
-            return strbuf;
-        }
+        if (null != key)
+
+            return ToStringBuilder(new StringBuilder(),key);
         else
             throw new IllegalArgumentException();
     }
-    private final static void ToString(Key key, StringBuilder strbuf, Key k){
+    private final static StringBuilder ToStringBuilder(StringBuilder strbuf, Key k){
 
-        Key p = k.getParent();
-        if (null != p)
-            ToString(key,strbuf,p);
+        final Key p = k.getParent();
+        if (null != p && (!KEQ(p,k)))
+            ToStringBuilder(strbuf,p);
 
-        strbuf.append('/');
-        strbuf.append(k.getKind());
-        strbuf.append(':');
-        String n = k.getName();
-        if (null != n && 0 != n.length())
+        final String n = k.getName();
+
+        if (null != n && 0 != n.length()){
+            strbuf.append('/');
+            strbuf.append(k.getKind());
+            strbuf.append(':');
             strbuf.append(n);
-        else {
-            long num = k.getId();
-            if (0L != num)
-                strbuf.append(String.valueOf(num));
-            else
-                throw new IllegalArgumentException("Key is incomplete '"+key+"'.");
         }
+        return strbuf;
+    }
+    /**
+     * @return Key node equivalence
+     */
+    private final static boolean KEQ(Key a, Key b){
+        if (a == b)
+            return true;
+        else if (a.getKind().equals(b.getKind())){
+            long ai = a.getId();
+            long bi = b.getId();
+            if (ai == bi){
+                String an = a.getName();
+                String bn = b.getName();
+                if (null == an)
+                    return (null == bn);
+                else if (null == bn)
+                    return false;
+                else
+                    return an.equals(bn);
+            }
+        }
+        return false;
+    }
+    /**
+     * @return True for Key(/Kind:ID)
+     */
+    private final static boolean IsKeyId(String k, Key y){
+        return (null != y && null == y.getName() && 0L != y.getId() && k.equals(y.getKind()));
+    }
+    /**
+     * @return True for Key(/Kind:NAME)
+     */
+    private final static boolean IsKeyName(String k, Key y){
+        return (null != y && null != y.getName() && 0L == y.getId() && k.equals(y.getKind()));
+    }
+    /**
+     * Merge Key(/Kind:name) and Key(/Kind:Id) 
+     * 
+     * @param t Kind and Name information
+     * @param y Key and Id information
+     * 
+     * @return Key(/Kind:Name/Kind:Id)
+     */
+    private final static Key Merge(BigTable t, Key y){
+
+        final String k = t.getClassKind().name;
+
+        if (IsKeyId(k,y)){
+
+            final Key p = y.getParent();
+
+            if (!IsKeyName(k,p)){
+
+                final long id = y.getId();
+
+                final String name = t.getId();
+
+                if (null != name)
+                    return KeyFactory.createKey(p,k,name).getChild(k,id);
+            }
+        }
+        return y;
     }
     public final static BigTable From(Entity entity){
         if (null != entity){
@@ -250,8 +321,8 @@ public abstract class BigTable
      */
     public final boolean setKey(Key key){
         if (IsNotEqual(this.key,key)){
-            this.key = key;
-            return true;
+            this.key = Merge(this,key);
+            return IsNotEqual(this.key,key);
         }
         else
             return false;

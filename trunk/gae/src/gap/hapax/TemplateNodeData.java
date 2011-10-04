@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-10-01T15:00:16.091Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-10-04T00:11:42.958Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -543,31 +543,12 @@ public abstract class TemplateNodeData
         this.parent = null;
     }
     public final String getId(){
-        Key key = this.key;
-        if (null != key){
-            String id = key.getName();
-            if (null != id)
-                return id;
-            else {
-                final Key pk = key.getParent();
-                if (null != pk && KIND.name.equals(pk.getKind())){
-                    id = pk.getName();
-                    if (null != id)
-                        return id;
-                    else
-                        throw new IllegalStateException("Key missing name"); //(this structure is named)
-                }
-                else {
-                    final long num = key.getId();
-                    if (0L != num)
-                        return String.valueOf(num);
-                    else
-                        throw new IllegalArgumentException("Key is incomplete");
-                }
-            }
-        }
-        else
-            return null;
+
+        String id = IdFor(KIND.name, this.key);
+        if (null != id)
+            return id;
+        else 
+            return IdFor(this.nodeType, this.lineNumber);
     }
     public final boolean setId(String id){
         if (null == id){
@@ -578,9 +559,12 @@ public abstract class TemplateNodeData
             else
                 return false;
         }
-        else {
-            return false;
+        else if (null == this.key){
+            this.key = KeyShortFor(this.getParentKey(),id);
+            return true;
         }
+        else
+            return false;
     }
     public final boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);

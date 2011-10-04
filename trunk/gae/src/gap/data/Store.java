@@ -270,25 +270,31 @@ public final class Store
             return PTL.get();
         }
         protected static BigTable Get(Key key){
-            String ck = BigTable.ToString(key);
-            MemcacheService mc = Store.C.Get();
             try {
-                BigTable gdo = (BigTable)mc.get(ck);
-                if (null != gdo){
-                    if (gdo instanceof AdminReadWrite){
+                String ck = BigTable.ToString(key);
+                MemcacheService mc = Store.C.Get();
+                try {
+                    BigTable gdo = (BigTable)mc.get(ck);
+                    if (null != gdo){
+                        if (gdo instanceof AdminReadWrite){
 
-                        if (!Logon.IsAdmin())
-                            throw new AdminAccessException(gdo.getClassKind());
+                            if (!Logon.IsAdmin())
+                                throw new AdminAccessException(gdo.getClassKind());
+                        }
+                        gdo.setFromMemcache();
+                        gdo.onread();
+                        return gdo;
                     }
-                    gdo.setFromMemcache();
-                    gdo.onread();
-                    return gdo;
+                    else 
+                        return null;
                 }
-                else 
+                catch (com.google.appengine.api.memcache.InvalidValueException serialization){
+                    mc.delete(key);
                     return null;
+                }
             }
-            catch (com.google.appengine.api.memcache.InvalidValueException serialization){
-                mc.delete(key);
+            catch (IllegalArgumentException incompleteKey){
+
                 return null;
             }
         }
@@ -297,16 +303,20 @@ public final class Store
             DatastoreService ds = Store.P.Get();
             gap.util.ArrayList<BigTable> list = new gap.util.ArrayList<BigTable>();
             for (Key key : keys){
-                
-                String ck = BigTable.ToString(key);
 
                 BigTable gdo = null;
-                try {
-                    gdo = (BigTable)mc.get(ck);
-                }
-                catch (com.google.appengine.api.memcache.InvalidValueException serialization){
 
-                    mc.delete(ck);
+                try {                
+                    String ck = BigTable.ToString(key);
+                    try {
+                        gdo = (BigTable)mc.get(ck);
+                    }
+                    catch (com.google.appengine.api.memcache.InvalidValueException serialization){
+
+                        mc.delete(ck);
+                    }
+                }
+                catch (IllegalArgumentException incompleteKey){
                 }
 
                 if (null != gdo){
@@ -347,10 +357,13 @@ public final class Store
                 if (!Logon.IsAdmin())
                     throw new AdminAccessException(table.getClassKind());
             }
-            String ck = BigTable.ToString(key);
+            try {
+                String ck = BigTable.ToString(key);
 
-            Get().put(ck,table);
-
+                Get().put(ck,table);
+            }
+            catch (IllegalArgumentException incompleteKey){
+            }
             return table;
         }
         protected static void Delete(Key key){
@@ -360,10 +373,13 @@ public final class Store
                     if (!Logon.IsAdmin())
                         throw new AdminAccessException(key.getKind());
                 }
+                try {
+                    String ck = BigTable.ToString(key);
 
-                String ck = BigTable.ToString(key);
-
-                Get().delete(ck);
+                    Get().delete(ck);
+                }
+                catch (IllegalArgumentException incompleteKey){
+                }
             }
         }
     }
@@ -450,9 +466,11 @@ public final class Store
 
         for (Entity ent : list){
             Key key = ent.getKey();
-            {
+            try {
                 String ck = BigTable.ToString(key);
                 mc.delete(ck);
+            }
+            catch (IllegalArgumentException incompleteKey){
             }
             ds.delete(key);
         }

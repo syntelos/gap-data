@@ -612,46 +612,13 @@ public abstract class {{=class_name}}Data
         this.parent = null;{{/class_re_child}}
     }
     public final String getId(){
-        Key key = this.key;
-        if (null != key){{{#class_re_not_child}}
-            String id = key.getName();
-            if (null != id)
-                return id;
-            else {
-                Key pk = key.getParent();
-                if (null != pk && KIND.name.equals(pk.getKind())){
-                    id = pk.getName();
-                    if (null != id)
-                        return id;
-                    else
-                        throw new IllegalStateException("Key missing name"); //(named key structure)
-                }
-                else
-                    throw new IllegalStateException("Key missing name");
-            }{{/class_re_not_child}}{{#class_re_child}}
-            String id = key.getName();
-            if (null != id)
-                return id;
-            else {
-                final Key pk = key.getParent();
-                if (null != pk && KIND.name.equals(pk.getKind())){
-                    id = pk.getName();
-                    if (null != id)
-                        return id;
-                    else
-                        throw new IllegalStateException("Key missing name"); //(this structure is named)
-                }
-                else {
-                    final long num = key.getId();
-                    if (0L != num)
-                        return String.valueOf(num);
-                    else
-                        throw new IllegalArgumentException("Key is incomplete");
-                }
-            }{{/class_re_child}}
-        }
-        else
-            return null;
+
+        String id = IdFor(KIND.name, this.key);
+        if (null != id)
+            return id;
+        else {{#field_unique}}
+            return IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}this.{{=field_name}}{{/field}});{{/field_unique}}{{#not_field_unique}}
+            return null;{{/not_field_unique}}
     }
     public final boolean setId(String id){
         if (null == id){
@@ -661,16 +628,14 @@ public abstract class {{=class_name}}Data
             }
             else
                 return false;
-        }{{#class_re_not_child}}
-        else if (null == this.key){
-            this.key = KeyLongFor(id);
+        }
+        else if (null == this.key){{{#class_re_not_child}}
+            this.key = KeyLongFor(id);{{/class_re_not_child}}{{#class_re_child}}
+            this.key = KeyShortFor(this.getParentKey(),id);{{/class_re_child}}
             return true;
         }
         else
-            return false;{{/class_re_not_child}}{{#class_re_child}}
-        else {
             return false;
-        }{{/class_re_child}}
     }
     public final boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
