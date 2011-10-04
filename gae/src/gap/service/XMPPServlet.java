@@ -77,94 +77,89 @@ public class XMPPServlet
     {
     }
     @Override
-    protected final void doPost(Request req, Response rep)
+        protected final void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
 	/*
 	 * GAE protects the URL this should be configured to, and will
-	 * employ admin status on access.  We'll enforce this here --
-	 * at least because we've already paid for it, and at most to
-	 * protect against misconfiguration.
+	 * employ admin status on access.  Re-enforcing this here is a
+	 * problem as under test there is no user.
 	 */
-        if (req.isAdmin){
+        switch(Directive.For(req.path.getComponent(0))){
+        case message:
+            switch(Directive.Message.For(req.path.getComponent(1))){
+            case chat:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Message m = xs.parseMessage(req);
+                this.doChat(req,rep,xs,m);
+            }
+                break;
+            case none:
+            case unrecognized:
+                this.error(req,rep,403,"Unrecognized request path");
+            }
+            break;
+        case subscription:
+            switch(Directive.Subscription.For(req.path.getComponent(1))){
+            case subscribe:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Subscription s = xs.parseSubscription(req);
+                this.doSubscribe(req,rep,xs,s);
+            }
+                break;
+            case subscribed:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Subscription s = xs.parseSubscription(req);
+                this.doSubscribed(req,rep,xs,s);
+            }
+                break;
+            case unsubscribe:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Subscription s = xs.parseSubscription(req);
+                this.doUnsubscribe(req,rep,xs,s);
+            }
+                break;
+            case unsubscribed:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Subscription s = xs.parseSubscription(req);
+                this.doUnsubscribed(req,rep,xs,s);
+            }
+                break;
+            case none:
+            case unrecognized:
+                this.error(req,rep,403,"Unrecognized request path");
+            }
+            break;
+        case presence:
+            switch(Directive.Presence.For(req.path.getComponent(1))){
+            case available:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Presence p = xs.parsePresence(req);
+                this.doAvailable(req,rep,xs,p);
+            }
+                break;
+            case unavailable:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Presence p = xs.parsePresence(req);
+                this.doUnavailable(req,rep,xs,p);
+            }
+                break;
+            case probe:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Presence p = xs.parsePresence(req);
+                this.doProbe(req,rep,xs,p);
+            }
+                break;
+            case none:
+            case unrecognized:
+                this.error(req,rep,403,"Unrecognized request path");
+            }
+            break;
+        case none:
+        case unrecognized:
+            this.error(req,rep,403,"Unrecognized request path");
+        }
 
-	    switch(Directive.For(req.path.getComponent(0))){
-	    case message:
-		switch(Directive.Message.For(req.path.getComponent(1))){
-		case chat:{
-		    final XMPPService xs = XMPPServiceFactory.getXMPPService();
-		    final Message m = xs.parseMessage(req);
-		    this.doChat(req,rep,xs,m);
-		}
-		    break;
-		case none:
-		case unrecognized:
-		    this.error(req,rep,403,"Unrecognized request path");
-		}
-		break;
-	    case subscription:
-		switch(Directive.Subscription.For(req.path.getComponent(1))){
-		case subscribe:{
-		    final XMPPService xs = XMPPServiceFactory.getXMPPService();
-		    final Subscription s = xs.parseSubscription(req);
-		    this.doSubscribe(req,rep,xs,s);
-		}
-		    break;
-		case subscribed:{
-		    final XMPPService xs = XMPPServiceFactory.getXMPPService();
-		    final Subscription s = xs.parseSubscription(req);
-		    this.doSubscribed(req,rep,xs,s);
-		}
-		    break;
-		case unsubscribe:{
-		    final XMPPService xs = XMPPServiceFactory.getXMPPService();
-		    final Subscription s = xs.parseSubscription(req);
-		    this.doUnsubscribe(req,rep,xs,s);
-		}
-		    break;
-		case unsubscribed:{
-		    final XMPPService xs = XMPPServiceFactory.getXMPPService();
-		    final Subscription s = xs.parseSubscription(req);
-		    this.doUnsubscribed(req,rep,xs,s);
-		}
-		    break;
-		case none:
-		case unrecognized:
-		    this.error(req,rep,403,"Unrecognized request path");
-		}
-		break;
-	    case presence:
-		switch(Directive.Presence.For(req.path.getComponent(1))){
-		case available:{
-		    final XMPPService xs = XMPPServiceFactory.getXMPPService();
-		    final Presence p = xs.parsePresence(req);
-		    this.doAvailable(req,rep,xs,p);
-		}
-		    break;
-		case unavailable:{
-		    final XMPPService xs = XMPPServiceFactory.getXMPPService();
-		    final Presence p = xs.parsePresence(req);
-		    this.doUnavailable(req,rep,xs,p);
-		}
-		    break;
-		case probe:{
-		    final XMPPService xs = XMPPServiceFactory.getXMPPService();
-		    final Presence p = xs.parsePresence(req);
-		    this.doProbe(req,rep,xs,p);
-		}
-		    break;
-		case none:
-		case unrecognized:
-		    this.error(req,rep,403,"Unrecognized request path");
-		}
-		break;
-	    case none:
-	    case unrecognized:
-		this.error(req,rep,403,"Unrecognized request path");
-	    }
-	}
-        else
-            this.error(req,rep,403,"Access denied");
     }
 
     /**
