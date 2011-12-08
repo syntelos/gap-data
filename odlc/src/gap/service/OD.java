@@ -923,8 +923,10 @@ public final class OD
 
         if (null != defaultSortBy)
             top.setVariable(new TemplateName(prefix,"class_defaultSortBy"), defaultSortBy);
-        else
+        else if (null != defaultSortByOpt)
             top.setVariable(new TemplateName(prefix,"class_defaultSortBy"), defaultSortByOpt);
+        else
+            throw new ODStateException(cd,"The object data model requires a default sort by.");
 
         /*
          * Methods
