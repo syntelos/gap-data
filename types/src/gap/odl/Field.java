@@ -44,7 +44,8 @@ public final class Field
     implements FieldDescriptor.Persistence,
                FieldDescriptor.Uniqueness,
                FieldDescriptor.Relation,
-               FieldDescriptor.DefaultSortBy
+               FieldDescriptor.DefaultSortBy,
+               FieldDescriptor.Enumerated
 {
     public final static Pattern Statement = new jauk.Re("<_>[^;]*;<Newline>");
 
@@ -52,6 +53,7 @@ public final class Field
         Child("*child"),
         Unique("*unique"),
         Transient("*transient"),
+        Enumerated("*enum"),
         DefaultSortBy("*sortby");
 
 
@@ -138,7 +140,7 @@ public final class Field
 
     public final Persistence.Type persistence;
 
-    public final boolean unique;
+    public final boolean unique, enumerated;
 
     public final Relation.Type relational;
 
@@ -155,7 +157,7 @@ public final class Field
             boolean isDefaultSortBy = false;
             String typeName = null, name = null;
             Persistence.Type persistence = null;
-            boolean unique = false;
+            boolean unique = false, enumerated = false;
             Relation.Type relational = null;
             StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
             while (strtok.hasMoreTokens()){
@@ -188,6 +190,9 @@ public final class Field
                             relational = Relation.Type.None;
                         }
                         break;
+                    case Enumerated:
+                        enumerated = true;
+                        break;
                     case DefaultSortBy:
                         isDefaultSortBy = true;
                         break;
@@ -208,6 +213,7 @@ public final class Field
             this.typeName = typeName;
             this.name = name;
             this.unique = unique;
+            this.enumerated = enumerated;
             this.persistence = persistence;
             this.relational = relational;
             this.isDefaultSortBy = isDefaultSortBy;
@@ -231,6 +237,9 @@ public final class Field
     }
     public boolean isUnique(){
         return this.unique;
+    }
+    public boolean isEnumerated(){
+        return this.enumerated;
     }
     public boolean hasRelation(){
         return (null != this.relational);

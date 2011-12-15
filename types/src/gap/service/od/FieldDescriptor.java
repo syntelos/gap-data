@@ -44,6 +44,18 @@ public interface FieldDescriptor
     }
 
     /**
+     * Symbolic enumerated types
+     */
+    public interface Enumerated
+        extends FieldDescriptor
+    {
+        /**
+         * @return True for field type is a subclass of {@link java.lang.Enum}
+         */
+        public boolean isEnumerated();
+    }
+
+    /**
      * Fields are persistent by default.
      */
     public interface Persistence 

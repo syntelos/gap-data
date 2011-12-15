@@ -400,6 +400,21 @@ public class Classes {
         else
             return false;
     }
+    /**
+     * Explicit qualification or extant class member of enum -- for
+     * symbolic enumerated type storage as string "pkg.class#field".
+     */
+    public final static boolean IsFieldEnumerated(FieldDescriptor field, ClassDescriptor fieldType, Class fieldClass){
+        if (field instanceof FieldDescriptor.Enumerated){
+            if ( ((FieldDescriptor.Enumerated)field).isEnumerated())
+                return true;
+        }
+
+        if (null != fieldClass && Enum.class.isAssignableFrom(fieldClass))
+            return true;
+        else
+            return false;
+    }
     public final static String ListChildClassName(FieldDescriptor field){
         String typeName = Classes.ToString(field.getType());
         String[] parameters = FieldTypeParameters(typeName);
