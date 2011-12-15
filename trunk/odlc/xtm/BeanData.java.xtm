@@ -70,16 +70,19 @@ public abstract class {{=class_name}}Data
     public final static String PathTo(String subpath){
         return KIND.pathto(subpath);
     }
-
-{{#field_unique}}
-
 {{#class_re_not_child}}
-    public final static Key KeyLongIdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        String id = IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
+    /**
+     * Long instance key without parent key
+     */
+    public final static Key KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
+        String id = IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         return KeyLongFor(id);
     }{{/class_re_not_child}}{{#class_re_child}}
-    public final static Key KeyShortIdFor(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        String id = IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}} {{=field_name}}{{/field}});
+    /**
+     * Short instance key from parent key
+     */
+    public final static Key KeyShortIdFor(Key ancestor, {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
+        String id = IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         return KeyShortFor(ancestor,id);
     }{{/class_re_child}}
     /**
@@ -88,8 +91,8 @@ public abstract class {{=class_name}}Data
      * Calls {@link #{{#class_re_not_child}}KeyLongIdFor{{/class_re_not_child}}{{#class_re_child}}KeyShortIdFor{{/class_re_child}}}
      */
     public final static Key KeyIdFor(Object... args){{{#class_re_not_child}}
-        return KeyLongIdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}({{=field_class}})args[{{=field_it_Index}}]{{/field}});{{/class_re_not_child}}{{#class_re_child}}
-        return KeyShortIdFor( (Key)args[0], {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}({{=field_class}})args[{{=field_it_Count}}]{{/field}});{{/class_re_child}}
+        return KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}({{=field_class}})args[{{=field_unique_it_Index}}]{{/field_unique}});{{/class_re_not_child}}{{#class_re_child}}
+        return KeyShortIdFor( (Key)args[0], {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}({{=field_class}})args[{{=field_unique_it_Count}}]{{/field_unique}});{{/class_re_child}}
     }
     /**
      * Used by setId
@@ -100,20 +103,24 @@ public abstract class {{=class_name}}Data
         return KeyLongFor( (String)args[0]);{{/class_re_not_child}}{{#class_re_child}}
         return KeyShortFor( (Key)args[0], (String)args[1]);{{/class_re_child}}
     }
-
-    public final static String IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){{{#field}}
-            String {{=field_name}}String = {{=field_to_string_prefix}}{{=field_name}}{{=field_to_string_suffix}};{{/field}}
-            return gap.data.Hash.For({{#field}}{{#field_it_NotFirst}}+'/'+{{/field_it_NotFirst}}{{=field_name}}String{{/field}});
+    /**
+     * Identifier for unique fields
+     */
+    public final static String IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
+        if ({{#field_unique}}{{#field_unique_it_NotFirst}} && {{/field_unique_it_NotFirst}}null != {{=field_name}}{{/field_unique}}){{{#field_unique}}
+            String {{=field_name}}String = {{=field_to_string_prefix}}{{=field_name}}{{=field_to_string_suffix}};{{/field_unique}}
+            return gap.data.Hash.For({{#field_unique}}{{#field_unique_it_NotFirst}}+'/'+{{/field_unique_it_NotFirst}}{{=field_name}}String{{/field_unique}});
         }
         else
             throw new IllegalArgumentException();
     }
-
 {{#class_re_not_child}}
-    public final static {{=class_name}} ForLong{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
-            Key key = KeyLongIdFor({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+    /**
+     * Instance lookup
+     */
+    public final static {{=class_name}} ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
+        if ({{#field_unique}}{{#field_unique_it_NotFirst}} && {{/field_unique_it_NotFirst}}null != {{=field_name}}{{/field_unique}}){
+            Key key = KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -125,9 +132,12 @@ public abstract class {{=class_name}}Data
         else
             throw new IllegalArgumentException();
     }{{/class_re_not_child}}{{#class_re_child}}
-    public final static {{=class_name}} ForShort{{#field}}{{=field_nameCamel}}{{/field}}(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        if ({{#field}}{{#field_it_NotFirst}} && {{/field_it_NotFirst}}null != {{=field_name}}{{/field}}){
-            Key key = KeyShortIdFor(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+    /**
+     * Instance lookup from parent key
+     */
+    public final static {{=class_name}} ForShort{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}(Key ancestor, {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
+        if ({{#field_unique}}{{#field_unique_it_NotFirst}} && {{/field_unique_it_NotFirst}}null != {{=field_name}}{{/field_unique}}){
+            Key key = KeyShortIdFor(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
             if (null != instance)
                 return instance;
@@ -139,25 +149,29 @@ public abstract class {{=class_name}}Data
         else
             throw new IllegalArgumentException();
     }{{/class_re_child}}
-
 {{#class_re_not_child}}
-    public final static {{=class_name}} GetCreateLong({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        {{=class_name}} {{=class_nameDecamel}} = ForLong{{#field}}{{=field_nameCamel}}{{/field}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+    /**
+     * Instance lookup or create
+     */
+    public final static {{=class_name}} GetCreateLong({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
+        {{=class_name}} {{=class_nameDecamel}} = ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         if (null == {{=class_nameDecamel}}){
-            {{=class_nameDecamel}} = new {{=class_name}}({{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            {{=class_nameDecamel}} = new {{=class_name}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
     }{{/class_re_not_child}}{{#class_re_child}}
-    public final static {{=class_name}} GetCreateShort(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}){
-        {{=class_name}} {{=class_nameDecamel}} = ForShort{{#field}}{{=field_nameCamel}}{{/field}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+    /**
+     * Instance lookup or create from parent key
+     */
+    public final static {{=class_name}} GetCreateShort(Key ancestor, {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
+        {{=class_name}} {{=class_nameDecamel}} = ForShort{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         if (null == {{=class_nameDecamel}}){
-            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field}}{{#field_it_NotFirst}},{{/field_it_NotFirst}} {{=field_name}}{{/field}});
+            {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
     }{{/class_re_child}}
-{{/field_unique}}
 
 {{#class_re_not_child}}
     public final static Key KeyLongFor(String id){
@@ -577,27 +591,26 @@ public abstract class {{=class_name}}Data
 
     protected {{=class_name}}Data() {
         super();
-    }{{#field_unique}}{{#class_re_not_child}}
-    protected {{=class_name}}Data({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
-        super();{{#field}}
-        this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
+    }{{#class_re_not_child}}
+    protected {{=class_name}}Data({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}) {
+        super();{{#field_unique}}
+        this.set{{=field_nameCamel}}({{=field_name}});{{/field_unique}}
         {
-            final String id = IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_name}}{{/field}});
+            final String id = IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_name}}{{/field_unique}});
             final Key key = KeyLongFor(id);
             this.setKey(key);
         }
     }{{/class_re_not_child}}{{#class_re_child}}
-    protected {{=class_name}}Data(Key ancestor, {{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field}}) {
-        super();{{#field}}
-        this.set{{=field_nameCamel}}({{=field_name}});{{/field}}
+    protected {{=class_name}}Data(Key ancestor, {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}) {
+        super();{{#field_unique}}
+        this.set{{=field_nameCamel}}({{=field_name}});{{/field_unique}}
         this.parentKey = ancestor;
         {
-            final String id = IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}{{=field_name}}{{/field}});{{#class_re_child}}
+            final String id = IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_name}}{{/field_unique}});{{#class_re_child}}
             final Key key = KeyShortFor(ancestor,id);{{/class_re_child}}
             this.setKey(key);
         }
     }{{/class_re_child}}
-{{/field_unique}}
 
 
     public void destroy(){
@@ -616,9 +629,8 @@ public abstract class {{=class_name}}Data
         String id = IdFor(KIND.name, this.key);
         if (null != id)
             return id;
-        else {{#field_unique}}
-            return IdFor({{#field}}{{#field_it_NotFirst}}, {{/field_it_NotFirst}}this.{{=field_name}}{{/field}});{{/field_unique}}{{#not_field_unique}}
-            return null;{{/not_field_unique}}
+        else
+            return IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}this.{{=field_name}}{{/field_unique}});
     }
     public final boolean setId(String id){
         if (null == id){
@@ -1036,7 +1048,7 @@ public abstract class {{=class_name}}Data
         String {{=field_name}}Request = req.getParameter("{{=field_name}}");
         if (null != {{=field_name}}Request && 0 < {{=field_name}}Request.length()){
             try {
-                {{=field_class}} {{=field_name}} = Strings.{{=field_class}}FromString({{=field_name}}Request);
+                {{=field_class}} {{=field_name}} = {{=field_from_string_prefix}}{{=field_name}}Request{{=field_from_string_suffix}};
                 if (this.set{{=field_nameCamel}}({{=field_name}})){
                     change = true;
                 }

@@ -54,10 +54,7 @@ public final class OD
     extends gap.service.Classes
 {
     public final static class TemplateNames {
-        public final static TemplateName Args = new TemplateName("args");
-        public final static TemplateName Body = new TemplateName("body");
-        public final static TemplateName DataModel = new TemplateName("data_model");
-        public final static TemplateName Excs = new TemplateName("excs");
+
         public final static TemplateName Field = new TemplateName("field");
         public final static TemplateName FieldClass = new TemplateName("field_class");
         public final static TemplateName FieldClassClean = new TemplateName("field_classClean");
@@ -69,6 +66,7 @@ public final class OD
 
         public final static TemplateName FieldIsInheritable = new TemplateName("field_is_inheritable");
         public final static TemplateName FieldIsKey = new TemplateName("field_is_key");
+        public final static TemplateName FieldIsEnum = new TemplateName("field_is_enum");
         public final static TemplateName FieldIsBoolean = new TemplateName("field_is_boolean");
         public final static TemplateName FieldIsCharacter = new TemplateName("field_is_character");
         public final static TemplateName FieldIsList = new TemplateName("field_is_list");
@@ -91,6 +89,7 @@ public final class OD
 
         public final static TemplateName FieldIsNotInheritable = new TemplateName("field_is_not_inheritable");
         public final static TemplateName FieldIsNotKey = new TemplateName("field_is_not_key");
+        public final static TemplateName FieldIsNotEnum = new TemplateName("field_is_not_enum");
         public final static TemplateName FieldIsNotBoolean = new TemplateName("field_is_not_boolean");
         public final static TemplateName FieldIsNotCharacter = new TemplateName("field_is_not_character");
         public final static TemplateName FieldIsNotList = new TemplateName("field_is_not_list");
@@ -120,6 +119,8 @@ public final class OD
         public final static TemplateName FieldNameCamel = new TemplateName("field_nameCamel");
         public final static TemplateName FieldToStringPrefix = new TemplateName("field_to_string_prefix");
         public final static TemplateName FieldToStringSuffix = new TemplateName("field_to_string_suffix");
+        public final static TemplateName FieldFromStringPrefix = new TemplateName("field_from_string_prefix");
+        public final static TemplateName FieldFromStringSuffix = new TemplateName("field_from_string_suffix");
         public final static TemplateName FieldFromObjectPrefix = new TemplateName("field_from_object_prefix");
         public final static TemplateName FieldFromObjectSuffix = new TemplateName("field_from_object_suffix");
         public final static TemplateName ImportSpec = new TemplateName("import_spec");
@@ -131,10 +132,13 @@ public final class OD
         public final static TemplateName MapKeyFieldNameCamel = new TemplateName("map_key_field_nameCamel");
         public final static TemplateName MapKeyType = new TemplateName("map_key_type");
         public final static TemplateName MapPValueType = new TemplateName("map_pvalue_type");
+
         public final static TemplateName MethodArguments = new TemplateName("method_arguments");
         public final static TemplateName MethodBody = new TemplateName("method_body");
         public final static TemplateName MethodName = new TemplateName("method_name");
         public final static TemplateName MethodType = new TemplateName("method_type");
+        public final static TemplateName MethodExceptions = new TemplateName("method_excs");
+
         public final static TemplateName Name = new TemplateName("name");
         public final static TemplateName NameCamel = new TemplateName("nameCamel");
         public final static TemplateName NameDecamel = new TemplateName("nameDecamel");
@@ -580,7 +584,7 @@ public final class OD
         }
 
         /*
-         * Fields & data
+         * Fields
          */
         FieldDescriptor key = null;
 
@@ -591,18 +595,20 @@ public final class OD
 
             for (FieldDescriptor field : cd.getFields()){
 
-                String fieldName = field.getName();
+                final String fieldName = field.getName();
+
                 if (IsFieldNameIllegal(fieldName))
                     throw new ODStateException(field,String.format("Reserved field name '%s'",fieldName));
 
-                String fieldNameCamel = Camel(fieldName);
-                String fieldType = OD.MapChild.Type(ToString(field.getType()));
-                String fieldTypeClean = CleanTypeName(fieldType);
-                String fieldTypeCleanClean = CleanCleanTypeName(fieldType);
-                ClassDescriptor fieldTypeClassDescriptor = Classes.For(fieldType);
-                Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
-                Primitive fieldTypePrimitive = Primitive.For(fieldTypeClass);
-                String[] fieldTypeParameters = FieldTypeParameters(ToString(field.getType()));
+                final String fieldNameCamel = Camel(fieldName);
+                final String fieldType = OD.MapChild.Type(ToString(field.getType()));
+                final String fieldTypeClean = CleanTypeName(fieldType);
+                final String fieldTypeCleanClean = CleanCleanTypeName(fieldType);
+                final ClassDescriptor fieldTypeClassDescriptor = Classes.For(fieldType);
+                final Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
+                final boolean isEnumerated = IsFieldEnumerated(field,fieldTypeClassDescriptor,fieldTypeClass);
+                final Primitive fieldTypePrimitive = Primitive.For(fieldTypeClass,isEnumerated);
+                final String[] fieldTypeParameters = FieldTypeParameters(ToString(field.getType()));
                 TemplateDataDictionary dataField = null;
                 boolean isPersistent = false;
                 boolean isInheritable = true;
@@ -614,7 +620,7 @@ public final class OD
                     defaultSortBy = fieldName;
 
                 /*
-                 * Create 'dataField' section
+                 * Create dataField section
                  */
                 if (IsFieldPersistent(field,fieldTypeClass)){
                     isPersistent = true;
@@ -626,43 +632,23 @@ public final class OD
                      * Populate 'pfield' section
                      */
                     if (IsFieldUnique(field)){
-                        isInheritable = false;
-
-                        defaultSortByOpt = fieldName;
-
-                        dataField.addSection(TemplateNames.FieldIsNotInheritable);
-
-                        TemplateDataDictionary field_is = dataField.addSection(TemplateNames.FieldIsUnique);
-
-                        field_is.setVariable(TemplateNames.DataModel,"*unique");
-
-                        /*
-                         * Global section 'field_unique'
-                         */
-                        if (null == field_unique)
-                            field_unique = top.showSection(new TemplateName(prefix,"field_unique")).get(0);
-
-                        TemplateDataDictionary field_uniqueF = field_unique.addSection(TemplateNames.Field);
-
-                        field_uniqueF.setVariable(TemplateNames.FieldName,fieldName);
-                        field_uniqueF.setVariable(TemplateNames.FieldNameCamel,fieldNameCamel);
-                        field_uniqueF.setVariable(TemplateNames.FieldClass,fieldType);
-                        field_uniqueF.setVariable(TemplateNames.FieldClassClean,fieldTypeClean);
-                        field_uniqueF.setVariable(TemplateNames.FieldClassCleanClean,fieldTypeCleanClean);
-                        if (IsTypeClassString(fieldTypeClass)){
-                            field_uniqueF.setVariable(TemplateNames.FieldToStringPrefix,"");
-                            field_uniqueF.setVariable(TemplateNames.FieldToStringSuffix,"");
-                        }
-			else if (IsTypeClassBigTable(field,fieldTypeClass)){
-                            field_uniqueF.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
-                            field_uniqueF.setVariable(TemplateNames.FieldToStringSuffix,")");
-			}
-                        else if (IsTypeClassCollection(field,fieldTypeClass)){
+                        if (IsTypeClassCollection(field,fieldTypeClass))
 			    throw new ODStateException(field,"Unique field '"+fieldName+"' of type collection.");
-			}
                         else {
-                            field_uniqueF.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
-                            field_uniqueF.setVariable(TemplateNames.FieldToStringSuffix,")");
+                            isInheritable = false;
+
+                            defaultSortByOpt = fieldName;
+
+                            dataField.addSection(TemplateNames.FieldIsNotInheritable);
+
+                            dataField.addSection(TemplateNames.FieldIsUnique);
+                            /*
+                             * Global section 'field_unique'
+                             */
+                            if (null == field_unique){
+
+                                top.addSection(new TemplateName(prefix,"field_unique"), dataField);
+                            }
                         }
                     }
                     else {
@@ -702,10 +688,8 @@ public final class OD
                      * Populate 'tfield' section
                      */
                     dataField.addSection(TemplateNames.FieldIsNotUnique);
-                    {
-                        TemplateDataDictionary field_is = dataField.addSection(TemplateNames.FieldIsTransient);
-                        field_is.setVariable(TemplateNames.DataModel,"*transient");
-                    }
+
+                    dataField.addSection(TemplateNames.FieldIsTransient);
                 }
 
                 if (isCollection)
@@ -721,50 +705,125 @@ public final class OD
                 dataField.setVariable(TemplateNames.FieldClass,fieldType);
                 dataField.setVariable(TemplateNames.FieldClassClean,fieldTypeClean);
                 dataField.setVariable(TemplateNames.FieldClassCleanClean,fieldTypeCleanClean);
-                if (IsTypeClassString(fieldTypeClass)){
-                    dataField.setVariable(TemplateNames.FieldToStringPrefix,"");
-                    dataField.setVariable(TemplateNames.FieldToStringSuffix,"");
-                }
-		else if (IsTypeClassBigTable(field,fieldTypeClass)){
-		    dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
-		    dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
-		}
-		else if (IsTypeClassCollection(field,fieldTypeClass)){
-		    /*
-		     * [TODO] Is the missing case encountered?
-		     */
-		    //throw new ODStateException(field,"Field '"+fieldName+"' of type collection.");
-		}
-                else {
-                    dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
-                    dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
-                }
+
+                /*
+                 * I/O functions ToString, FromString, FromObject
+                 * and Is/IsNot selectors
+                 */
                 if (null != fieldTypePrimitive){
-                    dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"gap.Objects."+fieldTypeCleanClean+"FromObject(");
-                    dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
                     dataField.addSection(TemplateNames.FieldIsPrimitive);
                     dataField.addSection(TemplateNames.FieldIsNotBigTable);
 
-                    if (Primitive.Boolean == fieldTypePrimitive)
-                        dataField.addSection(TemplateNames.FieldIsBoolean);
-                    else {
-                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                    switch(fieldTypePrimitive){
+                    case Key:
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
 
-                        if (Primitive.Character == fieldTypePrimitive)
-                            dataField.addSection(TemplateNames.FieldIsCharacter);
-                        else {
-                            dataField.addSection(TemplateNames.FieldIsNotCharacter);
-                        }
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"gap.Strings.KeyFromString(");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"gap.Objects.KeyFromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
+                        dataField.addSection(TemplateNames.FieldIsKey);
+                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                        dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                        dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        break;
+                    case Enum:
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.EnumToString(");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"("+fieldType+")gap.Strings.EnumFromString(");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+")gap.Objects.EnumFromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
+                        dataField.addSection(TemplateNames.FieldIsNotKey);
+                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                        dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                        dataField.addSection(TemplateNames.FieldIsEnum);
+                        break;
+                    case Boolean:
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.BooleanToString(");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"gap.Strings.BooleanFromString(");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"gap.Objects.BooleanFromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
+                        dataField.addSection(TemplateNames.FieldIsNotKey);
+                        dataField.addSection(TemplateNames.FieldIsBoolean);
+                        dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                        dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        break;
+                    case Character:
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.CharacterToString(");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"gap.Strings.CharacterFromString(");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"gap.Objects.CharacterFromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
+                        dataField.addSection(TemplateNames.FieldIsNotKey);
+                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                        dataField.addSection(TemplateNames.FieldIsCharacter);
+                        dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        break;
+                    case String:
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,"");
+
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,"");
+
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"gap.Objects.StringFromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
+                        dataField.addSection(TemplateNames.FieldIsNotKey);
+                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                        dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                        dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        break;
+                    default:
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"gap.Strings."+fieldTypeCleanClean+"FromString(");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"gap.Objects."+fieldTypeCleanClean+"FromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
+                        dataField.addSection(TemplateNames.FieldIsNotKey);
+                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                        dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                        dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        break;
                     }
                 }
                 else {
                     dataField.addSection(TemplateNames.FieldIsNotPrimitive);
                     dataField.addSection(TemplateNames.FieldIsNotBoolean);
                     dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                    dataField.addSection(TemplateNames.FieldIsNotEnum);
 
                     if (IsTypeClassBigTable(fieldTypeClassDescriptor,fieldTypeClass)){
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"gap.Strings.KeyFromString(");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+
                         dataField.setVariable(TemplateNames.FieldFromObjectPrefix,FullClassName(fieldTypeClassDescriptor,fieldTypeClass)+".FromObject(");
                         dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
                         dataField.addSection(TemplateNames.FieldIsBigTable);
                         /*
                          */
@@ -774,18 +833,26 @@ public final class OD
                             dataField.addSection(TemplateNames.FieldIsLong);
                     }
                     else {
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"gap.Strings."+fieldTypeCleanClean+"FromString(");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+
                         dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+')');
                         dataField.setVariable(TemplateNames.FieldFromObjectSuffix,"");
+
                         dataField.addSection(TemplateNames.FieldIsNotBigTable);
                     }
                 }
-
-                if (IsTypeClassKey(fieldTypeClass)){
+                /*
+                 * BigTables & Collections 
+                 */
+                if (Primitive.Key == fieldTypePrimitive){
                     isInheritable = false;
 
                     dataField.addSection(TemplateNames.FieldIsNotInheritable);
-
-                    TemplateDataDictionary field_is = dataField.addSection(TemplateNames.FieldIsKey);
+                    dataField.addSection(TemplateNames.FieldIsKey);
 
                 }
                 else if (IsTypeClassList(fieldTypeClass)){
@@ -940,18 +1007,18 @@ public final class OD
                     String method_body = gap.Strings.TextToString(method.getBody());
                     if (null != method_body){
 
-                        TemplateDataDictionary methods = top.addSection(new TemplateName(prefix,"method"));
-                        methods.setVariable(TemplateNames.MethodName,method_name);
-                        methods.setVariable(TemplateNames.MethodBody,method_body);
+                        TemplateDataDictionary methodData = top.addSection(new TemplateName(prefix,"method"));
+                        methodData.setVariable(TemplateNames.MethodName,method_name);
+                        methodData.setVariable(TemplateNames.MethodBody,method_body);
 
                         TemplateDataDictionary mb = top.addSection(new TemplateName(prefix,"method_"+method_name+"_with_body"));
-                        mb.setVariable(TemplateNames.Body,method_body);
+                        mb.setVariable(TemplateNames.MethodBody,method_body);
 
                         String method_type = ToString(method.getType());
                         if (null != method_type){
                             TemplateDataDictionary ma = top.addSection(new TemplateName(prefix,"method_"+method_name+"_with_type"));
                             ma.setVariable(TemplateNames.Type,method_type);
-                            methods.setVariable(TemplateNames.MethodType,method_type);
+                            methodData.setVariable(TemplateNames.MethodType,method_type);
                         }
                         else
                             top.showSection(new TemplateName(prefix,"method_"+method_name+"_without_type"));
@@ -961,9 +1028,9 @@ public final class OD
                             if (ma.hasArguments()){
                                 String method_arguments = ma.getArguments();
                                 if (null != method_arguments){
-                                    TemplateDataDictionary td = top.addSection(new TemplateName(prefix,"method_"+method_name+"_with_args"));
-                                    td.setVariable(TemplateNames.Args,method_arguments);
-                                    methods.setVariable(TemplateNames.MethodArguments,method_arguments);
+                                    top.addSection(new TemplateName(prefix,"method_"+method_name+"_with_args"));
+
+                                    methodData.setVariable(TemplateNames.MethodArguments,method_arguments);
                                 }
                                 else
                                     top.showSection(new TemplateName(prefix,"method_"+method_name+"_without_args"));
@@ -980,8 +1047,8 @@ public final class OD
                                 String method_exceptions = ma.getExceptions();
                                 if (null != method_exceptions){
                                     TemplateDataDictionary td = top.addSection(new TemplateName(prefix,"method_"+method_name+"_with_excs"));
-                                    td.setVariable(TemplateNames.Excs,method_exceptions);
-                                    methods.setVariable(new TemplateName(prefix,"method_exceptions"),method_exceptions);
+                                    td.setVariable(TemplateNames.MethodExceptions,method_exceptions);
+                                    methodData.setVariable(new TemplateName(prefix,"method_exceptions"),method_exceptions);
                                 }
                                 else
                                     top.showSection(new TemplateName(prefix,"method_"+method_name+"_without_excs"));

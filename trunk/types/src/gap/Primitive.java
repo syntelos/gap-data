@@ -122,6 +122,20 @@ public enum Primitive {
         }
         return null;
     }
+    public final static Primitive For(Class type, boolean isEnum){
+        if (isEnum)
+            return Primitive.Enum;
+        else if (null != type){
+            Primitive p = Map.get(type.getName());
+            if (null != p)
+                return p;
+            else if (Enum.type.isAssignableFrom(type))
+                return Primitive.Enum;
+            else if (Date.type.isAssignableFrom(type))
+                return Primitive.Date;
+        }
+        return null;
+    }
     public final static Primitive For(String name){
         Primitive type = Map.get(name);
         if (null != type)
