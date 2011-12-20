@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-10-04T00:11:41.531Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-20T03:50:47.524Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -66,9 +66,9 @@ public abstract class PersonData
         return KIND.pathto(subpath);
     }
 
-
-
-
+    /**
+     * Long instance key without parent key
+     */
     public final static Key KeyLongIdFor(String logonId){
         String id = IdFor( logonId);
         return KeyLongFor(id);
@@ -89,7 +89,9 @@ public abstract class PersonData
     public final static Key KeyFor(Object... args){
         return KeyLongFor( (String)args[0]);
     }
-
+    /**
+     * Identifier for unique fields
+     */
     public final static String IdFor(String logonId){
         if (null != logonId){
             String logonIdString = logonId;
@@ -99,7 +101,9 @@ public abstract class PersonData
             throw new IllegalArgumentException();
     }
 
-
+    /**
+     * Instance lookup
+     */
     public final static Person ForLongLogonId(String logonId){
         if (null != logonId){
             Key key = KeyLongIdFor( logonId);
@@ -115,7 +119,9 @@ public abstract class PersonData
             throw new IllegalArgumentException();
     }
 
-
+    /**
+     * Instance lookup or create
+     */
     public final static Person GetCreateLong(String logonId){
         Person person = ForLongLogonId( logonId);
         if (null == person){
@@ -124,7 +130,6 @@ public abstract class PersonData
         }
         return person;
     }
-
 
 
     public final static Key KeyLongFor(String id){
@@ -332,7 +337,7 @@ public abstract class PersonData
                 return field;
         }
         /**
-         * Principal dynamic binding operator (datastore, etc, except serialization)
+         * Dynamic binding operator for field data type
          *
          * Persistent BigTable fields are represented by the string ID.
          */
@@ -351,7 +356,7 @@ public abstract class PersonData
             }
         }
         /**
-         * Principal dynamic binding operator (datastore, etc, except serialization)
+         * Dynamic binding operator for field data type
          *
          * Persistent BigTable fields are represented by the string ID.
          */
@@ -369,6 +374,49 @@ public abstract class PersonData
                 throw new IllegalArgumentException(field.toString()+" in Person");
             }
         }
+        /**
+         * Dynamic binding operator for field storage type
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
+        public static java.io.Serializable Storage(Field field, Person instance){
+            switch(field){
+            case InheritFromKey:
+                return instance.getInheritFromKey();
+            case Key:
+                return instance.getKey();
+            case Id:
+                return instance.getId();
+            case LogonId:
+                return instance.getLogonId(MayNotInherit);
+            default:
+                throw new IllegalArgumentException(field.toString()+" in Person");
+            }
+        }
+        /**
+         * Dynamic binding operator for field storage type
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
+        public static void Storage(Field field, Person instance, java.io.Serializable value){
+            switch(field){
+            case InheritFromKey:
+                instance.setInheritFromKey( (Key)value);
+                return;
+            case Key:
+                instance.setKey( (Key)value);
+                return;
+            case Id:
+                instance.setId( (String)value);
+                return;
+            case LogonId:
+                instance.setLogonId( (String)value);
+                return;
+            default:
+                throw new IllegalArgumentException(field.toString()+" in Person");
+            }
+        }
+
 
         public final static class List
             extends gap.util.ArrayList<Person.Field>
@@ -490,7 +538,6 @@ public abstract class PersonData
     }
 
 
-
     public void destroy(){
         this.inheritFrom = null;
         this.datastoreEntity = null;
@@ -501,7 +548,7 @@ public abstract class PersonData
         String id = IdFor(KIND.name, this.key);
         if (null != id)
             return id;
-        else 
+        else
             return IdFor(this.logonId);
     }
     public final boolean setId(String id){
@@ -619,6 +666,14 @@ public abstract class PersonData
         boolean mayInherit = (!this.hasInheritFromKey());
         boolean change = false;
         return change;
+    }
+    public java.io.Serializable valueStorage(gap.data.Field field){
+
+        return Field.Storage( (Field)field, (Person)this);
+    }
+    public void defineStorage(gap.data.Field field, java.io.Serializable value){
+
+        Field.Storage( (Field)field, (Person)this, value);
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor();

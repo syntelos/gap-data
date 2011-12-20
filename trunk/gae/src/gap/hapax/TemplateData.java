@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-10-04T00:11:42.616Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-20T03:50:48.373Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -68,9 +68,9 @@ public abstract class TemplateData
         return KIND.pathto(subpath);
     }
 
-
-
-
+    /**
+     * Long instance key without parent key
+     */
     public final static Key KeyLongIdFor(String name){
         String id = IdFor( name);
         return KeyLongFor(id);
@@ -91,7 +91,9 @@ public abstract class TemplateData
     public final static Key KeyFor(Object... args){
         return KeyLongFor( (String)args[0]);
     }
-
+    /**
+     * Identifier for unique fields
+     */
     public final static String IdFor(String name){
         if (null != name){
             String nameString = name;
@@ -101,7 +103,9 @@ public abstract class TemplateData
             throw new IllegalArgumentException();
     }
 
-
+    /**
+     * Instance lookup
+     */
     public final static Template ForLongName(String name){
         if (null != name){
             Key key = KeyLongIdFor( name);
@@ -117,7 +121,9 @@ public abstract class TemplateData
             throw new IllegalArgumentException();
     }
 
-
+    /**
+     * Instance lookup or create
+     */
     public final static Template GetCreateLong(String name){
         Template template = ForLongName( name);
         if (null == template){
@@ -126,7 +132,6 @@ public abstract class TemplateData
         }
         return template;
     }
-
 
 
     public final static Key KeyLongFor(String id){
@@ -337,7 +342,7 @@ public abstract class TemplateData
                 return field;
         }
         /**
-         * Principal dynamic binding operator (datastore, etc, except serialization)
+         * Dynamic binding operator for field data type
          *
          * Persistent BigTable fields are represented by the string ID.
          */
@@ -362,7 +367,7 @@ public abstract class TemplateData
             }
         }
         /**
-         * Principal dynamic binding operator (datastore, etc, except serialization)
+         * Dynamic binding operator for field data type
          *
          * Persistent BigTable fields are represented by the string ID.
          */
@@ -386,6 +391,68 @@ public abstract class TemplateData
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }
         }
+        /**
+         * Dynamic binding operator for field storage type
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
+        public static java.io.Serializable Storage(Field field, Template instance){
+            switch(field){
+            case InheritFromKey:
+                return instance.getInheritFromKey();
+            case Key:
+                return instance.getKey();
+            case Id:
+                return instance.getId();
+            case Name:
+                return instance.getName(MayNotInherit);
+            case LastModified:{
+                return instance.getLastModified(MayNotInherit);
+            }
+            case TemplateSourceHapax:
+                return instance.getTemplateSourceHapax(MayNotInherit);
+            case TemplateTargetHapax:{
+                return null;
+            }
+            default:
+                throw new IllegalArgumentException(field.toString()+" in Template");
+            }
+        }
+        /**
+         * Dynamic binding operator for field storage type
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
+        public static void Storage(Field field, Template instance, java.io.Serializable value){
+            switch(field){
+            case InheritFromKey:
+                instance.setInheritFromKey( (Key)value);
+                return;
+            case Key:
+                instance.setKey( (Key)value);
+                return;
+            case Id:
+                instance.setId( (String)value);
+                return;
+            case Name:
+                instance.setName( (String)value);
+                return;
+            case LastModified:{
+
+                instance.setLastModified( (Number)value);
+                return;
+            }
+            case TemplateSourceHapax:
+                instance.setTemplateSourceHapax( (Text)value);
+                return;
+            case TemplateTargetHapax:{
+                return;
+            }
+            default:
+                throw new IllegalArgumentException(field.toString()+" in Template");
+            }
+        }
+
 
         public final static class List
             extends gap.util.ArrayList<Template.Field>
@@ -510,7 +577,6 @@ public abstract class TemplateData
     }
 
 
-
     public void destroy(){
         this.inheritFrom = null;
         this.datastoreEntity = null;
@@ -528,7 +594,7 @@ public abstract class TemplateData
         String id = IdFor(KIND.name, this.key);
         if (null != id)
             return id;
-        else 
+        else
             return IdFor(this.name);
     }
     public final boolean setId(String id){
@@ -659,6 +725,18 @@ public abstract class TemplateData
         if (IsNotEqual(this.lastModified,lastModified)){
             this.dirty = true;
             this.lastModified = lastModified;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean setLastModified(Number lastModified){
+        if (IsNotEqual(this.lastModified,lastModified)){
+            this.dirty = true;
+            if (lastModified instanceof Long)
+                this.lastModified = (Long)lastModified;
+            else
+                this.lastModified = new Long( lastModified.longValue());
             return true;
         }
         else
@@ -821,7 +899,7 @@ public abstract class TemplateData
         String lastModifiedRequest = req.getParameter("lastModified");
         if (null != lastModifiedRequest && 0 < lastModifiedRequest.length()){
             try {
-                Long lastModified = Strings.LongFromString(lastModifiedRequest);
+                Long lastModified = gap.Strings.LongFromString(lastModifiedRequest);
                 if (this.setLastModified(lastModified)){
                     change = true;
                 }
@@ -833,7 +911,7 @@ public abstract class TemplateData
         String templateSourceHapaxRequest = req.getParameter("templateSourceHapax");
         if (null != templateSourceHapaxRequest && 0 < templateSourceHapaxRequest.length()){
             try {
-                Text templateSourceHapax = Strings.TextFromString(templateSourceHapaxRequest);
+                Text templateSourceHapax = gap.Strings.TextFromString(templateSourceHapaxRequest);
                 if (this.setTemplateSourceHapax(templateSourceHapax)){
                     change = true;
                 }
@@ -859,6 +937,14 @@ public abstract class TemplateData
             change = true;
         }
         return change;
+    }
+    public java.io.Serializable valueStorage(gap.data.Field field){
+
+        return Field.Storage( (Field)field, (Template)this);
+    }
+    public void defineStorage(gap.data.Field field, java.io.Serializable value){
+
+        Field.Storage( (Field)field, (Template)this, value);
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor();

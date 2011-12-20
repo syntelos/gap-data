@@ -421,18 +421,32 @@ public abstract class BigTable
     public abstract Field getClassFieldByName(String name);
 
     /**
-     * Principal dynamic binding operator (datastore, etc, except serialization)
+     * Dynamic binding operator for field data type
      *
      * Persistent BigTable fields are represented by the string ID.
      */
     public abstract java.io.Serializable valueOf(Field field, boolean mayInherit);
 
     /**
-     * Principal dynamic binding operator (datastore, etc, except serialization)
+     * Dynamic binding operator for field storage type
+     *
+     * Persistent BigTable fields are represented by the string ID.
+     */
+    public abstract java.io.Serializable valueStorage(Field field);
+
+    /**
+     * Dynamic binding operator for field data type
      *
      * Persistent BigTable fields are represented by the string ID.
      */
     public abstract void define(Field field, java.io.Serializable value);
+
+    /**
+     * Dynamic binding operator for field storage type
+     *
+     * Persistent BigTable fields are represented by the string ID.
+     */
+    public abstract void defineStorage(Field field, java.io.Serializable value);
 
     public final void define(String fieldName, java.io.Serializable value){
         Field field = this.getClassFieldByName(fieldName);
@@ -536,59 +550,16 @@ public abstract class BigTable
 
             if (field.isNotFieldNameKeyOrId()){
 
-                if (field.isFieldTypeCollection()){
+                java.io.Serializable value = this.valueStorage(field);
+                if (null != value){
 
-                    if (field.isFieldTypePrimitive()){
-                        java.io.Serializable value = this.valueOf(field,MayNotInherit);
-                        if (null != value){
-
-                            value = Serialize.To(field,value);
-
-                            entity.setUnindexedProperty(fieldName, value);
-                        }
-                        else
-                            entity.removeProperty(fieldName);
-                    }
-                }
-                else {
-                    java.io.Serializable value = this.valueOf(field,MayNotInherit);
-                    if (null != value){
-                        /*
-                         * Indexed types storage
-                         */
-                        if (IsIndexed(value))
-                            entity.setProperty(fieldName, value);
-
-                        /*
-                         * Special type conversions for storage
-                         */
-                        else if (value instanceof Character){
-
-                            Integer safe = new Integer( ((Character)value).charValue());
-
-                            entity.setProperty(fieldName, safe);
-                        }
-                        else if (value instanceof BigInteger){
-
-                            ShortBlob safe = new ShortBlob( ((BigInteger)value).toByteArray());
-
-                            entity.setUnindexedProperty(fieldName, safe);
-                        }
-                        else if (value instanceof BigDecimal){
-
-                            String safe = value.toString();
-
-                            entity.setProperty(fieldName, safe);
-                        }
-                        /*
-                         * Unindexed types storage
-                         */
-                        else
-                            entity.setUnindexedProperty(fieldName, value);
-                    }
+                    if (IsIndexed(value))
+                        entity.setProperty(fieldName, value);
                     else
-                        entity.removeProperty(fieldName);
+                        entity.setUnindexedProperty(fieldName, value);
                 }
+                else
+                    entity.removeProperty(fieldName);
             }
             else
                 entity.removeProperty(fieldName); //[TEMP propagate change not storing key onto itself]
@@ -601,19 +572,7 @@ public abstract class BigTable
 
             java.io.Serializable object = (java.io.Serializable)entity.getProperty(field.getFieldName());
 
-            if (field.isFieldTypeCollection()){
-
-                if (field.isFieldTypePrimitive()){
-
-                    object = Serialize.From(field, (Blob)object);
-
-                    this.define(field,object);
-                }
-                else
-                    this.define(field,object);
-            }
-            else
-                this.define(field,object);
+            this.defineStorage(field,object);
         }
         this.setKey(entity.getKey());
         return entity;

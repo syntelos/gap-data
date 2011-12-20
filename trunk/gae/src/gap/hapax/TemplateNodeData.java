@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-10-04T00:11:42.958Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-20T03:50:48.824Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -69,9 +69,9 @@ public abstract class TemplateNodeData
         return KIND.pathto(subpath);
     }
 
-
-
-
+    /**
+     * Short instance key from parent key
+     */
     public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer lineNumber){
         String id = IdFor( nodeType,  lineNumber);
         return KeyShortFor(ancestor,id);
@@ -92,7 +92,9 @@ public abstract class TemplateNodeData
     public final static Key KeyFor(Object... args){
         return KeyShortFor( (Key)args[0], (String)args[1]);
     }
-
+    /**
+     * Identifier for unique fields
+     */
     public final static String IdFor(String nodeType, Integer lineNumber){
         if (null != nodeType && null != lineNumber){
             String nodeTypeString = nodeType;
@@ -103,7 +105,9 @@ public abstract class TemplateNodeData
             throw new IllegalArgumentException();
     }
 
-
+    /**
+     * Instance lookup from parent key
+     */
     public final static TemplateNode ForShortNodeTypeLineNumber(Key ancestor, String nodeType, Integer lineNumber){
         if (null != nodeType && null != lineNumber){
             Key key = KeyShortIdFor(ancestor, nodeType, lineNumber);
@@ -119,7 +123,9 @@ public abstract class TemplateNodeData
             throw new IllegalArgumentException();
     }
 
-
+    /**
+     * Instance lookup or create from parent key
+     */
     public final static TemplateNode GetCreateShort(Key ancestor, String nodeType, Integer lineNumber){
         TemplateNode templateNode = ForShortNodeTypeLineNumber(ancestor, nodeType, lineNumber);
         if (null == templateNode){
@@ -128,7 +134,6 @@ public abstract class TemplateNodeData
         }
         return templateNode;
     }
-
 
 
     public final static Key KeyShortFor(Key ancestor, String id){
@@ -345,7 +350,7 @@ public abstract class TemplateNodeData
                 return field;
         }
         /**
-         * Principal dynamic binding operator (datastore, etc, except serialization)
+         * Dynamic binding operator for field data type
          *
          * Persistent BigTable fields are represented by the string ID.
          */
@@ -374,7 +379,7 @@ public abstract class TemplateNodeData
             }
         }
         /**
-         * Principal dynamic binding operator (datastore, etc, except serialization)
+         * Dynamic binding operator for field data type
          *
          * Persistent BigTable fields are represented by the string ID.
          */
@@ -402,6 +407,83 @@ public abstract class TemplateNodeData
                 throw new IllegalArgumentException(field.toString()+" in TemplateNode");
             }
         }
+        /**
+         * Dynamic binding operator for field storage type
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
+        public static java.io.Serializable Storage(Field field, TemplateNode instance){
+            switch(field){
+            case InheritFromKey:
+                return instance.getInheritFromKey();
+            case ParentKey:
+                return instance.getParentKey();
+            case Key:
+                return instance.getKey();
+            case Id:
+                return instance.getId();
+            case NodeType:
+                return instance.getNodeType(MayNotInherit);
+            case LineNumber:{
+                return instance.getLineNumber(MayNotInherit);
+            }
+            case NodeContent:
+                return instance.getNodeContent(MayNotInherit);
+            case Offset:{
+                return instance.getOffset(MayNotInherit);
+            }
+            case OffsetCloseRelative:{
+                return instance.getOffsetCloseRelative(MayNotInherit);
+            }
+            default:
+                throw new IllegalArgumentException(field.toString()+" in TemplateNode");
+            }
+        }
+        /**
+         * Dynamic binding operator for field storage type
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
+        public static void Storage(Field field, TemplateNode instance, java.io.Serializable value){
+            switch(field){
+            case InheritFromKey:
+                instance.setInheritFromKey( (Key)value);
+                return;
+            case ParentKey:
+                instance.setParentKey( (Key)value);
+                return;
+            case Key:
+                instance.setKey( (Key)value);
+                return;
+            case Id:
+                instance.setId( (String)value);
+                return;
+            case NodeType:
+                instance.setNodeType( (String)value);
+                return;
+            case LineNumber:{
+
+                instance.setLineNumber( (Number)value);
+                return;
+            }
+            case NodeContent:
+                instance.setNodeContent( (Text)value);
+                return;
+            case Offset:{
+
+                instance.setOffset( (Number)value);
+                return;
+            }
+            case OffsetCloseRelative:{
+
+                instance.setOffsetCloseRelative( (Number)value);
+                return;
+            }
+            default:
+                throw new IllegalArgumentException(field.toString()+" in TemplateNode");
+            }
+        }
+
 
         public final static class List
             extends gap.util.ArrayList<TemplateNode.Field>
@@ -531,7 +613,6 @@ public abstract class TemplateNodeData
     }
 
 
-
     public void destroy(){
         this.inheritFrom = null;
         this.datastoreEntity = null;
@@ -547,7 +628,7 @@ public abstract class TemplateNodeData
         String id = IdFor(KIND.name, this.key);
         if (null != id)
             return id;
-        else 
+        else
             return IdFor(this.nodeType, this.lineNumber);
     }
     public final boolean setId(String id){
@@ -712,6 +793,18 @@ public abstract class TemplateNodeData
         else
             return false;
     }
+    public final boolean setLineNumber(Number lineNumber){
+        if (IsNotEqual(this.lineNumber,lineNumber)){
+            this.dirty = true;
+            if (lineNumber instanceof Integer)
+                this.lineNumber = (Integer)lineNumber;
+            else
+                this.lineNumber = new Integer( lineNumber.intValue());
+            return true;
+        }
+        else
+            return false;
+    }
     public final boolean hasNodeContent(boolean mayInherit){
         return (null != this.getNodeContent(mayInherit));
     }
@@ -808,6 +901,18 @@ public abstract class TemplateNodeData
         else
             return false;
     }
+    public final boolean setOffset(Number offset){
+        if (IsNotEqual(this.offset,offset)){
+            this.dirty = true;
+            if (offset instanceof Integer)
+                this.offset = (Integer)offset;
+            else
+                this.offset = new Integer( offset.intValue());
+            return true;
+        }
+        else
+            return false;
+    }
     public final boolean hasOffsetCloseRelative(boolean mayInherit){
         return (null != this.getOffsetCloseRelative(mayInherit));
     }
@@ -856,6 +961,18 @@ public abstract class TemplateNodeData
         else
             return false;
     }
+    public final boolean setOffsetCloseRelative(Number offsetCloseRelative){
+        if (IsNotEqual(this.offsetCloseRelative,offsetCloseRelative)){
+            this.dirty = true;
+            if (offsetCloseRelative instanceof Integer)
+                this.offsetCloseRelative = (Integer)offsetCloseRelative;
+            else
+                this.offsetCloseRelative = new Integer( offsetCloseRelative.intValue());
+            return true;
+        }
+        else
+            return false;
+    }
     /*
      * Data binding supports
      */
@@ -880,7 +997,7 @@ public abstract class TemplateNodeData
         String nodeContentRequest = req.getParameter("nodeContent");
         if (null != nodeContentRequest && 0 < nodeContentRequest.length()){
             try {
-                Text nodeContent = Strings.TextFromString(nodeContentRequest);
+                Text nodeContent = gap.Strings.TextFromString(nodeContentRequest);
                 if (this.setNodeContent(nodeContent)){
                     change = true;
                 }
@@ -892,7 +1009,7 @@ public abstract class TemplateNodeData
         String offsetRequest = req.getParameter("offset");
         if (null != offsetRequest && 0 < offsetRequest.length()){
             try {
-                Integer offset = Strings.IntegerFromString(offsetRequest);
+                Integer offset = gap.Strings.IntegerFromString(offsetRequest);
                 if (this.setOffset(offset)){
                     change = true;
                 }
@@ -904,7 +1021,7 @@ public abstract class TemplateNodeData
         String offsetCloseRelativeRequest = req.getParameter("offsetCloseRelative");
         if (null != offsetCloseRelativeRequest && 0 < offsetCloseRelativeRequest.length()){
             try {
-                Integer offsetCloseRelative = Strings.IntegerFromString(offsetCloseRelativeRequest);
+                Integer offsetCloseRelative = gap.Strings.IntegerFromString(offsetCloseRelativeRequest);
                 if (this.setOffsetCloseRelative(offsetCloseRelative)){
                     change = true;
                 }
@@ -934,6 +1051,14 @@ public abstract class TemplateNodeData
             change = true;
         }
         return change;
+    }
+    public java.io.Serializable valueStorage(gap.data.Field field){
+
+        return Field.Storage( (Field)field, (TemplateNode)this);
+    }
+    public void defineStorage(gap.data.Field field, java.io.Serializable value){
+
+        Field.Storage( (Field)field, (TemplateNode)this, value);
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor();
