@@ -54,57 +54,109 @@ public final class OD
     extends gap.service.Classes
 {
     public final static class TemplateNames {
-
+        /*
+         * Field properties
+         */
         public final static TemplateName Field = new TemplateName("field");
+
+        public final static TemplateName FieldName = new TemplateName("field_name");
+        public final static TemplateName FieldNameCamel = new TemplateName("field_nameCamel");
+
         public final static TemplateName FieldClass = new TemplateName("field_class");
         public final static TemplateName FieldClassClean = new TemplateName("field_classClean");
         public final static TemplateName FieldClassCleanClean = new TemplateName("field_classCleanClean");
         public final static TemplateName FieldImplClassName = new TemplateName("field_impl_class_name");
+        /*
+         * Field kind booleans
+         */
+        public final static TemplateName FieldIsUnique = new TemplateName("field_is_unique");
+        public final static TemplateName FieldIsNotUnique = new TemplateName("field_is_not_unique");
+
+        public final static TemplateName FieldIsTransient = new TemplateName("field_is_transient");
+        public final static TemplateName FieldIsNotTransient = new TemplateName("field_is_not_transient");
+
+        public final static TemplateName FieldIsRelation = new TemplateName("field_is_relation");
+        public final static TemplateName FieldIsNotRelation = new TemplateName("field_is_not_relation");
+
         public final static TemplateName FieldIsCollection = new TemplateName("field_is_collection");
+        public final static TemplateName FieldIsCollectionNotPrimitive = new TemplateName("field_is_collection_not_primitive");
+        public final static TemplateName FieldIsNotCollection = new TemplateName("field_is_not_collection");
+        /*
+         */
+        public final static TemplateName FieldIsInheritable = new TemplateName("field_is_inheritable");
+        public final static TemplateName FieldIsNotInheritable = new TemplateName("field_is_not_inheritable");
+        /*
+         * Field type booleans
+         */
+        public final static TemplateName FieldIsPrimitive = new TemplateName("field_is_primitive");
+        public final static TemplateName FieldIsNotPrimitive = new TemplateName("field_is_not_primitive");
+
+        public final static TemplateName FieldIsKey = new TemplateName("field_is_key");
+        public final static TemplateName FieldIsNotKey = new TemplateName("field_is_not_key");
+
+        public final static TemplateName FieldIsEnum = new TemplateName("field_is_enum");
+        public final static TemplateName FieldIsNotEnum = new TemplateName("field_is_not_enum");
+
+        public final static TemplateName FieldIsBoolean = new TemplateName("field_is_boolean");
+        public final static TemplateName FieldIsNotBoolean = new TemplateName("field_is_not_boolean");
+
+        public final static TemplateName FieldIsNumber = new TemplateName("field_is_number");
+        public final static TemplateName FieldIsNotNumber = new TemplateName("field_is_not_number");
+
+        public final static TemplateName FieldIsCharacter = new TemplateName("field_is_character");
+        public final static TemplateName FieldIsNotCharacter = new TemplateName("field_is_not_character");
+
+        public final static TemplateName FieldIsBigInteger = new TemplateName("field_is_biginteger");
+        public final static TemplateName FieldIsNotBigInteger = new TemplateName("field_is_not_biginteger");
+
+        public final static TemplateName FieldIsBigDecimal = new TemplateName("field_is_bigdecimal");
+        public final static TemplateName FieldIsNotBigDecimal = new TemplateName("field_is_not_bigdecimal");
+
+        public final static TemplateName FieldIsBigTable = new TemplateName("field_is_bigTable");
+        public final static TemplateName FieldIsNotBigTable = new TemplateName("field_is_not_bigTable");
+
+        public final static TemplateName FieldIsLong = new TemplateName("field_is_long");
+        public final static TemplateName FieldIsShort = new TemplateName("field_is_short");
+        /*
+         * Field type collection booleans
+         */
         public final static TemplateName FieldIsPrimitiveCollection = new TemplateName("field_is_primitive_collection");
         public final static TemplateName FieldIsNotPrimitiveCollection = new TemplateName("field_is_not_primitive_collection");
 
-        public final static TemplateName FieldIsInheritable = new TemplateName("field_is_inheritable");
-        public final static TemplateName FieldIsKey = new TemplateName("field_is_key");
-        public final static TemplateName FieldIsEnum = new TemplateName("field_is_enum");
-        public final static TemplateName FieldIsBoolean = new TemplateName("field_is_boolean");
-        public final static TemplateName FieldIsCharacter = new TemplateName("field_is_character");
         public final static TemplateName FieldIsList = new TemplateName("field_is_list");
-        public final static TemplateName FieldIsPrimitive = new TemplateName("field_is_primitive");
-        public final static TemplateName FieldIsNotPrimitive = new TemplateName("field_is_not_primitive");
-        public final static TemplateName FieldIsBigTable = new TemplateName("field_is_bigTable");
-        public final static TemplateName FieldIsNotBigTable = new TemplateName("field_is_not_bigTable");
-        public final static TemplateName FieldIsLong = new TemplateName("field_is_long");
-        public final static TemplateName FieldIsShort = new TemplateName("field_is_short");
-        public final static TemplateName FieldIsListLong = new TemplateName("field_is_list_long");
-        public final static TemplateName FieldIsListLongOrShort = new TemplateName("field_is_list_long_or_short");
-        public final static TemplateName FieldIsListPrimitive = new TemplateName("field_is_list_primitive");
-        public final static TemplateName FieldIsListShort = new TemplateName("field_is_list_short");
-        public final static TemplateName FieldIsMap = new TemplateName("field_is_map");
-        public final static TemplateName FieldIsMapLong = new TemplateName("field_is_map_long");
-        public final static TemplateName FieldIsMapLongOrShort = new TemplateName("field_is_map_long_or_short");
-        public final static TemplateName FieldIsMapPrimitive = new TemplateName("field_is_map_primitive");
-        public final static TemplateName FieldIsMapShort = new TemplateName("field_is_map_short");
-        public final static TemplateName FieldIsNotCollection = new TemplateName("field_is_not_collection");
-
-        public final static TemplateName FieldIsNotInheritable = new TemplateName("field_is_not_inheritable");
-        public final static TemplateName FieldIsNotKey = new TemplateName("field_is_not_key");
-        public final static TemplateName FieldIsNotEnum = new TemplateName("field_is_not_enum");
-        public final static TemplateName FieldIsNotBoolean = new TemplateName("field_is_not_boolean");
-        public final static TemplateName FieldIsNotCharacter = new TemplateName("field_is_not_character");
         public final static TemplateName FieldIsNotList = new TemplateName("field_is_not_list");
+
+        public final static TemplateName FieldIsListLong = new TemplateName("field_is_list_long");
         public final static TemplateName FieldIsNotListLong = new TemplateName("field_is_not_list_long");
+
+        public final static TemplateName FieldIsListLongOrShort = new TemplateName("field_is_list_long_or_short");
         public final static TemplateName FieldIsNotListLongOrShort = new TemplateName("field_is_not_list_long_or_short");
+
+        public final static TemplateName FieldIsListPrimitive = new TemplateName("field_is_list_primitive");
         public final static TemplateName FieldIsNotListPrimitive = new TemplateName("field_is_not_list_primitive");
+
+        public final static TemplateName FieldIsListShort = new TemplateName("field_is_list_short");
         public final static TemplateName FieldIsNotListShort = new TemplateName("field_is_not_list_short");
+        /*
+         * Field type collection map booleans
+         */
+        public final static TemplateName FieldIsMap = new TemplateName("field_is_map");
         public final static TemplateName FieldIsNotMap = new TemplateName("field_is_not_map");
+
+        public final static TemplateName FieldIsMapLong = new TemplateName("field_is_map_long");
         public final static TemplateName FieldIsNotMapLong = new TemplateName("field_is_not_map_long");
+
+        public final static TemplateName FieldIsMapLongOrShort = new TemplateName("field_is_map_long_or_short");
         public final static TemplateName FieldIsNotMapLongOrShort = new TemplateName("field_is_not_map_long_or_short");
+
+        public final static TemplateName FieldIsMapPrimitive = new TemplateName("field_is_map_primitive");
         public final static TemplateName FieldIsNotMapPrimitive = new TemplateName("field_is_not_map_primitive");
+
+        public final static TemplateName FieldIsMapShort = new TemplateName("field_is_map_short");
         public final static TemplateName FieldIsNotMapShort = new TemplateName("field_is_not_map_short");
-        public final static TemplateName FieldIsNotUnique = new TemplateName("field_is_not_unique");
-        public final static TemplateName FieldIsTransient = new TemplateName("field_is_transient");
-        public final static TemplateName FieldIsUnique = new TemplateName("field_is_unique");
+        /*
+         * Field type collection properties
+         */
         public final static TemplateName FieldListComponent = new TemplateName("field_list_component");
         public final static TemplateName FieldListComponentKind = new TemplateName("field_list_component_kind");
         public final static TemplateName FieldListComponentNamed = new TemplateName("field_list_component_named");
@@ -115,16 +167,20 @@ public final class OD
         public final static TemplateName FieldMapComponentKind = new TemplateName("field_map_component_kind");
         public final static TemplateName FieldMapComponentNamed = new TemplateName("field_map_component_named");
         public final static TemplateName FieldMapComponentTo = new TemplateName("field_map_component_to");
-        public final static TemplateName FieldName = new TemplateName("field_name");
-        public final static TemplateName FieldNameCamel = new TemplateName("field_nameCamel");
+        /*
+         * Field operators
+         */
         public final static TemplateName FieldToStringPrefix = new TemplateName("field_to_string_prefix");
         public final static TemplateName FieldToStringSuffix = new TemplateName("field_to_string_suffix");
         public final static TemplateName FieldFromStringPrefix = new TemplateName("field_from_string_prefix");
         public final static TemplateName FieldFromStringSuffix = new TemplateName("field_from_string_suffix");
         public final static TemplateName FieldFromObjectPrefix = new TemplateName("field_from_object_prefix");
         public final static TemplateName FieldFromObjectSuffix = new TemplateName("field_from_object_suffix");
-        public final static TemplateName ImportSpec = new TemplateName("import_spec");
-        public final static TemplateName InterfaceClass = new TemplateName("interface_class");
+
+        public final static TemplateName FieldNumberValue = new TemplateName("field_numberValue");
+        /*
+         * Field operators for type collection
+         */
         public final static TemplateName ListClassName = new TemplateName("list_class_name");
         public final static TemplateName ListType = new TemplateName("list_type");
         public final static TemplateName MapClassName = new TemplateName("map_class_name");
@@ -138,7 +194,11 @@ public final class OD
         public final static TemplateName MethodName = new TemplateName("method_name");
         public final static TemplateName MethodType = new TemplateName("method_type");
         public final static TemplateName MethodExceptions = new TemplateName("method_excs");
-
+        /*
+         * Class properties
+         */
+        public final static TemplateName ImportSpec = new TemplateName("import_spec");
+        public final static TemplateName InterfaceClass = new TemplateName("interface_class");
         public final static TemplateName Name = new TemplateName("name");
         public final static TemplateName NameCamel = new TemplateName("nameCamel");
         public final static TemplateName NameDecamel = new TemplateName("nameDecamel");
@@ -609,18 +669,35 @@ public final class OD
                 final boolean isEnumerated = IsFieldEnumerated(field,fieldTypeClassDescriptor,fieldTypeClass);
                 final Primitive fieldTypePrimitive = Primitive.For(fieldTypeClass,isEnumerated);
                 final String[] fieldTypeParameters = FieldTypeParameters(ToString(field.getType()));
+
+                final gap.data.List.Type listType;
+                if (IsTypeClassList(fieldTypeClass))
+                    listType = gap.data.List.Type.For(fieldTypeClean);
+                else
+                    listType = null;
+
+                final OD.MapChild mapChild;
+                if (IsTypeClassMap(fieldTypeClass))
+                    mapChild = new OD.MapChild(field);
+                else
+                    mapChild = null;
+
+                final boolean isNumber = (null != fieldTypePrimitive && fieldTypePrimitive.isNumber());
+
                 TemplateDataDictionary dataField = null;
                 boolean isPersistent = false;
                 boolean isInheritable = true;
                 boolean isRelation = false;
                 boolean isCollection = false;
                 boolean isTransient = false;
+                boolean isUnique = false;
+
 
                 if (IsFieldDefaultSortBy(field))
                     defaultSortBy = fieldName;
 
                 /*
-                 * Create dataField section
+                 * Create dataField section with field kind booleans
                  */
                 if (IsFieldPersistent(field,fieldTypeClass)){
                     isPersistent = true;
@@ -633,15 +710,18 @@ public final class OD
                      */
                     if (IsFieldUnique(field)){
                         if (IsTypeClassCollection(field,fieldTypeClass))
-			    throw new ODStateException(field,"Unique field '"+fieldName+"' of type collection.");
+			    throw new ODStateException(field,"Unique field '"+fieldName+"' of collection type.");
                         else {
+                            isUnique = true;
+
                             isInheritable = false;
+                            isCollection = false;
 
                             defaultSortByOpt = fieldName;
 
-                            dataField.addSection(TemplateNames.FieldIsNotInheritable);
-
                             dataField.addSection(TemplateNames.FieldIsUnique);
+                            dataField.addSection(TemplateNames.FieldIsNotCollection);
+                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
                             /*
                              * Global section 'field_unique'
                              */
@@ -653,7 +733,41 @@ public final class OD
                     }
                     else {
                         dataField.addSection(TemplateNames.FieldIsNotUnique);
+
+                        isCollection = IsTypeClassCollection(field,fieldTypeClass);
+
+                        if (isCollection){
+                            dataField.addSection(TemplateNames.FieldIsCollection);
+                            if (null != listType){
+
+                                if (ListPrimitive == listType){
+                                    dataField.addSection(TemplateNames.FieldIsPrimitiveCollection);
+                                }
+                                else {
+                                    dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
+                                    dataField.addSection(TemplateNames.FieldIsCollectionNotPrimitive);
+                                }
+                            }
+                            else if (null != mapChild){
+
+                                if (MapPrimitive == mapChild.mapType){
+                                    dataField.addSection(TemplateNames.FieldIsPrimitiveCollection);
+                                }
+                                else {
+                                    dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
+                                    dataField.addSection(TemplateNames.FieldIsCollectionNotPrimitive);
+                                }
+                            }
+                            else
+                                throw new ODStateException(field,"Collection field '"+fieldName+"' is neither list nor map.");
+                        }
+                        else {
+                            dataField.addSection(TemplateNames.FieldIsNotCollection);
+                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
+                        }
                     }
+                    dataField.addSection(TemplateNames.FieldIsNotTransient);
+                    dataField.addSection(TemplateNames.FieldIsNotRelation);
                 }
                 else if (IsTypeClassCollection(field,fieldTypeClass)){
                     isCollection = true;
@@ -663,7 +777,33 @@ public final class OD
                     /*
                      * Populate 'cfield' section
                      */
+                    dataField.addSection(TemplateNames.FieldIsCollection);
                     dataField.addSection(TemplateNames.FieldIsNotUnique);
+                    dataField.addSection(TemplateNames.FieldIsNotTransient);
+                    dataField.addSection(TemplateNames.FieldIsNotRelation);
+
+                    if (null != listType){
+
+                        if (ListPrimitive == listType){
+                            dataField.addSection(TemplateNames.FieldIsPrimitiveCollection);
+                        }
+                        else {
+                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
+                            dataField.addSection(TemplateNames.FieldIsCollectionNotPrimitive);
+                        }
+                    }
+                    else if (null != mapChild){
+
+                        if (MapPrimitive == mapChild.mapType){
+                            dataField.addSection(TemplateNames.FieldIsPrimitiveCollection);
+                        }
+                        else {
+                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
+                            dataField.addSection(TemplateNames.FieldIsCollectionNotPrimitive);
+                        }
+                    }
+                    else
+                        throw new ODStateException(field,"Collection field '"+fieldName+"' is neither list nor map.");
                 }
                 else if (IsFieldRelation(field)){
                     isRelation = true;
@@ -673,11 +813,15 @@ public final class OD
                     /*
                      * Populate 'rfield' section
                      */
-                    dataField.addSection(TemplateNames.FieldIsNotUnique);
-
                     if ((!IsTypeClassKey(fieldTypeClass)) && null != fieldTypeClass && IsNotTypeClassBigTable(fieldTypeClass))
                         throw new ODStateException(field,"Relation field '"+fieldName+"' is not a subclass of 'gap.data.BigTable'.");
-
+                    else {
+                        dataField.addSection(TemplateNames.FieldIsNotCollection);
+                        dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
+                        dataField.addSection(TemplateNames.FieldIsNotUnique);
+                        dataField.addSection(TemplateNames.FieldIsNotTransient);
+                        dataField.addSection(TemplateNames.FieldIsNotRelation);
+                    }
                 }
                 else {
                     isTransient = true;
@@ -687,18 +831,15 @@ public final class OD
                     /*
                      * Populate 'tfield' section
                      */
+                    dataField.addSection(TemplateNames.FieldIsNotCollection);
+                    dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
                     dataField.addSection(TemplateNames.FieldIsNotUnique);
-
                     dataField.addSection(TemplateNames.FieldIsTransient);
+                    dataField.addSection(TemplateNames.FieldIsNotRelation);
                 }
 
-                if (isCollection)
-                    dataField.addSection(TemplateNames.FieldIsCollection);
-                else
-                    dataField.addSection(TemplateNames.FieldIsNotCollection);
-
                 /*
-                 * Populate 'dataField' name and type information
+                 * Field common properties
                  */
                 dataField.setVariable(TemplateNames.FieldName,fieldName);
                 dataField.setVariable(TemplateNames.FieldNameCamel,fieldNameCamel);
@@ -715,8 +856,34 @@ public final class OD
                     dataField.addSection(TemplateNames.FieldIsPrimitive);
                     dataField.addSection(TemplateNames.FieldIsNotBigTable);
 
+                    if (isNumber){
+                        dataField.addSection(TemplateNames.FieldIsNumber);
+                        switch(fieldTypePrimitive){
+                        case Short:
+                            dataField.setVariable(TemplateNames.FieldNumberValue,"shortValue");
+                            break;
+                        case Integer:
+                            dataField.setVariable(TemplateNames.FieldNumberValue,"intValue");
+                            break;
+                        case Long:
+                            dataField.setVariable(TemplateNames.FieldNumberValue,"longValue");
+                            break;
+                        case Float:
+                            dataField.setVariable(TemplateNames.FieldNumberValue,"floatValue");
+                            break;
+                        case Double:
+                            dataField.setVariable(TemplateNames.FieldNumberValue,"doubleValue");
+                            break;
+                        default:
+                            throw new ODStateException(field,"Number field '"+fieldName+"' type not recognized.");
+                        }
+                    }
+                    else
+                        dataField.addSection(TemplateNames.FieldIsNotNumber);
+
                     switch(fieldTypePrimitive){
                     case Key:
+                        isInheritable = false;
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
                         dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
 
@@ -730,6 +897,8 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotBoolean);
                         dataField.addSection(TemplateNames.FieldIsNotCharacter);
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                        dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
                         break;
                     case Enum:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.EnumToString(");
@@ -745,6 +914,8 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotBoolean);
                         dataField.addSection(TemplateNames.FieldIsNotCharacter);
                         dataField.addSection(TemplateNames.FieldIsEnum);
+                        dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                        dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
                         break;
                     case Boolean:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.BooleanToString(");
@@ -760,6 +931,8 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsBoolean);
                         dataField.addSection(TemplateNames.FieldIsNotCharacter);
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                        dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
                         break;
                     case Character:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.CharacterToString(");
@@ -775,6 +948,8 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotBoolean);
                         dataField.addSection(TemplateNames.FieldIsCharacter);
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                        dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
                         break;
                     case String:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"");
@@ -790,6 +965,42 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotBoolean);
                         dataField.addSection(TemplateNames.FieldIsNotCharacter);
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                        dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        break;
+                    case BigInteger:
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.BigIntegerToString(");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"gap.Strings.BigIntegerFromString(");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"gap.Objects.BigIntegerFromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
+                        dataField.addSection(TemplateNames.FieldIsNotKey);
+                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                        dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                        dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        dataField.addSection(TemplateNames.FieldIsBigInteger);
+                        dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        break;
+                    case BigDecimal:
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.BigDecimalToString(");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"gap.Strings.BigDecimalFromString(");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"gap.Objects.BigDecimalFromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
+                        dataField.addSection(TemplateNames.FieldIsNotKey);
+                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                        dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                        dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                        dataField.addSection(TemplateNames.FieldIsBigDecimal);
                         break;
                     default:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
@@ -805,14 +1016,20 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotBoolean);
                         dataField.addSection(TemplateNames.FieldIsNotCharacter);
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                        dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
                         break;
                     }
                 }
                 else {
                     dataField.addSection(TemplateNames.FieldIsNotPrimitive);
-                    dataField.addSection(TemplateNames.FieldIsNotBoolean);
-                    dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                    dataField.addSection(TemplateNames.FieldIsNotKey);
                     dataField.addSection(TemplateNames.FieldIsNotEnum);
+                    dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                    dataField.addSection(TemplateNames.FieldIsNotNumber);
+                    dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                    dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                    dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
 
                     if (IsTypeClassBigTable(fieldTypeClassDescriptor,fieldTypeClass)){
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
@@ -823,164 +1040,149 @@ public final class OD
 
                         dataField.setVariable(TemplateNames.FieldFromObjectPrefix,FullClassName(fieldTypeClassDescriptor,fieldTypeClass)+".FromObject(");
                         dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
-
-                        dataField.addSection(TemplateNames.FieldIsBigTable);
                         /*
                          */
+                        dataField.addSection(TemplateNames.FieldIsBigTable);
+
                         if (IsFieldShort(cd,field,fieldTypeClassDescriptor))
                             dataField.addSection(TemplateNames.FieldIsShort);
                         else
                             dataField.addSection(TemplateNames.FieldIsLong);
                     }
                     else {
-                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
-                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
-
-                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"gap.Strings."+fieldTypeCleanClean+"FromString(");
-                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+                        dataField.addSection(TemplateNames.FieldIsNotBigTable);
 
                         dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+')');
                         dataField.setVariable(TemplateNames.FieldFromObjectSuffix,"");
+                        /*
+                         */
+                        if (null != listType){
+                            dataField.addSection(TemplateNames.FieldIsNotMap);
 
-                        dataField.addSection(TemplateNames.FieldIsNotBigTable);
-                    }
-                }
-                /*
-                 * BigTables & Collections 
-                 */
-                if (Primitive.Key == fieldTypePrimitive){
-                    isInheritable = false;
+                            if (1 == fieldTypeParameters.length){
 
-                    dataField.addSection(TemplateNames.FieldIsNotInheritable);
-                    dataField.addSection(TemplateNames.FieldIsKey);
+                                dataField.addSection(TemplateNames.FieldIsList);
 
-                }
-                else if (IsTypeClassList(fieldTypeClass)){
+                                switch(listType){
+                                case ListPrimitive:
+                                    dataField.addSection(TemplateNames.FieldIsListPrimitive);
+                                    dataField.addSection(TemplateNames.FieldIsNotListLongOrShort);
+                                    dataField.addSection(TemplateNames.FieldIsNotListLong);
+                                    dataField.addSection(TemplateNames.FieldIsNotListShort);
+                                    break;
+                                case ListShort:
+                                    dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
+                                    dataField.addSection(TemplateNames.FieldIsListLongOrShort);
+                                    dataField.addSection(TemplateNames.FieldIsNotListLong);
+                                    dataField.addSection(TemplateNames.FieldIsListShort);
+                                    break;
+                                case ListLong:
+                                    dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
+                                    dataField.addSection(TemplateNames.FieldIsListLongOrShort);
+                                    dataField.addSection(TemplateNames.FieldIsListLong);
+                                    dataField.addSection(TemplateNames.FieldIsNotListShort);
+                                    break;
+                                default:
+                                    throw new ODStateException(field,"List field '"+fieldName+"' has list type '"+listType+"'.");
+                                }
 
-                    dataField.addSection(TemplateNames.FieldIsNotMap);
+                                String typeParameter = fieldTypeParameters[0];
+                                dataField.setVariable(TemplateNames.FieldListComponent,typeParameter);
 
-                    if (1 == fieldTypeParameters.length){
+                                if (IsTypeOf(typeParameter,"HasName"))
+                                    dataField.addSection(TemplateNames.FieldListComponentNamed);
 
-                        dataField.addSection(TemplateNames.FieldIsList);
+                                ClassDescriptor component = Classes.For(typeParameter);
+                                if (null != component){
+                                    String componentKind = ClassKind(component);
+                                    if (null != componentKind)
+                                        dataField.setVariable(TemplateNames.FieldListComponentKind,componentKind);
 
-                        gap.data.List.Type listType = gap.data.List.Type.For(fieldTypeClean);
-                        switch(listType){
-                        case ListPrimitive:
-                            dataField.addSection(TemplateNames.FieldIsPrimitiveCollection);
-                            dataField.addSection(TemplateNames.FieldIsListPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsNotListLongOrShort);
-                            dataField.addSection(TemplateNames.FieldIsNotListLong);
-                            dataField.addSection(TemplateNames.FieldIsNotListShort);
-                            break;
-                        case ListShort:
-                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
-                            dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsListLongOrShort);
-                            dataField.addSection(TemplateNames.FieldIsNotListLong);
-                            dataField.addSection(TemplateNames.FieldIsListShort);
-                            break;
-                        case ListLong:
-                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
-                            dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsListLongOrShort);
-                            dataField.addSection(TemplateNames.FieldIsListLong);
-                            dataField.addSection(TemplateNames.FieldIsNotListShort);
-                            break;
-                        }
-
-                        String typeParameter = fieldTypeParameters[0];
-                        dataField.setVariable(TemplateNames.FieldListComponent,typeParameter);
-
-                        if (IsTypeOf(typeParameter,"HasName"))
-                            dataField.addSection(TemplateNames.FieldListComponentNamed);
-
-                        ClassDescriptor component = Classes.For(typeParameter);
-                        if (null != component){
-                            String componentKind = ClassKind(component);
-                            if (null != componentKind)
-                                dataField.setVariable(TemplateNames.FieldListComponentKind,componentKind);
-
-                            dataField.setVariable(TemplateNames.FieldImplClassName,ListImplClassName(fieldTypeClean,className,component));
-                        }
-                        else {
-                            Class componentClass = FieldClass(pkg,typeParameter,imports);
-                            if (null != componentClass){
-                                Primitive primitive = Primitive.For(componentClass);
-                                if (null != primitive)
-                                    dataField.setVariable(TemplateNames.FieldImplClassName,ListImplClassName(fieldTypeClean,className,primitive));
-                                else
-                                    throw new ODStateException(field,"Field '"+fieldName+"' in '"+listType.name()+"' expected primitive component type '"+typeParameter+"'.");
+                                    dataField.setVariable(TemplateNames.FieldImplClassName,ListImplClassName(fieldTypeClean,className,component));
+                                }
+                                else {
+                                    Class componentClass = FieldClass(pkg,typeParameter,imports);
+                                    if (null != componentClass){
+                                        Primitive primitive = Primitive.For(componentClass);
+                                        if (null != primitive)
+                                            dataField.setVariable(TemplateNames.FieldImplClassName,ListImplClassName(fieldTypeClean,className,primitive));
+                                        else
+                                            throw new ODStateException(field,"Field '"+fieldName+"' in '"+listType.name()+"' expected primitive component type '"+typeParameter+"'.");
+                                    }
+                                    else
+                                        throw new ODStateException(field,"Field '"+fieldName+"' in '"+listType.name()+"' unable to resolve class of component type '"+typeParameter+"'.");
+                                }
                             }
                             else
-                                throw new ODStateException(field,"Field '"+fieldName+"' in '"+listType.name()+"' unable to resolve class of component type '"+typeParameter+"'.");
+                                throw new ODStateException(field,"Field '"+fieldName+"' type list missing type parameter.");
                         }
+                        else if (null != mapChild){
+
+                            dataField.addSection(TemplateNames.FieldIsNotList);
+
+                            if (2 == fieldTypeParameters.length){
+
+                                dataField.addSection(TemplateNames.FieldIsMap);
+
+                                switch(mapChild.mapType){
+                                case MapPrimitive:
+                                    dataField.addSection(TemplateNames.FieldIsMapPrimitive);
+                                    dataField.addSection(TemplateNames.FieldIsNotMapLongOrShort);
+                                    dataField.addSection(TemplateNames.FieldIsNotMapLong);
+                                    dataField.addSection(TemplateNames.FieldIsNotMapShort);
+                                    break;
+                                case MapShort:
+
+                                    dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
+                                    dataField.addSection(TemplateNames.FieldIsMapLongOrShort);
+                                    dataField.addSection(TemplateNames.FieldIsNotMapLong);
+                                    dataField.addSection(TemplateNames.FieldIsMapShort);
+                                    break;
+                                case MapLong:
+                                    dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
+                                    dataField.addSection(TemplateNames.FieldIsMapLongOrShort);
+                                    dataField.addSection(TemplateNames.FieldIsMapLong);
+                                    dataField.addSection(TemplateNames.FieldIsNotMapShort);
+                                    break;
+                                }
+
+
+                                String typeComponentFrom = mapChild.childKeyFieldType;
+                                String typeComponentFromName = mapChild.childKeyFieldName;
+                                String typeComponentTo = mapChild.childValueClassName;
+                                dataField.setVariable(TemplateNames.FieldMapComponentFrom,typeComponentFrom);
+                                dataField.setVariable(TemplateNames.FieldMapComponentFromName,typeComponentFromName);
+                                dataField.setVariable(TemplateNames.FieldMapComponentFromNameCamel,Camel(typeComponentFromName));
+                                dataField.setVariable(TemplateNames.FieldMapComponentTo,typeComponentTo);
+                                dataField.setVariable(TemplateNames.FieldMapComponent,typeComponentTo);
+
+                                if (IsTypeOf(typeComponentTo,"HasName"))
+                                    dataField.addSection(TemplateNames.FieldMapComponentNamed);
+
+                                ClassDescriptor componentTo = Classes.For(typeComponentTo);
+                                if (null != componentTo){
+                                    String componentToKind = ClassKind(componentTo);
+                                    if (null != componentToKind)
+                                        dataField.setVariable(TemplateNames.FieldMapComponentKind,componentToKind);
+                                }
+
+                                dataField.setVariable(TemplateNames.FieldImplClassName,MapClassName(fieldTypeClean,className,typeComponentFrom,typeComponentTo));
+                            }
+                            else
+                                throw new ODStateException(field,"Field '"+fieldName+"' type map missing type parameter.");
+                        }
+                        else
+                            throw new ODStateException(field,"Field '"+fieldName+"' type?");
                     }
-                    else
-                        throw new ODStateException(field,"Field '"+fieldName+"' type list missing type parameter.");
                 }
-                else if (IsTypeClassMap(fieldTypeClass)){
 
-                    dataField.addSection(TemplateNames.FieldIsNotList);
-
-                    if (2 == fieldTypeParameters.length){
-
-                        dataField.addSection(TemplateNames.FieldIsMap);
-
-                        OD.MapChild mapChild = new OD.MapChild(field);
-                        switch(mapChild.mapType){
-                        case MapPrimitive:
-                            dataField.addSection(TemplateNames.FieldIsPrimitiveCollection);
-                            dataField.addSection(TemplateNames.FieldIsMapPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsNotMapLongOrShort);
-                            dataField.addSection(TemplateNames.FieldIsNotMapLong);
-                            dataField.addSection(TemplateNames.FieldIsNotMapShort);
-                            break;
-                        case MapShort:
-                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
-                            dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsMapLongOrShort);
-                            dataField.addSection(TemplateNames.FieldIsNotMapLong);
-                            dataField.addSection(TemplateNames.FieldIsMapShort);
-                            break;
-                        case MapLong:
-                            dataField.addSection(TemplateNames.FieldIsNotPrimitiveCollection);
-                            dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
-                            dataField.addSection(TemplateNames.FieldIsMapLongOrShort);
-                            dataField.addSection(TemplateNames.FieldIsMapLong);
-                            dataField.addSection(TemplateNames.FieldIsNotMapShort);
-                            break;
-                        }
-
-
-                        String typeComponentFrom = mapChild.childKeyFieldType;
-                        String typeComponentFromName = mapChild.childKeyFieldName;
-                        String typeComponentTo = mapChild.childValueClassName;
-                        dataField.setVariable(TemplateNames.FieldMapComponentFrom,typeComponentFrom);
-                        dataField.setVariable(TemplateNames.FieldMapComponentFromName,typeComponentFromName);
-                        dataField.setVariable(TemplateNames.FieldMapComponentFromNameCamel,Camel(typeComponentFromName));
-                        dataField.setVariable(TemplateNames.FieldMapComponentTo,typeComponentTo);
-                        dataField.setVariable(TemplateNames.FieldMapComponent,typeComponentTo);
-
-                        if (IsTypeOf(typeComponentTo,"HasName"))
-                            dataField.addSection(TemplateNames.FieldMapComponentNamed);
-
-                        ClassDescriptor componentTo = Classes.For(typeComponentTo);
-                        if (null != componentTo){
-                            String componentToKind = ClassKind(componentTo);
-                            if (null != componentToKind)
-                                dataField.setVariable(TemplateNames.FieldMapComponentKind,componentToKind);
-                        }
-
-                        dataField.setVariable(TemplateNames.FieldImplClassName,MapClassName(fieldTypeClean,className,typeComponentFrom,typeComponentTo));
-                    }
-                    else
-                        throw new ODStateException(field,"Field '"+fieldName+"' type map missing type parameter.");
-                }
-                else {
-                    dataField.addSection(TemplateNames.FieldIsNotKey);
-                    if (isPersistent && isInheritable)
-                        dataField.addSection(TemplateNames.FieldIsInheritable);
-                }
+                /*
+                 * Field inheritance
+                 */
+                if (isPersistent && isInheritable)
+                    dataField.addSection(TemplateNames.FieldIsInheritable);
+                else
+                    dataField.addSection(TemplateNames.FieldIsNotInheritable);
             }
         }
 

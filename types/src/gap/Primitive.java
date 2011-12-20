@@ -77,6 +77,33 @@ public enum Primitive {
     }
 
 
+    public boolean isNumber(){
+        switch(this){
+
+        case Short:
+        case Integer:
+        case Long:
+        case Float:
+        case Double:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+    public boolean isInteger(){
+        switch(this){
+
+        case Short:
+        case Integer:
+        case Long:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+
 
     public final static boolean Is(String name){
         return (null != Primitive.For(name));
@@ -91,28 +118,9 @@ public enum Primitive {
         else
             return false;
     }
-    /**
-     * @see gap.odl.Field#GetType
-     */
-    private final static java.util.Map<String,Primitive> Map = new java.util.HashMap<String,Primitive>();
-    static {
-        for (Primitive type : Primitive.values()){
-            String name = type.type.getName();
-            Map.put(name,type);
-            Map.put(name.toLowerCase(),type);
-            switch(type){
-            case Boolean:
-                Map.put("bool",type);
-                break;
-            case Integer:
-                Map.put("int",type);
-                break;
-            }
-        }
-    }
     public final static Primitive For(Class type){
         if (null != type){
-            Primitive p = Map.get(type.getName());
+            Primitive p = Primitive.Map.get(type.getName());
             if (null != p)
                 return p;
             else if (Enum.type.isAssignableFrom(type))
@@ -125,19 +133,11 @@ public enum Primitive {
     public final static Primitive For(Class type, boolean isEnum){
         if (isEnum)
             return Primitive.Enum;
-        else if (null != type){
-            Primitive p = Map.get(type.getName());
-            if (null != p)
-                return p;
-            else if (Enum.type.isAssignableFrom(type))
-                return Primitive.Enum;
-            else if (Date.type.isAssignableFrom(type))
-                return Primitive.Date;
-        }
-        return null;
+        else
+            return Primitive.For(type);
     }
     public final static Primitive For(String name){
-        Primitive type = Map.get(name);
+        Primitive type = Primitive.Map.get(name);
         if (null != type)
             return type;
         else {
@@ -154,5 +154,26 @@ public enum Primitive {
             return Primitive.For(type);
         else
             return Primitive.For(name);
+    }
+
+
+    /*
+     * Primitive type map
+     */
+    private final static java.util.Map<String,Primitive> Map = new java.util.HashMap<String,Primitive>();
+    static {
+        for (Primitive type : Primitive.values()){
+            String name = type.type.getName();
+            Primitive.Map.put(name,type);
+            Primitive.Map.put(name.toLowerCase(),type);
+            switch(type){
+            case Boolean:
+                Primitive.Map.put("bool",type);
+                break;
+            case Integer:
+                Primitive.Map.put("int",type);
+                break;
+            }
+        }
     }
 }

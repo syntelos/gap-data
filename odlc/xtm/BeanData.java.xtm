@@ -429,7 +429,7 @@ public abstract class {{=class_name}}Data
                 return field;
         }
         /**
-         * Principal dynamic binding operator (datastore, etc, except serialization)
+         * Dynamic binding operator for field data type
          *
          * Persistent BigTable fields are represented by the string ID.
          */
@@ -452,7 +452,7 @@ public abstract class {{=class_name}}Data
             }
         }
         /**
-         * Principal dynamic binding operator (datastore, etc, except serialization)
+         * Dynamic binding operator for field data type
          *
          * Persistent BigTable fields are represented by the string ID.
          */
@@ -474,6 +474,141 @@ public abstract class {{=class_name}}Data
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
         }
+        /**
+         * Dynamic binding operator for field storage type
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
+        public static java.io.Serializable Storage(Field field, {{=class_name}} instance){
+            switch(field){
+            case InheritFromKey:
+                return instance.getInheritFromKey();{{#class_re_child}}
+            case ParentKey:
+                return instance.getParentKey();{{/class_re_child}}
+            case Key:
+                return instance.getKey();
+            case Id:
+                return instance.getId();{{#field}}{{#field_is_primitive_collection}}
+            case {{=field_nameCamel}}:{
+                {{=field_class}} {{=field_name}} = instance.get{{=field_nameCamel}}(MayNotInherit);
+                if (null != {{=field_name}})
+                    return Serialize.To(field,{{=field_name}});
+                else
+                    return null;
+            }{{/field_is_primitive_collection}}{{#field_is_collection_not_primitive}}
+            case {{=field_nameCamel}}:{
+                return null;
+            }{{/field_is_collection_not_primitive}}{{#field_is_character}}
+            case {{=field_nameCamel}}:{
+                {{=field_class}} _{{=field_name}} = instance.get{{=field_nameCamel}}(MayNotInherit);
+                if (null != _{{=field_name}})
+                    return new Integer( _{{=field_name}}.charValue());
+                else
+                    return null;
+            }{{/field_is_character}}{{#field_is_number}}
+            case {{=field_nameCamel}}:{
+                return instance.get{{=field_nameCamel}}(MayNotInherit);
+            }{{/field_is_number}}{{#field_is_biginteger}}
+            case {{=field_nameCamel}}:{
+                {{=field_class}} _{{=field_name}} = instance.get{{=field_nameCamel}}(MayNotInherit);
+                if (null != _{{=field_name}})
+                    return new ShortBlob( _{{=field_name}}.toByteArray());
+                else
+                    return null;
+            }{{/field_is_biginteger}}{{#field_is_bigdecimal}}
+            case {{=field_nameCamel}}:{
+                {{=field_class}} _{{=field_name}} = instance.get{{=field_nameCamel}}(MayNotInherit);
+                if (null != _{{=field_name}})
+                    return _{{=field_name}}.toString();
+                else
+                    return null;
+            }{{/field_is_bigdecimal}}{{#field_is_enum}}
+            case {{=field_nameCamel}}:{
+                return Strings.EnumToString( instance.get{{=field_nameCamel}}(MayNotInherit));
+            }{{/field_is_enum}}{{#field_is_bigTable}}
+            case {{=field_nameCamel}}:
+                return instance.get{{=field_nameCamel}}Id();{{/field_is_bigTable}}{{#field_is_not_collection}}{{#field_is_not_character}}{{#field_is_not_number}}{{#field_is_not_biginteger}}{{#field_is_not_bigdecimal}}{{#field_is_not_enum}}{{#field_is_not_bigTable}}
+            case {{=field_nameCamel}}:
+                return instance.get{{=field_nameCamel}}(MayNotInherit);{{/field_is_not_bigTable}}{{/field_is_not_enum}}{{/field_is_not_bigdecimal}}{{/field_is_not_biginteger}}{{/field_is_not_number}}{{/field_is_not_character}}{{/field_is_not_collection}}{{/field}}
+            default:
+                throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
+            }
+        }
+        /**
+         * Dynamic binding operator for field storage type
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
+        public static void Storage(Field field, {{=class_name}} instance, java.io.Serializable value){
+            switch(field){
+            case InheritFromKey:
+                instance.setInheritFromKey( (Key)value);
+                return;{{#class_re_child}}
+            case ParentKey:
+                instance.setParentKey( (Key)value);
+                return;{{/class_re_child}}
+            case Key:
+                instance.setKey( (Key)value);
+                return;
+            case Id:
+                instance.setId( (String)value);
+                return;{{#field}}{{#field_is_primitive_collection}}
+            case {{=field_nameCamel}}:{
+                {{=field_class}} _{{=field_name}} = null;
+                if (null != value){
+                    _{{=field_name}} = ({{=field_class}})Serialize.From(field,value);
+                }
+                instance.set{{=field_nameCamel}}( _{{=field_name}});
+                return;
+            }{{/field_is_primitive_collection}}{{#field_is_collection_not_primitive}}
+            case {{=field_nameCamel}}:{
+                return;
+            }{{/field_is_collection_not_primitive}}{{#field_is_character}}
+            case {{=field_nameCamel}}:{
+                {{=field_class}} _{{=field_name}} = null;
+                if (null != value){
+                    _{{=field_name}} = new {{=field_class}}( (char)((Integer)value).intValue());
+                }
+                instance.set{{=field_nameCamel}}( _{{=field_name}});
+                return;
+            }{{/field_is_character}}{{#field_is_number}}
+            case {{=field_nameCamel}}:{
+
+                instance.set{{=field_nameCamel}}( (Number)value);
+                return;
+            }{{/field_is_number}}{{#field_is_biginteger}}
+            case {{=field_nameCamel}}:{
+                {{=field_class}} _{{=field_name}} = null;
+                if (null != value){
+                    _{{=field_name}} = new {{=field_class}}( ((ShortBlob)value).getBytes());
+                }
+                instance.set{{=field_nameCamel}}( _{{=field_name}});
+                return;
+            }{{/field_is_biginteger}}{{#field_is_bigdecimal}}
+            case {{=field_nameCamel}}:{
+                {{=field_class}} _{{=field_name}} = null;
+                if (null != value){
+                    _{{=field_name}} = new {{=field_class}}( (String)value);
+                }
+                instance.set{{=field_nameCamel}}( _{{=field_name}});
+                return;
+            }{{/field_is_bigdecimal}}{{#field_is_enum}}
+            case {{=field_nameCamel}}:{
+                {{field_class}} _{{=field_name}} = ({{=field_class}})Strings.EnumFromString( (String)value);
+                instance.set{{=field_nameCamel}}( _{{=field_name}});
+                return;
+            }{{/field_is_enum}}{{#field_is_bigTable}}
+            case {{=field_nameCamel}}:
+                instance.set{{=field_nameCamel}}Id( (String)value);
+                return;{{/field_is_bigTable}}{{#field_is_not_collection}}{{#field_is_not_character}}{{#field_is_not_number}}{{#field_is_not_biginteger}}{{#field_is_not_bigdecimal}}{{#field_is_not_enum}}{{#field_is_not_bigTable}}
+            case {{=field_nameCamel}}:
+                instance.set{{=field_nameCamel}}( ({{=field_class}})value);
+                return;{{/field_is_not_bigTable}}{{/field_is_not_enum}}{{/field_is_not_bigdecimal}}{{/field_is_not_biginteger}}{{/field_is_not_number}}{{/field_is_not_character}}{{/field_is_not_collection}}{{/field}}
+            default:
+                throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
+            }
+        }
+
 
         public final static class List
             extends gap.util.ArrayList<{{=class_name}}.Field>
@@ -887,7 +1022,19 @@ public abstract class {{=class_name}}Data
         }
         else
             return false;
-    }{{/pfield}}{{!
+    }{{#field_is_number}}
+    public final boolean set{{=field_nameCamel}}(Number {{=field_name}}){
+        if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
+            this.dirty = true;
+            if ({{=field_name}} instanceof {{=field_class}})
+                this.{{=field_name}} = ({{=field_class}}){{=field_name}};
+            else
+                this.{{=field_name}} = new {{=field_class}}( {{=field_name}}.{{=field_numberValue}}());
+            return true;
+        }
+        else
+            return false;
+    }{{/field_is_number}}{{/pfield}}{{!
  }}{{#cfield}}
     public final boolean has{{=field_nameCamel}}(boolean mayInherit){
         return (this.get{{=field_nameCamel}}(mayInherit).isNotEmpty());
@@ -1070,6 +1217,14 @@ public abstract class {{=class_name}}Data
             change = true;
         }{{/field_is_not_unique}}{{/field_is_primitive}}{{/pfield}}
         return change;
+    }
+    public java.io.Serializable valueStorage(gap.data.Field field){
+
+        return Field.Storage( (Field)field, ({{=class_name}})this);
+    }
+    public void defineStorage(gap.data.Field field, java.io.Serializable value){
+
+        Field.Storage( (Field)field, ({{=class_name}})this, value);
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor();
