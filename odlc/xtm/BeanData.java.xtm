@@ -567,7 +567,7 @@ public abstract class {{=class_name}}Data
             case {{=field_nameCamel}}:{
                 {{=field_class}} _{{=field_name}} = null;
                 if (null != value){
-                    _{{=field_name}} = new {{=field_class}}( (char)((Integer)value).intValue());
+                    _{{=field_name}} = new {{=field_class}}( (char)((Number)value).intValue());
                 }
                 instance.set{{=field_nameCamel}}( _{{=field_name}});
                 return;
