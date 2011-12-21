@@ -48,6 +48,10 @@ public class XMPPServlet
         throws ServletException, IOException
     {
     }
+    protected void doChatError(Request req, Response rep, XMPPService xs, Message msg)
+        throws ServletException, IOException
+    {
+    }
     protected void doSubscribe(Request req, Response rep, XMPPService xs, Subscription sub)
         throws ServletException, IOException
     {
@@ -64,6 +68,10 @@ public class XMPPServlet
         throws ServletException, IOException
     {
     }
+    protected void doSubscriptionError(Request req, Response rep, XMPPService xs, Subscription sub)
+        throws ServletException, IOException
+    {
+    }
     protected void doAvailable(Request req, Response rep, XMPPService xs, Presence pre)
         throws ServletException, IOException
     {
@@ -76,8 +84,12 @@ public class XMPPServlet
         throws ServletException, IOException
     {
     }
+    protected void doPresenceError(Request req, Response rep, XMPPService xs, Presence pre)
+        throws ServletException, IOException
+    {
+    }
     @Override
-        protected final void doPost(Request req, Response rep)
+    protected final void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
 	/*
@@ -92,6 +104,12 @@ public class XMPPServlet
                 final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Message m = xs.parseMessage(req);
                 this.doChat(req,rep,xs,m);
+            }
+                break;
+            case error:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Message m = xs.parseMessage(req);
+                this.doChatError(req,rep,xs,m);
             }
                 break;
             case none:
@@ -125,6 +143,12 @@ public class XMPPServlet
                 this.doUnsubscribed(req,rep,xs,s);
             }
                 break;
+            case error:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Subscription s = xs.parseSubscription(req);
+                this.doSubscriptionError(req,rep,xs,s);
+            }
+                break;
             case none:
             case unrecognized:
                 this.error(req,rep,403,"Unrecognized request path");
@@ -150,6 +174,12 @@ public class XMPPServlet
                 this.doProbe(req,rep,xs,p);
             }
                 break;
+            case error:{
+                final XMPPService xs = XMPPServiceFactory.getXMPPService();
+                final Presence p = xs.parsePresence(req);
+                this.doPresenceError(req,rep,xs,p);
+            }
+                break;
             case none:
             case unrecognized:
                 this.error(req,rep,403,"Unrecognized request path");
@@ -166,7 +196,7 @@ public class XMPPServlet
      * Lookup maps for fixed path elements
      */
     public enum Directive {
-	message, presence, subscription, none, unrecognized;
+	message, presence, subscription, error, none, unrecognized;
 
 	public final static Directive For(String name){
 	    if (null == name)
@@ -182,7 +212,7 @@ public class XMPPServlet
 	}
 
 	public enum Message {
-	    chat, none, unrecognized;
+	    chat, error, none, unrecognized;
 
 	    public final static Message For(String name){
 		if (null == name)
@@ -198,7 +228,7 @@ public class XMPPServlet
 	    }
 	}
 	public enum Presence {
-	    available, unavailable, probe, none, unrecognized;
+	    available, unavailable, probe, error, none, unrecognized;
 
 	    public final static Presence For(String name){
 		if (null == name)
@@ -214,7 +244,7 @@ public class XMPPServlet
 	    }
 	}
 	public enum Subscription {
-	    subscribe, subscribed, unsubscribe, unsubscribed, none, unrecognized;
+	    subscribe, subscribed, unsubscribe, unsubscribed, error, none, unrecognized;
 
 	    public final static Subscription For(String name){
 		if (null == name)
