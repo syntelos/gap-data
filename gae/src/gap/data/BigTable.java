@@ -256,20 +256,11 @@ public abstract class BigTable
 
     private transient volatile boolean fromDatastore = false;
 
-    protected transient volatile Entity datastoreEntity;
-
     protected volatile Key inheritFromKey;
 
     protected volatile Key key;
 
     private transient volatile Lock lock;
-    /**
-     * Mark instance dirty on changes to non transient fields.
-     * 
-     * When the instance is clean, the datastore entity is not
-     * refilled on the datastore write.
-     */
-    protected transient boolean dirty;
 
 
     protected BigTable(){
@@ -277,12 +268,6 @@ public abstract class BigTable
     }
 
 
-    public final boolean isDirty(){
-        return this.dirty;
-    }
-    public final boolean isClean(){
-        return (!this.dirty);
-    }
     public final boolean hasId(){
         return (null != this.key);
     }
@@ -455,49 +440,42 @@ public abstract class BigTable
         else
             throw new IllegalArgumentException("Unknown field name '"+fieldName+"'.");
     }
-    public final void clearDatastoreEntity(){
-        this.datastoreEntity = null;        
-    }
     /**
      * Get/create an entity for this instance.  The returned entity
      * may or may not have data.
      * @see #fillToDatastoreEntity
      */
     public final Entity getDatastoreEntity(){
-        Entity datastoreEntity = this.datastoreEntity;
-        if (null == datastoreEntity){
-            this.dirty = true;
-            Key key = this.key;
-            if (null != key){
-                try {
-                    datastoreEntity = Store.P.Get().get(key);
-                    this.setKey(datastoreEntity.getKey());
-                }
-                catch (com.google.appengine.api.datastore.EntityNotFoundException exc){
-                    Kind kind = this.getClassKind();
-                    datastoreEntity = new Entity(kind.getName(),key);
-                }
-            }
-            else
-                throw new IllegalStateException("Missing key field value.");
 
-            this.datastoreEntity = datastoreEntity;
+        Key key = this.key;
+        if (null != key){
+            Entity datastoreEntity = null;
+            try {
+                datastoreEntity = Store.P.Get().get(key);
+                this.setKey(datastoreEntity.getKey());
+            }
+            catch (com.google.appengine.api.datastore.EntityNotFoundException exc){
+                Kind kind = this.getClassKind();
+                datastoreEntity = new Entity(kind.getName(),key);
+            }
+            return datastoreEntity;
         }
-        return datastoreEntity;
+        else
+            throw new IllegalStateException("Missing key field value.");
     }
     /**
      * Get/create an entity with current data for this instance.
      */
     public final Entity fillToDatastoreEntity(){
         Entity entity = this.getDatastoreEntity();
-        if (this.dirty){
-            this.fillTo(entity);
-            this.dirty = false;
-        }
+
+        this.fillTo(entity);
+
         return entity;
     }
     public final Entity fillFromDatastoreEntity(Entity entity){
-        return (this.datastoreEntity = this.fillFrom(entity));
+
+        return this.fillFrom(entity);
     }
     /**
      * Delete from the world, completely.
