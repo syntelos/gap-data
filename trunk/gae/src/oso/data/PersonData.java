@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-20T18:05:58.659Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-22T17:30:20.094Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -540,7 +540,6 @@ public abstract class PersonData
 
     public void destroy(){
         this.inheritFrom = null;
-        this.datastoreEntity = null;
         this.logonId = null;
     }
     public final String getId(){
@@ -586,7 +585,7 @@ public abstract class PersonData
     }
     public final boolean setInheritFrom(Person ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
-            this.dirty = true;
+
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -597,7 +596,7 @@ public abstract class PersonData
     }
     public final boolean inheritFrom(Person ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
-            this.dirty = true;
+
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -614,7 +613,7 @@ public abstract class PersonData
     }
     public final boolean dropLogonId(){
         if (null != this.logonId){
-            this.dirty = true;
+
             this.logonId = null;
             return true;
         }
@@ -629,7 +628,7 @@ public abstract class PersonData
     }
     public final boolean setLogonId(String logonId){
         if (IsNotEqual(this.logonId,logonId)){
-            this.dirty = true;
+
             this.logonId = logonId;
             return true;
         }

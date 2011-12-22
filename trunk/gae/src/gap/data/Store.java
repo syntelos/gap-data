@@ -49,7 +49,7 @@ public final class Store
 {
 
     /**
-     * BigTable
+     * Datastore
      */
     protected final static class P 
         extends java.lang.Object
@@ -401,11 +401,20 @@ public final class Store
     }
     public static BigTable Get(Key key){
         if (key.isComplete()){
-            BigTable value = C.Get(key);
-            if (null != value)
-                return value;
-            else
-                return P.Get(key);
+            BigTable table = C.Get(key);
+            if (null != table)
+                return table;
+            else {
+                table = P.Get(key);
+                if (null != table){
+                    /*
+                     * Optimistic cache
+                     */
+                    return C.Put(table.getKey(),table);
+                }
+                else
+                    return null;
+            }
         }
         else
             throw new IllegalArgumentException("Incomplete key '"+key+"'.");
