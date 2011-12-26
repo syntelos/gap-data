@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2011-12-22T17:30:21.683Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2011-12-23T18:44:11.145Z")
 public abstract class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>
@@ -155,7 +155,7 @@ public abstract class ListShortTemplateTemplateNode
             else {
                 Query q = new Query(TemplateNode.KIND.getName(),this.ancestorKey).addSort(TemplateNode.DefaultSortBy,Query.SortDirection.ASCENDING);
                 Page p = new Page(0,count);
-                return Store.QueryN(q,p);
+                return Store.QueryNClass(q,p);
             }
         }
         else
@@ -188,7 +188,7 @@ public abstract class ListShortTemplateTemplateNode
             else {
                 Query q = new Query(TemplateNode.KIND.getName(),this.ancestorKey).addSort(TemplateNode.DefaultSortBy,Query.SortDirection.DESCENDING);
                 Page p = new Page(0,count);
-                return Store.QueryN(q,p);
+                return Store.QueryNClass(q,p);
             }
         }
         else

@@ -27,6 +27,7 @@ import gap.util.*;
 import com.google.appengine.api.datastore.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 
@@ -70,9 +71,23 @@ import javax.servlet.ServletException;
 public final class TemplateServlet
     extends gap.service.Servlet
 {
+    public static enum Cmd {
+        CLEAN, LIST, UNKNOWN;
 
-    private final static Page ALL = new Page(0,Short.MAX_VALUE);
+        public static Cmd For(String s){
+            if (null == s || 1 > s.length())
+                return Cmd.UNKNOWN;
+            else {
+                try {
+                    return Cmd.valueOf(s.toUpperCase());
+                }
+                catch (RuntimeException exc){
 
+                    return Cmd.UNKNOWN;
+                }
+            }
+        }
+    }
 
     public TemplateServlet() {
         super();
@@ -83,33 +98,46 @@ public final class TemplateServlet
         throws ServletException, IOException
     {
         if (req.isAdmin){
-            String cmd = req.getPath(0);
-            if (null != cmd){
-
-                if ("clean".equals(cmd)){
-                    try {
-                        List.Primitive<Key> list = Template.QueryKeyN(Template.CreateQueryFor(),ALL);
-                        for (Key key: list){
-                            Store.DeleteCollection(TemplateNode.KIND,TemplateNode.CreateQueryFor(key));
-                            Store.Delete(key);
+            Cmd cmd = Cmd.For(req.getSource());
+            switch(cmd){
+            case CLEAN:{
+                List.Primitive<Key> list = Template.QueryNKey(Template.CreateQueryFor());
+                for (Key key: list){
+                    TemplateNode.DeleteChildrenOf(key);
+                    Template.Delete(key);
+                }
+                this.ok(req,rep);
+                break;
+            }
+            case LIST:{
+                String name = req.getGroup();
+                if (null != name){
+                    Template template = Template.ForLongName(name);
+                    if (null != template){
+                        rep.setContentTypeText();
+                        PrintWriter out = rep.getWriter();
+                        {
+                            List.Short<TemplateNode> list = template.getTemplateTargetHapax();
+                            for (TemplateNode node: list){
+                                Text text = node.getNodeContent();
+                                if (null != text){
+                                    out.print(text.getValue());
+                                }
+                            }
                         }
-
-
-                        rep.setStatus(200,"Ok");
+                        this.ok(req,rep);
                     }
-                    catch (Exception any){
-
-                        rep.setStatus(500,"Exception");
-                        rep.setContentType("text/plain");
-
-                        any.printStackTrace(rep.getWriter());
-                    }
+                    else
+                        this.error(req,rep,404,"Not found");
                 }
                 else
-                    this.error(req,rep,501,"Unrecognized command");
+                    this.error(req,rep,400,"Bad request");
+                break;
             }
-            else
-                this.error(req,rep,400,"Missing command");
+            default:
+                this.error(req,rep,400,"Bad request");
+                break;
+            }
         }
         else
             this.error(req,rep,403,"Not authorized");

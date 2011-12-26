@@ -24,19 +24,24 @@ import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.Expiration;
 
 /**
- * A memcache based shared system lock.  The lock may employ a
- * datastore key for an association with an instance, or any string
- * for a GUID.  The lock, like the GUID, is unique across all
- * processes running the application within the global appengine
- * network system.
+ * An appengine application cloud system mutex lock.  The design
+ * depends on the uniqueness of a memcache increment subject over the
+ * appengine application memcache cloud.
  * 
- * Correct usage is to enter the lock immediately preceding the top of
- * a try block, and then to exit the lock in the finally clause at the
- * tail of the try block.  Of course, the try block contains the
- * critical (protected) region.
+ * The lock may employ a datastore key for an association with an
+ * instance, or any string for a GUID.
  * 
- * The operation of this lock employs the declared atomicity of the
- * increment API in the memcache service.
+ * A try block contains a critical or protected region.  Enter the
+ * lock immediately preceding the top of the try block, and then exit
+ * the lock in the finally clause.
+ * 
+ * The design and implementation of this lock is based on the memcache
+ * increment operation.  While the memcache cloud is consistent over
+ * the application runtime cloud, this lock is intended to protect a
+ * region of code in terms of mutually exclusive entry.
+ * 
+ * The memcache increment subject is incremented to value one when the
+ * lock is entered, and decremented to value zero when the lock exits.
  * 
  * @author jdp
  */
@@ -45,10 +50,28 @@ public final class Lock
     implements java.io.Serializable,
                gap.util.Millis
 {
-    private final static long serialVersionUID = 1L;
-
+    /**
+     * Version two changes key format from version one.
+     */
+    private final static long serialVersionUID = 2L;
+    /**
+     */
     private final static MemcacheService.SetPolicy IFNOT = MemcacheService.SetPolicy.ADD_ONLY_IF_NOT_PRESENT;
-    private final static Expiration EXP = Expiration.byDeltaMillis( (int)(3*Hours));
+    /**
+     * Lifespan of Lock object in Memcache is protecting some minutes,
+     * so it's more than some minutes.
+     */
+    private final static Expiration EXP = Expiration.byDeltaMillis( (int)(1*Hours));
+    /**
+     * Entry timeout is request timeout (30 seconds) minus two seconds
+     * (normal request processing time).
+     */
+    private final static long ENTER = ((30-2)*Seconds);
+    /**
+     */
+    private final static long TOF = 33L;
+    /**
+     */
     private final static Long COND = 0L;
     private final static Long INC = 1L;
     private final static Long DEC = -1L;
@@ -59,15 +82,16 @@ public final class Lock
 
     public final int hashCode;
 
-    private transient boolean entered;
+    private transient Long entry;
+
 
 
     public Lock(Key key){
-        this(gap.Strings.KeyToString(key));
+        this(BigTable.ToString(key));
     }
     public Lock(String guid){
-        if (null != guid){
-            this.string = "lock:///"+guid;
+        if (null != guid && 0 < guid.length()){
+            this.string = "lock://"+guid;
             this.hashCode = gap.data.Hash.Djb32(this.string);
         }
         else
@@ -75,48 +99,80 @@ public final class Lock
     }
 
 
+    /**
+     * Enter using a default lock request timeout.
+     * 
+     * Default lock request timeout is request timeout (30 seconds)
+     * minus two seconds (normal request processing time).
+     * 
+     * @return Success gaining mutex access
+     */
+    public boolean enter(){
+        try {
+            return this.enter(ENTER);
+        }
+        catch (InterruptedException exc){
+
+            
+        }
+    }
     public boolean enter(long timeout)
         throws java.lang.InterruptedException
     {
-        long end = (System.currentTimeMillis()+timeout);
+        final long end = (System.currentTimeMillis()+timeout);
+        final MemcacheService mc = Store.C.Get();
         do {
-            if (this.enter())
+            if (this.test(mc))
                 return true;
             else {
-                long waitfor = (timeout / 3);
+                long waitfor = (timeout / TOF);
                 if (0 < waitfor)
                     Thread.sleep(waitfor);
                 else
-                    Thread.sleep(33);
+                    Thread.sleep(TOF);
             }
         }
         while (System.currentTimeMillis() < end);
         return false;
     }
-    public boolean enter(){
+    public void exit(){
         MemcacheService mc = Store.C.Get();
-        if (null != mc){
-
-            Long entry = mc.increment(this.string,INC);
-
-            if (null == entry){
-
-                mc.put(this.string,COND,EXP,IFNOT);
-
-                entry = mc.increment(this.string,INC);
-            }
-            return (this.entered = (INC.longValue() == entry.longValue()));
-        }
+        if (null != mc)
+            this.exit(mc);
         else
             throw new IllegalStateException("Memcache service not available.");
     }
-    public void exit(){
-        MemcacheService mc = Store.C.Get();
-        if (null != mc){
-            if (this.entered)
+    private void exit(MemcacheService mc){
+        if (null != this.entry){
+            try {
                 mc.increment(this.string,DEC);
-            else
-                throw new IllegalStateException("Lock not entered.");
+            }
+            finally {
+                this.entry = null;
+            }
+        }
+    }
+    private boolean entered(){
+        Long entry = this.entry;
+        return (null != entry && INC == entry);
+    }
+    private boolean test(MemcacheService mc){
+        if (null != mc){
+
+            this.entry = mc.increment(this.string,INC);
+
+            if (null == this.entry){
+
+                mc.put(this.string,COND,EXP,IFNOT);
+
+                this.entry = mc.increment(this.string,INC);
+            }
+            if (this.entered())
+                return true;
+            else {
+                this.exit(mc);
+                return false;
+            }
         }
         else
             throw new IllegalStateException("Memcache service not available.");

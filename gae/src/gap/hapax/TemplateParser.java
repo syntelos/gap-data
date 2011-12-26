@@ -84,7 +84,7 @@ public final class TemplateParser
                 case EOF:
                     ParserClose(list);
                     try {
-                        if (list.save(3000))
+                        if (list.save())
                             return list;
                         else
                             throw new Retry();

@@ -156,7 +156,7 @@ public abstract class ListShort{{=parent_class_name}}{{=child_class_name}}
             else {
                 Query q = new Query({{=child_class_name}}.KIND.getName(),this.ancestorKey).addSort({{=child_class_name}}.DefaultSortBy,Query.SortDirection.ASCENDING);
                 Page p = new Page(0,count);
-                return Store.QueryN(q,p);
+                return Store.QueryNClass(q,p);
             }
         }
         else
@@ -189,7 +189,7 @@ public abstract class ListShort{{=parent_class_name}}{{=child_class_name}}
             else {
                 Query q = new Query({{=child_class_name}}.KIND.getName(),this.ancestorKey).addSort({{=child_class_name}}.DefaultSortBy,Query.SortDirection.DESCENDING);
                 Page p = new Page(0,count);
-                return Store.QueryN(q,p);
+                return Store.QueryNClass(q,p);
             }
         }
         else

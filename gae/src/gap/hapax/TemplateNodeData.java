@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-22T17:30:21.763Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-23T18:44:11.170Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -111,12 +111,12 @@ public abstract class TemplateNodeData
     public final static TemplateNode ForShortNodeTypeLineNumber(Key ancestor, String nodeType, Integer lineNumber){
         if (null != nodeType && null != lineNumber){
             Key key = KeyShortIdFor(ancestor, nodeType, lineNumber);
-            TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
+            TemplateNode instance = (TemplateNode)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (TemplateNode)gap.data.Store.Query1(q);
+                return (TemplateNode)gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -130,7 +130,7 @@ public abstract class TemplateNodeData
         TemplateNode templateNode = ForShortNodeTypeLineNumber(ancestor, nodeType, lineNumber);
         if (null == templateNode){
             templateNode = new TemplateNode(ancestor, nodeType, lineNumber);
-            templateNode = (TemplateNode)gap.data.Store.Put(templateNode);
+            templateNode = (TemplateNode)gap.data.Store.PutClass(templateNode);
         }
         return templateNode;
     }
@@ -144,12 +144,12 @@ public abstract class TemplateNodeData
     public final static TemplateNode ForShortId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
             Key key = KeyShortFor(ancestor,id);
-            TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
+            TemplateNode instance = (TemplateNode)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (TemplateNode)gap.data.Store.Query1(q);
+                return (TemplateNode)gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -161,12 +161,12 @@ public abstract class TemplateNodeData
      */
     public final static TemplateNode Get(Key key){
         if (null != key){
-            TemplateNode instance = (TemplateNode)gap.data.Store.Get(key);
+            TemplateNode instance = (TemplateNode)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (TemplateNode)gap.data.Store.Query1(q);
+                return (TemplateNode)gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -175,7 +175,7 @@ public abstract class TemplateNodeData
     public final static Key GetKey(Key key){
         if (null != key){
             Query q = CreateQueryFor(key);
-            return gap.data.Store.QueryKey1(q);
+            return gap.data.Store.Query1Key(q);
         }
         else
             throw new IllegalArgumentException();
@@ -224,14 +224,38 @@ public abstract class TemplateNodeData
         else
             throw new IllegalArgumentException();
     }
-
+    /**
+     * Drop all children of the parent
+     */
+    public final static void Delete(Template parent){
+        if (null != parent){
+            DeleteChildrenOf(parent.getKey());
+        }
+    }
+    /**
+     * Drop all children of the parent
+     */
+    public final static void DeleteChildrenOf(Key parentKey){
+        if (null != parentKey){
+             gap.data.Store.DeleteCollection(KIND,CreateQueryFor(parentKey));
+        }
+    }
     /**
      * Drop the instance from memcache and datastore.
      */
     public final static void Delete(TemplateNode instance){
         if (null != instance){
 
-            gap.data.Store.Delete(instance.getKey());
+            Delete(instance.getKey());
+        }
+    }
+    /**
+     * Drop the instance from memcache and datastore.
+     */
+    public final static void Delete(Key instanceKey){
+        if (null != instanceKey){
+
+            gap.data.Store.DeleteKey(instanceKey);
         }
     }
     /**
@@ -240,7 +264,7 @@ public abstract class TemplateNodeData
     public final static void Clean(TemplateNode instance){
         if (null != instance){
             Key key = instance.getKey();
-            gap.data.Store.Clean(key);
+            gap.data.Store.CleanKey(key);
         }
     }
     /**
@@ -248,7 +272,7 @@ public abstract class TemplateNodeData
      */
     public final static void Save(TemplateNode instance){
         if (null != instance){
-            gap.data.Store.Put(instance);
+            gap.data.Store.PutClass(instance);
         }
     }
     /**
@@ -256,7 +280,7 @@ public abstract class TemplateNodeData
      */
     public final static void Store(TemplateNode instance){
         if (null != instance){
-            gap.data.Store.Put(instance);
+            gap.data.Store.PutClass(instance);
         }
     }
     /**
@@ -281,25 +305,31 @@ public abstract class TemplateNodeData
     }
     public final static TemplateNode Query1(Query query){
         if (null != query)
-            return (TemplateNode)gap.data.Store.Query1(query);
+            return (TemplateNode)gap.data.Store.Query1Class(query);
         else
             throw new IllegalArgumentException();
     }
     public final static BigTableIterator<TemplateNode> QueryN(Query query, Page page){
         if (null != query && null != page)
-            return gap.data.Store.QueryN(query,page);
+            return gap.data.Store.QueryNClass(query,page);
         else
             throw new IllegalArgumentException();
     }
     public final static Key QueryKey1(Query query){
         if (null != query)
-            return gap.data.Store.QueryKey1(query);
+            return gap.data.Store.Query1Key(query);
         else
             throw new IllegalArgumentException();
     }
-    public final static List.Primitive<Key> QueryKeyN(Query query, Page page){
+    public final static List.Primitive<Key> QueryNKey(Query query, Page page){
         if (null != query)
-            return gap.data.Store.QueryKeyN(query,page);
+            return gap.data.Store.QueryNKey(query,page);
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static List.Primitive<Key> QueryNKey(Query query){
+        if (null != query)
+            return gap.data.Store.QueryNKey(query);
         else
             throw new IllegalArgumentException();
     }
@@ -348,6 +378,16 @@ public abstract class TemplateNodeData
                 }
             else
                 return field;
+        }
+        /**
+         * Field statistics are maintained for persistent fields exclusively
+         */
+        public final static class Statistics
+            extends gap.data.Field.Statistics<TemplateNode.Field>
+        {
+            public Statistics(){
+                super(TemplateNode.Field.class);
+            }
         }
         /**
          * Dynamic binding operator for field data type
@@ -583,6 +623,8 @@ public abstract class TemplateNodeData
         }
     }
 
+    private final TemplateNode.Field.Statistics fieldStatistics = new TemplateNode.Field.Statistics();
+
     private transient TemplateNode inheritFrom;
 
 
@@ -740,7 +782,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropNodeType(){
         if (null != this.nodeType){
-
+            this.fieldStatistics.markDirty(Field.NodeType);
             this.nodeType = null;
             return true;
         }
@@ -755,7 +797,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setNodeType(String nodeType){
         if (IsNotEqual(this.nodeType,nodeType)){
-
+            this.fieldStatistics.markDirty(Field.NodeType);
             this.nodeType = nodeType;
             return true;
         }
@@ -770,7 +812,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropLineNumber(){
         if (null != this.lineNumber){
-
+            this.fieldStatistics.markDirty(Field.LineNumber);
             this.lineNumber = null;
             return true;
         }
@@ -785,7 +827,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setLineNumber(Integer lineNumber){
         if (IsNotEqual(this.lineNumber,lineNumber)){
-
+            this.fieldStatistics.markDirty(Field.LineNumber);
             this.lineNumber = lineNumber;
             return true;
         }
@@ -794,7 +836,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setLineNumber(Number lineNumber){
         if (IsNotEqual(this.lineNumber,lineNumber)){
-
+            this.fieldStatistics.markDirty(Field.LineNumber);
             if (lineNumber instanceof Integer)
                 this.lineNumber = (Integer)lineNumber;
             else
@@ -812,7 +854,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropNodeContent(){
         if (null != this.nodeContent){
-
+            this.fieldStatistics.markDirty(Field.NodeContent);
             this.nodeContent = null;
             return true;
         }
@@ -836,7 +878,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setNodeContent(Text nodeContent, boolean withInheritance){
         if (IsNotEqual(this.nodeContent,this.getNodeContent(withInheritance))){
-
+            this.fieldStatistics.markDirty(Field.NodeContent);
             this.nodeContent = nodeContent;
             return true;
         }
@@ -845,7 +887,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setNodeContent(Text nodeContent){
         if (IsNotEqual(this.nodeContent,nodeContent)){
-
+            this.fieldStatistics.markDirty(Field.NodeContent);
             this.nodeContent = nodeContent;
             return true;
         }
@@ -860,7 +902,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropOffset(){
         if (null != this.offset){
-
+            this.fieldStatistics.markDirty(Field.Offset);
             this.offset = null;
             return true;
         }
@@ -884,7 +926,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffset(Integer offset, boolean withInheritance){
         if (IsNotEqual(this.offset,this.getOffset(withInheritance))){
-
+            this.fieldStatistics.markDirty(Field.Offset);
             this.offset = offset;
             return true;
         }
@@ -893,7 +935,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffset(Integer offset){
         if (IsNotEqual(this.offset,offset)){
-
+            this.fieldStatistics.markDirty(Field.Offset);
             this.offset = offset;
             return true;
         }
@@ -902,7 +944,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffset(Number offset){
         if (IsNotEqual(this.offset,offset)){
-
+            this.fieldStatistics.markDirty(Field.Offset);
             if (offset instanceof Integer)
                 this.offset = (Integer)offset;
             else
@@ -920,7 +962,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropOffsetCloseRelative(){
         if (null != this.offsetCloseRelative){
-
+            this.fieldStatistics.markDirty(Field.OffsetCloseRelative);
             this.offsetCloseRelative = null;
             return true;
         }
@@ -944,7 +986,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffsetCloseRelative(Integer offsetCloseRelative, boolean withInheritance){
         if (IsNotEqual(this.offsetCloseRelative,this.getOffsetCloseRelative(withInheritance))){
-
+            this.fieldStatistics.markDirty(Field.OffsetCloseRelative);
             this.offsetCloseRelative = offsetCloseRelative;
             return true;
         }
@@ -953,7 +995,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffsetCloseRelative(Integer offsetCloseRelative){
         if (IsNotEqual(this.offsetCloseRelative,offsetCloseRelative)){
-
+            this.fieldStatistics.markDirty(Field.OffsetCloseRelative);
             this.offsetCloseRelative = offsetCloseRelative;
             return true;
         }
@@ -962,7 +1004,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffsetCloseRelative(Number offsetCloseRelative){
         if (IsNotEqual(this.offsetCloseRelative,offsetCloseRelative)){
-
+            this.fieldStatistics.markDirty(Field.OffsetCloseRelative);
             if (offsetCloseRelative instanceof Integer)
                 this.offsetCloseRelative = (Integer)offsetCloseRelative;
             else
@@ -1058,6 +1100,32 @@ public abstract class TemplateNodeData
     public void defineStorage(gap.data.Field field, java.io.Serializable value){
 
         Field.Storage( (Field)field, (TemplateNode)this, value);
+    }
+    public final TemplateNode markClean(){
+
+        this.fieldStatistics.markClean();
+        return (TemplateNode)this;
+    }
+    public final TemplateNode markDirty(){
+
+        this.fieldStatistics.markDirty();
+        return (TemplateNode)this;
+    }
+    public final Iterable<gap.data.Field> listClean(){
+
+        return this.fieldStatistics.listClean();
+    }
+    public final Iterable<gap.data.Field> listDirty(){
+
+        return this.fieldStatistics.listDirty();
+    }
+    public final boolean isClean(){
+
+        return this.fieldStatistics.isClean();
+    }
+    public final boolean isDirty(){
+
+        return this.fieldStatistics.isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor();

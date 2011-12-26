@@ -136,11 +136,12 @@ public abstract class BigTable
      */
     public final static String ToString(Key key){
 
-        String s = ToStringBuilder(key).toString();
-        if (0 < s.length())
-            return s;
-        else
-            throw new IllegalArgumentException("Incomplete key ("+key+")");
+        if (null != key && key.isComplete()){
+            String s = ToStringBuilder(key).toString();
+            if (0 < s.length())
+                return s;
+        }
+        throw new IllegalArgumentException("Incomplete key ("+key+")");
     }
     public final static StringBuilder ToStringBuilder(Key key){
         if (null != key)
@@ -433,49 +434,24 @@ public abstract class BigTable
      */
     public abstract void defineStorage(Field field, java.io.Serializable value);
 
+    public abstract BigTable markClean();
+
+    public abstract BigTable markDirty();
+
+    public abstract Iterable<Field> listClean();
+
+    public abstract Iterable<Field> listDirty();
+
+    public abstract boolean isClean();
+
+    public abstract boolean isDirty();
+
     public final void define(String fieldName, java.io.Serializable value){
         Field field = this.getClassFieldByName(fieldName);
         if (null != field)
             this.define(field,value);
         else
             throw new IllegalArgumentException("Unknown field name '"+fieldName+"'.");
-    }
-    /**
-     * Get/create an entity for this instance.  The returned entity
-     * may or may not have data.
-     * @see #fillToDatastoreEntity
-     */
-    public final Entity getDatastoreEntity(){
-
-        Key key = this.key;
-        if (null != key){
-            Entity datastoreEntity = null;
-            try {
-                datastoreEntity = Store.P.Get().get(key);
-                this.setKey(datastoreEntity.getKey());
-            }
-            catch (com.google.appengine.api.datastore.EntityNotFoundException exc){
-                Kind kind = this.getClassKind();
-                datastoreEntity = new Entity(kind.getName(),key);
-            }
-            return datastoreEntity;
-        }
-        else
-            throw new IllegalStateException("Missing key field value.");
-    }
-    /**
-     * Get/create an entity with current data for this instance.
-     */
-    public final Entity fillToDatastoreEntity(){
-        Entity entity = this.getDatastoreEntity();
-
-        this.fillTo(entity);
-
-        return entity;
-    }
-    public final Entity fillFromDatastoreEntity(Entity entity){
-
-        return this.fillFrom(entity);
     }
     /**
      * Delete from the world, completely.
@@ -521,10 +497,11 @@ public abstract class BigTable
     }
     public abstract gap.service.od.ClassDescriptor getClassDescriptorFor();
 
-    protected final Entity fillTo(Entity entity){
+    public final Entity fillTo(Entity entity){
 
-        for (Field field: this.getClassFields()){
-            String fieldName = field.getFieldName();
+        for (Field field: this.listDirty()){
+
+            final String fieldName = field.getFieldName();
 
             if (field.isNotFieldNameKeyOrId()){
 
@@ -544,7 +521,7 @@ public abstract class BigTable
         }
         return entity;
     }
-    protected final Entity fillFrom(Entity entity){
+    public final Entity fillFrom(Entity entity){
 
         for (Field field: this.getClassFields()){
 
