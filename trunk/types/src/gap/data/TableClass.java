@@ -82,11 +82,9 @@ public interface TableClass
 
     public void define(String fieldName, java.io.Serializable value);
 
-    public Entity getDatastoreEntity();
+    public Entity fillTo(Entity entity);
 
-    public Entity fillToDatastoreEntity();
-
-    public Entity fillFromDatastoreEntity(Entity entity);
+    public Entity fillFrom(Entity entity);
 
     public void drop();
 

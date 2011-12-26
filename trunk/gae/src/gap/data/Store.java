@@ -73,52 +73,17 @@ public final class Store
         protected static DatastoreService Get(){
             return PTL.get();
         }
-        protected static BigTable Get(Key key){
+        protected static Entity Get(Key key){
             try {
-                Entity entity = Get().get(key);
-                if (null != entity){
-                    BigTable gdo = BigTable.From(entity);
-                    if (gdo instanceof AdminReadWrite){
-
-                        if (!Logon.IsAdmin())
-                            throw new AdminAccessException(gdo.getClassKind());
-                    }
-                    gdo.setFromDatastore();
-                    gdo.onread();
-                    return gdo;
-                }
-                else
-                    return null;
+                return Get().get(key);
             }
             catch (com.google.appengine.api.datastore.EntityNotFoundException notFound){
                 return null;
             }
         }
-        protected static gap.util.ArrayList<BigTable> Get(java.lang.Iterable<Key> keys){
-            gap.util.ArrayList<BigTable> list = new gap.util.ArrayList<BigTable>();
-            java.util.Map <Key,Entity> map = Get().get(keys);
-            for (Entity entity : map.values()){
-                BigTable gdo = BigTable.From(entity);
-                if (gdo instanceof AdminReadWrite){
+        protected static Key Put(Entity entity){
 
-                    if (!Logon.IsAdmin())
-                        throw new AdminAccessException(gdo.getClassKind());
-                }
-                gdo.setFromDatastore();
-                gdo.onread();
-                list.add(gdo);
-            }
-            return list;
-        }
-        protected static BigTable Put(BigTable table){
-            if (table instanceof AdminReadWrite){
-
-                if (!Logon.IsAdmin())
-                    throw new AdminAccessException(table.getClassKind());
-            }
-            Entity entity = table.fillToDatastoreEntity();
-            Key key = Get().put(entity);
-            return table.setFromDatastore(key);
+            return Get().put(entity);
         }
         protected static void Delete(Key key){
             if (null != key){
@@ -130,66 +95,19 @@ public final class Store
                 Get().delete(new Key[]{key});
             }
         }
-        protected static BigTable Query1(Query query){
-            DatastoreService ds = Get();
-            try {
-                PreparedQuery stmt = ds.prepare(query);
-                Entity entity = stmt.asSingleEntity();
-                if (null == entity)
-                    return null;
-                else {
-                    BigTable gdo = BigTable.From(entity);
-                    if (gdo instanceof AdminReadWrite){
+        /**
+         * Defines query for keys only
+         * @see BigTableIterator
+         */
+        protected static BigTableIterator QueryNClass(Query query, Page page){
 
-                        if (!Logon.IsAdmin())
-                            throw new AdminAccessException(gdo.getClassKind());
-                    }
-                    gdo.setFromDatastore();
-                    gdo.onread();
-                    return gdo;
-                }
-            }
-            catch (com.google.appengine.api.datastore.PreparedQuery.TooManyResultsException exc){
-                query.setKeysOnly();
-                PreparedQuery stmt = ds.prepare(query);
-                Key highKey = null;
-                long highId = 0;
-                for (Entity ent : stmt.asIterable()){
-                    Key key = ent.getKey();
-                    long keyId = key.getId();
-                    if (keyId > highId){
-                        highId = keyId;
-                        highKey = key;
-                    }
-                }
-                try {
-                    Entity entity = ds.get(highKey);
-                    if (null == entity)
-                        return null;
-                    else {
-                        BigTable gdo = BigTable.From(entity);
-                        if (gdo instanceof AdminReadWrite){
+            query.setKeysOnly();
 
-                            if (!Logon.IsAdmin())
-                                throw new AdminAccessException(gdo.getClassKind());
-                        }
-                        gdo.setFromDatastore();
-                        gdo.onread();
-                        return gdo;
-                    }
-                }
-                catch (com.google.appengine.api.datastore.EntityNotFoundException err){
-                    return null;
-                }
-            }
-        }
-        protected static BigTableIterator QueryN(Query query, Page page){
-            DatastoreService ds = Get();
-            PreparedQuery stmt = ds.prepare(query);
+            final PreparedQuery stmt = Get().prepare(query);
 
             return new BigTableIterator(stmt,page);
         }
-        protected static Key QueryKey1(Query query){
+        protected static Key Query1(Query query){
             if (BigTable.IsAdmin(query.getKind())){
 
                 if (!Logon.IsAdmin())
@@ -222,7 +140,7 @@ public final class Store
                 return highKey;
             }
         }
-        protected static List.Primitive<Key> QueryKeyN(Query query, Page page){
+        protected static List.Primitive<Key> QueryN(Query query, Page page){
             if (BigTable.IsAdmin(query.getKind())){
 
                 if (!Logon.IsAdmin())
@@ -234,6 +152,27 @@ public final class Store
             PreparedQuery stmt = ds.prepare(query);
 
             Iterable<Entity> it = stmt.asIterable(page.createFetchOptions());
+
+            List.Primitive<Key> list = new gap.util.ListPrimitiveKey(query.getKind());
+
+            for (Entity entity : it){
+
+                list.add(entity.getKey());
+            }
+            return list;
+        }
+        protected static List.Primitive<Key> QueryN(Query query){
+            if (BigTable.IsAdmin(query.getKind())){
+
+                if (!Logon.IsAdmin())
+                    throw new AdminAccessException();
+            }
+            query.setKeysOnly();
+
+            DatastoreService ds = Get();
+            PreparedQuery stmt = ds.prepare(query);
+
+            Iterable<Entity> it = stmt.asIterable();
 
             List.Primitive<Key> list = new gap.util.ListPrimitiveKey(query.getKind());
 
@@ -269,24 +208,19 @@ public final class Store
         protected static MemcacheService Get(){
             return PTL.get();
         }
-        protected static BigTable Get(Key key){
+        protected static Entity Get(Key key){
             try {
-                String ck = BigTable.ToString(key);
-                MemcacheService mc = Store.C.Get();
+                final String ck = BigTable.ToString(key);
+                final MemcacheService mc = Store.C.Get();
                 try {
-                    BigTable gdo = (BigTable)mc.get(ck);
-                    if (null != gdo){
-                        if (gdo instanceof AdminReadWrite){
-
-                            if (!Logon.IsAdmin())
-                                throw new AdminAccessException(gdo.getClassKind());
-                        }
-                        gdo.setFromMemcache();
-                        gdo.onread();
-                        return gdo;
-                    }
-                    else 
-                        return null;
+                    return (Entity)mc.get(ck);
+                }
+                catch (ClassCastException exc){
+                    /*
+                     * Code change conversion
+                     */
+                    mc.delete(key);
+                    return null;
                 }
                 catch (com.google.appengine.api.memcache.InvalidValueException serialization){
                     mc.delete(key);
@@ -298,83 +232,18 @@ public final class Store
                 return null;
             }
         }
-        protected static gap.util.ArrayList<BigTable> Get(java.lang.Iterable<Key> keys){
-            MemcacheService mc = Store.C.Get();
-            DatastoreService ds = Store.P.Get();
-            gap.util.ArrayList<BigTable> list = new gap.util.ArrayList<BigTable>();
-            for (Key key : keys){
+        protected static void Put(Entity entity){
+            final Key key = entity.getKey();
 
-                BigTable gdo = null;
+            final String ck = BigTable.ToString(key);
 
-                try {                
-                    String ck = BigTable.ToString(key);
-                    try {
-                        gdo = (BigTable)mc.get(ck);
-                    }
-                    catch (com.google.appengine.api.memcache.InvalidValueException serialization){
-
-                        mc.delete(ck);
-                    }
-                }
-                catch (IllegalArgumentException incompleteKey){
-                }
-
-                if (null != gdo){
-                    if (gdo instanceof AdminReadWrite){
-
-                        if (!Logon.IsAdmin())
-                            throw new AdminAccessException(gdo.getClassKind());
-                    }
-                    gdo.setFromMemcache();
-                    gdo.onread();
-                    list.add(gdo);
-                }
-                else {
-                    try {
-                        gdo = BigTable.From(ds.get(key));
-                        if (null != gdo){
-                            if (gdo instanceof AdminReadWrite){
-
-                                if (!Logon.IsAdmin())
-                                    throw new AdminAccessException(gdo.getClassKind());
-                            }
-                            gdo.setFromDatastore();
-                            gdo.onread();
-                            list.add(gdo);
-                            mc.put(key,gdo);
-                        }
-                    }
-                    catch (com.google.appengine.api.datastore.EntityNotFoundException exc){
-                    }
-                }
-            }
-            return list;
-        }
-        protected static BigTable Put(Key key, BigTable table){
-
-            if (table instanceof AdminReadWrite){
-
-                if (!Logon.IsAdmin())
-                    throw new AdminAccessException(table.getClassKind());
-            }
-            try {
-                String ck = BigTable.ToString(key);
-
-                Get().put(ck,table);
-            }
-            catch (IllegalArgumentException incompleteKey){
-            }
-            return table;
+            Get().put(ck,entity);
         }
         protected static void Delete(Key key){
-            if (null != key){
-                if (BigTable.IsAdmin(key.getKind())){
 
-                    if (!Logon.IsAdmin())
-                        throw new AdminAccessException(key.getKind());
-                }
+            if (null != key){
                 try {
-                    String ck = BigTable.ToString(key);
+                    final String ck = BigTable.ToString(key);
 
                     Get().delete(ck);
                 }
@@ -399,18 +268,37 @@ public final class Store
         P.Exit();
         C.Exit();
     }
-    public static BigTable Get(Key key){
+    public static BigTable GetClass(Key key){
         if (key.isComplete()){
-            BigTable table = C.Get(key);
-            if (null != table)
+            Entity entity = C.Get(key);
+            if (null != entity){
+                BigTable table = BigTable.From(entity);
+                if (table instanceof AdminReadWrite){
+
+                    if (!Logon.IsAdmin())
+                        throw new AdminAccessException(table.getClassKind());
+                }
+                table.setFromMemcache();
+                table.onread();
                 return table;
+            }
             else {
-                table = P.Get(key);
-                if (null != table){
+                entity = P.Get(key);
+                if (null != entity){
                     /*
                      * Optimistic cache
                      */
-                    return C.Put(table.getKey(),table);
+                    C.Put(entity);
+
+                    BigTable table = BigTable.From(entity);
+                    if (table instanceof AdminReadWrite){
+
+                        if (!Logon.IsAdmin())
+                            throw new AdminAccessException(table.getClassKind());
+                    }
+                    table.setFromDatastore();
+                    table.onread();
+                    return table;
                 }
                 else
                     return null;
@@ -419,43 +307,158 @@ public final class Store
         else
             throw new IllegalArgumentException("Incomplete key '"+key+"'.");
     }
-    public static gap.util.ArrayList<BigTable> Get(Iterable<Key> keys){
-
-        return C.Get(keys);
+    protected static Entity Get(Key key){
+        if (key.isComplete()){
+            Entity entity = C.Get(key);
+            if (null != entity)
+                return entity;
+            else 
+                return P.Get(key);
+        }
+        else
+            throw new IllegalArgumentException("Incomplete key '"+key+"'.");
     }
-    public static BigTable Query1(Query q){
+    public static gap.util.ArrayList<BigTable> GetClass(Iterable<Key> keys){
+
+        gap.util.ArrayList<BigTable> list = new gap.util.ArrayList<BigTable>();
+
+        for (Key key : keys){
+
+            Entity entity = C.Get(key);
+            if (null != entity){
+                BigTable table = BigTable.From(entity);
+                if (table instanceof AdminReadWrite){
+
+                    if (!Logon.IsAdmin())
+                        throw new AdminAccessException(table.getClassKind());
+                }
+                table.setFromMemcache();
+                table.onread();
+                list.add(table);
+            }
+            else {
+                entity = P.Get(key);
+                if (null != entity){
+                    /*
+                     * Optimistic cache
+                     */
+                    C.Put(entity);
+
+                    BigTable table = BigTable.From(entity);
+                    if (table instanceof AdminReadWrite){
+
+                        if (!Logon.IsAdmin())
+                            throw new AdminAccessException(table.getClassKind());
+                    }
+                    table.setFromDatastore();
+                    table.onread();
+                    list.add(table);
+                }
+            }
+        }
+        return list;
+    }
+    public static BigTable Query1Class(Query q){
+        Key key = Store.P.Query1(q);
+        if (null != key)
+            return Store.GetClass(key);
+        else
+            return null;
+    }
+    public static BigTableIterator QueryNClass(Query q, Page p){
+
+        return Store.P.QueryNClass(q,p);
+    }
+    public static Key Query1Key(Query q){
+
         return Store.P.Query1(q);
     }
-    public static BigTableIterator QueryN(Query q, Page p){
+    public static List.Primitive<Key> QueryNKey(Query q, Page p){
+
         return Store.P.QueryN(q,p);
     }
-    public static Key QueryKey1(Query q){
-        return Store.P.QueryKey1(q);
-    }
-    public static List.Primitive<Key> QueryKeyN(Query q, Page p){
-        return Store.P.QueryKeyN(q,p);
-    }
-    public static BigTable Put(BigTable table){
+    public static List.Primitive<Key> QueryNKey(Query q){
 
-        if (table instanceof LastModified){
+        return Store.P.QueryN(q);
+    }
+    public static BigTable PutClass(BigTable table){
+        /*
+         */
+        if (table instanceof AdminReadWrite){
+
+            if (!Logon.IsAdmin())
+                throw new AdminAccessException(table.getClassKind());
+        }
+        else if (table instanceof LastModified){
             ((LastModified)table).setLastModified(System.currentTimeMillis());
         }
 
         table.onwrite();
 
-        table = P.Put(table);
-
         Key key = table.getKey();
 
-        C.Put(key,table);
+        final Lock lock = new Lock(key);
+        if (lock.enter()){
+            try {
+                /*
+                 * Current clean
+                 */
+                Entity entity = Store.Get(key);
 
-        return table;
+                if (null == entity){
+
+                    entity = new Entity(key);
+
+                    table.markDirty();
+                    /*
+                     * Copy all
+                     */
+                    table.fillTo(entity);
+                }
+                else {
+                    /*
+                     * Write dirty
+                     */
+                    table.fillTo(entity);
+                    /*
+                     * Read clean
+                     */
+                    table.fillFrom(entity);
+                }
+                table.markClean();
+
+                key = P.Put(entity);
+                /*
+                 * Copy write to cache
+                 */
+                C.Put(entity);
+
+                table.setKey(key);
+
+                return table;
+            }
+            finally {
+                lock.exit();
+            }
+        }
+        else
+            throw new IllegalArgumentException("Failed to acquire write lock");
     }
-    public static void Delete(Key key){
-        C.Delete(key);
-        P.Delete(key);
+    public static void DeleteKey(Key key){
+        final Lock lock = new Lock(key);
+        if (lock.enter()){
+            try {
+                C.Delete(key);
+                P.Delete(key);
+            }
+            finally {
+                lock.exit();
+            }
+        }
+        else
+            throw new IllegalArgumentException("Failed to acquire write lock");
     }
-    public static void Clean(Key key){
+    public static void CleanKey(Key key){
         C.Delete(key);
     }
     public static void DeleteCollection(Kind access, Query query){
@@ -466,27 +469,33 @@ public final class Store
         }
         query.setKeysOnly();
 
-        DatastoreService ds = Store.P.Get();
-        MemcacheService mc = Store.C.Get();
+        final DatastoreService ds = Store.P.Get();
+        final MemcacheService mc = Store.C.Get();
 
         PreparedQuery stmt = ds.prepare(query);
 
         Iterable<Entity> list = stmt.asIterable();
 
         for (Entity ent : list){
-            Key key = ent.getKey();
-            try {
-                String ck = BigTable.ToString(key);
-                mc.delete(ck);
+            final Key key = ent.getKey();
+            final Lock lock = new Lock(key);
+            if (lock.enter()){
+                try {
+                    mc.delete(BigTable.ToString(key));
+
+                    ds.delete(key);
+                }
+                catch (RuntimeException any){
+                }
+                finally {
+                    lock.exit();
+                }
             }
-            catch (IllegalArgumentException incompleteKey){
-            }
-            ds.delete(key);
         }
     }
 
-    protected Store(){
+
+    private Store(){
         super();
     }
-
 }

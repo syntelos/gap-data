@@ -44,6 +44,9 @@ public final class BigTableIterator<V extends BigTable>
     private final Iterator<Entity> ds;
 
 
+    /**
+     * Query for keys only
+     */
     BigTableIterator(PreparedQuery stmt, Page page){
         super();
         
@@ -67,16 +70,10 @@ public final class BigTableIterator<V extends BigTable>
         return this.ds.hasNext();
     }
     public V next(){
-        Entity entity = this.ds.next();
-        BigTable gdo = BigTable.From(entity);
-        if (gdo instanceof AdminReadWrite){
 
-            if (!Logon.IsAdmin())
-                throw new AdminAccessException();
-        }
-        gdo.setFromDatastore();
-        gdo.onread();
-        return (V)gdo;
+        Entity entity = this.ds.next();
+
+        return (V)Store.GetClass(entity.getKey());
     }
     public void remove(){
         throw new java.lang.UnsupportedOperationException();

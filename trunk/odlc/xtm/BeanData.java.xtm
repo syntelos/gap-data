@@ -121,12 +121,12 @@ public abstract class {{=class_name}}Data
     public final static {{=class_name}} ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
         if ({{#field_unique}}{{#field_unique_it_NotFirst}} && {{/field_unique_it_NotFirst}}null != {{=field_name}}{{/field_unique}}){
             Key key = KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
-            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return ({{=class_name}})gap.data.Store.Query1(q);
+                return ({{=class_name}})gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -138,12 +138,12 @@ public abstract class {{=class_name}}Data
     public final static {{=class_name}} ForShort{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}(Key ancestor, {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
         if ({{#field_unique}}{{#field_unique_it_NotFirst}} && {{/field_unique_it_NotFirst}}null != {{=field_name}}{{/field_unique}}){
             Key key = KeyShortIdFor(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
-            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return ({{=class_name}})gap.data.Store.Query1(q);
+                return ({{=class_name}})gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -157,7 +157,7 @@ public abstract class {{=class_name}}Data
         {{=class_name}} {{=class_nameDecamel}} = ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
-            {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
+            {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.PutClass({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
     }{{/class_re_not_child}}{{#class_re_child}}
@@ -168,7 +168,7 @@ public abstract class {{=class_name}}Data
         {{=class_name}} {{=class_nameDecamel}} = ForShort{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
-            {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.Put({{=class_nameDecamel}});
+            {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.PutClass({{=class_nameDecamel}});
         }
         return {{=class_nameDecamel}};
     }{{/class_re_child}}
@@ -185,12 +185,12 @@ public abstract class {{=class_name}}Data
     public final static {{=class_name}} ForLongId(String id){
         if (null != id){
             Key key = KeyLongFor(id);
-            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return ({{=class_name}})gap.data.Store.Query1(q);
+                return ({{=class_name}})gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -199,12 +199,12 @@ public abstract class {{=class_name}}Data
     public final static {{=class_name}} ForShortId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
             Key key = KeyShortFor(ancestor,id);
-            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return ({{=class_name}})gap.data.Store.Query1(q);
+                return ({{=class_name}})gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -216,12 +216,12 @@ public abstract class {{=class_name}}Data
      */
     public final static {{=class_name}} Get(Key key){
         if (null != key){
-            {{=class_name}} instance = ({{=class_name}})gap.data.Store.Get(key);
+            {{=class_name}} instance = ({{=class_name}})gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return ({{=class_name}})gap.data.Store.Query1(q);
+                return ({{=class_name}})gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -230,7 +230,7 @@ public abstract class {{=class_name}}Data
     public final static Key GetKey(Key key){
         if (null != key){
             Query q = CreateQueryFor(key);
-            return gap.data.Store.QueryKey1(q);
+            return gap.data.Store.Query1Key(q);
         }
         else
             throw new IllegalArgumentException();
@@ -299,15 +299,39 @@ public abstract class {{=class_name}}Data
         }
         else
             throw new IllegalArgumentException();
+    }
+    /**
+     * Drop all children of the parent
+     */
+    public final static void Delete({{=parent_class_name}} parent){
+        if (null != parent){
+            DeleteChildrenOf(parent.getKey());
+        }
+    }
+    /**
+     * Drop all children of the parent
+     */
+    public final static void DeleteChildrenOf(Key parentKey){
+        if (null != parentKey){
+             gap.data.Store.DeleteCollection(KIND,CreateQueryFor(parentKey));
+        }
     }{{/class_re_child}}
-
     /**
      * Drop the instance from memcache and datastore.
      */
     public final static void Delete({{=class_name}} instance){
         if (null != instance){
 
-            gap.data.Store.Delete(instance.getKey());
+            Delete(instance.getKey());
+        }
+    }
+    /**
+     * Drop the instance from memcache and datastore.
+     */
+    public final static void Delete(Key instanceKey){
+        if (null != instanceKey){
+
+            gap.data.Store.DeleteKey(instanceKey);
         }
     }
     /**
@@ -316,7 +340,7 @@ public abstract class {{=class_name}}Data
     public final static void Clean({{=class_name}} instance){
         if (null != instance){
             Key key = instance.getKey();
-            gap.data.Store.Clean(key);
+            gap.data.Store.CleanKey(key);
         }
     }
     /**
@@ -324,7 +348,7 @@ public abstract class {{=class_name}}Data
      */
     public final static void Save({{=class_name}} instance){
         if (null != instance){
-            gap.data.Store.Put(instance);
+            gap.data.Store.PutClass(instance);
         }
     }
     /**
@@ -332,7 +356,7 @@ public abstract class {{=class_name}}Data
      */
     public final static void Store({{=class_name}} instance){
         if (null != instance){
-            gap.data.Store.Put(instance);
+            gap.data.Store.PutClass(instance);
         }
     }
     /**
@@ -364,25 +388,31 @@ public abstract class {{=class_name}}Data
     }{{/class_re_child}}
     public final static {{=class_name}} Query1(Query query){
         if (null != query)
-            return ({{=class_name}})gap.data.Store.Query1(query);
+            return ({{=class_name}})gap.data.Store.Query1Class(query);
         else
             throw new IllegalArgumentException();
     }
     public final static BigTableIterator<{{=class_name}}> QueryN(Query query, Page page){
         if (null != query && null != page)
-            return gap.data.Store.QueryN(query,page);
+            return gap.data.Store.QueryNClass(query,page);
         else
             throw new IllegalArgumentException();
     }
     public final static Key QueryKey1(Query query){
         if (null != query)
-            return gap.data.Store.QueryKey1(query);
+            return gap.data.Store.Query1Key(query);
         else
             throw new IllegalArgumentException();
     }
-    public final static List.Primitive<Key> QueryKeyN(Query query, Page page){
+    public final static List.Primitive<Key> QueryNKey(Query query, Page page){
         if (null != query)
-            return gap.data.Store.QueryKeyN(query,page);
+            return gap.data.Store.QueryNKey(query,page);
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static List.Primitive<Key> QueryNKey(Query query){
+        if (null != query)
+            return gap.data.Store.QueryNKey(query);
         else
             throw new IllegalArgumentException();
     }
@@ -427,6 +457,16 @@ public abstract class {{=class_name}}Data
                 }
             else
                 return field;
+        }
+        /**
+         * Field statistics are maintained for persistent fields exclusively
+         */
+        public final static class Statistics
+            extends gap.data.Field.Statistics<{{=class_name}}.Field>
+        {
+            public Statistics(){
+                super({{=class_name}}.Field.class);
+            }
         }
         /**
          * Dynamic binding operator for field data type
@@ -708,6 +748,8 @@ public abstract class {{=class_name}}Data
         }
     }
 
+    private final {{=class_name}}.Field.Statistics fieldStatistics = new {{=class_name}}.Field.Statistics();
+
     private transient {{=class_name}} inheritFrom;
 
 {{#pfield}}{{#field_is_primitive}}
@@ -879,7 +921,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean drop{{=field_nameCamel}}(){
         if (null != this.{{=field_name}}){
-
+            this.fieldStatistics.markDirty(Field.{{=field_nameCamel}});
             this.{{=field_name}} = null;{{#field_is_bigTable}}
             this.{{=field_name}}Id = null;
             this.{{=field_name}}Key = null;{{/field_is_bigTable}}
@@ -893,7 +935,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean set{{=field_nameCamel}}Id(String {{=field_name}}Id){
         if (IsNotEqual(this.{{=field_name}}Id,{{=field_name}}Id)){
-
+            this.fieldStatistics.markDirty(Field.{{=field_nameCamel}});
             this.{{=field_name}}Id = {{=field_name}}Id;
             this.{{=field_name}}Key = null;
             this.{{=field_name}} = null;
@@ -990,7 +1032,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}, boolean withInheritance){
         if (IsNotEqual(this.{{=field_name}},this.get{{=field_nameCamel}}(withInheritance))){
-
+            this.fieldStatistics.markDirty(Field.{{=field_nameCamel}});
             this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
             if (null != {{=field_name}}){
                 this.{{=field_name}}Id = {{=field_name}}.getId();
@@ -1007,7 +1049,7 @@ public abstract class {{=class_name}}Data
     }{{/field_is_inheritable}}
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
-
+            this.fieldStatistics.markDirty(Field.{{=field_nameCamel}});
             this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
             if (null != {{=field_name}}){
                 this.{{=field_name}}Id = {{=field_name}}.getId();
@@ -1024,7 +1066,7 @@ public abstract class {{=class_name}}Data
     }{{#field_is_number}}
     public final boolean set{{=field_nameCamel}}(Number {{=field_name}}){
         if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
-
+            this.fieldStatistics.markDirty(Field.{{=field_nameCamel}});
             if ({{=field_name}} instanceof {{=field_class}})
                 this.{{=field_name}} = ({{=field_class}}){{=field_name}};
             else
@@ -1224,6 +1266,32 @@ public abstract class {{=class_name}}Data
     public void defineStorage(gap.data.Field field, java.io.Serializable value){
 
         Field.Storage( (Field)field, ({{=class_name}})this, value);
+    }
+    public final {{=class_name}} markClean(){
+
+        this.fieldStatistics.markClean();
+        return ({{=class_name}})this;
+    }
+    public final {{=class_name}} markDirty(){
+
+        this.fieldStatistics.markDirty();
+        return ({{=class_name}})this;
+    }
+    public final Iterable<gap.data.Field> listClean(){
+
+        return this.fieldStatistics.listClean();
+    }
+    public final Iterable<gap.data.Field> listDirty(){
+
+        return this.fieldStatistics.listDirty();
+    }
+    public final boolean isClean(){
+
+        return this.fieldStatistics.isClean();
+    }
+    public final boolean isDirty(){
+
+        return this.fieldStatistics.isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor();

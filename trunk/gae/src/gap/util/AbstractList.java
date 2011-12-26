@@ -124,7 +124,7 @@ public abstract class AbstractList<V extends BigTable>
         if (null != query){
             Page page = this.page;
             this.buffering(page);
-            BigTableIterator<BigTable> iterable = Store.QueryN(query,page);
+            BigTableIterator<BigTable> iterable = Store.QueryNClass(query,page);
             this.gross = iterable.gross;
             this.hitEnd = iterable.hitEnd;
             this.clearBuffer();
@@ -372,6 +372,30 @@ public abstract class AbstractList<V extends BigTable>
         if (null != buffer){
             Lock lock = this.getParent().getLock();
             if (lock.enter(timeout)){
+                try {
+                    for (int cc = 0, count = buffer.length; cc < count; cc++){
+                        BigTable instance = buffer[cc];
+                        instance.save();
+                    }
+                    return true;
+                }
+                finally {
+                    lock.exit();
+                }
+            }
+            else
+                return false;
+        }
+        else
+            return true;
+    }
+    public boolean save()
+        throws java.lang.InterruptedException
+    {
+        BigTable[] buffer = this.buffer;
+        if (null != buffer){
+            Lock lock = this.getParent().getLock();
+            if (lock.enter()){
                 try {
                     for (int cc = 0, count = buffer.length; cc < count; cc++){
                         BigTable instance = buffer[cc];

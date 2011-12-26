@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-22T17:30:20.094Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-23T18:44:10.397Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -107,12 +107,12 @@ public abstract class PersonData
     public final static Person ForLongLogonId(String logonId){
         if (null != logonId){
             Key key = KeyLongIdFor( logonId);
-            Person instance = (Person)gap.data.Store.Get(key);
+            Person instance = (Person)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
+                return (Person)gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -126,7 +126,7 @@ public abstract class PersonData
         Person person = ForLongLogonId( logonId);
         if (null == person){
             person = new Person( logonId);
-            person = (Person)gap.data.Store.Put(person);
+            person = (Person)gap.data.Store.PutClass(person);
         }
         return person;
     }
@@ -140,12 +140,12 @@ public abstract class PersonData
     public final static Person ForLongId(String id){
         if (null != id){
             Key key = KeyLongFor(id);
-            Person instance = (Person)gap.data.Store.Get(key);
+            Person instance = (Person)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
+                return (Person)gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -157,12 +157,12 @@ public abstract class PersonData
      */
     public final static Person Get(Key key){
         if (null != key){
-            Person instance = (Person)gap.data.Store.Get(key);
+            Person instance = (Person)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Person)gap.data.Store.Query1(q);
+                return (Person)gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -171,7 +171,7 @@ public abstract class PersonData
     public final static Key GetKey(Key key){
         if (null != key){
             Query q = CreateQueryFor(key);
-            return gap.data.Store.QueryKey1(q);
+            return gap.data.Store.Query1Key(q);
         }
         else
             throw new IllegalArgumentException();
@@ -216,14 +216,22 @@ public abstract class PersonData
         }
         while (true);
     }
-
     /**
      * Drop the instance from memcache and datastore.
      */
     public final static void Delete(Person instance){
         if (null != instance){
 
-            gap.data.Store.Delete(instance.getKey());
+            Delete(instance.getKey());
+        }
+    }
+    /**
+     * Drop the instance from memcache and datastore.
+     */
+    public final static void Delete(Key instanceKey){
+        if (null != instanceKey){
+
+            gap.data.Store.DeleteKey(instanceKey);
         }
     }
     /**
@@ -232,7 +240,7 @@ public abstract class PersonData
     public final static void Clean(Person instance){
         if (null != instance){
             Key key = instance.getKey();
-            gap.data.Store.Clean(key);
+            gap.data.Store.CleanKey(key);
         }
     }
     /**
@@ -240,7 +248,7 @@ public abstract class PersonData
      */
     public final static void Save(Person instance){
         if (null != instance){
-            gap.data.Store.Put(instance);
+            gap.data.Store.PutClass(instance);
         }
     }
     /**
@@ -248,7 +256,7 @@ public abstract class PersonData
      */
     public final static void Store(Person instance){
         if (null != instance){
-            gap.data.Store.Put(instance);
+            gap.data.Store.PutClass(instance);
         }
     }
     /**
@@ -273,25 +281,31 @@ public abstract class PersonData
     
     public final static Person Query1(Query query){
         if (null != query)
-            return (Person)gap.data.Store.Query1(query);
+            return (Person)gap.data.Store.Query1Class(query);
         else
             throw new IllegalArgumentException();
     }
     public final static BigTableIterator<Person> QueryN(Query query, Page page){
         if (null != query && null != page)
-            return gap.data.Store.QueryN(query,page);
+            return gap.data.Store.QueryNClass(query,page);
         else
             throw new IllegalArgumentException();
     }
     public final static Key QueryKey1(Query query){
         if (null != query)
-            return gap.data.Store.QueryKey1(query);
+            return gap.data.Store.Query1Key(query);
         else
             throw new IllegalArgumentException();
     }
-    public final static List.Primitive<Key> QueryKeyN(Query query, Page page){
+    public final static List.Primitive<Key> QueryNKey(Query query, Page page){
         if (null != query)
-            return gap.data.Store.QueryKeyN(query,page);
+            return gap.data.Store.QueryNKey(query,page);
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static List.Primitive<Key> QueryNKey(Query query){
+        if (null != query)
+            return gap.data.Store.QueryNKey(query);
         else
             throw new IllegalArgumentException();
     }
@@ -335,6 +349,16 @@ public abstract class PersonData
                 }
             else
                 return field;
+        }
+        /**
+         * Field statistics are maintained for persistent fields exclusively
+         */
+        public final static class Statistics
+            extends gap.data.Field.Statistics<Person.Field>
+        {
+            public Statistics(){
+                super(Person.Field.class);
+            }
         }
         /**
          * Dynamic binding operator for field data type
@@ -516,6 +540,8 @@ public abstract class PersonData
         }
     }
 
+    private final Person.Field.Statistics fieldStatistics = new Person.Field.Statistics();
+
     private transient Person inheritFrom;
 
 
@@ -613,7 +639,7 @@ public abstract class PersonData
     }
     public final boolean dropLogonId(){
         if (null != this.logonId){
-
+            this.fieldStatistics.markDirty(Field.LogonId);
             this.logonId = null;
             return true;
         }
@@ -628,7 +654,7 @@ public abstract class PersonData
     }
     public final boolean setLogonId(String logonId){
         if (IsNotEqual(this.logonId,logonId)){
-
+            this.fieldStatistics.markDirty(Field.LogonId);
             this.logonId = logonId;
             return true;
         }
@@ -673,6 +699,32 @@ public abstract class PersonData
     public void defineStorage(gap.data.Field field, java.io.Serializable value){
 
         Field.Storage( (Field)field, (Person)this, value);
+    }
+    public final Person markClean(){
+
+        this.fieldStatistics.markClean();
+        return (Person)this;
+    }
+    public final Person markDirty(){
+
+        this.fieldStatistics.markDirty();
+        return (Person)this;
+    }
+    public final Iterable<gap.data.Field> listClean(){
+
+        return this.fieldStatistics.listClean();
+    }
+    public final Iterable<gap.data.Field> listDirty(){
+
+        return this.fieldStatistics.listDirty();
+    }
+    public final boolean isClean(){
+
+        return this.fieldStatistics.isClean();
+    }
+    public final boolean isDirty(){
+
+        return this.fieldStatistics.isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor();

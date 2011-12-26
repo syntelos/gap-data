@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-22T17:30:21.143Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-23T18:44:11.003Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -109,12 +109,12 @@ public abstract class TemplateData
     public final static Template ForLongName(String name){
         if (null != name){
             Key key = KeyLongIdFor( name);
-            Template instance = (Template)gap.data.Store.Get(key);
+            Template instance = (Template)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Template)gap.data.Store.Query1(q);
+                return (Template)gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -128,7 +128,7 @@ public abstract class TemplateData
         Template template = ForLongName( name);
         if (null == template){
             template = new Template( name);
-            template = (Template)gap.data.Store.Put(template);
+            template = (Template)gap.data.Store.PutClass(template);
         }
         return template;
     }
@@ -142,12 +142,12 @@ public abstract class TemplateData
     public final static Template ForLongId(String id){
         if (null != id){
             Key key = KeyLongFor(id);
-            Template instance = (Template)gap.data.Store.Get(key);
+            Template instance = (Template)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Template)gap.data.Store.Query1(q);
+                return (Template)gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -159,12 +159,12 @@ public abstract class TemplateData
      */
     public final static Template Get(Key key){
         if (null != key){
-            Template instance = (Template)gap.data.Store.Get(key);
+            Template instance = (Template)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
                 Query q = CreateQueryFor(key);
-                return (Template)gap.data.Store.Query1(q);
+                return (Template)gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -173,7 +173,7 @@ public abstract class TemplateData
     public final static Key GetKey(Key key){
         if (null != key){
             Query q = CreateQueryFor(key);
-            return gap.data.Store.QueryKey1(q);
+            return gap.data.Store.Query1Key(q);
         }
         else
             throw new IllegalArgumentException();
@@ -218,14 +218,22 @@ public abstract class TemplateData
         }
         while (true);
     }
-
     /**
      * Drop the instance from memcache and datastore.
      */
     public final static void Delete(Template instance){
         if (null != instance){
 
-            gap.data.Store.Delete(instance.getKey());
+            Delete(instance.getKey());
+        }
+    }
+    /**
+     * Drop the instance from memcache and datastore.
+     */
+    public final static void Delete(Key instanceKey){
+        if (null != instanceKey){
+
+            gap.data.Store.DeleteKey(instanceKey);
         }
     }
     /**
@@ -234,7 +242,7 @@ public abstract class TemplateData
     public final static void Clean(Template instance){
         if (null != instance){
             Key key = instance.getKey();
-            gap.data.Store.Clean(key);
+            gap.data.Store.CleanKey(key);
         }
     }
     /**
@@ -242,7 +250,7 @@ public abstract class TemplateData
      */
     public final static void Save(Template instance){
         if (null != instance){
-            gap.data.Store.Put(instance);
+            gap.data.Store.PutClass(instance);
         }
     }
     /**
@@ -250,7 +258,7 @@ public abstract class TemplateData
      */
     public final static void Store(Template instance){
         if (null != instance){
-            gap.data.Store.Put(instance);
+            gap.data.Store.PutClass(instance);
         }
     }
     /**
@@ -275,25 +283,31 @@ public abstract class TemplateData
     
     public final static Template Query1(Query query){
         if (null != query)
-            return (Template)gap.data.Store.Query1(query);
+            return (Template)gap.data.Store.Query1Class(query);
         else
             throw new IllegalArgumentException();
     }
     public final static BigTableIterator<Template> QueryN(Query query, Page page){
         if (null != query && null != page)
-            return gap.data.Store.QueryN(query,page);
+            return gap.data.Store.QueryNClass(query,page);
         else
             throw new IllegalArgumentException();
     }
     public final static Key QueryKey1(Query query){
         if (null != query)
-            return gap.data.Store.QueryKey1(query);
+            return gap.data.Store.Query1Key(query);
         else
             throw new IllegalArgumentException();
     }
-    public final static List.Primitive<Key> QueryKeyN(Query query, Page page){
+    public final static List.Primitive<Key> QueryNKey(Query query, Page page){
         if (null != query)
-            return gap.data.Store.QueryKeyN(query,page);
+            return gap.data.Store.QueryNKey(query,page);
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static List.Primitive<Key> QueryNKey(Query query){
+        if (null != query)
+            return gap.data.Store.QueryNKey(query);
         else
             throw new IllegalArgumentException();
     }
@@ -340,6 +354,16 @@ public abstract class TemplateData
                 }
             else
                 return field;
+        }
+        /**
+         * Field statistics are maintained for persistent fields exclusively
+         */
+        public final static class Statistics
+            extends gap.data.Field.Statistics<Template.Field>
+        {
+            public Statistics(){
+                super(Template.Field.class);
+            }
         }
         /**
          * Dynamic binding operator for field data type
@@ -552,6 +576,8 @@ public abstract class TemplateData
         }
     }
 
+    private final Template.Field.Statistics fieldStatistics = new Template.Field.Statistics();
+
     private transient Template inheritFrom;
 
 
@@ -659,7 +685,7 @@ public abstract class TemplateData
     }
     public final boolean dropName(){
         if (null != this.name){
-
+            this.fieldStatistics.markDirty(Field.Name);
             this.name = null;
             return true;
         }
@@ -674,7 +700,7 @@ public abstract class TemplateData
     }
     public final boolean setName(String name){
         if (IsNotEqual(this.name,name)){
-
+            this.fieldStatistics.markDirty(Field.Name);
             this.name = name;
             return true;
         }
@@ -689,7 +715,7 @@ public abstract class TemplateData
     }
     public final boolean dropLastModified(){
         if (null != this.lastModified){
-
+            this.fieldStatistics.markDirty(Field.LastModified);
             this.lastModified = null;
             return true;
         }
@@ -713,7 +739,7 @@ public abstract class TemplateData
     }
     public final boolean setLastModified(Long lastModified, boolean withInheritance){
         if (IsNotEqual(this.lastModified,this.getLastModified(withInheritance))){
-
+            this.fieldStatistics.markDirty(Field.LastModified);
             this.lastModified = lastModified;
             return true;
         }
@@ -722,7 +748,7 @@ public abstract class TemplateData
     }
     public final boolean setLastModified(Long lastModified){
         if (IsNotEqual(this.lastModified,lastModified)){
-
+            this.fieldStatistics.markDirty(Field.LastModified);
             this.lastModified = lastModified;
             return true;
         }
@@ -731,7 +757,7 @@ public abstract class TemplateData
     }
     public final boolean setLastModified(Number lastModified){
         if (IsNotEqual(this.lastModified,lastModified)){
-
+            this.fieldStatistics.markDirty(Field.LastModified);
             if (lastModified instanceof Long)
                 this.lastModified = (Long)lastModified;
             else
@@ -749,7 +775,7 @@ public abstract class TemplateData
     }
     public final boolean dropTemplateSourceHapax(){
         if (null != this.templateSourceHapax){
-
+            this.fieldStatistics.markDirty(Field.TemplateSourceHapax);
             this.templateSourceHapax = null;
             return true;
         }
@@ -773,7 +799,7 @@ public abstract class TemplateData
     }
     public final boolean setTemplateSourceHapax(Text templateSourceHapax, boolean withInheritance){
         if (IsNotEqual(this.templateSourceHapax,this.getTemplateSourceHapax(withInheritance))){
-
+            this.fieldStatistics.markDirty(Field.TemplateSourceHapax);
             this.templateSourceHapax = templateSourceHapax;
             return true;
         }
@@ -782,7 +808,7 @@ public abstract class TemplateData
     }
     public final boolean setTemplateSourceHapax(Text templateSourceHapax){
         if (IsNotEqual(this.templateSourceHapax,templateSourceHapax)){
-
+            this.fieldStatistics.markDirty(Field.TemplateSourceHapax);
             this.templateSourceHapax = templateSourceHapax;
             return true;
         }
@@ -944,6 +970,32 @@ public abstract class TemplateData
     public void defineStorage(gap.data.Field field, java.io.Serializable value){
 
         Field.Storage( (Field)field, (Template)this, value);
+    }
+    public final Template markClean(){
+
+        this.fieldStatistics.markClean();
+        return (Template)this;
+    }
+    public final Template markDirty(){
+
+        this.fieldStatistics.markDirty();
+        return (Template)this;
+    }
+    public final Iterable<gap.data.Field> listClean(){
+
+        return this.fieldStatistics.listClean();
+    }
+    public final Iterable<gap.data.Field> listDirty(){
+
+        return this.fieldStatistics.listDirty();
+    }
+    public final boolean isClean(){
+
+        return this.fieldStatistics.isClean();
+    }
+    public final boolean isDirty(){
+
+        return this.fieldStatistics.isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return ClassDescriptorFor();

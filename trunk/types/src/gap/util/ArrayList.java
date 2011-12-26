@@ -119,6 +119,11 @@ public class ArrayList<V>
     public void drop(){
         this.buffer = null;
     }
+    public boolean save()
+        throws java.lang.InterruptedException
+    {
+        throw new UnsupportedOperationException();
+    }
     public boolean save(long timeout)
         throws java.lang.InterruptedException
     {

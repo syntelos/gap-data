@@ -120,9 +120,17 @@ public interface List<V>
         public List.Short<V> add(V instance);
 
         /**
+         * @param timeout Mutex lock acquisition timeout
          * @return False on failure to lock collection parent.
          */
         public boolean save(long timeout)
+            throws java.lang.InterruptedException;
+
+        /**
+         * Employ default timeout of 28 seconds.
+         * @return False on failure to lock collection parent.
+         */
+        public boolean save()
             throws java.lang.InterruptedException;
 
         public List.Short<V> clone();
