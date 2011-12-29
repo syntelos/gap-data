@@ -76,6 +76,18 @@ public final class Lock
     private final static Long INC = 1L;
     private final static Long DEC = -1L;
 
+    /**
+     * Thrown by enter on thread interrupt.  Caller should return
+     * immediately from the current thread.
+     */
+    public final static class InterruptedException
+        extends java.lang.RuntimeException
+    {
+        public InterruptedException(java.lang.InterruptedException exc){
+            super(exc);
+        }
+    }
+
 
 
     public final String string;
@@ -111,9 +123,9 @@ public final class Lock
         try {
             return this.enter(ENTER);
         }
-        catch (InterruptedException exc){
+        catch (java.lang.InterruptedException exc){
 
-            
+            throw new Lock.InterruptedException(exc);
         }
     }
     public boolean enter(long timeout)
