@@ -1104,8 +1104,10 @@ public final class OD
                                     Class componentClass = FieldClass(pkg,typeParameter,imports);
                                     if (null != componentClass){
                                         Primitive primitive = Primitive.For(componentClass);
-                                        if (null != primitive)
-                                            dataField.setVariable(TemplateNames.FieldImplClassName,ListImplClassName(fieldTypeClean,className,primitive));
+                                        if (null != primitive){
+
+                                            dataField.setVariable(TemplateNames.FieldImplClassName,ListPrimitiveClassName(primitive));
+                                        }
                                         else
                                             throw new ODStateException(field,"Field '"+fieldName+"' in '"+listType.name()+"' expected primitive component type '"+typeParameter+"'.");
                                     }

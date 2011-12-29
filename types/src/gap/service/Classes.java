@@ -817,18 +817,7 @@ public class Classes {
         else
             throw new IllegalStateException();
     }
-    /**
-     * Accepting user primitives enum and date by requiring child type
-     * to be Primitive or ClassDescriptor.
-     * @param fieldType
-     * @param parentClassName
-     * @param childType One of either gap.Primitive or gap.service.od.ClassDescriptor
-     */
     public final static String ListImplClassName(String fieldType, String parentClassName, ClassDescriptor childType){
-
-        return ListUserClassName(parentClassName,childType.getName());
-    }
-    public final static String ListImplClassName(String fieldType, String parentClassName, Primitive childType){
 
         return ListUserClassName(parentClassName,childType.getName());
     }

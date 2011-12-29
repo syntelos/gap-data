@@ -153,6 +153,22 @@ public final class TemplateName
         }
 
 
+        public int indexOf(lxl.Index<String> index){
+            int idx = index.get(this.term);
+            if (this.complement){
+                if (-1 < idx)
+                    return -1;
+                else {
+                    /*
+                     * Strange but correct boolean not -1
+                     */
+                    return 0;
+                }
+            }
+            else {
+                return idx;
+            }
+        }
         public List.Short<TemplateDataDictionary> dereferenceC(lxl.Map<String,List.Short<TemplateDataDictionary>> dict)
         {
             List.Short<TemplateDataDictionary> section = dict.get(this.term);
@@ -446,6 +462,12 @@ public final class TemplateName
      */
     public Component tail(){
         return this.get(this.count-1);
+    }
+    public int indexOf(lxl.Index<String> index){
+        if (0 < this.count)
+            return this.path[0].indexOf(index);
+        else
+            return -1;
     }
     /**
      * @return A negative index is added to list size.
