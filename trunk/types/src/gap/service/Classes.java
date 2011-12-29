@@ -824,9 +824,13 @@ public class Classes {
      * @param parentClassName
      * @param childType One of either gap.Primitive or gap.service.od.ClassDescriptor
      */
-    public final static String ListImplClassName(String fieldType, String parentClassName, Object childType){
+    public final static String ListImplClassName(String fieldType, String parentClassName, ClassDescriptor childType){
 
-        return ListUserClassName(parentClassName,((ClassDescriptor)childType).getName());
+        return ListUserClassName(parentClassName,childType.getName());
+    }
+    public final static String ListImplClassName(String fieldType, String parentClassName, Primitive childType){
+
+        return ListUserClassName(parentClassName,childType.getName());
     }
     public final static String ListPrimitiveClassName(Primitive childType){
         if (null != childType)

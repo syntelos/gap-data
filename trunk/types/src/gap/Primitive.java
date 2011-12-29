@@ -77,6 +77,9 @@ public enum Primitive {
     }
 
 
+    public String getName(){
+        return this.type.getName();
+    }
     public boolean isNumber(){
         switch(this){
 
