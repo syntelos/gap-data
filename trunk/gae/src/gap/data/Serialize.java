@@ -40,6 +40,12 @@ import java.io.ObjectOutputStream;
 public final class Serialize
     extends java.lang.Object
 {
+    public final static java.io.Serializable From(Field field, java.io.Serializable blob){
+        if (null != blob)
+            return Serialize.From(field,(Blob)blob);
+        else
+            return null;
+    }
     /**
      * @see BigTable#fillFrom
      */
