@@ -79,7 +79,7 @@ import java.util.StringTokenizer;
  */
 public final class TemplateName 
     extends Object
-    implements HasName, Iterable<TemplateName.Component>
+    implements HasName, Iterable<TemplateName.Component>, Comparable<TemplateName>
 {
 
     /**
@@ -592,6 +592,24 @@ public final class TemplateName
     }
     public java.util.Iterator<Component> iterator(){
         return new Iterator(this.path);
+    }
+    public int compareTo(TemplateName that){
+        if (this == that)
+            return 0;
+        else if (this.count == that.count){
+
+            for (int cc = 0; cc < this.count; cc++){
+
+                int c = this.path[cc].compareTo(that.path[cc]);
+                if (0 != c)
+                    return c;
+            }
+            return 0;
+        }
+        else if (this.count < that.count)
+            return -1;
+        else
+            return +1;
     }
 
     /**

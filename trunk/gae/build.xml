@@ -134,48 +134,41 @@
     <version/>
   </target>
 
-  <target name="test.compile" depends="version" description="">
-
-    <path id="test.path">
+  <!--  Ant 1.8 + Junit 3.8 -->
+  <target name="test.compile" depends="version" description="Compile unit tests">
+    <path id="test.lib.path">
       <pathelement location="${target.jar}" />
       <pathelement path="test/bin" />
       <fileset dir="${lib}">
         <include name="**/*.jar" />
       </fileset>
-      <fileset dir="${appengine.sdk.home}/lib/shared">
-        <include name="**/*.jar" />
-      </fileset>
-      <fileset dir="${appengine.sdk.home}/lib/user">
-        <include name="**/*.jar" />
-      </fileset>
-      <fileset dir="${appengine.sdk.home}/lib/impl">
-        <include name="**/*.jar" />
-      </fileset>
-      <fileset dir="${appengine.sdk.home}/lib/testing">
-        <include name="**/*.jar" />
-      </fileset>
+      <path location="${appengine.sdk.home}/lib/appengine-tools-api.jar" />
+      <path location="${appengine.sdk.home}/lib/impl/appengine-api.jar" />
+      <path location="${appengine.sdk.home}/lib/impl/appengine-api-labs.jar" />
+      <path location="${appengine.sdk.home}/lib/impl/appengine-api-stubs.jar" />
+      <path location="${appengine.sdk.home}/lib/impl/appengine-local-runtime.jar" />
+      <path location="${appengine.sdk.home}/lib/shared/servlet-api.jar" />
+      <path location="${appengine.sdk.home}/lib/testing/appengine-testing.jar" />
+      <path location="${ant.home}/lib/junit.jar" />
     </path>
 
-    <compile src="test/src" ver="test/ver" bin="test/bin" classpath.id="test.path"/>
-
+    <mkdir dir="test/bin" />
+    <javac srcdir="test/src" destdir="test/bin" includeAntRuntime="false" debug="true">
+      <classpath refid="test.lib.path"/>
+    </javac>
   </target>
 
-  <target name="test" depends="test.compile" description="">
+  <target name="test" depends="test.compile" description="Run defined unit tests">
 
-    <java classname="Selection" fork="true" failOnError="true">
+    <junit haltonerror="true" includeAntRuntime="true" fork="true" dir="test">
+      <classpath refid="test.lib.path"/>
+      <formatter type="plain" usefile="false"/>
 
-      <classpath refid="test.path"/>
-      <arg value="ax@by.cz"/>
-      <arg value="bx@cy.dz"/>
-      <arg value="cx@dy.ez"/>
-      <arg value="dx@ey.fz"/>
-      <arg value="ex@fy.gz"/>
-      <arg value="fx@gy.hz"/>
-      <arg value="gx@hy.iz"/>
-      <arg value="hx@iy.jz"/>
-      <arg value="ix@jy.kz"/>
-      <arg value="jx@ky.lz"/>
-    </java>
+      <test name="Selection" />
+
+      <test name="Templating" />
+
+    </junit>
 
   </target>
 

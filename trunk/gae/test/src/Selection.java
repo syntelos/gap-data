@@ -1,35 +1,35 @@
 
 import com.google.appengine.api.datastore.Key;
 
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
-
 /**
  * Test selection set.
  */
-public class Selection {
+public class Selection
+    extends AbstractTest
+{
+    private final static String[] args = {
+      "ax@by.cz", "bx@cy.dz", "cx@dy.ez", "dx@ey.fz", "ex@fy.gz", "fx@gy.hz", "gx@hy.iz", "hx@iy.jz", "ix@jy.kz", "jx@ky.lz"
+    };
 
-    public static void main(String[] args){
+
+    public Selection(){
+        super();
+    }
+
+    public void testSelection(){
         int errors = 0;
-        LocalServiceTestHelper test = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
-        try {
-            test.setUp();
 
-            gap.service.Selection selection = new gap.service.Selection(oso.data.Person.KIND);
-            for (String uid: args){
-                selection.add(uid);
-            }
+        gap.service.Selection selection = new gap.service.Selection(oso.data.Person.KIND);
+        for (String uid: args){
+            selection.add(uid);
+        }
 
-            for (String uid: args){
-                Key uik = oso.data.Person.KIND.keyForId(uid);
-                if (selection.containsNot(uik))
-                    errors += 1;
-            }
-            System.err.printf("Errors %d%n",errors);
+        for (String uid: args){
+            Key uik = oso.data.Person.KIND.keyIdFor(uid);
+            if (selection.containsNot(uik))
+                errors += 1;
         }
-        finally {
-            test.tearDown();
-        }
-        System.exit(errors);
+        System.err.printf("Test Selection Errors %d%n",errors);
+        assertTrue(0 == errors);
     }
 }
