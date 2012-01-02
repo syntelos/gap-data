@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-23T18:44:11.003Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-02T07:07:13.821Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -72,7 +72,7 @@ public abstract class TemplateData
      * Long instance key without parent key
      */
     public final static Key KeyLongIdFor(String name){
-        String id = IdFor( name);
+        String id = Template.IdFor( name);
         return KeyLongFor(id);
     }
     /**
@@ -81,7 +81,7 @@ public abstract class TemplateData
      * Calls {@link #KeyLongIdFor}
      */
     public final static Key KeyIdFor(Object... args){
-        return KeyLongIdFor((String)args[0]);
+        return Template.KeyLongIdFor((String)args[0]);
     }
     /**
      * Used by setId
@@ -89,7 +89,7 @@ public abstract class TemplateData
      * Calls {@link #KeyLongFor}
      */
     public final static Key KeyFor(Object... args){
-        return KeyLongFor( (String)args[0]);
+        return Template.KeyLongFor( (String)args[0]);
     }
     /**
      * Identifier for unique fields
@@ -108,12 +108,12 @@ public abstract class TemplateData
      */
     public final static Template ForLongName(String name){
         if (null != name){
-            Key key = KeyLongIdFor( name);
+            Key key = Template.KeyLongIdFor( name);
             Template instance = (Template)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = Template.CreateQueryFor(key);
                 return (Template)gap.data.Store.Query1Class(q);
             }
         }
@@ -125,7 +125,7 @@ public abstract class TemplateData
      * Instance lookup or create
      */
     public final static Template GetCreateLong(String name){
-        Template template = ForLongName( name);
+        Template template = Template.ForLongName( name);
         if (null == template){
             template = new Template( name);
             template = (Template)gap.data.Store.PutClass(template);
@@ -141,12 +141,12 @@ public abstract class TemplateData
 
     public final static Template ForLongId(String id){
         if (null != id){
-            Key key = KeyLongFor(id);
+            Key key = Template.KeyLongFor(id);
             Template instance = (Template)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = Template.CreateQueryFor(key);
                 return (Template)gap.data.Store.Query1Class(q);
             }
         }
@@ -163,7 +163,7 @@ public abstract class TemplateData
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = Template.CreateQueryFor(key);
                 return (Template)gap.data.Store.Query1Class(q);
             }
         }
@@ -172,7 +172,7 @@ public abstract class TemplateData
     }
     public final static Key GetKey(Key key){
         if (null != key){
-            Query q = CreateQueryFor(key);
+            Query q = Template.CreateQueryFor(key);
             return gap.data.Store.Query1Key(q);
         }
         else
@@ -596,8 +596,8 @@ public abstract class TemplateData
         super();
         this.setName(name);
         {
-            final String id = IdFor(name);
-            final Key key = KeyLongFor(id);
+            final String id = Template.IdFor(name);
+            final Key key = Template.KeyLongFor(id);
             this.setKey(key);
         }
     }
@@ -616,11 +616,11 @@ public abstract class TemplateData
     }
     public final String getId(){
 
-        String id = IdFor(KIND.name, this.key);
+        String id = Template.IdFor(KIND.name, this.key);
         if (null != id)
             return id;
         else
-            return IdFor(this.name);
+            return Template.IdFor(this.name);
     }
     public final boolean setId(String id){
         if (null == id){
@@ -632,7 +632,7 @@ public abstract class TemplateData
                 return false;
         }
         else if (null == this.key){
-            this.key = KeyLongFor(id);
+            this.key = Template.KeyLongFor(id);
             return true;
         }
         else
@@ -998,13 +998,13 @@ public abstract class TemplateData
         return this.fieldStatistics.isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
-        return ClassDescriptorFor();
+        return Template.ClassDescriptorFor();
     }
     /*
      * Template Data Dictionary
      */
     public boolean hasVariable(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = Template.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case Id:
@@ -1050,7 +1050,7 @@ public abstract class TemplateData
         }
     }
     public String getVariable(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = Template.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case Id:
@@ -1082,7 +1082,7 @@ public abstract class TemplateData
         }
     }
     public void setVariable(TemplateName name, String value){
-        Field field = Field.For(name.getTerm());
+        Field field = Template.Field.For(name.getTerm());
         if (null != field){
             if (name.has(1)){
                 switch (field){
@@ -1106,7 +1106,7 @@ public abstract class TemplateData
         }
     }
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = Template.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case Name:
