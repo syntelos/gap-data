@@ -47,7 +47,38 @@ import java.util.Iterator;
 public final class Store
     extends java.lang.Object
 {
+    /**
+     * Namespace
+     */
+    protected final static class N
+        extends java.lang.Object
+    {
+        private final static ThreadLocal<String> NTL = new ThreadLocal<String>();
 
+        protected static void Enter(String ns){
+
+            if (null == ns){
+
+                if (null != NTL.get()){
+
+                    NTL.set(null);
+                }   
+            }
+            else if (null == NTL.get()){
+
+                NTL.set(ns);
+            }
+            /*
+             * Valid reentry is possible in some error handling schemes
+             */
+        }
+        protected static void Exit(){
+            NTL.remove();
+        }
+        public static String Get(){
+            return NTL.get();
+        }
+    }
     /**
      * Datastore
      */
@@ -255,9 +286,16 @@ public final class Store
 
 
     /**
+     * Test enter without namespace (default application namespace)
+     */
+    public static void Test(){
+        Store.Enter(null);
+    }
+    /**
      * Servlet enter
      */
     public static void Enter(String ns){
+        N.Enter(ns);
         P.Enter(ns);
         C.Enter(ns);
     }
@@ -267,6 +305,10 @@ public final class Store
     public static void Exit(){
         P.Exit();
         C.Exit();
+    }
+    public static String NS(){
+
+        return N.Get();
     }
     public static BigTable GetClass(Key key){
         if (key.isComplete()){
