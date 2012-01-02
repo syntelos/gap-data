@@ -75,15 +75,15 @@ public abstract class {{=class_name}}Data
      * Long instance key without parent key
      */
     public final static Key KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
-        String id = IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+        String id = {{=class_name}}.IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         return KeyLongFor(id);
     }{{/class_re_not_child}}{{#class_re_child}}
     /**
      * Short instance key from parent key
      */
     public final static Key KeyShortIdFor(Key ancestor, {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
-        String id = IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
-        return KeyShortFor(ancestor,id);
+        String id = {{=class_name}}.IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+        return {{=class_name}}.KeyShortFor(ancestor,id);
     }{{/class_re_child}}
     /**
      * Used by gap.data.Kind
@@ -91,8 +91,8 @@ public abstract class {{=class_name}}Data
      * Calls {@link #{{#class_re_not_child}}KeyLongIdFor{{/class_re_not_child}}{{#class_re_child}}KeyShortIdFor{{/class_re_child}}}
      */
     public final static Key KeyIdFor(Object... args){{{#class_re_not_child}}
-        return KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}({{=field_class}})args[{{=field_unique_it_Index}}]{{/field_unique}});{{/class_re_not_child}}{{#class_re_child}}
-        return KeyShortIdFor( (Key)args[0], {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}({{=field_class}})args[{{=field_unique_it_Count}}]{{/field_unique}});{{/class_re_child}}
+        return {{=class_name}}.KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}({{=field_class}})args[{{=field_unique_it_Index}}]{{/field_unique}});{{/class_re_not_child}}{{#class_re_child}}
+        return {{=class_name}}.KeyShortIdFor( (Key)args[0], {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}({{=field_class}})args[{{=field_unique_it_Count}}]{{/field_unique}});{{/class_re_child}}
     }
     /**
      * Used by setId
@@ -100,8 +100,8 @@ public abstract class {{=class_name}}Data
      * Calls {@link #{{#class_re_not_child}}KeyLongFor{{/class_re_not_child}}{{#class_re_child}}KeyShortFor{{/class_re_child}}}
      */
     public final static Key KeyFor(Object... args){{{#class_re_not_child}}
-        return KeyLongFor( (String)args[0]);{{/class_re_not_child}}{{#class_re_child}}
-        return KeyShortFor( (Key)args[0], (String)args[1]);{{/class_re_child}}
+        return {{=class_name}}.KeyLongFor( (String)args[0]);{{/class_re_not_child}}{{#class_re_child}}
+        return {{=class_name}}.KeyShortFor( (Key)args[0], (String)args[1]);{{/class_re_child}}
     }
     /**
      * Identifier for unique fields
@@ -120,12 +120,12 @@ public abstract class {{=class_name}}Data
      */
     public final static {{=class_name}} ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
         if ({{#field_unique}}{{#field_unique_it_NotFirst}} && {{/field_unique_it_NotFirst}}null != {{=field_name}}{{/field_unique}}){
-            Key key = KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+            Key key = {{=class_name}}.KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = {{=class_name}}.CreateQueryFor(key);
                 return ({{=class_name}})gap.data.Store.Query1Class(q);
             }
         }
@@ -137,12 +137,12 @@ public abstract class {{=class_name}}Data
      */
     public final static {{=class_name}} ForShort{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}(Key ancestor, {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
         if ({{#field_unique}}{{#field_unique_it_NotFirst}} && {{/field_unique_it_NotFirst}}null != {{=field_name}}{{/field_unique}}){
-            Key key = KeyShortIdFor(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+            Key key = {{=class_name}}.KeyShortIdFor(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = {{=class_name}}.CreateQueryFor(key);
                 return ({{=class_name}})gap.data.Store.Query1Class(q);
             }
         }
@@ -154,7 +154,7 @@ public abstract class {{=class_name}}Data
      * Instance lookup or create
      */
     public final static {{=class_name}} GetCreateLong({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
-        {{=class_name}} {{=class_nameDecamel}} = ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+        {{=class_name}} {{=class_nameDecamel}} = {{=class_name}}.ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.PutClass({{=class_nameDecamel}});
@@ -165,7 +165,7 @@ public abstract class {{=class_name}}Data
      * Instance lookup or create from parent key
      */
     public final static {{=class_name}} GetCreateShort(Key ancestor, {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
-        {{=class_name}} {{=class_nameDecamel}} = ForShort{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+        {{=class_name}} {{=class_nameDecamel}} = {{=class_name}}.ForShort{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}(ancestor,{{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
             {{=class_nameDecamel}} = ({{=class_name}})gap.data.Store.PutClass({{=class_nameDecamel}});
@@ -184,12 +184,12 @@ public abstract class {{=class_name}}Data
 {{#class_re_not_child}}
     public final static {{=class_name}} ForLongId(String id){
         if (null != id){
-            Key key = KeyLongFor(id);
+            Key key = {{=class_name}}.KeyLongFor(id);
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = {{=class_name}}.CreateQueryFor(key);
                 return ({{=class_name}})gap.data.Store.Query1Class(q);
             }
         }
@@ -198,12 +198,12 @@ public abstract class {{=class_name}}Data
     }{{/class_re_not_child}}{{#class_re_child}}
     public final static {{=class_name}} ForShortId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyShortFor(ancestor,id);
+            Key key = {{=class_name}}.KeyShortFor(ancestor,id);
             {{=class_name}} instance = ({{=class_name}})gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = {{=class_name}}.CreateQueryFor(key);
                 return ({{=class_name}})gap.data.Store.Query1Class(q);
             }
         }
@@ -220,7 +220,7 @@ public abstract class {{=class_name}}Data
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = {{=class_name}}.CreateQueryFor(key);
                 return ({{=class_name}})gap.data.Store.Query1Class(q);
             }
         }
@@ -229,7 +229,7 @@ public abstract class {{=class_name}}Data
     }
     public final static Key GetKey(Key key){
         if (null != key){
-            Query q = CreateQueryFor(key);
+            Query q = {{=class_name}}.CreateQueryFor(key);
             return gap.data.Store.Query1Key(q);
         }
         else
@@ -313,7 +313,7 @@ public abstract class {{=class_name}}Data
      */
     public final static void DeleteChildrenOf(Key parentKey){
         if (null != parentKey){
-             gap.data.Store.DeleteCollection(KIND,CreateQueryFor(parentKey));
+             gap.data.Store.DeleteCollection(KIND,{{=class_name}}.CreateQueryFor(parentKey));
         }
     }{{/class_re_child}}
     /**
@@ -773,8 +773,8 @@ public abstract class {{=class_name}}Data
         super();{{#field_unique}}
         this.set{{=field_nameCamel}}({{=field_name}});{{/field_unique}}
         {
-            final String id = IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_name}}{{/field_unique}});
-            final Key key = KeyLongFor(id);
+            final String id = {{=class_name}}.IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_name}}{{/field_unique}});
+            final Key key = {{=class_name}}.KeyLongFor(id);
             this.setKey(key);
         }
     }{{/class_re_not_child}}{{#class_re_child}}
@@ -783,8 +783,8 @@ public abstract class {{=class_name}}Data
         this.set{{=field_nameCamel}}({{=field_name}});{{/field_unique}}
         this.parentKey = ancestor;
         {
-            final String id = IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_name}}{{/field_unique}});{{#class_re_child}}
-            final Key key = KeyShortFor(ancestor,id);{{/class_re_child}}
+            final String id = {{=class_name}}.IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_name}}{{/field_unique}});{{#class_re_child}}
+            final Key key = {{=class_name}}.KeyShortFor(ancestor,id);{{/class_re_child}}
             this.setKey(key);
         }
     }{{/class_re_child}}
@@ -802,11 +802,11 @@ public abstract class {{=class_name}}Data
     }
     public final String getId(){
 
-        String id = IdFor(KIND.name, this.key);
+        String id = {{=class_name}}.IdFor(KIND.name, this.key);
         if (null != id)
             return id;
         else
-            return IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}this.{{=field_name}}{{/field_unique}});
+            return {{=class_name}}.IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}this.{{=field_name}}{{/field_unique}});
     }
     public final boolean setId(String id){
         if (null == id){
@@ -818,8 +818,8 @@ public abstract class {{=class_name}}Data
                 return false;
         }
         else if (null == this.key){{{#class_re_not_child}}
-            this.key = KeyLongFor(id);{{/class_re_not_child}}{{#class_re_child}}
-            this.key = KeyShortFor(this.getParentKey(),id);{{/class_re_child}}
+            this.key = {{=class_name}}.KeyLongFor(id);{{/class_re_not_child}}{{#class_re_child}}
+            this.key = {{=class_name}}.KeyShortFor(this.getParentKey(),id);{{/class_re_child}}
             return true;
         }
         else
@@ -1294,16 +1294,16 @@ public abstract class {{=class_name}}Data
         return this.fieldStatistics.isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
-        return ClassDescriptorFor();
+        return {{=class_name}}.ClassDescriptorFor();
     }{{#class_re_child}}
     public final gap.service.od.ClassDescriptor getClassDescriptorForParent(){
-        return ClassDescriptorForParent();
+        return {{=class_name}}.ClassDescriptorForParent();
     }{{/class_re_child}}
     /*
      * Template Data Dictionary
      */
     public boolean hasVariable(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = {{=class_name}}.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case Id:
@@ -1348,7 +1348,7 @@ public abstract class {{=class_name}}Data
         }
     }
     public String getVariable(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = {{=class_name}}.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case Id:
@@ -1380,7 +1380,7 @@ public abstract class {{=class_name}}Data
         }
     }
     public void setVariable(TemplateName name, String value){
-        Field field = Field.For(name.getTerm());
+        Field field = {{=class_name}}.Field.For(name.getTerm());
         if (null != field){
             if (name.has(1)){
                 switch (field){
@@ -1406,7 +1406,7 @@ public abstract class {{=class_name}}Data
         }
     }
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = {{=class_name}}.Field.For(name.getTerm());
         if (null != field){
             switch (field){{{#pfield}}
             case {{=field_nameCamel}}:{{#field_is_bigTable}}

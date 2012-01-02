@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-23T18:44:11.170Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-02T07:07:14.418Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -73,8 +73,8 @@ public abstract class TemplateNodeData
      * Short instance key from parent key
      */
     public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer lineNumber){
-        String id = IdFor( nodeType,  lineNumber);
-        return KeyShortFor(ancestor,id);
+        String id = TemplateNode.IdFor( nodeType,  lineNumber);
+        return TemplateNode.KeyShortFor(ancestor,id);
     }
     /**
      * Used by gap.data.Kind
@@ -82,7 +82,7 @@ public abstract class TemplateNodeData
      * Calls {@link #KeyShortIdFor}
      */
     public final static Key KeyIdFor(Object... args){
-        return KeyShortIdFor( (Key)args[0], (String)args[1], (Integer)args[2]);
+        return TemplateNode.KeyShortIdFor( (Key)args[0], (String)args[1], (Integer)args[2]);
     }
     /**
      * Used by setId
@@ -90,7 +90,7 @@ public abstract class TemplateNodeData
      * Calls {@link #KeyShortFor}
      */
     public final static Key KeyFor(Object... args){
-        return KeyShortFor( (Key)args[0], (String)args[1]);
+        return TemplateNode.KeyShortFor( (Key)args[0], (String)args[1]);
     }
     /**
      * Identifier for unique fields
@@ -110,12 +110,12 @@ public abstract class TemplateNodeData
      */
     public final static TemplateNode ForShortNodeTypeLineNumber(Key ancestor, String nodeType, Integer lineNumber){
         if (null != nodeType && null != lineNumber){
-            Key key = KeyShortIdFor(ancestor, nodeType, lineNumber);
+            Key key = TemplateNode.KeyShortIdFor(ancestor, nodeType, lineNumber);
             TemplateNode instance = (TemplateNode)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = TemplateNode.CreateQueryFor(key);
                 return (TemplateNode)gap.data.Store.Query1Class(q);
             }
         }
@@ -127,7 +127,7 @@ public abstract class TemplateNodeData
      * Instance lookup or create from parent key
      */
     public final static TemplateNode GetCreateShort(Key ancestor, String nodeType, Integer lineNumber){
-        TemplateNode templateNode = ForShortNodeTypeLineNumber(ancestor, nodeType, lineNumber);
+        TemplateNode templateNode = TemplateNode.ForShortNodeTypeLineNumber(ancestor, nodeType, lineNumber);
         if (null == templateNode){
             templateNode = new TemplateNode(ancestor, nodeType, lineNumber);
             templateNode = (TemplateNode)gap.data.Store.PutClass(templateNode);
@@ -143,12 +143,12 @@ public abstract class TemplateNodeData
 
     public final static TemplateNode ForShortId(Key ancestor, String id){
         if (null != ancestor && ancestor.isComplete() && null != id){
-            Key key = KeyShortFor(ancestor,id);
+            Key key = TemplateNode.KeyShortFor(ancestor,id);
             TemplateNode instance = (TemplateNode)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = TemplateNode.CreateQueryFor(key);
                 return (TemplateNode)gap.data.Store.Query1Class(q);
             }
         }
@@ -165,7 +165,7 @@ public abstract class TemplateNodeData
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = TemplateNode.CreateQueryFor(key);
                 return (TemplateNode)gap.data.Store.Query1Class(q);
             }
         }
@@ -174,7 +174,7 @@ public abstract class TemplateNodeData
     }
     public final static Key GetKey(Key key){
         if (null != key){
-            Query q = CreateQueryFor(key);
+            Query q = TemplateNode.CreateQueryFor(key);
             return gap.data.Store.Query1Key(q);
         }
         else
@@ -237,7 +237,7 @@ public abstract class TemplateNodeData
      */
     public final static void DeleteChildrenOf(Key parentKey){
         if (null != parentKey){
-             gap.data.Store.DeleteCollection(KIND,CreateQueryFor(parentKey));
+             gap.data.Store.DeleteCollection(KIND,TemplateNode.CreateQueryFor(parentKey));
         }
     }
     /**
@@ -648,8 +648,8 @@ public abstract class TemplateNodeData
         this.setLineNumber(lineNumber);
         this.parentKey = ancestor;
         {
-            final String id = IdFor(nodeType, lineNumber);
-            final Key key = KeyShortFor(ancestor,id);
+            final String id = TemplateNode.IdFor(nodeType, lineNumber);
+            final Key key = TemplateNode.KeyShortFor(ancestor,id);
             this.setKey(key);
         }
     }
@@ -666,11 +666,11 @@ public abstract class TemplateNodeData
     }
     public final String getId(){
 
-        String id = IdFor(KIND.name, this.key);
+        String id = TemplateNode.IdFor(KIND.name, this.key);
         if (null != id)
             return id;
         else
-            return IdFor(this.nodeType, this.lineNumber);
+            return TemplateNode.IdFor(this.nodeType, this.lineNumber);
     }
     public final boolean setId(String id){
         if (null == id){
@@ -682,7 +682,7 @@ public abstract class TemplateNodeData
                 return false;
         }
         else if (null == this.key){
-            this.key = KeyShortFor(this.getParentKey(),id);
+            this.key = TemplateNode.KeyShortFor(this.getParentKey(),id);
             return true;
         }
         else
@@ -1128,16 +1128,16 @@ public abstract class TemplateNodeData
         return this.fieldStatistics.isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
-        return ClassDescriptorFor();
+        return TemplateNode.ClassDescriptorFor();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorForParent(){
-        return ClassDescriptorForParent();
+        return TemplateNode.ClassDescriptorForParent();
     }
     /*
      * Template Data Dictionary
      */
     public boolean hasVariable(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = TemplateNode.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case Id:
@@ -1201,7 +1201,7 @@ public abstract class TemplateNodeData
         }
     }
     public String getVariable(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = TemplateNode.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case Id:
@@ -1243,7 +1243,7 @@ public abstract class TemplateNodeData
         }
     }
     public void setVariable(TemplateName name, String value){
-        Field field = Field.For(name.getTerm());
+        Field field = TemplateNode.Field.For(name.getTerm());
         if (null != field){
             if (name.has(1)){
                 switch (field){
@@ -1271,7 +1271,7 @@ public abstract class TemplateNodeData
         }
     }
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = TemplateNode.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case NodeType:

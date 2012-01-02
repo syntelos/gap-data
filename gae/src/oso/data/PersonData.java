@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-12-23T18:44:10.397Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-02T07:07:12.868Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -70,7 +70,7 @@ public abstract class PersonData
      * Long instance key without parent key
      */
     public final static Key KeyLongIdFor(String logonId){
-        String id = IdFor( logonId);
+        String id = Person.IdFor( logonId);
         return KeyLongFor(id);
     }
     /**
@@ -79,7 +79,7 @@ public abstract class PersonData
      * Calls {@link #KeyLongIdFor}
      */
     public final static Key KeyIdFor(Object... args){
-        return KeyLongIdFor((String)args[0]);
+        return Person.KeyLongIdFor((String)args[0]);
     }
     /**
      * Used by setId
@@ -87,7 +87,7 @@ public abstract class PersonData
      * Calls {@link #KeyLongFor}
      */
     public final static Key KeyFor(Object... args){
-        return KeyLongFor( (String)args[0]);
+        return Person.KeyLongFor( (String)args[0]);
     }
     /**
      * Identifier for unique fields
@@ -106,12 +106,12 @@ public abstract class PersonData
      */
     public final static Person ForLongLogonId(String logonId){
         if (null != logonId){
-            Key key = KeyLongIdFor( logonId);
+            Key key = Person.KeyLongIdFor( logonId);
             Person instance = (Person)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = Person.CreateQueryFor(key);
                 return (Person)gap.data.Store.Query1Class(q);
             }
         }
@@ -123,7 +123,7 @@ public abstract class PersonData
      * Instance lookup or create
      */
     public final static Person GetCreateLong(String logonId){
-        Person person = ForLongLogonId( logonId);
+        Person person = Person.ForLongLogonId( logonId);
         if (null == person){
             person = new Person( logonId);
             person = (Person)gap.data.Store.PutClass(person);
@@ -139,12 +139,12 @@ public abstract class PersonData
 
     public final static Person ForLongId(String id){
         if (null != id){
-            Key key = KeyLongFor(id);
+            Key key = Person.KeyLongFor(id);
             Person instance = (Person)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = Person.CreateQueryFor(key);
                 return (Person)gap.data.Store.Query1Class(q);
             }
         }
@@ -161,7 +161,7 @@ public abstract class PersonData
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
+                Query q = Person.CreateQueryFor(key);
                 return (Person)gap.data.Store.Query1Class(q);
             }
         }
@@ -170,7 +170,7 @@ public abstract class PersonData
     }
     public final static Key GetKey(Key key){
         if (null != key){
-            Query q = CreateQueryFor(key);
+            Query q = Person.CreateQueryFor(key);
             return gap.data.Store.Query1Key(q);
         }
         else
@@ -557,8 +557,8 @@ public abstract class PersonData
         super();
         this.setLogonId(logonId);
         {
-            final String id = IdFor(logonId);
-            final Key key = KeyLongFor(id);
+            final String id = Person.IdFor(logonId);
+            final Key key = Person.KeyLongFor(id);
             this.setKey(key);
         }
     }
@@ -570,11 +570,11 @@ public abstract class PersonData
     }
     public final String getId(){
 
-        String id = IdFor(KIND.name, this.key);
+        String id = Person.IdFor(KIND.name, this.key);
         if (null != id)
             return id;
         else
-            return IdFor(this.logonId);
+            return Person.IdFor(this.logonId);
     }
     public final boolean setId(String id){
         if (null == id){
@@ -586,7 +586,7 @@ public abstract class PersonData
                 return false;
         }
         else if (null == this.key){
-            this.key = KeyLongFor(id);
+            this.key = Person.KeyLongFor(id);
             return true;
         }
         else
@@ -727,13 +727,13 @@ public abstract class PersonData
         return this.fieldStatistics.isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
-        return ClassDescriptorFor();
+        return Person.ClassDescriptorFor();
     }
     /*
      * Template Data Dictionary
      */
     public boolean hasVariable(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = Person.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case Id:
@@ -761,7 +761,7 @@ public abstract class PersonData
         }
     }
     public String getVariable(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = Person.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case Id:
@@ -783,7 +783,7 @@ public abstract class PersonData
         }
     }
     public void setVariable(TemplateName name, String value){
-        Field field = Field.For(name.getTerm());
+        Field field = Person.Field.For(name.getTerm());
         if (null != field){
             if (name.has(1)){
                 switch (field){
@@ -803,7 +803,7 @@ public abstract class PersonData
         }
     }
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
-        Field field = Field.For(name.getTerm());
+        Field field = Person.Field.For(name.getTerm());
         if (null != field){
             switch (field){
             case LogonId:
