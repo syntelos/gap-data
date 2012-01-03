@@ -153,7 +153,13 @@ public abstract class {{=class_name}}Data
     /**
      * Instance lookup or create
      */
-    public final static {{=class_name}} GetCreateLong({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
+    public static {{=class_name}} GetCreateLong({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
+        return GetCreateLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+    }
+    /**
+     * Instance lookup or create
+     */
+    public final static {{=class_name}} GetCreateLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
         {{=class_name}} {{=class_nameDecamel}} = {{=class_name}}.ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         if (null == {{=class_nameDecamel}}){
             {{=class_nameDecamel}} = new {{=class_name}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
@@ -255,6 +261,9 @@ public abstract class {{=class_name}}Data
 
 {{#class_re_not_child}}
     /**
+     * Anonymous random key cannot be mapped to network identifier
+     * @see {{=class_name}}#IdFor
+     *
      * Test for uniqueness and iterate under collisions.
      */
     public final static Key NewRandomKeyLong(){
@@ -276,6 +285,9 @@ public abstract class {{=class_name}}Data
         while (true);
     }{{/class_re_not_child}}{{#class_re_child}}
     /**
+     * Anonymous random key cannot be mapped to network identifier
+     * @see {{=class_name}}#IdFor
+     *
      * Test for uniqueness and iterate under collisions.
      */
     public final static Key NewRandomKeyShort(Key ancestor){
@@ -562,14 +574,18 @@ public abstract class {{=class_name}}Data
                     return _{{=field_name}}.toString();
                 else
                     return null;
-            }{{/field_is_bigdecimal}}{{#field_is_enum}}
+            }{{/field_is_bigdecimal}}{{#field_is_serializable}}
+            case {{=field_nameCamel}}:{
+                {{=field_class}} _{{=field_name}} = instance.get{{=field_nameCamel}}(MayNotInherit);
+                return Serialize.To(field,_{{=field_name}});
+            }{{/field_is_serializable}}{{#field_is_enum}}
             case {{=field_nameCamel}}:{
                 return Strings.EnumToString( instance.get{{=field_nameCamel}}(MayNotInherit));
             }{{/field_is_enum}}{{#field_is_bigTable}}
             case {{=field_nameCamel}}:
-                return instance.get{{=field_nameCamel}}Id();{{/field_is_bigTable}}{{#field_is_not_collection}}{{#field_is_not_character}}{{#field_is_not_number}}{{#field_is_not_biginteger}}{{#field_is_not_bigdecimal}}{{#field_is_not_enum}}{{#field_is_not_bigTable}}
+                return instance.get{{=field_nameCamel}}Id();{{/field_is_bigTable}}{{#field_is_not_collection}}{{#field_is_not_character}}{{#field_is_not_number}}{{#field_is_not_biginteger}}{{#field_is_not_bigdecimal}}{{#field_is_not_serializable}}{{#field_is_not_enum}}{{#field_is_not_bigTable}}
             case {{=field_nameCamel}}:
-                return instance.get{{=field_nameCamel}}(MayNotInherit);{{/field_is_not_bigTable}}{{/field_is_not_enum}}{{/field_is_not_bigdecimal}}{{/field_is_not_biginteger}}{{/field_is_not_number}}{{/field_is_not_character}}{{/field_is_not_collection}}{{/field}}
+                return instance.get{{=field_nameCamel}}(MayNotInherit);{{/field_is_not_bigTable}}{{/field_is_not_enum}}{{/field_is_not_serializable}}{{/field_is_not_bigdecimal}}{{/field_is_not_biginteger}}{{/field_is_not_number}}{{/field_is_not_character}}{{/field_is_not_collection}}{{/field}}
             default:
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
@@ -632,7 +648,12 @@ public abstract class {{=class_name}}Data
                 }
                 instance.set{{=field_nameCamel}}( _{{=field_name}});
                 return;
-            }{{/field_is_bigdecimal}}{{#field_is_enum}}
+            }{{/field_is_bigdecimal}}{{#field_is_serializable}}
+            case {{=field_nameCamel}}:{
+                {{=field_class}} _{{=field_name}} = ({{=field_class}})Serialize.From(field,value);
+                instance.set{{=field_nameCamel}}( _{{=field_name}});
+                return;
+            }{{/field_is_serializable}}{{#field_is_enum}}
             case {{=field_nameCamel}}:{
                 {{field_class}} _{{=field_name}} = ({{=field_class}})Strings.EnumFromString( (String)value);
                 instance.set{{=field_nameCamel}}( _{{=field_name}});
@@ -640,10 +661,10 @@ public abstract class {{=class_name}}Data
             }{{/field_is_enum}}{{#field_is_bigTable}}
             case {{=field_nameCamel}}:
                 instance.set{{=field_nameCamel}}Id( (String)value);
-                return;{{/field_is_bigTable}}{{#field_is_not_collection}}{{#field_is_not_character}}{{#field_is_not_number}}{{#field_is_not_biginteger}}{{#field_is_not_bigdecimal}}{{#field_is_not_enum}}{{#field_is_not_bigTable}}
+                return;{{/field_is_bigTable}}{{#field_is_not_collection}}{{#field_is_not_character}}{{#field_is_not_number}}{{#field_is_not_biginteger}}{{#field_is_not_bigdecimal}}{{#field_is_not_serializable}}{{#field_is_not_enum}}{{#field_is_not_bigTable}}
             case {{=field_nameCamel}}:
                 instance.set{{=field_nameCamel}}( ({{=field_class}})value);
-                return;{{/field_is_not_bigTable}}{{/field_is_not_enum}}{{/field_is_not_bigdecimal}}{{/field_is_not_biginteger}}{{/field_is_not_number}}{{/field_is_not_character}}{{/field_is_not_collection}}{{/field}}
+                return;{{/field_is_not_bigTable}}{{/field_is_not_enum}}{{/field_is_not_serializable}}{{/field_is_not_bigdecimal}}{{/field_is_not_biginteger}}{{/field_is_not_number}}{{/field_is_not_character}}{{/field_is_not_collection}}{{/field}}
             default:
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }

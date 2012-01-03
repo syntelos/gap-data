@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-02T07:07:13.821Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-03T19:09:40.885Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -124,7 +124,13 @@ public abstract class TemplateData
     /**
      * Instance lookup or create
      */
-    public final static Template GetCreateLong(String name){
+    public static Template GetCreateLong(String name){
+        return GetCreateLongName( name);
+    }
+    /**
+     * Instance lookup or create
+     */
+    public final static Template GetCreateLongName(String name){
         Template template = Template.ForLongName( name);
         if (null == template){
             template = new Template( name);
@@ -198,6 +204,9 @@ public abstract class TemplateData
 
 
     /**
+     * Anonymous random key cannot be mapped to network identifier
+     * @see Template#IdFor
+     *
      * Test for uniqueness and iterate under collisions.
      */
     public final static Key NewRandomKeyLong(){

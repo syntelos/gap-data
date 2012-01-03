@@ -19,11 +19,23 @@
  */
 package gap;
 
+import alto.io.u.B64;
+
 import static gap.Primitive.* ;
 
 import jauk.Re;
 
+import com.google.appengine.api.datastore.Blob;
+
 import java.lang.reflect.Method;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import java.util.Random;
+
 
 /**
  * String conversions for {@link Primitive} types.
@@ -79,6 +91,8 @@ public abstract class Strings {
                 return RatingFromString(string);
             case Text:
                 return TextFromString(string);
+            case Serializable:
+                return SerializableFromString(string);
             default:
                 throw new java.lang.IllegalStateException("Unrecognized type "+type.name());
             }
@@ -138,6 +152,8 @@ public abstract class Strings {
                 return RatingToString((com.google.appengine.api.datastore.Rating)instance);
             case Text:
                 return TextToString((com.google.appengine.api.datastore.Text)instance);
+            case Serializable:
+                return SerializableToString((java.io.Serializable)instance);
             default:
                 throw new java.lang.IllegalStateException("Unrecognized type "+type.name());
             }
@@ -492,6 +508,40 @@ public abstract class Strings {
         else
             return null;
     }
+    public final static java.io.Serializable SerializableFromString(java.lang.String string){
+        if (null != string){
+            byte[] blob = B64.decode(string);
+            if (null != blob){
+                try {
+                    ByteArrayInputStream buffer = new ByteArrayInputStream(blob);
+                    ObjectInputStream in = new ObjectInputStream(buffer);
+                    return (java.io.Serializable)in.readObject();
+                }
+                catch (java.lang.ClassNotFoundException exc){
+                    throw new java.lang.RuntimeException(exc);
+                }
+                catch (java.io.IOException exc){
+                    throw new java.lang.RuntimeException(exc);
+                }
+            }
+        }
+        return null;
+    }
+    public final static java.lang.String SerializableToString(java.io.Serializable instance){
+        if (null != instance){
+            try {
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                ObjectOutputStream out = new ObjectOutputStream(buffer);
+                out.writeObject(instance);
+                return B64.encodeBytes(buffer.toByteArray());
+            }
+            catch (java.io.IOException exc){
+                throw new java.lang.RuntimeException(exc);
+            }
+        }
+        else
+            return null;
+    }
     public final static java.lang.String[] Add(java.lang.String[] list, Primitive type, java.lang.Object instance){
 	return Add(list,ToString(type,instance));
     }
@@ -508,5 +558,48 @@ public abstract class Strings {
 	    return copier;
 	}
     }
+    private final static int RandomIdentifierOctets = 12;
 
+    public final static java.lang.String RandomIdentifier(){
+        byte[] bits = new byte[RandomIdentifierOctets];
+        {
+            new Random().nextBytes(bits);
+        }
+        return RandomIdentifierPathclean(B64.encodeBytes(bits));
+    }
+    private final static String RandomIdentifierPathclean(String r){
+        char[] cary = r.toCharArray();
+        final int count = cary.length;
+        boolean change = false;
+        for (int cc = 0; cc < count; cc++){
+            switch (cary[cc]){
+            case '/':
+                change = true;
+                cary[cc] = 'A';
+                break;
+            case '+':
+                change = true;
+                cary[cc] = 'B';
+                break;
+            case '\r':
+                change = true;
+                cary[cc] = 'C';
+                break;
+            case '\n':
+                change = true;
+                cary[cc] = 'D';
+                break;
+            case '=':
+                change = true;
+                cary[cc] = 'E';
+                break;
+            default:
+                break;
+            }
+        }
+        if (change)
+            return new String(cary,0,count);
+        else
+            return r;
+    }
 }

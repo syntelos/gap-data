@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-02T07:07:12.868Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-03T19:09:39.802Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -122,7 +122,13 @@ public abstract class PersonData
     /**
      * Instance lookup or create
      */
-    public final static Person GetCreateLong(String logonId){
+    public static Person GetCreateLong(String logonId){
+        return GetCreateLongLogonId( logonId);
+    }
+    /**
+     * Instance lookup or create
+     */
+    public final static Person GetCreateLongLogonId(String logonId){
         Person person = Person.ForLongLogonId( logonId);
         if (null == person){
             person = new Person( logonId);
@@ -196,6 +202,9 @@ public abstract class PersonData
 
 
     /**
+     * Anonymous random key cannot be mapped to network identifier
+     * @see Person#IdFor
+     *
      * Test for uniqueness and iterate under collisions.
      */
     public final static Key NewRandomKeyLong(){

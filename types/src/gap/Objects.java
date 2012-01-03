@@ -19,6 +19,14 @@
  */
 package gap;
 
+import com.google.appengine.api.datastore.Blob;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+
 /**
  * Object conversions for field types.
  * 
@@ -297,6 +305,28 @@ public abstract class Objects {
             return (com.google.appengine.api.datastore.Text)object;
         else if (object instanceof java.lang.String)
             return Strings.TextFromString( (java.lang.String)object);
+        else if (null == object)
+            return null;
+        else
+            throw new ClassCastException(object.getClass().getName());
+    }
+    public final static java.io.Serializable SerializableFromObject(java.lang.Object object){
+        if (object instanceof Blob){
+            Blob blob = (Blob)object;
+            try {
+                ByteArrayInputStream buffer = new ByteArrayInputStream(blob.getBytes());
+                ObjectInputStream in = new ObjectInputStream(buffer);
+                return (java.io.Serializable)in.readObject();
+            }
+            catch (java.lang.ClassNotFoundException exc){
+                throw new java.lang.RuntimeException(exc);
+            }
+            catch (java.io.IOException exc){
+                throw new java.lang.RuntimeException(exc);
+            }
+        }
+        else if (object instanceof java.io.Serializable)
+            return (java.io.Serializable)object;
         else if (null == object)
             return null;
         else

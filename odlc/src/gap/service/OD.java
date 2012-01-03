@@ -112,6 +112,9 @@ public final class OD
         public final static TemplateName FieldIsBigDecimal = new TemplateName("field_is_bigdecimal");
         public final static TemplateName FieldIsNotBigDecimal = new TemplateName("field_is_not_bigdecimal");
 
+        public final static TemplateName FieldIsSerializable = new TemplateName("field_is_serializable");
+        public final static TemplateName FieldIsNotSerializable = new TemplateName("field_is_not_serializable");
+
         public final static TemplateName FieldIsBigTable = new TemplateName("field_is_bigTable");
         public final static TemplateName FieldIsNotBigTable = new TemplateName("field_is_not_bigTable");
 
@@ -899,6 +902,7 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
                         dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                         dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        dataField.addSection(TemplateNames.FieldIsNotSerializable);
                         break;
                     case Enum:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.EnumToString(");
@@ -916,6 +920,7 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsEnum);
                         dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                         dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        dataField.addSection(TemplateNames.FieldIsNotSerializable);
                         break;
                     case Boolean:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.BooleanToString(");
@@ -933,6 +938,7 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
                         dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                         dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        dataField.addSection(TemplateNames.FieldIsNotSerializable);
                         break;
                     case Character:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.CharacterToString(");
@@ -950,6 +956,7 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
                         dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                         dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        dataField.addSection(TemplateNames.FieldIsNotSerializable);
                         break;
                     case String:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"");
@@ -967,6 +974,7 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
                         dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                         dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        dataField.addSection(TemplateNames.FieldIsNotSerializable);
                         break;
                     case BigInteger:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.BigIntegerToString(");
@@ -984,6 +992,7 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
                         dataField.addSection(TemplateNames.FieldIsBigInteger);
                         dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        dataField.addSection(TemplateNames.FieldIsNotSerializable);
                         break;
                     case BigDecimal:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.BigDecimalToString(");
@@ -1001,6 +1010,25 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
                         dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                         dataField.addSection(TemplateNames.FieldIsBigDecimal);
+                        dataField.addSection(TemplateNames.FieldIsNotSerializable);
+                        break;
+                    case Serializable:
+                        dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.SerializableToString(");
+                        dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromStringPrefix,"("+fieldType+")gap.Strings.SerializableFromString(");
+                        dataField.setVariable(TemplateNames.FieldFromStringSuffix,")");
+
+                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+")gap.Objects.SerializableFromObject(");
+                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,")");
+
+                        dataField.addSection(TemplateNames.FieldIsNotKey);
+                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                        dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                        dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                        dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        dataField.addSection(TemplateNames.FieldIsSerializable);
                         break;
                     default:
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings."+fieldTypeCleanClean+"ToString(");
@@ -1018,6 +1046,7 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotEnum);
                         dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                         dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        dataField.addSection(TemplateNames.FieldIsNotSerializable);
                         break;
                     }
                 }
@@ -1030,6 +1059,7 @@ public final class OD
                     dataField.addSection(TemplateNames.FieldIsNotCharacter);
                     dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                     dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                    dataField.addSection(TemplateNames.FieldIsNotSerializable);
 
                     if (IsTypeClassBigTable(fieldTypeClassDescriptor,fieldTypeClass)){
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");

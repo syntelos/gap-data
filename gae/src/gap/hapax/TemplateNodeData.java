@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-02T07:07:14.418Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-03T19:09:41.499Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -200,6 +200,9 @@ public abstract class TemplateNodeData
 
 
     /**
+     * Anonymous random key cannot be mapped to network identifier
+     * @see TemplateNode#IdFor
+     *
      * Test for uniqueness and iterate under collisions.
      */
     public final static Key NewRandomKeyShort(Key ancestor){

@@ -19,6 +19,9 @@
  */
 package gap;
 
+import gap.data.Collection;
+import gap.data.TableClass;
+
 /**
  * The gap primitive types from java lang and google datastore.
  * 
@@ -60,10 +63,13 @@ public enum Primitive {
     Rating(com.google.appengine.api.datastore.Rating.class),
     ShortBlob(com.google.appengine.api.datastore.ShortBlob.class),
     Text(com.google.appengine.api.datastore.Text.class),
-    BlobKey(com.google.appengine.api.blobstore.BlobKey.class);
+    BlobKey(com.google.appengine.api.blobstore.BlobKey.class),
+    Serializable(java.io.Serializable.class,new Class[]{TableClass.class,Collection.class});
 
 
     public final Class type;
+
+    public final Class[] exclude;
 
     public final String full, pkg, local;
 
@@ -71,6 +77,15 @@ public enum Primitive {
     private Primitive(Class impl){
         this.type = impl;
         this.full = impl.getName();
+        this.exclude = null;
+        int idx = this.full.lastIndexOf('.');
+        this.pkg = this.full.substring(0,idx);
+        this.local = this.full.substring(idx+1);
+    }
+    private Primitive(Class impl, Class[] exclude){
+        this.type = impl;
+        this.full = impl.getName();
+        this.exclude = exclude;
         int idx = this.full.lastIndexOf('.');
         this.pkg = this.full.substring(0,idx);
         this.local = this.full.substring(idx+1);
@@ -106,6 +121,21 @@ public enum Primitive {
             return false;
         }
     }
+    public boolean isAssignableFrom(Class type){
+        if (this.type.isAssignableFrom(type)){
+
+            if (null != this.exclude){
+                for (Class not: this.exclude){
+
+                    if (not.isAssignableFrom(type))
+                        return false;
+                }
+            }
+            return true;
+        }
+        else
+            return false;
+    }
 
 
     public final static boolean Is(String name){
@@ -114,10 +144,18 @@ public enum Primitive {
     public final static boolean Is(Class type){
         if (null != Primitive.For(type))
             return true;
-        else if (Enum.type.isAssignableFrom(type))
+        else if (Enum.isAssignableFrom(type))
             return true;
-        else if (Date.type.isAssignableFrom(type))
+        else if (Date.isAssignableFrom(type))
             return true;
+        else if (Serializable.isAssignableFrom(type))
+            return true;
+        else
+            return false;
+    }
+    public final static boolean IsSerializable(Class type){
+        if (Serializable.type.isAssignableFrom(type))
+            return (!(TableClass.class.isAssignableFrom(type)||Collection.class.isAssignableFrom(type)));
         else
             return false;
     }
@@ -126,10 +164,12 @@ public enum Primitive {
             Primitive p = Primitive.Map.get(type.getName());
             if (null != p)
                 return p;
-            else if (Enum.type.isAssignableFrom(type))
+            else if (Enum.isAssignableFrom(type))
                 return Primitive.Enum;
-            else if (Date.type.isAssignableFrom(type))
+            else if (Date.isAssignableFrom(type))
                 return Primitive.Date;
+            else if (Serializable.isAssignableFrom(type))
+                return Primitive.Serializable;
         }
         return null;
     }
@@ -175,6 +215,9 @@ public enum Primitive {
                 break;
             case Integer:
                 Primitive.Map.put("int",type);
+                break;
+            case Serializable:
+                Primitive.Map.put("object",type);
                 break;
             }
         }
