@@ -32,8 +32,8 @@ public class ListPrimitiveShort
     public ListPrimitiveShort(){
         super();
     }
-    public ListPrimitiveShort(gap.data.BigTable table){
-        super();
+    public ListPrimitiveShort(gap.data.BigTable ancestor){
+        super(ancestor);
     }
 
     public final gap.Primitive getType(){

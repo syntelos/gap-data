@@ -32,8 +32,8 @@ public class ListPrimitiveBoolean
     public ListPrimitiveBoolean(){
         super();
     }
-    public ListPrimitiveBoolean(gap.data.BigTable table){
-        super();
+    public ListPrimitiveBoolean(gap.data.BigTable ancestor){
+        super(ancestor);
     }
 
 

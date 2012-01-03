@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-03T19:09:41.499Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-03T23:50:42.608Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -785,7 +785,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropNodeType(){
         if (null != this.nodeType){
-            this.fieldStatistics.markDirty(Field.NodeType);
+            this.fieldStatistics.markDirty(TemplateNode.Field.NodeType);
             this.nodeType = null;
             return true;
         }
@@ -800,7 +800,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setNodeType(String nodeType){
         if (IsNotEqual(this.nodeType,nodeType)){
-            this.fieldStatistics.markDirty(Field.NodeType);
+            this.fieldStatistics.markDirty(TemplateNode.Field.NodeType);
             this.nodeType = nodeType;
             return true;
         }
@@ -815,7 +815,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropLineNumber(){
         if (null != this.lineNumber){
-            this.fieldStatistics.markDirty(Field.LineNumber);
+            this.fieldStatistics.markDirty(TemplateNode.Field.LineNumber);
             this.lineNumber = null;
             return true;
         }
@@ -830,7 +830,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setLineNumber(Integer lineNumber){
         if (IsNotEqual(this.lineNumber,lineNumber)){
-            this.fieldStatistics.markDirty(Field.LineNumber);
+            this.fieldStatistics.markDirty(TemplateNode.Field.LineNumber);
             this.lineNumber = lineNumber;
             return true;
         }
@@ -839,7 +839,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setLineNumber(Number lineNumber){
         if (IsNotEqual(this.lineNumber,lineNumber)){
-            this.fieldStatistics.markDirty(Field.LineNumber);
+            this.fieldStatistics.markDirty(TemplateNode.Field.LineNumber);
             if (lineNumber instanceof Integer)
                 this.lineNumber = (Integer)lineNumber;
             else
@@ -857,7 +857,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropNodeContent(){
         if (null != this.nodeContent){
-            this.fieldStatistics.markDirty(Field.NodeContent);
+            this.fieldStatistics.markDirty(TemplateNode.Field.NodeContent);
             this.nodeContent = null;
             return true;
         }
@@ -881,7 +881,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setNodeContent(Text nodeContent, boolean withInheritance){
         if (IsNotEqual(this.nodeContent,this.getNodeContent(withInheritance))){
-            this.fieldStatistics.markDirty(Field.NodeContent);
+            this.fieldStatistics.markDirty(TemplateNode.Field.NodeContent);
             this.nodeContent = nodeContent;
             return true;
         }
@@ -890,7 +890,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setNodeContent(Text nodeContent){
         if (IsNotEqual(this.nodeContent,nodeContent)){
-            this.fieldStatistics.markDirty(Field.NodeContent);
+            this.fieldStatistics.markDirty(TemplateNode.Field.NodeContent);
             this.nodeContent = nodeContent;
             return true;
         }
@@ -905,7 +905,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropOffset(){
         if (null != this.offset){
-            this.fieldStatistics.markDirty(Field.Offset);
+            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
             this.offset = null;
             return true;
         }
@@ -929,7 +929,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffset(Integer offset, boolean withInheritance){
         if (IsNotEqual(this.offset,this.getOffset(withInheritance))){
-            this.fieldStatistics.markDirty(Field.Offset);
+            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
             this.offset = offset;
             return true;
         }
@@ -938,7 +938,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffset(Integer offset){
         if (IsNotEqual(this.offset,offset)){
-            this.fieldStatistics.markDirty(Field.Offset);
+            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
             this.offset = offset;
             return true;
         }
@@ -947,7 +947,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffset(Number offset){
         if (IsNotEqual(this.offset,offset)){
-            this.fieldStatistics.markDirty(Field.Offset);
+            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
             if (offset instanceof Integer)
                 this.offset = (Integer)offset;
             else
@@ -965,7 +965,7 @@ public abstract class TemplateNodeData
     }
     public final boolean dropOffsetCloseRelative(){
         if (null != this.offsetCloseRelative){
-            this.fieldStatistics.markDirty(Field.OffsetCloseRelative);
+            this.fieldStatistics.markDirty(TemplateNode.Field.OffsetCloseRelative);
             this.offsetCloseRelative = null;
             return true;
         }
@@ -989,7 +989,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffsetCloseRelative(Integer offsetCloseRelative, boolean withInheritance){
         if (IsNotEqual(this.offsetCloseRelative,this.getOffsetCloseRelative(withInheritance))){
-            this.fieldStatistics.markDirty(Field.OffsetCloseRelative);
+            this.fieldStatistics.markDirty(TemplateNode.Field.OffsetCloseRelative);
             this.offsetCloseRelative = offsetCloseRelative;
             return true;
         }
@@ -998,7 +998,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffsetCloseRelative(Integer offsetCloseRelative){
         if (IsNotEqual(this.offsetCloseRelative,offsetCloseRelative)){
-            this.fieldStatistics.markDirty(Field.OffsetCloseRelative);
+            this.fieldStatistics.markDirty(TemplateNode.Field.OffsetCloseRelative);
             this.offsetCloseRelative = offsetCloseRelative;
             return true;
         }
@@ -1007,7 +1007,7 @@ public abstract class TemplateNodeData
     }
     public final boolean setOffsetCloseRelative(Number offsetCloseRelative){
         if (IsNotEqual(this.offsetCloseRelative,offsetCloseRelative)){
-            this.fieldStatistics.markDirty(Field.OffsetCloseRelative);
+            this.fieldStatistics.markDirty(TemplateNode.Field.OffsetCloseRelative);
             if (offsetCloseRelative instanceof Integer)
                 this.offsetCloseRelative = (Integer)offsetCloseRelative;
             else
@@ -1113,6 +1113,35 @@ public abstract class TemplateNodeData
 
         this.fieldStatistics.markDirty();
         return (TemplateNode)this;
+    }
+    public final TemplateNode markDirty(gap.data.Field field){
+
+        this.fieldStatistics.markDirty(field);
+        return (TemplateNode)this;
+    }
+    public final TemplateNode markDirty(java.io.Serializable instance){
+        if (instance == this.nodeType){
+            gap.data.Field field = TemplateNode.Field.NodeType;
+            return this.markDirty(field);
+        }
+        else if (instance == this.lineNumber){
+            gap.data.Field field = TemplateNode.Field.LineNumber;
+            return this.markDirty(field);
+        }
+        else if (instance == this.nodeContent){
+            gap.data.Field field = TemplateNode.Field.NodeContent;
+            return this.markDirty(field);
+        }
+        else if (instance == this.offset){
+            gap.data.Field field = TemplateNode.Field.Offset;
+            return this.markDirty(field);
+        }
+        else if (instance == this.offsetCloseRelative){
+            gap.data.Field field = TemplateNode.Field.OffsetCloseRelative;
+            return this.markDirty(field);
+        }
+        else
+            return (TemplateNode)this;
     }
     public final Iterable<gap.data.Field> listClean(){
 

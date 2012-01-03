@@ -34,8 +34,8 @@ public class ListPrimitiveRating
     public ListPrimitiveRating(){
         super();
     }
-    public ListPrimitiveRating(gap.data.BigTable table){
-        super();
+    public ListPrimitiveRating(gap.data.BigTable ancestor){
+        super(ancestor);
     }
 
     public final gap.Primitive getType(){

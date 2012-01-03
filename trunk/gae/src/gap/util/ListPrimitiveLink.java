@@ -34,8 +34,8 @@ public class ListPrimitiveLink
     public ListPrimitiveLink(){
         super();
     }
-    public ListPrimitiveLink(gap.data.BigTable table){
-        super();
+    public ListPrimitiveLink(gap.data.BigTable ancestor){
+        super(ancestor);
     }
 
     public final gap.Primitive getType(){

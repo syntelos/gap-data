@@ -438,6 +438,10 @@ public abstract class BigTable
 
     public abstract BigTable markDirty();
 
+    public abstract BigTable markDirty(Field field);
+
+    public abstract BigTable markDirty(java.io.Serializable instance);
+
     public abstract Iterable<Field> listClean();
 
     public abstract Iterable<Field> listDirty();

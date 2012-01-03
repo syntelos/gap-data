@@ -32,8 +32,8 @@ public class ListPrimitiveDouble
     public ListPrimitiveDouble(){
         super();
     }
-    public ListPrimitiveDouble(gap.data.BigTable table){
-        super();
+    public ListPrimitiveDouble(gap.data.BigTable ancestor){
+        super(ancestor);
     }
 
     public final gap.Primitive getType(){
