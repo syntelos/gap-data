@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see A
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-02T07:08:43.223Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-03T19:10:55.132Z")
 public abstract class AData
     extends gap.data.BigTable
     implements DataInheritance<A>
@@ -122,7 +122,13 @@ public abstract class AData
     /**
      * Instance lookup or create
      */
-    public final static A GetCreateLong(String name){
+    public static A GetCreateLong(String name){
+        return GetCreateLongName( name);
+    }
+    /**
+     * Instance lookup or create
+     */
+    public final static A GetCreateLongName(String name){
         A a = A.ForLongName( name);
         if (null == a){
             a = new A( name);
@@ -196,6 +202,9 @@ public abstract class AData
 
 
     /**
+     * Anonymous random key cannot be mapped to network identifier
+     * @see A#IdFor
+     *
      * Test for uniqueness and iterate under collisions.
      */
     public final static Key NewRandomKeyLong(){
