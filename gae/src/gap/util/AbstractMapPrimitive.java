@@ -42,6 +42,9 @@ public abstract class AbstractMapPrimitive<K extends Comparable,V extends Serial
     protected AbstractMapPrimitive(){
         super();
     }
+    protected AbstractMapPrimitive(gap.data.BigTable ancestor){
+        super(ancestor);
+    }
 
 
     public Map<K,V> clone(){

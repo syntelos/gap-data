@@ -33,8 +33,8 @@ public class ListPrimitiveCategory
     public ListPrimitiveCategory(){
         super();
     }
-    public ListPrimitiveCategory(gap.data.BigTable table){
-        super();
+    public ListPrimitiveCategory(gap.data.BigTable ancestor){
+        super(ancestor);
     }
 
     public final gap.Primitive getType(){

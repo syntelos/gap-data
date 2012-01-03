@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-03T19:09:39.802Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-03T23:50:41.670Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -648,7 +648,7 @@ public abstract class PersonData
     }
     public final boolean dropLogonId(){
         if (null != this.logonId){
-            this.fieldStatistics.markDirty(Field.LogonId);
+            this.fieldStatistics.markDirty(Person.Field.LogonId);
             this.logonId = null;
             return true;
         }
@@ -663,7 +663,7 @@ public abstract class PersonData
     }
     public final boolean setLogonId(String logonId){
         if (IsNotEqual(this.logonId,logonId)){
-            this.fieldStatistics.markDirty(Field.LogonId);
+            this.fieldStatistics.markDirty(Person.Field.LogonId);
             this.logonId = logonId;
             return true;
         }
@@ -718,6 +718,19 @@ public abstract class PersonData
 
         this.fieldStatistics.markDirty();
         return (Person)this;
+    }
+    public final Person markDirty(gap.data.Field field){
+
+        this.fieldStatistics.markDirty(field);
+        return (Person)this;
+    }
+    public final Person markDirty(java.io.Serializable instance){
+        if (instance == this.logonId){
+            gap.data.Field field = Person.Field.LogonId;
+            return this.markDirty(field);
+        }
+        else
+            return (Person)this;
     }
     public final Iterable<gap.data.Field> listClean(){
 

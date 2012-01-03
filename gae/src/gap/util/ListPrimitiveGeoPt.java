@@ -34,8 +34,8 @@ public class ListPrimitiveGeoPt
     public ListPrimitiveGeoPt(){
         super();
     }
-    public ListPrimitiveGeoPt(gap.data.BigTable table){
-        super();
+    public ListPrimitiveGeoPt(gap.data.BigTable ancestor){
+        super(ancestor);
     }
 
     public final gap.Primitive getType(){

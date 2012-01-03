@@ -19,7 +19,7 @@
  */
 package gap.util;
 
-import com.google.appengine.api.datastore.PostalAddress;
+import java.io.Serializable;
 
 
 /**
@@ -27,21 +27,21 @@ import com.google.appengine.api.datastore.PostalAddress;
  * 
  * @author jdp
  */
-public class ListPrimitivePostalAddress
-    extends AbstractListPrimitive<PostalAddress>
+public class ListPrimitiveSerializable
+    extends AbstractListPrimitive<Serializable>
 {
 
-    public ListPrimitivePostalAddress(){
+    public ListPrimitiveSerializable(){
         super();
     }
-    public ListPrimitivePostalAddress(gap.data.BigTable ancestor){
+    public ListPrimitiveSerializable(gap.data.BigTable ancestor){
         super(ancestor);
     }
 
     public final gap.Primitive getType(){
-        return gap.Primitive.PostalAddress;
+        return gap.Primitive.Serializable;
     }
-    public ListPrimitivePostalAddress clone(){
-        return (ListPrimitivePostalAddress)super.clone();
+    public ListPrimitiveSerializable clone(){
+        return (ListPrimitiveSerializable)super.clone();
     }
 }

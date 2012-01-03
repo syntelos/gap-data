@@ -51,7 +51,10 @@ public class ListPrimitiveKey
         this(kind,false);
     }
     public ListPrimitiveKey(Kind kind, boolean ordered){
-        super();
+        this(null,kind,ordered);
+    }
+    public ListPrimitiveKey(gap.data.BigTable ancestor, Kind kind, boolean ordered){
+        super(ancestor);
         this.ordered = ordered;
         this.nordered = (!ordered);
         if (null != kind){

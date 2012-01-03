@@ -32,8 +32,8 @@ public class ListPrimitiveEnum
     public ListPrimitiveEnum(){
         super();
     }
-    public ListPrimitiveEnum(gap.data.BigTable table){
-        super();
+    public ListPrimitiveEnum(gap.data.BigTable ancestor){
+        super(ancestor);
     }
 
 

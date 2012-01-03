@@ -70,6 +70,9 @@ public abstract class AbstractListPrimitive<V>
     }
 
 
+
+    protected gap.data.BigTable ancestor;
+
     protected Key ancestorKey;
 
     protected String ancestorKeyFieldName;
@@ -77,9 +80,12 @@ public abstract class AbstractListPrimitive<V>
     protected Object[] list;
 
 
-
     protected AbstractListPrimitive(){
         super();
+    }
+    protected AbstractListPrimitive(gap.data.BigTable ancestor){
+        super();
+        this.ancestor = ancestor;
     }
 
 
@@ -156,6 +162,11 @@ public abstract class AbstractListPrimitive<V>
             throw new IllegalArgumentException();
     }
     protected List.Primitive<V> added(){
+
+        if (null != this.ancestor){
+
+            this.ancestor.markDirty(this);
+        }
         return this;
     }
     protected final int append(V instance){
@@ -183,6 +194,11 @@ public abstract class AbstractListPrimitive<V>
             throw new IllegalArgumentException();
     }
     protected int appended(int idx){
+
+        if (null != this.ancestor){
+
+            this.ancestor.markDirty(this);
+        }
         return idx;
     }
     public final List.Primitive<V> remove(V instance){
@@ -212,6 +228,11 @@ public abstract class AbstractListPrimitive<V>
         return this;
     }
     protected List.Primitive<V> removed(int idx){
+
+        if (null != this.ancestor){
+
+            this.ancestor.markDirty(this);
+        }
         return this;
     }
     public final boolean has(int index){
@@ -242,6 +263,11 @@ public abstract class AbstractListPrimitive<V>
         throw new java.lang.ArrayIndexOutOfBoundsException(String.valueOf(index));
     }
     protected V updated(V value){
+
+        if (null != this.ancestor){
+
+            this.ancestor.markDirty(this);
+        }
         return value;
     }
     public final java.util.Iterator<V> iterator(){

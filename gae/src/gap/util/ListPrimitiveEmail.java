@@ -34,8 +34,8 @@ public class ListPrimitiveEmail
     public ListPrimitiveEmail(){
         super();
     }
-    public ListPrimitiveEmail(gap.data.BigTable table){
-        super();
+    public ListPrimitiveEmail(gap.data.BigTable ancestor){
+        super(ancestor);
     }
 
     public final gap.Primitive getType(){
