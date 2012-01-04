@@ -1,1 +1,1 @@
-<span class="logon"><b><a href="{{=logonUrl}}">{{=logonText}}</a></b></span>
+<span class="logon"><b><a href="{{=logonUrl}}">{{=logonText}}</a></b></span><span class="logon"><b><a href="http://www.cognitiveprofile.com/cpionline">Home</a></b></span>{{>logonEtc}}<span class="logon"><a href="http://www.google.com/accounts">Account</a></span><span class="logon"><a href="http://www.google.com/profiles/me">Profile</a></span>

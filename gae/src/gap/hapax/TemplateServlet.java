@@ -116,15 +116,9 @@ public final class TemplateServlet
                     if (null != template){
                         rep.setContentTypeText();
                         PrintWriter out = rep.getWriter();
-                        {
-                            List.Short<TemplateNode> list = template.getTemplateTargetHapax();
-                            for (TemplateNode node: list){
-                                Text text = node.getNodeContent();
-                                if (null != text){
-                                    out.print(text.getValue());
-                                }
-                            }
-                        }
+
+                        out.print(template.toString());
+
                         this.ok(req,rep);
                     }
                     else
