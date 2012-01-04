@@ -35,6 +35,66 @@ import java.util.Date;
 public final class Template
     extends TemplateData
 {
+    public final static String ToString(Template template){
+        StringBuilder string = new StringBuilder();
+
+        List.Short<TemplateNode> list = template.getTemplateTargetHapax();
+        for (TemplateNode node: list){
+            final Text text = node.getNodeContent();
+            final TemplateNodeType nodeType = TemplateNodeType.For(node);
+            if (null != nodeType){
+
+                String textString;
+                if (null != text)
+                    textString = text.getValue();
+                else
+                    textString = null;
+
+
+                switch(nodeType){
+                case SectionOpen:
+                    string.append("{{#");
+
+                    if (null != textString)
+                        string.append(textString);
+                    string.append("}}");
+                    break;
+                case SectionClose:
+                    string.append("{{/");
+                    if (null != textString)
+                        string.append(textString);
+                    string.append("}}");
+                    break;
+                case Variable:
+                    string.append("{{=");
+                    if (null != textString)
+                        string.append(textString);
+                    string.append("}}");
+                    break;
+                case Text:
+                    if (null != textString)
+                        string.append(textString);
+                    break;
+                case Include:
+                    string.append("{{>");
+                    if (null != textString)
+                        string.append(textString);
+                    string.append("}}");
+                    break;
+                case Comment:
+                    string.append("{{!");
+                    if (null != textString)
+                        string.append(textString);
+                    string.append("}}");
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+        return string.toString();
+    }
+
 
     public Template() {
         super();
@@ -80,5 +140,9 @@ public final class Template
              * Safe to ignore as the template node set has been dropped
              */
         }
+    }
+    public String toString(){
+
+        return Template.ToString(this);
     }
 }

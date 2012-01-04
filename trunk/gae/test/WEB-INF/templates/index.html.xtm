@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>Test</title>
+    <title>Cognitive Profile Inventory</title>
     <link rel="stylesheet" type="text/css" href="{{=pageUrlRoot}}/top.css" />
     <link rel="icon" href="{{=pageUrlRoot}}/favicon.ico" />
   </head>
@@ -9,7 +9,27 @@
     </div>
     <div id="first">
 
-      <h1>Test</h1>
+      <h3><i> Please login to use this service </i></h3>
+
+      <p> Your personal profile session will be maintained on the server
+        for a limited period for your convenience.
+      </p>
+
+      <div class="block">
+
+        <h3>Personal record</h3>
+
+        <p> Save your personal profile result URL for future reference.
+        </p>
+
+      </div>
+
+    </div>
+    <div id="second">
+      <img src="{{=pageUrlRoot}}/images/cognitive-profile-240x240.gif" width="240" height="240" />
+    </div>
+    <div id="footer">
+      <center>Copyright &copy; 2010 Lois Breur Krause</center>
     </div>
   </body>
 </html>
