@@ -769,7 +769,7 @@ public abstract class {{=class_name}}Data
         }
     }
 
-    private final {{=class_name}}.Field.Statistics fieldStatistics = new {{=class_name}}.Field.Statistics();
+    private transient final {{=class_name}}.Field.Statistics fieldStatistics = new {{=class_name}}.Field.Statistics();
 
     private transient {{=class_name}} inheritFrom;
 
