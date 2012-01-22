@@ -42,7 +42,7 @@ import javax.servlet.ServletContext;
 import java.util.Iterator;
 
 /**
- * 
+ * Memcache - Datastore for Entities and Classes
  */
 public final class Store
     extends java.lang.Object
@@ -137,6 +137,18 @@ public final class Store
             final PreparedQuery stmt = Get().prepare(query);
 
             return new BigTableIterator(stmt,page);
+        }
+        /**
+         * Defines query for keys only
+         * @see BigTableIterator
+         */
+        protected static BigTableIterator QueryNClass(Query query){
+
+            query.setKeysOnly();
+
+            final PreparedQuery stmt = Get().prepare(query);
+
+            return new BigTableIterator(stmt);
         }
         protected static Key Query1(Query query){
             if (BigTable.IsAdmin(query.getKind())){
@@ -409,7 +421,14 @@ public final class Store
     }
     public static BigTableIterator QueryNClass(Query q, Page p){
 
-        return Store.P.QueryNClass(q,p);
+        if (null == p)
+            return Store.P.QueryNClass(q);
+        else
+            return Store.P.QueryNClass(q,p);
+    }
+    public static BigTableIterator QueryNClass(Query q){
+
+        return Store.P.QueryNClass(q);
     }
     public static Key Query1Key(Query q){
 
@@ -417,7 +436,10 @@ public final class Store
     }
     public static List.Primitive<Key> QueryNKey(Query q, Page p){
 
-        return Store.P.QueryN(q,p);
+        if (null == p)
+            return Store.P.QueryN(q);
+        else
+            return Store.P.QueryN(q,p);
     }
     public static List.Primitive<Key> QueryNKey(Query q){
 
@@ -439,8 +461,8 @@ public final class Store
 
         Key key = table.getKey();
 
-        final Lock lock = new Lock(key);
-        if (lock.enter()){
+        final Lock lock = Lock.Accept(key);
+        if (lock.accept()){
             try {
                 /*
                  * Current clean

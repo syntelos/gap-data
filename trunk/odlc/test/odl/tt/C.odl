@@ -5,6 +5,6 @@ parent C
        version 1
        child D
 {
-    *unique String identifier;
+    *unique *sortby String identifier;
     List.Short<D> children;
 }

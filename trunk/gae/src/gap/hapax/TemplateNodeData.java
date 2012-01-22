@@ -38,13 +38,13 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-03T23:58:05.673Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-22T09:45:12.865Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
 {
 
-    private final static long serialVersionUID = 4;
+    private final static long serialVersionUID = 5;
 
     public final static Kind KIND = Kind.Create("TemplateNode","gap.hapax","TemplateNode","/template-nodes");
 
@@ -72,8 +72,8 @@ public abstract class TemplateNodeData
     /**
      * Short instance key from parent key
      */
-    public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer lineNumber){
-        String id = TemplateNode.IdFor( nodeType,  lineNumber);
+    public final static Key KeyShortIdFor(Key ancestor, String nodeType, Integer offset){
+        String id = TemplateNode.IdFor( nodeType,  offset);
         return TemplateNode.KeyShortFor(ancestor,id);
     }
     /**
@@ -95,11 +95,11 @@ public abstract class TemplateNodeData
     /**
      * Identifier for unique fields
      */
-    public final static String IdFor(String nodeType, Integer lineNumber){
-        if (null != nodeType && null != lineNumber){
+    public final static String IdFor(String nodeType, Integer offset){
+        if (null != nodeType && null != offset){
             String nodeTypeString = nodeType;
-            String lineNumberString = gap.Strings.IntegerToString(lineNumber);
-            return gap.data.Hash.For(nodeTypeString+'/'+lineNumberString);
+            String offsetString = gap.Strings.IntegerToString(offset);
+            return gap.data.Hash.For(nodeTypeString+'/'+offsetString);
         }
         else
             throw new IllegalArgumentException();
@@ -108,9 +108,9 @@ public abstract class TemplateNodeData
     /**
      * Instance lookup from parent key
      */
-    public final static TemplateNode ForShortNodeTypeLineNumber(Key ancestor, String nodeType, Integer lineNumber){
-        if (null != nodeType && null != lineNumber){
-            Key key = TemplateNode.KeyShortIdFor(ancestor, nodeType, lineNumber);
+    public final static TemplateNode ForShortNodeTypeOffset(Key ancestor, String nodeType, Integer offset){
+        if (null != nodeType && null != offset){
+            Key key = TemplateNode.KeyShortIdFor(ancestor, nodeType, offset);
             TemplateNode instance = (TemplateNode)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
@@ -126,10 +126,10 @@ public abstract class TemplateNodeData
     /**
      * Instance lookup or create from parent key
      */
-    public final static TemplateNode GetCreateShort(Key ancestor, String nodeType, Integer lineNumber){
-        TemplateNode templateNode = TemplateNode.ForShortNodeTypeLineNumber(ancestor, nodeType, lineNumber);
+    public final static TemplateNode GetCreateShort(Key ancestor, String nodeType, Integer offset){
+        TemplateNode templateNode = TemplateNode.ForShortNodeTypeOffset(ancestor, nodeType, offset);
         if (null == templateNode){
-            templateNode = new TemplateNode(ancestor, nodeType, lineNumber);
+            templateNode = new TemplateNode(ancestor, nodeType, offset);
             templateNode = (TemplateNode)gap.data.Store.PutClass(templateNode);
         }
         return templateNode;
@@ -348,10 +348,11 @@ public abstract class TemplateNodeData
         Key("key",Type.Primitive),
         Id("id",Type.Primitive),
         NodeType("nodeType",Type.Primitive),
-        LineNumber("lineNumber",Type.Primitive),
-        NodeContent("nodeContent",Type.Primitive),
         Offset("offset",Type.Primitive),
-        OffsetCloseRelative("offsetCloseRelative",Type.Primitive);
+        LineNumber("lineNumber",Type.Primitive),
+        Index("index",Type.Primitive),
+        NodeContent("nodeContent",Type.Primitive),
+        IndexCloseRelative("indexCloseRelative",Type.Primitive);
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
@@ -409,14 +410,16 @@ public abstract class TemplateNodeData
                 return instance.getId();
             case NodeType:
                 return instance.getNodeType(mayInherit);
-            case LineNumber:
-                return instance.getLineNumber(mayInherit);
-            case NodeContent:
-                return instance.getNodeContent(mayInherit);
             case Offset:
                 return instance.getOffset(mayInherit);
-            case OffsetCloseRelative:
-                return instance.getOffsetCloseRelative(mayInherit);
+            case LineNumber:
+                return instance.getLineNumber(mayInherit);
+            case Index:
+                return instance.getIndex(mayInherit);
+            case NodeContent:
+                return instance.getNodeContent(mayInherit);
+            case IndexCloseRelative:
+                return instance.getIndexCloseRelative(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in TemplateNode");
             }
@@ -438,14 +441,16 @@ public abstract class TemplateNodeData
                 return instance.setId(gap.Objects.StringFromObject(value));
             case NodeType:
                 return instance.setNodeType(gap.Objects.StringFromObject(value));
-            case LineNumber:
-                return instance.setLineNumber(gap.Objects.IntegerFromObject(value));
-            case NodeContent:
-                return instance.setNodeContent(gap.Objects.TextFromObject(value));
             case Offset:
                 return instance.setOffset(gap.Objects.IntegerFromObject(value));
-            case OffsetCloseRelative:
-                return instance.setOffsetCloseRelative(gap.Objects.IntegerFromObject(value));
+            case LineNumber:
+                return instance.setLineNumber(gap.Objects.IntegerFromObject(value));
+            case Index:
+                return instance.setIndex(gap.Objects.IntegerFromObject(value));
+            case NodeContent:
+                return instance.setNodeContent(gap.Objects.TextFromObject(value));
+            case IndexCloseRelative:
+                return instance.setIndexCloseRelative(gap.Objects.IntegerFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in TemplateNode");
             }
@@ -467,16 +472,19 @@ public abstract class TemplateNodeData
                 return instance.getId();
             case NodeType:
                 return instance.getNodeType(MayNotInherit);
-            case LineNumber:{
-                return instance.getLineNumber(MayNotInherit);
-            }
-            case NodeContent:
-                return instance.getNodeContent(MayNotInherit);
             case Offset:{
                 return instance.getOffset(MayNotInherit);
             }
-            case OffsetCloseRelative:{
-                return instance.getOffsetCloseRelative(MayNotInherit);
+            case LineNumber:{
+                return instance.getLineNumber(MayNotInherit);
+            }
+            case Index:{
+                return instance.getIndex(MayNotInherit);
+            }
+            case NodeContent:
+                return instance.getNodeContent(MayNotInherit);
+            case IndexCloseRelative:{
+                return instance.getIndexCloseRelative(MayNotInherit);
             }
             default:
                 throw new IllegalArgumentException(field.toString()+" in TemplateNode");
@@ -504,22 +512,27 @@ public abstract class TemplateNodeData
             case NodeType:
                 instance.setNodeType( (String)value);
                 return;
-            case LineNumber:{
-
-                instance.setLineNumber( (Number)value);
-                return;
-            }
-            case NodeContent:
-                instance.setNodeContent( (Text)value);
-                return;
             case Offset:{
 
                 instance.setOffset( (Number)value);
                 return;
             }
-            case OffsetCloseRelative:{
+            case LineNumber:{
 
-                instance.setOffsetCloseRelative( (Number)value);
+                instance.setLineNumber( (Number)value);
+                return;
+            }
+            case Index:{
+
+                instance.setIndex( (Number)value);
+                return;
+            }
+            case NodeContent:
+                instance.setNodeContent( (Text)value);
+                return;
+            case IndexCloseRelative:{
+
+                instance.setIndexCloseRelative( (Number)value);
                 return;
             }
             default:
@@ -632,10 +645,11 @@ public abstract class TemplateNodeData
 
 
     private String nodeType;
-    private Integer lineNumber;
-    private Text nodeContent;
     private Integer offset;
-    private Integer offsetCloseRelative;
+    private Integer lineNumber;
+    private Integer index;
+    private Text nodeContent;
+    private Integer indexCloseRelative;
 
 
     private Key parentKey;
@@ -645,13 +659,13 @@ public abstract class TemplateNodeData
     protected TemplateNodeData() {
         super();
     }
-    protected TemplateNodeData(Key ancestor, String nodeType, Integer lineNumber) {
+    protected TemplateNodeData(Key ancestor, String nodeType, Integer offset) {
         super();
         this.setNodeType(nodeType);
-        this.setLineNumber(lineNumber);
+        this.setOffset(offset);
         this.parentKey = ancestor;
         {
-            final String id = TemplateNode.IdFor(nodeType, lineNumber);
+            final String id = TemplateNode.IdFor(nodeType, offset);
             final Key key = TemplateNode.KeyShortFor(ancestor,id);
             this.setKey(key);
         }
@@ -661,10 +675,11 @@ public abstract class TemplateNodeData
     public void destroy(){
         this.inheritFrom = null;
         this.nodeType = null;
-        this.lineNumber = null;
-        this.nodeContent = null;
         this.offset = null;
-        this.offsetCloseRelative = null;
+        this.lineNumber = null;
+        this.index = null;
+        this.nodeContent = null;
+        this.indexCloseRelative = null;
         this.parent = null;
     }
     public final String getId(){
@@ -673,7 +688,7 @@ public abstract class TemplateNodeData
         if (null != id)
             return id;
         else
-            return TemplateNode.IdFor(this.nodeType, this.lineNumber);
+            return TemplateNode.IdFor(this.nodeType, this.offset);
     }
     public final boolean setId(String id){
         if (null == id){
@@ -807,6 +822,48 @@ public abstract class TemplateNodeData
         else
             return false;
     }
+    public final boolean hasOffset(boolean mayInherit){
+        return (null != this.getOffset(mayInherit));
+    }
+    public final boolean hasNotOffset(boolean mayInherit){
+        return (null == this.getOffset(mayInherit));
+    }
+    public final boolean dropOffset(){
+        if (null != this.offset){
+            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
+            this.offset = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final Integer getOffset(){
+        return this.offset;
+    }
+    public final Integer getOffset(boolean mayInherit){
+        return this.getOffset();
+    }
+    public final boolean setOffset(Integer offset){
+        if (IsNotEqual(this.offset,offset)){
+            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
+            this.offset = offset;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean setOffset(Number offset){
+        if (IsNotEqual(this.offset,offset)){
+            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
+            if (offset instanceof Integer)
+                this.offset = (Integer)offset;
+            else
+                this.offset = new Integer( offset.intValue());
+            return true;
+        }
+        else
+            return false;
+    }
     public final boolean hasLineNumber(boolean mayInherit){
         return (null != this.getLineNumber(mayInherit));
     }
@@ -823,10 +880,28 @@ public abstract class TemplateNodeData
             return false;
     }
     public final Integer getLineNumber(){
-        return this.lineNumber;
+        return this.getLineNumber(Notation.MayInherit);
     }
     public final Integer getLineNumber(boolean mayInherit){
-        return this.getLineNumber();
+        if (mayInherit){
+            Integer lineNumber = this.lineNumber;
+            if (null == lineNumber && this.hasInheritFrom()){
+                TemplateNode inheritFrom = this.getInheritFrom();
+                return inheritFrom.getLineNumber(Notation.MayInherit);
+            }
+            return lineNumber;
+        }
+        else
+            return this.lineNumber;
+    }
+    public final boolean setLineNumber(Integer lineNumber, boolean withInheritance){
+        if (IsNotEqual(this.lineNumber,this.getLineNumber(withInheritance))){
+            this.fieldStatistics.markDirty(TemplateNode.Field.LineNumber);
+            this.lineNumber = lineNumber;
+            return true;
+        }
+        else
+            return false;
     }
     public final boolean setLineNumber(Integer lineNumber){
         if (IsNotEqual(this.lineNumber,lineNumber)){
@@ -844,6 +919,66 @@ public abstract class TemplateNodeData
                 this.lineNumber = (Integer)lineNumber;
             else
                 this.lineNumber = new Integer( lineNumber.intValue());
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean hasIndex(boolean mayInherit){
+        return (null != this.getIndex(mayInherit));
+    }
+    public final boolean hasNotIndex(boolean mayInherit){
+        return (null == this.getIndex(mayInherit));
+    }
+    public final boolean dropIndex(){
+        if (null != this.index){
+            this.fieldStatistics.markDirty(TemplateNode.Field.Index);
+            this.index = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final Integer getIndex(){
+        return this.getIndex(Notation.MayInherit);
+    }
+    public final Integer getIndex(boolean mayInherit){
+        if (mayInherit){
+            Integer index = this.index;
+            if (null == index && this.hasInheritFrom()){
+                TemplateNode inheritFrom = this.getInheritFrom();
+                return inheritFrom.getIndex(Notation.MayInherit);
+            }
+            return index;
+        }
+        else
+            return this.index;
+    }
+    public final boolean setIndex(Integer index, boolean withInheritance){
+        if (IsNotEqual(this.index,this.getIndex(withInheritance))){
+            this.fieldStatistics.markDirty(TemplateNode.Field.Index);
+            this.index = index;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean setIndex(Integer index){
+        if (IsNotEqual(this.index,index)){
+            this.fieldStatistics.markDirty(TemplateNode.Field.Index);
+            this.index = index;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean setIndex(Number index){
+        if (IsNotEqual(this.index,index)){
+            this.fieldStatistics.markDirty(TemplateNode.Field.Index);
+            if (index instanceof Integer)
+                this.index = (Integer)index;
+            else
+                this.index = new Integer( index.intValue());
             return true;
         }
         else
@@ -897,121 +1032,61 @@ public abstract class TemplateNodeData
         else
             return false;
     }
-    public final boolean hasOffset(boolean mayInherit){
-        return (null != this.getOffset(mayInherit));
+    public final boolean hasIndexCloseRelative(boolean mayInherit){
+        return (null != this.getIndexCloseRelative(mayInherit));
     }
-    public final boolean hasNotOffset(boolean mayInherit){
-        return (null == this.getOffset(mayInherit));
+    public final boolean hasNotIndexCloseRelative(boolean mayInherit){
+        return (null == this.getIndexCloseRelative(mayInherit));
     }
-    public final boolean dropOffset(){
-        if (null != this.offset){
-            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
-            this.offset = null;
+    public final boolean dropIndexCloseRelative(){
+        if (null != this.indexCloseRelative){
+            this.fieldStatistics.markDirty(TemplateNode.Field.IndexCloseRelative);
+            this.indexCloseRelative = null;
             return true;
         }
         else
             return false;
     }
-    public final Integer getOffset(){
-        return this.getOffset(Notation.MayInherit);
+    public final Integer getIndexCloseRelative(){
+        return this.getIndexCloseRelative(Notation.MayInherit);
     }
-    public final Integer getOffset(boolean mayInherit){
+    public final Integer getIndexCloseRelative(boolean mayInherit){
         if (mayInherit){
-            Integer offset = this.offset;
-            if (null == offset && this.hasInheritFrom()){
+            Integer indexCloseRelative = this.indexCloseRelative;
+            if (null == indexCloseRelative && this.hasInheritFrom()){
                 TemplateNode inheritFrom = this.getInheritFrom();
-                return inheritFrom.getOffset(Notation.MayInherit);
+                return inheritFrom.getIndexCloseRelative(Notation.MayInherit);
             }
-            return offset;
+            return indexCloseRelative;
         }
         else
-            return this.offset;
+            return this.indexCloseRelative;
     }
-    public final boolean setOffset(Integer offset, boolean withInheritance){
-        if (IsNotEqual(this.offset,this.getOffset(withInheritance))){
-            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
-            this.offset = offset;
+    public final boolean setIndexCloseRelative(Integer indexCloseRelative, boolean withInheritance){
+        if (IsNotEqual(this.indexCloseRelative,this.getIndexCloseRelative(withInheritance))){
+            this.fieldStatistics.markDirty(TemplateNode.Field.IndexCloseRelative);
+            this.indexCloseRelative = indexCloseRelative;
             return true;
         }
         else
             return false;
     }
-    public final boolean setOffset(Integer offset){
-        if (IsNotEqual(this.offset,offset)){
-            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
-            this.offset = offset;
+    public final boolean setIndexCloseRelative(Integer indexCloseRelative){
+        if (IsNotEqual(this.indexCloseRelative,indexCloseRelative)){
+            this.fieldStatistics.markDirty(TemplateNode.Field.IndexCloseRelative);
+            this.indexCloseRelative = indexCloseRelative;
             return true;
         }
         else
             return false;
     }
-    public final boolean setOffset(Number offset){
-        if (IsNotEqual(this.offset,offset)){
-            this.fieldStatistics.markDirty(TemplateNode.Field.Offset);
-            if (offset instanceof Integer)
-                this.offset = (Integer)offset;
+    public final boolean setIndexCloseRelative(Number indexCloseRelative){
+        if (IsNotEqual(this.indexCloseRelative,indexCloseRelative)){
+            this.fieldStatistics.markDirty(TemplateNode.Field.IndexCloseRelative);
+            if (indexCloseRelative instanceof Integer)
+                this.indexCloseRelative = (Integer)indexCloseRelative;
             else
-                this.offset = new Integer( offset.intValue());
-            return true;
-        }
-        else
-            return false;
-    }
-    public final boolean hasOffsetCloseRelative(boolean mayInherit){
-        return (null != this.getOffsetCloseRelative(mayInherit));
-    }
-    public final boolean hasNotOffsetCloseRelative(boolean mayInherit){
-        return (null == this.getOffsetCloseRelative(mayInherit));
-    }
-    public final boolean dropOffsetCloseRelative(){
-        if (null != this.offsetCloseRelative){
-            this.fieldStatistics.markDirty(TemplateNode.Field.OffsetCloseRelative);
-            this.offsetCloseRelative = null;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final Integer getOffsetCloseRelative(){
-        return this.getOffsetCloseRelative(Notation.MayInherit);
-    }
-    public final Integer getOffsetCloseRelative(boolean mayInherit){
-        if (mayInherit){
-            Integer offsetCloseRelative = this.offsetCloseRelative;
-            if (null == offsetCloseRelative && this.hasInheritFrom()){
-                TemplateNode inheritFrom = this.getInheritFrom();
-                return inheritFrom.getOffsetCloseRelative(Notation.MayInherit);
-            }
-            return offsetCloseRelative;
-        }
-        else
-            return this.offsetCloseRelative;
-    }
-    public final boolean setOffsetCloseRelative(Integer offsetCloseRelative, boolean withInheritance){
-        if (IsNotEqual(this.offsetCloseRelative,this.getOffsetCloseRelative(withInheritance))){
-            this.fieldStatistics.markDirty(TemplateNode.Field.OffsetCloseRelative);
-            this.offsetCloseRelative = offsetCloseRelative;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final boolean setOffsetCloseRelative(Integer offsetCloseRelative){
-        if (IsNotEqual(this.offsetCloseRelative,offsetCloseRelative)){
-            this.fieldStatistics.markDirty(TemplateNode.Field.OffsetCloseRelative);
-            this.offsetCloseRelative = offsetCloseRelative;
-            return true;
-        }
-        else
-            return false;
-    }
-    public final boolean setOffsetCloseRelative(Number offsetCloseRelative){
-        if (IsNotEqual(this.offsetCloseRelative,offsetCloseRelative)){
-            this.fieldStatistics.markDirty(TemplateNode.Field.OffsetCloseRelative);
-            if (offsetCloseRelative instanceof Integer)
-                this.offsetCloseRelative = (Integer)offsetCloseRelative;
-            else
-                this.offsetCloseRelative = new Integer( offsetCloseRelative.intValue());
+                this.indexCloseRelative = new Integer( indexCloseRelative.intValue());
             return true;
         }
         else
@@ -1038,6 +1113,30 @@ public abstract class TemplateNodeData
     }
     public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;
+        String lineNumberRequest = req.getParameter("lineNumber");
+        if (null != lineNumberRequest && 0 < lineNumberRequest.length()){
+            try {
+                Integer lineNumber = gap.Strings.IntegerFromString(lineNumberRequest);
+                if (this.setLineNumber(lineNumber)){
+                    change = true;
+                }
+            }
+            catch (RuntimeException exc){
+                throw new ValidationError(ClassName,"lineNumber",lineNumberRequest,exc);
+            }
+        }
+        String indexRequest = req.getParameter("index");
+        if (null != indexRequest && 0 < indexRequest.length()){
+            try {
+                Integer index = gap.Strings.IntegerFromString(indexRequest);
+                if (this.setIndex(index)){
+                    change = true;
+                }
+            }
+            catch (RuntimeException exc){
+                throw new ValidationError(ClassName,"index",indexRequest,exc);
+            }
+        }
         String nodeContentRequest = req.getParameter("nodeContent");
         if (null != nodeContentRequest && 0 < nodeContentRequest.length()){
             try {
@@ -1050,28 +1149,16 @@ public abstract class TemplateNodeData
                 throw new ValidationError(ClassName,"nodeContent",nodeContentRequest,exc);
             }
         }
-        String offsetRequest = req.getParameter("offset");
-        if (null != offsetRequest && 0 < offsetRequest.length()){
+        String indexCloseRelativeRequest = req.getParameter("indexCloseRelative");
+        if (null != indexCloseRelativeRequest && 0 < indexCloseRelativeRequest.length()){
             try {
-                Integer offset = gap.Strings.IntegerFromString(offsetRequest);
-                if (this.setOffset(offset)){
+                Integer indexCloseRelative = gap.Strings.IntegerFromString(indexCloseRelativeRequest);
+                if (this.setIndexCloseRelative(indexCloseRelative)){
                     change = true;
                 }
             }
             catch (RuntimeException exc){
-                throw new ValidationError(ClassName,"offset",offsetRequest,exc);
-            }
-        }
-        String offsetCloseRelativeRequest = req.getParameter("offsetCloseRelative");
-        if (null != offsetCloseRelativeRequest && 0 < offsetCloseRelativeRequest.length()){
-            try {
-                Integer offsetCloseRelative = gap.Strings.IntegerFromString(offsetCloseRelativeRequest);
-                if (this.setOffsetCloseRelative(offsetCloseRelative)){
-                    change = true;
-                }
-            }
-            catch (RuntimeException exc){
-                throw new ValidationError(ClassName,"offsetCloseRelative",offsetCloseRelativeRequest,exc);
+                throw new ValidationError(ClassName,"indexCloseRelative",indexCloseRelativeRequest,exc);
             }
         }
         return change;
@@ -1082,16 +1169,20 @@ public abstract class TemplateNodeData
     public final boolean updateFrom(TemplateNode proto){
         boolean mayInherit = (!this.hasInheritFromKey());
         boolean change = false;
+        Integer lineNumber = proto.getLineNumber(mayInherit);
+        if (null != lineNumber && this.setLineNumber(lineNumber)){
+            change = true;
+        }
+        Integer index = proto.getIndex(mayInherit);
+        if (null != index && this.setIndex(index)){
+            change = true;
+        }
         Text nodeContent = proto.getNodeContent(mayInherit);
         if (null != nodeContent && this.setNodeContent(nodeContent)){
             change = true;
         }
-        Integer offset = proto.getOffset(mayInherit);
-        if (null != offset && this.setOffset(offset)){
-            change = true;
-        }
-        Integer offsetCloseRelative = proto.getOffsetCloseRelative(mayInherit);
-        if (null != offsetCloseRelative && this.setOffsetCloseRelative(offsetCloseRelative)){
+        Integer indexCloseRelative = proto.getIndexCloseRelative(mayInherit);
+        if (null != indexCloseRelative && this.setIndexCloseRelative(indexCloseRelative)){
             change = true;
         }
         return change;
@@ -1124,20 +1215,24 @@ public abstract class TemplateNodeData
             gap.data.Field field = TemplateNode.Field.NodeType;
             return this.markDirty(field);
         }
+        else if (instance == this.offset){
+            gap.data.Field field = TemplateNode.Field.Offset;
+            return this.markDirty(field);
+        }
         else if (instance == this.lineNumber){
             gap.data.Field field = TemplateNode.Field.LineNumber;
+            return this.markDirty(field);
+        }
+        else if (instance == this.index){
+            gap.data.Field field = TemplateNode.Field.Index;
             return this.markDirty(field);
         }
         else if (instance == this.nodeContent){
             gap.data.Field field = TemplateNode.Field.NodeContent;
             return this.markDirty(field);
         }
-        else if (instance == this.offset){
-            gap.data.Field field = TemplateNode.Field.Offset;
-            return this.markDirty(field);
-        }
-        else if (instance == this.offsetCloseRelative){
-            gap.data.Field field = TemplateNode.Field.OffsetCloseRelative;
+        else if (instance == this.indexCloseRelative){
+            gap.data.Field field = TemplateNode.Field.IndexCloseRelative;
             return this.markDirty(field);
         }
         else
@@ -1188,6 +1283,15 @@ public abstract class TemplateNodeData
                      */
                     return this.hasNodeType(true);
                 }
+            case Offset:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else {
+                    /*
+                     * Synthesize section for Field (EXISTS)
+                     */
+                    return this.hasOffset(true);
+                }
             case LineNumber:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -1196,6 +1300,15 @@ public abstract class TemplateNodeData
                      * Synthesize section for Field (EXISTS)
                      */
                     return this.hasLineNumber(true);
+                }
+            case Index:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else {
+                    /*
+                     * Synthesize section for Field (EXISTS)
+                     */
+                    return this.hasIndex(true);
                 }
             case NodeContent:
                 if (name.has(1))
@@ -1206,23 +1319,14 @@ public abstract class TemplateNodeData
                      */
                     return this.hasNodeContent(true);
                 }
-            case Offset:
+            case IndexCloseRelative:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else {
                     /*
                      * Synthesize section for Field (EXISTS)
                      */
-                    return this.hasOffset(true);
-                }
-            case OffsetCloseRelative:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else {
-                    /*
-                     * Synthesize section for Field (EXISTS)
-                     */
-                    return this.hasOffsetCloseRelative(true);
+                    return this.hasIndexCloseRelative(true);
                 }
             default:
                 throw new IllegalStateException(field.name());
@@ -1246,26 +1350,31 @@ public abstract class TemplateNodeData
                     throw new IllegalStateException(field.name());
                 else
                     return this.getNodeType(true);
-            case LineNumber:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return gap.Strings.IntegerToString(this.getLineNumber(true));
-            case NodeContent:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
-                else
-                    return gap.Strings.TextToString(this.getNodeContent(true));
             case Offset:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
                     return gap.Strings.IntegerToString(this.getOffset(true));
-            case OffsetCloseRelative:
+            case LineNumber:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
-                    return gap.Strings.IntegerToString(this.getOffsetCloseRelative(true));
+                    return gap.Strings.IntegerToString(this.getLineNumber(true));
+            case Index:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.IntegerToString(this.getIndex(true));
+            case NodeContent:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.TextToString(this.getNodeContent(true));
+            case IndexCloseRelative:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return gap.Strings.IntegerToString(this.getIndexCloseRelative(true));
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -1283,13 +1392,15 @@ public abstract class TemplateNodeData
                     throw new UnsupportedOperationException(field.name());
                 case NodeType:
                     throw new IllegalStateException(field.name());
+                case Offset:
+                    throw new IllegalStateException(field.name());
                 case LineNumber:
+                    throw new IllegalStateException(field.name());
+                case Index:
                     throw new IllegalStateException(field.name());
                 case NodeContent:
                     throw new IllegalStateException(field.name());
-                case Offset:
-                    throw new IllegalStateException(field.name());
-                case OffsetCloseRelative:
+                case IndexCloseRelative:
                     throw new IllegalStateException(field.name());
                 default:
                     throw new IllegalStateException(field.name());
@@ -1308,13 +1419,15 @@ public abstract class TemplateNodeData
             switch (field){
             case NodeType:
                 return null;
+            case Offset:
+                return null;
             case LineNumber:
+                return null;
+            case Index:
                 return null;
             case NodeContent:
                 return null;
-            case Offset:
-                return null;
-            case OffsetCloseRelative:
+            case IndexCloseRelative:
                 return null;
             default:
                 throw new IllegalStateException(field.name());

@@ -41,29 +41,6 @@ public class Templating
         }
     }
 
-    public void testIndexDivLogonHtml(){
-        System.err.println("-- Test IndexDivLogonHtml");
-        Store.Test();
-        try {
-            this.load(IndexHtml);
-            this.load(DivLogonHtml);
-
-            final boolean test = this.validate(DivLogonHtml);
-            System.err.println("-- ");
-            assertTrue(test);
-        }
-        catch (TemplateException exc){
-
-            //exc.printStackTrace();
-            System.err.println(exc);
-            System.err.println("-- ");
-            assertTrue(false);
-        }
-        finally {
-            Store.Exit();
-        }
-    }
-
     public void testDivLogonHtml(){
         System.err.println("-- Test DivLogonHtml");
         Store.Test();

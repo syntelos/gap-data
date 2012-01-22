@@ -24,24 +24,57 @@ import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.Expiration;
 
 /**
- * An appengine application cloud system mutex lock.  The design
- * depends on the uniqueness of a memcache increment subject over the
- * appengine application memcache cloud.
+ * Application cloud system mutex based on the memcache increment
+ * operation.
  * 
- * The lock may employ a datastore key for an association with an
- * instance, or any string for a GUID.
+ * <h3>Reentrant</h3>
  * 
- * A try block contains a critical or protected region.  Enter the
- * lock immediately preceding the top of the try block, and then exit
- * the lock in the finally clause.
+ * <p> Each lock instance operates as if it is a unique representative
+ * of the current thread (or an "accepted child").  Therefore using
+ * this class requires the maintenance of this agreement between
+ * instances and callers.</p>
  * 
- * The design and implementation of this lock is based on the memcache
- * increment operation.  While the memcache cloud is consistent over
- * the application runtime cloud, this lock is intended to protect a
- * region of code in terms of mutually exclusive entry.
+ * <p> A static "Get" function is provided to get a reference to any
+ * existing lock in the request-response thread.</p> 
  * 
- * The memcache increment subject is incremented to value one when the
- * lock is entered, and decremented to value zero when the lock exits.
+ * <p> The implementation employs a dead reckoning algorithm over
+ * Memcache, and depends on the simple usage pattern.  A lock instance
+ * object is created or accepted and its enter/accept and exit methods
+ * called. </p> 
+ * 
+ * <p> Other usage will not perform as desired.  For example, creating
+ * a lock instance in order to test another instance in the same
+ * thread would function as if in another thread.</p>
+ * 
+ * <h3>Lock child</h3>
+ * 
+ * <p> Employ the {@link Lock#Accept Lock.Accept} static function to
+ * create a lock, and the {@link #accept accept} instance method to
+ * enter the lock.  </p>
+ * 
+ * <p> This pattern implements the execution path leaf consumer of
+ * locking, as for example in the {@link Store} class.  The Store
+ * class is an execution path leaf as the bottom of the execution path
+ * -- calling only the AppEngine DataStore and Memcache APIs (aside
+ * from the data bean methods). </p>
+ * 
+ * <p> There are many possible applications of locking in the
+ * Application and Framework outside of or external to the Store
+ * class.  From calling execution branches external to Store, a Lock
+ * Parent may be entered within the scope of the Store.  In order to
+ * avoid deadlocks, the Store should not simply create a lock to
+ * protect its algorithms from races -- rather it should accept a
+ * lock.  </p>
+ * 
+ * <h3>Lock parent</h3>
+ * 
+ * <p> Employ a constructor and "enter" method pattern to create a
+ * lock that must never be found in the scope of an entered lock.
+ * </p>
+ * 
+ * <p> The enter method will throw a deadlock warning exception when
+ * this requirement is violated.  Normal coverage testing will reveal
+ * these application design conflicts. </p>
  * 
  * @author jdp
  */
@@ -76,6 +109,8 @@ public final class Lock
     private final static Long INC = 1L;
     private final static Long DEC = -1L;
 
+    public final static String Prefix = "lock://";
+
     /**
      * Thrown by enter on thread interrupt.  Caller should return
      * immediately from the current thread.
@@ -87,12 +122,84 @@ public final class Lock
             super(exc);
         }
     }
+    /**
+     * Requesting a lock within a lock
+     */
+    public final static class DeadlockWarning
+        extends java.lang.RuntimeException
+    {
+        public final String existing, requesting;
 
+
+        public DeadlockWarning(Lock existing, Lock requesting){
+            this(existing.string,requesting.string);
+        }
+        private DeadlockWarning(String existing, String requesting){
+            super(String.format("Requesting lock '%s' within lock '%s'",requesting,existing));
+            this.existing = existing;
+            this.requesting = requesting;
+        }
+    }
+
+
+    private final static ThreadLocal<Lock> TL = new ThreadLocal<Lock>();
+
+    private static boolean Enter(Lock lock){
+        Lock test = Lock.TL.get();
+        if (test == lock)
+            return true;
+        else if (null == test){
+            Lock.TL.set(lock);
+            return true;
+        }
+        else
+            throw new DeadlockWarning(test,lock);
+    }
+    private static void Exit(){
+        Lock.TL.remove();
+    }
+    /**
+     * @return Current lock for this thread
+     */
+    public static Lock Get(){
+        return Lock.TL.get();
+    }
+    /**
+     * @return This thread has entered a lock
+     */
+    public static boolean In(){
+        return (null != Lock.TL.get());
+    }
+    /**
+     * @return This thread has not entered a lock
+     */
+    public static boolean Not(){
+        return (null == Lock.TL.get());
+    }
+    /**
+     * Get or create a lock.  An existing lock is returned when found,
+     * otherwise a new lock is created from the argument key.  This
+     * logic assumes that any existing lock is semantically
+     * appropriate to the user (e.g. parent of argument key).
+     * 
+     * The returned lock should have the accept and exit methods
+     * employed in place of the enter and exit methods.  The returned
+     * lock will not exit a pre-existing lock.
+     */
+    public static Lock Accept(Key key){
+        Lock accept = Lock.TL.get();
+        if (null != accept)
+            return new Lock(accept);
+        else
+            return new Lock(key);
+    }
 
 
     public final String string;
 
     public final int hashCode;
+
+    public final boolean child;
 
     private transient Long entry;
 
@@ -102,15 +209,44 @@ public final class Lock
         this(BigTable.ToString(key));
     }
     public Lock(String guid){
+        super();
         if (null != guid && 0 < guid.length()){
-            this.string = "lock://"+guid;
+
+            if (guid.startsWith(Lock.Prefix))
+
+                throw new IllegalArgumentException(String.format("Unintended application '%s'",guid));
+            else
+                this.string = Lock.Prefix+guid;
+
             this.hashCode = gap.data.Hash.Djb32(this.string);
+            this.child = false;
         }
         else
             throw new IllegalArgumentException();
     }
+    /**
+     * Create a child that will not touch the MC atom
+     */
+    private Lock(Lock accept){
+        super();
+        this.string = accept.string;
+        this.hashCode = accept.hashCode;
+        this.child = true;
+        this.entry = accept.entry;
+    }
 
 
+    /**
+     * Enter this lock or accept 
+     * 
+     * @return Success gaining mutex access
+     */
+    public boolean accept(){
+        if (Lock.In())
+            return true;
+        else
+            return this.enter();
+    }
     /**
      * Enter using a default lock request timeout.
      * 
@@ -120,39 +256,50 @@ public final class Lock
      * @return Success gaining mutex access
      */
     public boolean enter(){
-        try {
-            return this.enter(ENTER);
-        }
-        catch (java.lang.InterruptedException exc){
 
-            throw new Lock.InterruptedException(exc);
+        if (null == this.entry){
+            try {
+                return this.enter(ENTER);
+            }
+            catch (java.lang.InterruptedException exc){
+
+                throw new Lock.InterruptedException(exc);
+            }
         }
+        else
+            return this.entered();
     }
     public boolean enter(long timeout)
         throws java.lang.InterruptedException
     {
-        final long end = (System.currentTimeMillis()+timeout);
-        final MemcacheService mc = Store.C.Get();
-        do {
-            if (this.test(mc))
-                return true;
-            else {
-                long waitfor = (timeout / TOF);
-                if (0 < waitfor)
-                    Thread.sleep(waitfor);
-                else
-                    Thread.sleep(TOF);
+        if (this.child)
+            return this.entered();
+        else {
+            final long end = (System.currentTimeMillis()+timeout);
+            final MemcacheService mc = Store.C.Get();
+            do {
+                if (this.test(mc))
+                    /*
+                     */
+                    return Lock.Enter(this);
+                else {
+                    long waitfor = (timeout / TOF);
+                    if (0 < waitfor)
+                        Thread.sleep(waitfor);
+                    else
+                        Thread.sleep(TOF);
+                }
             }
+            while (System.currentTimeMillis() < end);
+            return false;
         }
-        while (System.currentTimeMillis() < end);
-        return false;
     }
     public void exit(){
-        MemcacheService mc = Store.C.Get();
-        if (null != mc)
-            this.exit(mc);
-        else
-            throw new IllegalStateException("Memcache service not available.");
+        if (!this.child){
+            MemcacheService mc = Store.C.Get();
+            if (null != mc)
+                this.exit(mc);
+        }
     }
     private void exit(MemcacheService mc){
         if (null != this.entry){
@@ -161,6 +308,9 @@ public final class Lock
             }
             finally {
                 this.entry = null;
+                /*
+                 */
+                Lock.Exit();
             }
         }
     }
@@ -179,6 +329,8 @@ public final class Lock
 
                 this.entry = mc.increment(this.string,INC);
             }
+            /*
+             */
             if (this.entered())
                 return true;
             else {

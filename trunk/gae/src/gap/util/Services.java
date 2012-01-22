@@ -41,7 +41,8 @@ public class Services
     extends lxl.ArrayList<Class>
     implements gap.data.HasName
 {
-    public final static String NamePrefix = "META-INF/services/";
+    public final static String NamePrefix_JAR = "META-INF/services/";
+    public final static String NamePrefix_WAR = "WEB-INF/services/";
 
     protected final static Logger Log = Logger.getLogger(Services.class.getName());
 
@@ -49,28 +50,45 @@ public class Services
         throws IOException
     {
         lxl.List<String> re = new lxl.ArrayList<String>();
-        String name = NamePrefix+service.getName();
-        Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(name);
-        while (resources.hasMoreElements()){
-            URL resource = resources.nextElement();
-            InputStream in = resource.openStream();
-            if (null != in){
-                BufferedReader strin = new BufferedReader(new InputStreamReader(in));
-                try {
-                    String line;
-                    while (null != (line = strin.readLine())){
-                        int comment = line.indexOf('#');
-                        if (-1 != comment)
-                            line = line.substring(0,comment);
-                        line = line.trim();
-                        if (0 != line.length())
-                            re.add(line);
-                    }
-                }
-                finally {
-                    in.close();
+        String name = service.getName();
+        {
+            Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(NamePrefix_JAR+name);
+            while (resources.hasMoreElements()){
+                URL resource = resources.nextElement();
+                InputStream in = resource.openStream();
+                if (null != in){
+                    Read(service,re,new BufferedReader(new InputStreamReader(in)));
                 }
             }
+        }
+        {
+            Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(NamePrefix_WAR+name);
+            while (resources.hasMoreElements()){
+                URL resource = resources.nextElement();
+                InputStream in = resource.openStream();
+                if (null != in){
+                    Read(service,re,new BufferedReader(new InputStreamReader(in)));
+                }
+            }
+        }
+        return re;
+    }
+    public static lxl.List<String> Read(Class service, lxl.List<String> re, BufferedReader in)
+        throws IOException
+    {
+        try {
+            String line;
+            while (null != (line = in.readLine())){
+                int comment = line.indexOf('#');
+                if (-1 != comment)
+                    line = line.substring(0,comment);
+                line = line.trim();
+                if (0 != line.length())
+                    re.add(line);
+            }
+        }
+        finally {
+            in.close();
         }
         return re;
     }
@@ -109,7 +127,7 @@ public class Services
         super();
         if (null != service){
             this.service = service;
-            this.name = NamePrefix+service.getName();
+            this.name = service.getName();
             try {
                 this.fill();
             }
@@ -140,38 +158,54 @@ public class Services
         throws IOException
     {
         this.clear();
-        Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(this.name);
-        while (resources.hasMoreElements()){
-            URL resource = resources.nextElement();
-            InputStream in = resource.openStream();
-            if (null != in){
-                BufferedReader strin = new BufferedReader(new InputStreamReader(in));
-                try {
-                    String line;
-                    while (null != (line = strin.readLine())){
-                        int comment = line.indexOf('#');
-                        if (-1 != comment)
-                            line = line.substring(0,comment);
-                        line = line.trim();
-                        if (0 != line.length()){
-                            try {
-                                Class clas = Class.forName(line);
-                                if (!this.contains(clas)){
-                                    this.add(clas);
-                                }
-                            }
-                            catch (ClassNotFoundException exc){
-                                LogRecord rec = new LogRecord(Level.SEVERE,line);
-                                rec.setThrown(exc);
-                                Log.log(rec);
-                            }
-                        }
-                    }
-                }
-                finally {
-                    in.close();
+        {
+            Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(NamePrefix_JAR+this.name);
+            while (resources.hasMoreElements()){
+                URL resource = resources.nextElement();
+                InputStream in = resource.openStream();
+                if (null != in){
+                    this.fill( new BufferedReader(new InputStreamReader(in)));
                 }
             }
+        }
+        {
+            Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(NamePrefix_WAR+this.name);
+            while (resources.hasMoreElements()){
+                URL resource = resources.nextElement();
+                InputStream in = resource.openStream();
+                if (null != in){
+                    this.fill( new BufferedReader(new InputStreamReader(in)));
+                }
+            }
+        }
+    }
+    protected void fill(BufferedReader in)
+        throws IOException
+    {
+        try {
+            String line;
+            while (null != (line = in.readLine())){
+                int comment = line.indexOf('#');
+                if (-1 != comment)
+                    line = line.substring(0,comment);
+                line = line.trim();
+                if (0 != line.length()){
+                    try {
+                        Class clas = Class.forName(line);
+                        if (!this.contains(clas)){
+                            this.add(clas);
+                        }
+                    }
+                    catch (ClassNotFoundException exc){
+                        LogRecord rec = new LogRecord(Level.SEVERE,line);
+                        rec.setThrown(exc);
+                        Log.log(rec);
+                    }
+                }
+            }
+        }
+        finally {
+            in.close();
         }
     }
     /**

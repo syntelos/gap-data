@@ -86,7 +86,7 @@ public abstract class AbstractList<V extends BigTable>
 
     protected Query query;
 
-    protected Page page = Page.Default;
+    protected Page page = null;
 
     protected transient BigTable[] buffer;
 
@@ -165,10 +165,18 @@ public abstract class AbstractList<V extends BigTable>
         return this.query;
     }
     public final int getStartIndex(){
-        return this.page.startIndex;
+        Page page = this.page;
+        if (null == page)
+            return 0;
+        else
+            return this.page.startIndex;
     }
     public final int getLimit(){
-        return this.page.count;
+        Page page = this.page;
+        if (null == page)
+            return this.size();
+        else
+            return this.page.count;
     }
     public final int getGross(){
         return this.gross;
@@ -179,14 +187,14 @@ public abstract class AbstractList<V extends BigTable>
     public final boolean hitEnd(){
         return this.hitEnd;
     }
+    public final boolean hasPage(){
+        return (null != this.page);
+    }
     public final Page getPage(){
         return this.page;
     }
     public final void setPage(Page page){
-        if (null != page)
-            this.page = page;
-        else
-            throw new IllegalArgumentException();
+        this.page = page;
     }
     public final Key getValueClassAncestorKey(){
         return this.ancestorKey;
@@ -293,6 +301,9 @@ public abstract class AbstractList<V extends BigTable>
     public final void clearBuffer(){
         this.buffer = null;
     }
+    /**
+     * @param page Default null, dynamic buffering not paging
+     */
     protected void buffering(Page page){
     }
     protected void buffered(BigTable instance, int index){

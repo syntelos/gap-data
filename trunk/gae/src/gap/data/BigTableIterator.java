@@ -58,6 +58,20 @@ public final class BigTableIterator<V extends BigTable>
 
         this.ds = ds.iterator();
     }
+    /**
+     * Query for keys only
+     */
+    BigTableIterator(PreparedQuery stmt){
+        super();
+        
+        this.gross = stmt.countEntities();
+
+        this.hitEnd = false;
+
+        Iterable<Entity> ds = stmt.asIterable();
+
+        this.ds = ds.iterator();
+    }
 
 
     public int getGross(){

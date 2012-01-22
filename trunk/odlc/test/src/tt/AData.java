@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see A
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-03T19:10:55.132Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-05T13:59:04.575Z")
 public abstract class AData
     extends gap.data.BigTable
     implements DataInheritance<A>
@@ -580,7 +580,7 @@ public abstract class AData
         }
     }
 
-    private final A.Field.Statistics fieldStatistics = new A.Field.Statistics();
+    private transient final A.Field.Statistics fieldStatistics = new A.Field.Statistics();
 
     private transient A inheritFrom;
 
@@ -691,7 +691,7 @@ public abstract class AData
     }
     public final boolean dropName(){
         if (null != this.name){
-            this.fieldStatistics.markDirty(Field.Name);
+            this.fieldStatistics.markDirty(A.Field.Name);
             this.name = null;
             return true;
         }
@@ -706,7 +706,7 @@ public abstract class AData
     }
     public final boolean setName(String name){
         if (IsNotEqual(this.name,name)){
-            this.fieldStatistics.markDirty(Field.Name);
+            this.fieldStatistics.markDirty(A.Field.Name);
             this.name = name;
             return true;
         }
@@ -922,6 +922,27 @@ public abstract class AData
 
         this.fieldStatistics.markDirty();
         return (A)this;
+    }
+    public final A markDirty(gap.data.Field field){
+
+        this.fieldStatistics.markDirty(field);
+        return (A)this;
+    }
+    public final A markDirty(java.io.Serializable instance){
+        if (instance == this.name){
+            gap.data.Field field = A.Field.Name;
+            return this.markDirty(field);
+        }
+        else if (instance == this.children){
+            gap.data.Field field = A.Field.Children;
+            return this.markDirty(field);
+        }
+        else if (instance == this.content){
+            gap.data.Field field = A.Field.Content;
+            return this.markDirty(field);
+        }
+        else
+            return (A)this;
     }
     public final Iterable<gap.data.Field> listClean(){
 

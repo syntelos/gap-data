@@ -1,6 +1,6 @@
 <project name="gap-data" default="all">
 
- <target name="all">
+ <target name="all" description="Build all subpackages">
 
    <ant dir="types" />
 
@@ -9,12 +9,12 @@
    <ant dir="gae" />
  </target>
 
- <target name="odl">
+ <target name="odl" description="Generate Java from ODL in the GAE subpackage">
 
    <ant dir="gae" target="odl"/>
  </target>
 
- <target name="clean">
+ <target name="clean" description="Clean subpackages to initial state">
 
    <ant dir="types" target="clean"/>
 
@@ -23,7 +23,7 @@
    <ant dir="gae" target="clean"/>
  </target>
 
- <target name="test">
+ <target name="test" description="Run tests in subpackages">
 
    <ant dir="types" target="test"/>
 
@@ -32,16 +32,21 @@
    <ant dir="gae" target="test"/>
  </target>
 
- <target name="build">
+ <target name="run" description="Run development server in the GAE subpackage at http://localhost:8888/">
 
-   <ant dir="types" target="build"/>
-
-   <ant dir="odlc" target="build"/>
-
-   <ant dir="gae" target="build"/>
+   <ant dir="gae" target="run"/>
  </target>
 
- <target name="minor">
+ <target name="version" description="Print version of subpackages">
+
+   <ant dir="types" target="version"/>
+
+   <ant dir="odlc" target="version"/>
+
+   <ant dir="gae" target="version"/>
+ </target>
+
+ <target name="minor" description="Increment version of subpackages">
 
    <ant dir="types" target="minor"/>
 
@@ -50,7 +55,7 @@
    <ant dir="gae" target="minor"/>
  </target>
 
- <target name="major">
+ <target name="major" description="Increment version of subpackages">
 
    <ant dir="types" target="major"/>
 
@@ -59,13 +64,13 @@
    <ant dir="gae" target="major"/>
  </target>
 
- <target name="version">
+ <target name="build" description="Increment version of subpackages">
 
-   <ant dir="types" target="version"/>
+   <ant dir="types" target="build"/>
 
-   <ant dir="odlc" target="version"/>
+   <ant dir="odlc" target="build"/>
 
-   <ant dir="gae" target="version"/>
+   <ant dir="gae" target="build"/>
  </target>
 
 </project>

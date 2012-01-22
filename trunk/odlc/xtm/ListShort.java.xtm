@@ -65,7 +65,9 @@ public abstract class ListShort{{=parent_class_name}}{{=child_class_name}}
     }
     public ListShort{{=parent_class_name}}{{=child_class_name}}(){
         super();
-        this.page = Page.Short;
+        /*
+         * Not Paging -- Short lists are for small membership.
+         */
     }
 
 
