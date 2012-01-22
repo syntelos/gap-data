@@ -119,6 +119,12 @@ public final class Field
         GetTypeEq.put("key","Key");
         GetTypeEq.put("enum","Enum"); //(for completeness)
         GetTypeEq.put("date","Date");
+        GetTypeEq.put("serializable","Serializable");
+        GetTypeEq.put("java.io.serializable","Serializable");
+        GetTypeEq.put("java.io.Serializable","Serializable");
+        GetTypeEq.put("object","Serializable");
+        GetTypeEq.put("java.lang.object","Serializable");
+        GetTypeEq.put("java.lang.Object","Serializable");
     }
     /**
      * Map type equivalents, <i>e.g. "int" = "Integer", or "bool" =
@@ -159,49 +165,57 @@ public final class Field
             Persistence.Type persistence = null;
             boolean unique = false, enumerated = false;
             Relation.Type relational = null;
+
             StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
+
             while (strtok.hasMoreTokens()){
                 String token = strtok.nextToken();
                 Qualifier qualifier = Qualifier.For(token);
                 if (null != qualifier){
-                    switch (qualifier){
-                    case Child:
-                        if (unique)
-                            throw new Syntax("Malformed ODL field statement '"+line+"'.");
-                        else {
-                            persistence = Persistence.Type.Transient;
-                            relational = Relation.Type.Child;
+                    if (null != typeName)
+                        throw new Syntax("Malformed ODL field statement '"+line+"'.");
+                    else {
+                        switch (qualifier){
+                        case Child:
+                            if (unique)
+                                throw new Syntax("Malformed ODL field statement '"+line+"'.");
+                            else {
+                                persistence = Persistence.Type.Transient;
+                                relational = Relation.Type.Child;
+                            }
+                            break;
+                        case Unique:
+                            if (unique)
+                                throw new Syntax("Malformed ODL field statement '"+line+"'.");
+                            else {
+                                unique = true;
+                                persistence = Persistence.Type.Persistent;
+                                relational = Relation.Type.None;
+                            }
+                            break;
+                        case Transient:
+                            if (unique)
+                                throw new Syntax("Malformed ODL field statement '"+line+"'.");
+                            else {
+                                persistence = Persistence.Type.Transient;
+                                relational = Relation.Type.None;
+                            }
+                            break;
+                        case Enumerated:
+                            enumerated = true;
+                            break;
+                        case DefaultSortBy:
+                            isDefaultSortBy = true;
+                            break;
                         }
-                        break;
-                    case Unique:
-                        if (unique)
-                            throw new Syntax("Malformed ODL field statement '"+line+"'.");
-                        else {
-                            unique = true;
-                            persistence = Persistence.Type.Persistent;
-                            relational = Relation.Type.None;
-                        }
-                        break;
-                    case Transient:
-                        if (unique)
-                            throw new Syntax("Malformed ODL field statement '"+line+"'.");
-                        else {
-                            persistence = Persistence.Type.Transient;
-                            relational = Relation.Type.None;
-                        }
-                        break;
-                    case Enumerated:
-                        enumerated = true;
-                        break;
-                    case DefaultSortBy:
-                        isDefaultSortBy = true;
-                        break;
                     }
                 }
-                else if (null == typeName)
+                else if (null == typeName){
                     typeName = token;
-                else if (null == name)
+                }
+                else if (null == name){
                     name = token;
+                }
                 else
                     throw new Syntax("Malformed ODL field statement '"+line+"'.");
             }

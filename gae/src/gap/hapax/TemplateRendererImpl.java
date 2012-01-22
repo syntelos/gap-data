@@ -138,7 +138,7 @@ public final class TemplateRendererImpl
         throws TemplateException
     {
         int next = (open + 1);
-        int close = (open + node.getOffsetCloseRelative(false));
+        int close = (open + node.getIndexCloseRelative(false));
         TemplateName sectionName = new TemplateName(gap.Strings.TextToString(node.getNodeContent()));
 
         if (close >= next && close < template.size()){

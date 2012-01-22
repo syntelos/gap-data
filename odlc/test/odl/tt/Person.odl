@@ -6,7 +6,7 @@ class Person
        version 5
 {
     *unique String logonId;
-    String nameLast;
+    *sortby String nameLast;
     String nameMiddle;
     String nameFirst;
     String title;

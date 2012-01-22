@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see B
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2011-04-07T17:30:00.418Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-05T13:59:05.809Z")
 public abstract class BData
     extends gap.data.BigTable
     implements DataInheritance<B>
@@ -50,14 +50,92 @@ public abstract class BData
 
     public final static String ClassName = "B";
 
-    public final static String DefaultSortBy = "";
+    public final static String DefaultSortBy = "name";
 
 
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
         return ClassDescriptorFor(B.class);
     }
+    /**
+     * @see gap.data.Kind#pathto()
+     */
+    public final static String PathTo(){
+        return KIND.pathto();
+    }
+    public final static String PathTo(String subpath){
+        return KIND.pathto(subpath);
+    }
 
+    /**
+     * Long instance key without parent key
+     */
+    public final static Key KeyLongIdFor(String name){
+        String id = B.IdFor( name);
+        return KeyLongFor(id);
+    }
+    /**
+     * Used by gap.data.Kind
+     *
+     * Calls {@link #KeyLongIdFor}
+     */
+    public final static Key KeyIdFor(Object... args){
+        return B.KeyLongIdFor((String)args[0]);
+    }
+    /**
+     * Used by setId
+     *
+     * Calls {@link #KeyLongFor}
+     */
+    public final static Key KeyFor(Object... args){
+        return B.KeyLongFor( (String)args[0]);
+    }
+    /**
+     * Identifier for unique fields
+     */
+    public final static String IdFor(String name){
+        if (null != name){
+            String nameString = name;
+            return gap.data.Hash.For(nameString);
+        }
+        else
+            throw new IllegalArgumentException();
+    }
 
+    /**
+     * Instance lookup
+     */
+    public final static B ForLongName(String name){
+        if (null != name){
+            Key key = B.KeyLongIdFor( name);
+            B instance = (B)gap.data.Store.GetClass(key);
+            if (null != instance)
+                return instance;
+            else {
+                Query q = B.CreateQueryFor(key);
+                return (B)gap.data.Store.Query1Class(q);
+            }
+        }
+        else
+            throw new IllegalArgumentException();
+    }
+
+    /**
+     * Instance lookup or create
+     */
+    public static B GetCreateLong(String name){
+        return GetCreateLongName( name);
+    }
+    /**
+     * Instance lookup or create
+     */
+    public final static B GetCreateLongName(String name){
+        B b = B.ForLongName( name);
+        if (null == b){
+            b = new B( name);
+            b = (B)gap.data.Store.PutClass(b);
+        }
+        return b;
+    }
 
 
     public final static Key KeyLongFor(String id){
@@ -67,27 +145,30 @@ public abstract class BData
 
     public final static B ForLongId(String id){
         if (null != id){
-            Key key = KeyLongFor(id);
-            B instance = (B)gap.data.Store.Get(key);
+            Key key = B.KeyLongFor(id);
+            B instance = (B)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
-                return (B)gap.data.Store.Query1(q);
+                Query q = B.CreateQueryFor(key);
+                return (B)gap.data.Store.Query1Class(q);
             }
         }
         else
             throw new IllegalArgumentException();
     }
 
+    /**
+     * Used by gap.data.Kind
+     */
     public final static B Get(Key key){
         if (null != key){
-            B instance = (B)gap.data.Store.Get(key);
+            B instance = (B)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
             else {
-                Query q = CreateQueryFor(key);
-                return (B)gap.data.Store.Query1(q);
+                Query q = B.CreateQueryFor(key);
+                return (B)gap.data.Store.Query1Class(q);
             }
         }
         else
@@ -95,8 +176,8 @@ public abstract class BData
     }
     public final static Key GetKey(Key key){
         if (null != key){
-            Query q = CreateQueryFor(key);
-            return gap.data.Store.QueryKey1(q);
+            Query q = B.CreateQueryFor(key);
+            return gap.data.Store.Query1Key(q);
         }
         else
             throw new IllegalArgumentException();
@@ -120,14 +201,46 @@ public abstract class BData
     }
 
 
-
+    /**
+     * Anonymous random key cannot be mapped to network identifier
+     * @see B#IdFor
+     *
+     * Test for uniqueness and iterate under collisions.
+     */
+    public final static Key NewRandomKeyLong(){
+        /*
+         * Source matter for data local uniqueness
+         */
+        long matter = (gap.data.Hash.Djb64(ClassName) ^ (serialVersionUID<<3) ^ serialVersionUID);
+        /*
+         * Random matter for network global uniqueness
+         */
+        java.util.Random random = new java.util.Random();
+        do {
+            matter ^= random.nextLong();
+            String idString = gap.data.Hash.Hex(matter);
+            Key key = KeyFactory.createKey(KIND.getName(),idString);
+            if (null == GetKey(key))
+                return key;
+        }
+        while (true);
+    }
     /**
      * Drop the instance from memcache and datastore.
      */
     public final static void Delete(B instance){
         if (null != instance){
 
-            gap.data.Store.Delete(instance.getKey());
+            Delete(instance.getKey());
+        }
+    }
+    /**
+     * Drop the instance from memcache and datastore.
+     */
+    public final static void Delete(Key instanceKey){
+        if (null != instanceKey){
+
+            gap.data.Store.DeleteKey(instanceKey);
         }
     }
     /**
@@ -136,7 +249,7 @@ public abstract class BData
     public final static void Clean(B instance){
         if (null != instance){
             Key key = instance.getKey();
-            gap.data.Store.Clean(key);
+            gap.data.Store.CleanKey(key);
         }
     }
     /**
@@ -144,7 +257,7 @@ public abstract class BData
      */
     public final static void Save(B instance){
         if (null != instance){
-            gap.data.Store.Put(instance);
+            gap.data.Store.PutClass(instance);
         }
     }
     /**
@@ -152,7 +265,7 @@ public abstract class BData
      */
     public final static void Store(B instance){
         if (null != instance){
-            gap.data.Store.Put(instance);
+            gap.data.Store.PutClass(instance);
         }
     }
     /**
@@ -175,28 +288,33 @@ public abstract class BData
         return filter.update(query);
     }
     
-    
     public final static B Query1(Query query){
         if (null != query)
-            return (B)gap.data.Store.Query1(query);
+            return (B)gap.data.Store.Query1Class(query);
         else
             throw new IllegalArgumentException();
     }
     public final static BigTableIterator<B> QueryN(Query query, Page page){
         if (null != query && null != page)
-            return gap.data.Store.QueryN(query,page);
+            return gap.data.Store.QueryNClass(query,page);
         else
             throw new IllegalArgumentException();
     }
     public final static Key QueryKey1(Query query){
         if (null != query)
-            return gap.data.Store.QueryKey1(query);
+            return gap.data.Store.Query1Key(query);
         else
             throw new IllegalArgumentException();
     }
-    public final static List.Primitive<Key> QueryKeyN(Query query, Page page){
+    public final static List.Primitive<Key> QueryNKey(Query query, Page page){
         if (null != query)
-            return gap.data.Store.QueryKeyN(query,page);
+            return gap.data.Store.QueryNKey(query,page);
+        else
+            throw new IllegalArgumentException();
+    }
+    public final static List.Primitive<Key> QueryNKey(Query query){
+        if (null != query)
+            return gap.data.Store.QueryNKey(query);
         else
             throw new IllegalArgumentException();
     }
@@ -209,7 +327,8 @@ public abstract class BData
     {
         InheritFromKey("inheritFromKey",Type.Primitive),
         Key("key",Type.Primitive),
-        Id("id",Type.Primitive);
+        Id("id",Type.Primitive),
+        Name("name",Type.Primitive);
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
@@ -241,7 +360,17 @@ public abstract class BData
                 return field;
         }
         /**
-         * Principal dynamic binding operator (datastore, etc, except serialization)
+         * Field statistics are maintained for persistent fields exclusively
+         */
+        public final static class Statistics
+            extends gap.data.Field.Statistics<B.Field>
+        {
+            public Statistics(){
+                super(B.Field.class);
+            }
+        }
+        /**
+         * Dynamic binding operator for field data type
          *
          * Persistent BigTable fields are represented by the string ID.
          */
@@ -253,12 +382,14 @@ public abstract class BData
                 return instance.getKey();
             case Id:
                 return instance.getId();
+            case Name:
+                return instance.getName(mayInherit);
             default:
                 throw new IllegalArgumentException(field.toString()+" in B");
             }
         }
         /**
-         * Principal dynamic binding operator (datastore, etc, except serialization)
+         * Dynamic binding operator for field data type
          *
          * Persistent BigTable fields are represented by the string ID.
          */
@@ -270,10 +401,55 @@ public abstract class BData
                 return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
                 return instance.setId(gap.Objects.StringFromObject(value));
+            case Name:
+                return instance.setName(gap.Objects.StringFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in B");
             }
         }
+        /**
+         * Dynamic binding operator for field storage type
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
+        public static java.io.Serializable Storage(Field field, B instance){
+            switch(field){
+            case InheritFromKey:
+                return instance.getInheritFromKey();
+            case Key:
+                return instance.getKey();
+            case Id:
+                return instance.getId();
+            case Name:
+                return instance.getName(MayNotInherit);
+            default:
+                throw new IllegalArgumentException(field.toString()+" in B");
+            }
+        }
+        /**
+         * Dynamic binding operator for field storage type
+         *
+         * Persistent BigTable fields are represented by the string ID.
+         */
+        public static void Storage(Field field, B instance, java.io.Serializable value){
+            switch(field){
+            case InheritFromKey:
+                instance.setInheritFromKey( (Key)value);
+                return;
+            case Key:
+                instance.setKey( (Key)value);
+                return;
+            case Id:
+                instance.setId( (String)value);
+                return;
+            case Name:
+                instance.setName( (String)value);
+                return;
+            default:
+                throw new IllegalArgumentException(field.toString()+" in B");
+            }
+        }
+
 
         public final static class List
             extends gap.util.ArrayList<B.Field>
@@ -298,11 +474,14 @@ public abstract class BData
 
         private final boolean fieldTypePrimitive, fieldTypeBigTable, fieldTypeCollection;
 
+        private final boolean fieldNameKeyOrId;
+
 
         Field(String fieldName, Type fieldType){
             if (null != fieldName && null != fieldType){
                 this.fieldName = fieldName;
                 this.fieldType = fieldType;
+                this.fieldNameKeyOrId = BigTable.IsKeyOrId(fieldName);
                 /*
                  * Using a switch here causes a null pointer
                  * initializing the switch map.
@@ -359,14 +538,23 @@ public abstract class BData
         public boolean isNotFieldTypeCollection(){
             return (!this.fieldTypeCollection);
         }
+        public boolean isFieldNameKeyOrId(){
+            return this.fieldNameKeyOrId;
+        }
+        public boolean isNotFieldNameKeyOrId(){
+            return (!this.fieldNameKeyOrId);
+        }
         public String toString(){
             return this.fieldName;
         }
     }
 
+    private transient final B.Field.Statistics fieldStatistics = new B.Field.Statistics();
+
     private transient B inheritFrom;
 
 
+    private String name;
 
 
 
@@ -374,11 +562,44 @@ public abstract class BData
     protected BData() {
         super();
     }
+    protected BData(String name) {
+        super();
+        this.setName(name);
+        {
+            final String id = B.IdFor(name);
+            final Key key = B.KeyLongFor(id);
+            this.setKey(key);
+        }
+    }
 
 
     public void destroy(){
         this.inheritFrom = null;
-        this.datastoreEntity = null;
+        this.name = null;
+    }
+    public final String getId(){
+
+        String id = B.IdFor(KIND.name, this.key);
+        if (null != id)
+            return id;
+        else
+            return B.IdFor(this.name);
+    }
+    public final boolean setId(String id){
+        if (null == id){
+            if (null != this.key){
+                this.key = null;
+                return true;
+            }
+            else
+                return false;
+        }
+        else if (null == this.key){
+            this.key = B.KeyLongFor(id);
+            return true;
+        }
+        else
+            return false;
     }
     public final boolean hasInheritFrom(){
         return (null != this.inheritFrom || null != this.inheritFromKey);
@@ -399,6 +620,7 @@ public abstract class BData
     }
     public final boolean setInheritFrom(B ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
+
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
@@ -409,9 +631,40 @@ public abstract class BData
     }
     public final boolean inheritFrom(B ancestor){
         if (IsNotEqual(this.inheritFrom,ancestor)){
+
             this.inheritFrom = ancestor;
             if (null != ancestor)
                 this.inheritFromKey = ancestor.getKey();
+            return true;
+        }
+        else
+            return false;
+    }
+    public final boolean hasName(boolean mayInherit){
+        return (null != this.getName(mayInherit));
+    }
+    public final boolean hasNotName(boolean mayInherit){
+        return (null == this.getName(mayInherit));
+    }
+    public final boolean dropName(){
+        if (null != this.name){
+            this.fieldStatistics.markDirty(B.Field.Name);
+            this.name = null;
+            return true;
+        }
+        else
+            return false;
+    }
+    public final String getName(){
+        return this.name;
+    }
+    public final String getName(boolean mayInherit){
+        return this.getName();
+    }
+    public final boolean setName(String name){
+        if (IsNotEqual(this.name,name)){
+            this.fieldStatistics.markDirty(B.Field.Name);
+            this.name = name;
             return true;
         }
         else
@@ -448,16 +701,79 @@ public abstract class BData
         boolean change = false;
         return change;
     }
+    public java.io.Serializable valueStorage(gap.data.Field field){
+
+        return Field.Storage( (Field)field, (B)this);
+    }
+    public void defineStorage(gap.data.Field field, java.io.Serializable value){
+
+        Field.Storage( (Field)field, (B)this, value);
+    }
+    public final B markClean(){
+
+        this.fieldStatistics.markClean();
+        return (B)this;
+    }
+    public final B markDirty(){
+
+        this.fieldStatistics.markDirty();
+        return (B)this;
+    }
+    public final B markDirty(gap.data.Field field){
+
+        this.fieldStatistics.markDirty(field);
+        return (B)this;
+    }
+    public final B markDirty(java.io.Serializable instance){
+        if (instance == this.name){
+            gap.data.Field field = B.Field.Name;
+            return this.markDirty(field);
+        }
+        else
+            return (B)this;
+    }
+    public final Iterable<gap.data.Field> listClean(){
+
+        return this.fieldStatistics.listClean();
+    }
+    public final Iterable<gap.data.Field> listDirty(){
+
+        return this.fieldStatistics.listDirty();
+    }
+    public final boolean isClean(){
+
+        return this.fieldStatistics.isClean();
+    }
+    public final boolean isDirty(){
+
+        return this.fieldStatistics.isDirty();
+    }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
-        return ClassDescriptorFor();
+        return B.ClassDescriptorFor();
     }
     /*
      * Template Data Dictionary
      */
     public boolean hasVariable(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = B.Field.For(name.getTerm());
         if (null != field){
             switch (field){
+            case Id:
+                if (name.is(0)){
+                    String id = this.getId();
+                    return (null != id);
+                }
+                else
+                    return false;
+            case Name:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else {
+                    /*
+                     * Synthesize section for Field (EXISTS)
+                     */
+                    return this.hasName(true);
+                }
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -467,9 +783,19 @@ public abstract class BData
         }
     }
     public String getVariable(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = B.Field.For(name.getTerm());
         if (null != field){
             switch (field){
+            case Id:
+                if (name.is(0))
+                    return this.getId();
+                else
+                    return null;
+            case Name:
+                if (name.has(1))
+                    throw new IllegalStateException(field.name());
+                else
+                    return this.getName(true);
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -479,10 +805,14 @@ public abstract class BData
         }
     }
     public void setVariable(TemplateName name, String value){
-        Field field = Field.For(name.getComponent(0));
+        Field field = B.Field.For(name.getTerm());
         if (null != field){
             if (name.has(1)){
                 switch (field){
+                case Id:
+                    throw new UnsupportedOperationException(field.name());
+                case Name:
+                    throw new IllegalStateException(field.name());
                 default:
                     throw new IllegalStateException(field.name());
                 }
@@ -495,9 +825,11 @@ public abstract class BData
         }
     }
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
-        Field field = Field.For(name.getComponent(0));
+        Field field = B.Field.For(name.getTerm());
         if (null != field){
             switch (field){
+            case Name:
+                return null;
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -505,5 +837,21 @@ public abstract class BData
         else {
             return super.getSection(name);
         }
+    }
+    public B clone(){
+        return (B)super.clone();
+    }
+    public String pathto(){
+        return PathTo(this.getId());
+    }
+    public String pathto(String subpath){
+        StringBuilder string = new StringBuilder();
+        string.append(this.getId());
+        if (null != subpath){
+            if (0 == subpath.length() || '/' != subpath.charAt(0))
+                string.append('/');
+            string.append(subpath);
+        }
+        return PathTo(string.toString());
     }
 }

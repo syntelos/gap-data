@@ -43,7 +43,7 @@ public final class TemplateParserReader
 
     private int lno = 1;
 
-    private int advance;
+    private int offset, advance;
 
 
     public TemplateParserReader(Template source){
@@ -66,6 +66,9 @@ public final class TemplateParserReader
     }
     public int lineNumber(){
         return this.lno;
+    }
+    public int currentOffset(){
+        return (this.advance + this.offset);
     }
     public int length(){
         char[] buf = this.buffer;
@@ -236,10 +239,20 @@ public final class TemplateParserReader
 
     protected String lines(char[] re, int ofs, int len){
 
-        this.advance = 0;
+        if (-1 == len){
 
-        if (-1 == len)
+            this.offset += this.advance;
+
+            this.advance = 0;
+
             len = ((null != re)?(re.length):(0));
+        }
+        else {
+
+            this.offset += (this.advance + len);
+
+            this.advance = 0;
+        }
 
         this.lno += CountLines(re,ofs,len);
 

@@ -5,5 +5,5 @@ child D
       version 1
       parent C
 {
-    *unique String identifier;
+    *unique *sortby String identifier;
 }

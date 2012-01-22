@@ -70,7 +70,7 @@
         <pathelement location="${target.jar}"/>
       </classpath>
     </java>
-    <compile src="test/src" ver="test/ver/src" bin="test/bin" classpath.id="test.path"/>
+    <!-- compile src="test/src" ver="test/ver/src" bin="test/bin" classpath.id="test.path"/ -->
 
   </target>
 

@@ -149,17 +149,17 @@ public final class TemplateParser
     private static void ParserClose(List.Short<TemplateNode> template)
         throws TemplateParserException
     {
-        for (int cc = 0, count = template.size(); cc < count; cc++){
+        for (int node_tidx = 0, count = template.size(); node_tidx < count; node_tidx++){
 
-            TemplateNode node = template.get(cc);
+            TemplateNode node = template.get(node_tidx);
 
-            node.setOffset(cc);
+            node.setIndex(node_tidx);
 
             switch (TemplateNodeType.For(node)){
 
             case SectionOpen:
 
-                node.setOffsetCloseRelative(DistanceToClose(template,cc,node));
+                node.setIndexCloseRelative(DistanceToClose(template,node_tidx,node));
 
                 break;
 
@@ -170,18 +170,19 @@ public final class TemplateParser
     }
 
     private static TemplateNode ParseTextNode(TemplateParserReader input) {
-        int lno = input.lineNumber();
+        final int lno = input.lineNumber();
+        final int ofs = input.currentOffset();
         int next_braces = input.indexOf("{{");
         if (next_braces == -1) {
 
             String text = input.truncate();
 
-            return (new TemplateNode(input.getSourceKey(),Text.name(),lno,gap.Strings.TextFromString(text)));
+            return (new TemplateNode(input.getSourceKey(),Text.name(),ofs,lno,gap.Strings.TextFromString(text)));
         }
         else {
             String text = input.delete(0, next_braces);
             if (text.length() > 0)
-                return (new TemplateNode(input.getSourceKey(),Text.name(),lno,gap.Strings.TextFromString(text)));
+                return (new TemplateNode(input.getSourceKey(),Text.name(),ofs,lno,gap.Strings.TextFromString(text)));
             else
                 return null;
         }
@@ -190,46 +191,51 @@ public final class TemplateParser
     private static TemplateNode ParseInclude(TemplateParserReader input)
         throws TemplateParserException
     {
-        int lno = input.lineNumber();
+        final int lno = input.lineNumber();
+        final int ofs = input.currentOffset();
         String consumed = ParseClose(input);
         String token = consumed.substring(3,consumed.length()-2).trim();
-        return (new TemplateNode(input.getSourceKey(),Include.name(),lno,gap.Strings.TextFromString(token)));
+        return (new TemplateNode(input.getSourceKey(),Include.name(),ofs,lno,gap.Strings.TextFromString(token)));
     }
     private static TemplateNode ParseVariable(TemplateParserReader input)
         throws TemplateParserException
     {
-        int lno = input.lineNumber();
+        final int lno = input.lineNumber();
+        final int ofs = input.currentOffset();
         String token;
         String consumed = ParseClose(input);
         if ('=' == consumed.charAt(2))
             token = consumed.substring(3,consumed.length()-2).trim();
         else
             token = consumed.substring(2,consumed.length()-2).trim();
-        return (new TemplateNode(input.getSourceKey(),Variable.name(),lno,gap.Strings.TextFromString(token)));
+        return (new TemplateNode(input.getSourceKey(),Variable.name(),ofs,lno,gap.Strings.TextFromString(token)));
     }
     private static TemplateNode ParseCloseSection(TemplateParserReader input)
         throws TemplateParserException
     {
-        int lno = input.lineNumber();
+        final int lno = input.lineNumber();
+        final int ofs = input.currentOffset();
         String consumed = ParseClose(input);
         String token = consumed.substring(3,consumed.length()-2).trim();
-        return (new TemplateNode(input.getSourceKey(),SectionClose.name(),lno,gap.Strings.TextFromString(token)));
+        return (new TemplateNode(input.getSourceKey(),SectionClose.name(),ofs,lno,gap.Strings.TextFromString(token)));
     }
     private static TemplateNode ParseOpenSection(TemplateParserReader input)
         throws TemplateParserException
     {
-        int lno = input.lineNumber();
+        final int lno = input.lineNumber();
+        final int ofs = input.currentOffset();
         String consumed = ParseClose(input);
         String token = consumed.substring(3,consumed.length()-2).trim();
-        return (new TemplateNode(input.getSourceKey(),SectionOpen.name(),lno,gap.Strings.TextFromString(token)));
+        return (new TemplateNode(input.getSourceKey(),SectionOpen.name(),ofs,lno,gap.Strings.TextFromString(token)));
     }
     private static TemplateNode ParseComment(TemplateParserReader input)
         throws TemplateParserException
     {
-        int lno = input.lineNumber();
+        final int lno = input.lineNumber();
+        final int ofs = input.currentOffset();
         String consumed = ParseClose(input);
         String token = consumed.substring(3,consumed.length()-2).trim();
-        return (new TemplateNode(input.getSourceKey(),Comment.name(),lno,gap.Strings.TextFromString(token)));
+        return (new TemplateNode(input.getSourceKey(),Comment.name(),ofs,lno,gap.Strings.TextFromString(token)));
     }
 
     private static String ParseClose(TemplateParserReader input)
@@ -244,14 +250,15 @@ public final class TemplateParser
         }
     }
 
-    private final static int DistanceToClose(List.Short<TemplateNode> template, int node_ofs, TemplateNode node)
+    private final static int DistanceToClose(List.Short<TemplateNode> template, int node_tidx, TemplateNode node)
         throws TemplateParserException
     {
-        int stack = DistanceToCloseStackInit, ofs = (node_ofs+1), length = template.size();
+        int stack = DistanceToCloseStackInit, tidx = (node_tidx+1);
+        final int tlength = template.size();
         String sectionName = gap.Strings.TextToString(node.getNodeContent());
-        for (; ofs < length; ofs++) {
+        for (; tidx < tlength; tidx++) {
 
-            TemplateNode tp = template.get(ofs);
+            TemplateNode tp = template.get(tidx);
 
             switch (TemplateNodeType.For(tp)){
             case SectionOpen:
@@ -264,7 +271,7 @@ public final class TemplateParser
 
                     if (tpName.equals(sectionName))
 
-                        return (ofs-node_ofs);
+                        return (tidx-node_tidx);
 
                     else {
 

@@ -38,12 +38,17 @@ public final class TemplateNode
     public TemplateNode() {
         super();
     }
-    public TemplateNode(Key ancestor, String nodeType, Integer lineNumber) {
-        super(ancestor,  nodeType,  lineNumber);
+    public TemplateNode(Key ancestor, String nodeType, Integer offset) {
+        super(ancestor,  nodeType,  offset);
     }
-    public TemplateNode(Key ancestor, String nodeType, Integer lineNumber, Text nodeContent) {
-        super(ancestor,  nodeType,  lineNumber);
+    public TemplateNode(Key ancestor, String nodeType, Integer offset, Integer lno) {
+        super(ancestor,  nodeType,  offset);
+        this.setLineNumber(lno);
+    }
+    public TemplateNode(Key ancestor, String nodeType, Integer offset, Integer lno, Text nodeContent) {
+        super(ancestor,  nodeType,  offset);
         this.setNodeContent(nodeContent);
+        this.setLineNumber(lno);
     }
 
 
