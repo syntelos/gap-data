@@ -404,6 +404,10 @@ public abstract class {{=class_name}}Data
         else
             throw new IllegalArgumentException();
     }
+    public final static BigTableIterator<{{=class_name}}> ListPage(Page page){
+
+        return {{=class_name}}.QueryN({{=class_name}}.CreateQueryFor(),page);
+    }
     public final static BigTableIterator<{{=class_name}}> QueryN(Query query, Page page){
         if (null != query && null != page)
             return gap.data.Store.QueryNClass(query,page);

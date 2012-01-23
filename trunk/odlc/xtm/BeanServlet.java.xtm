@@ -3,14 +3,20 @@ package {{=package_name}};
 {{#import}}
 import {{=import_spec}};{{/import}}
 
-import gap.*;
-import gap.data.*;
-import gap.util.*;
+import gap.Request;
+import gap.Response;
+import gap.data.List;
+import gap.hapax.TemplateDataDictionary;
+import gap.hapax.TemplateException;
+import gap.hapax.TemplateName;
+import gap.hapax.TemplateRenderer;
+import gap.service.Templates;
 
-import com.google.appengine.api.datastore.*;
-import com.google.appengine.api.blobstore.*;
+import oso.data.Person;
 
-import java.util.Date;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
 
 /**
  * Generated once.  This source file will not be overwritten
