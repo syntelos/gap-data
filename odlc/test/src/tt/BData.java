@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see B
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-05T13:59:05.809Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-23T11:31:05.321Z")
 public abstract class BData
     extends gap.data.BigTable
     implements DataInheritance<B>
@@ -293,6 +293,10 @@ public abstract class BData
             return (B)gap.data.Store.Query1Class(query);
         else
             throw new IllegalArgumentException();
+    }
+    public final static BigTableIterator<B> ListPage(Page page){
+
+        return B.QueryN(B.CreateQueryFor(),page);
     }
     public final static BigTableIterator<B> QueryN(Query query, Page page){
         if (null != query && null != page)

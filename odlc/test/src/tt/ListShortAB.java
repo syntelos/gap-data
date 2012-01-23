@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2012-01-05T13:59:05.254Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2012-01-23T11:31:02.966Z")
 public abstract class ListShortAB
     extends gap.util.AbstractList<B>
     implements gap.data.List.Short<B>
@@ -64,7 +64,9 @@ public abstract class ListShortAB
     }
     public ListShortAB(){
         super();
-        this.page = Page.Short;
+        /*
+         * Not Paging -- Short lists are for small membership.
+         */
     }
 
 
