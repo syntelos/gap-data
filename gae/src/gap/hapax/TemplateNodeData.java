@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-23T11:24:43.616Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-24T11:26:14.743Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -826,6 +826,9 @@ public abstract class TemplateNodeData
         else
             return false;
     }
+    public boolean setNodeType(json.Json json){
+        return this.setNodeType((String)json.getValue(String.class));
+    }
     public final boolean hasOffset(boolean mayInherit){
         return (null != this.getOffset(mayInherit));
     }
@@ -855,6 +858,9 @@ public abstract class TemplateNodeData
         }
         else
             return false;
+    }
+    public boolean setOffset(json.Json json){
+        return this.setOffset((Integer)json.getValue(Integer.class));
     }
     public final boolean setOffset(Number offset){
         if (IsNotEqual(this.offset,offset)){
@@ -916,6 +922,9 @@ public abstract class TemplateNodeData
         else
             return false;
     }
+    public boolean setLineNumber(json.Json json){
+        return this.setLineNumber((Integer)json.getValue(Integer.class));
+    }
     public final boolean setLineNumber(Number lineNumber){
         if (IsNotEqual(this.lineNumber,lineNumber)){
             this.fieldStatistics.markDirty(TemplateNode.Field.LineNumber);
@@ -975,6 +984,9 @@ public abstract class TemplateNodeData
         }
         else
             return false;
+    }
+    public boolean setIndex(json.Json json){
+        return this.setIndex((Integer)json.getValue(Integer.class));
     }
     public final boolean setIndex(Number index){
         if (IsNotEqual(this.index,index)){
@@ -1036,6 +1048,9 @@ public abstract class TemplateNodeData
         else
             return false;
     }
+    public boolean setNodeContent(json.Json json){
+        return this.setNodeContent((Text)json.getValue(Text.class));
+    }
     public final boolean hasIndexCloseRelative(boolean mayInherit){
         return (null != this.getIndexCloseRelative(mayInherit));
     }
@@ -1084,6 +1099,9 @@ public abstract class TemplateNodeData
         else
             return false;
     }
+    public boolean setIndexCloseRelative(json.Json json){
+        return this.setIndexCloseRelative((Integer)json.getValue(Integer.class));
+    }
     public final boolean setIndexCloseRelative(Number indexCloseRelative){
         if (IsNotEqual(this.indexCloseRelative,indexCloseRelative)){
             this.fieldStatistics.markDirty(TemplateNode.Field.IndexCloseRelative);
@@ -1114,6 +1132,30 @@ public abstract class TemplateNodeData
     }
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
+    }
+    public json.Json toJson(){
+        json.Json json = new json.ObjectJson();
+         nodeType = this.getNodeType();
+        json.set("nodeType",nodeType);
+         offset = this.getOffset();
+        json.set("offset",offset);
+         lineNumber = this.getLineNumber();
+        json.set("lineNumber",lineNumber);
+         index = this.getIndex();
+        json.set("index",index);
+         nodeContent = this.getNodeContent();
+        json.set("nodeContent",nodeContent);
+         indexCloseRelative = this.getIndexCloseRelative();
+        json.set("indexCloseRelative",indexCloseRelative);
+        return json;
+    }
+    public boolean fromJson(json.Json json){
+        boolean modified = false;
+        modified = (this.setLineNumber(json.at("lineNumber")) || modified);
+        modified = (this.setIndex(json.at("index")) || modified);
+        modified = (this.setNodeContent(json.at("nodeContent")) || modified);
+        modified = (this.setIndexCloseRelative(json.at("indexCloseRelative")) || modified);
+        return modified;
     }
     public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;

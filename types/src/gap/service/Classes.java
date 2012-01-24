@@ -819,7 +819,7 @@ public class Classes {
     }
     public final static String ListImplClassName(String fieldType, String parentClassName, ClassDescriptor childType){
 
-        return ListUserClassName(parentClassName,childType.getName());
+        return ListImplClassName(parentClassName,childType.getName());
     }
     public final static String ListPrimitiveClassName(Primitive childType){
         if (null != childType)
@@ -849,7 +849,7 @@ public class Classes {
         else
             return null;
     }
-    public final static String ListUserClassName(String parentClassName, String childClassName){
+    public final static String ListImplClassName(String parentClassName, String childClassName){
         if (null != parentClassName && null != childClassName)
             return "List"+parentClassName+childClassName;
         else

@@ -34,6 +34,60 @@ import java.io.ObjectOutputStream;
  */
 public abstract class Objects {
 
+    public final static java.lang.Object From(Primitive type, java.lang.Object object){
+        if (null == object)
+            return null;
+        else {
+            switch(type){
+            case String:
+                return StringFromObject(object);
+            case Boolean:
+                return BooleanFromObject(object);
+            case Byte:
+                return ByteFromObject(object);
+            case Character:
+                return CharacterFromObject(object);
+            case Short:
+                return ShortFromObject(object);
+            case Integer:
+                return IntegerFromObject(object);
+            case Long:
+                return LongFromObject(object);
+            case Float:
+                return FloatFromObject(object);
+            case Double:
+                return DoubleFromObject(object);
+            case Date:
+                return DateFromObject(object);
+            case BigInteger:
+                return BigIntegerFromObject(object);
+            case BigDecimal:
+                return BigDecimalFromObject(object);
+            case Category:
+                return CategoryFromObject(object);
+            case Email:
+                return EmailFromObject(object);
+            case GeoPt:
+                return GeoPtFromObject(object);
+            case Key:
+                return KeyFromObject(object);
+            case Link:
+                return LinkFromObject(object);
+            case PhoneNumber:
+                return PhoneNumberFromObject(object);
+            case PostalAddress:
+                return PostalAddressFromObject(object);
+            case Rating:
+                return RatingFromObject(object);
+            case Text:
+                return TextFromObject(object);
+            case Serializable:
+                return SerializableFromObject(object);
+            default:
+                throw new java.lang.IllegalStateException("Unrecognized type "+type.name());
+            }
+        }
+    }
     public final static java.lang.Object ObjectFromObject(java.lang.Object object){
         if (object instanceof java.lang.String){
             String string = (String)object;

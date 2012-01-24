@@ -176,7 +176,7 @@ public final class Main
                                         out.close();
                                     }
                                 }
-                                String userClassName = OD.ListUserClassName(parentClassName,childClassName);
+                                String userClassName = OD.ListImplClassName(parentClassName,childClassName);
                                 if (null != userClassName){
                                     File userFile = new File(packagePath,userClassName+".java");
                                     if (!userFile.exists()){
@@ -210,7 +210,7 @@ public final class Main
                                         out.close();
                                     }
                                 }
-                                String userClassName = OD.ListUserClassName(parentClassName,childClassName);
+                                String userClassName = OD.ListImplClassName(parentClassName,childClassName);
                                 if (null != userClassName){
                                     File userFile = new File(packagePath,userClassName+".java");
                                     if (!userFile.exists()){

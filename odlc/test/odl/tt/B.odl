@@ -2,5 +2,5 @@ package tt;
 path /b;
 
 class B {
- *unique *sortby string name;
+ *unique *sortby Person person;
 }
