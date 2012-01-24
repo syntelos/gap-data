@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see B
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-23T11:31:05.321Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-24T11:33:40.373Z")
 public abstract class BData
     extends gap.data.BigTable
     implements DataInheritance<B>
@@ -50,7 +50,7 @@ public abstract class BData
 
     public final static String ClassName = "B";
 
-    public final static String DefaultSortBy = "name";
+    public final static String DefaultSortBy = "person";
 
 
     public final static gap.service.od.ClassDescriptor ClassDescriptorFor(){
@@ -69,8 +69,8 @@ public abstract class BData
     /**
      * Long instance key without parent key
      */
-    public final static Key KeyLongIdFor(String name){
-        String id = B.IdFor( name);
+    public final static Key KeyLongIdFor(Person person){
+        String id = B.IdFor( person);
         return KeyLongFor(id);
     }
     /**
@@ -79,7 +79,7 @@ public abstract class BData
      * Calls {@link #KeyLongIdFor}
      */
     public final static Key KeyIdFor(Object... args){
-        return B.KeyLongIdFor((String)args[0]);
+        return B.KeyLongIdFor((Person)args[0]);
     }
     /**
      * Used by setId
@@ -92,10 +92,10 @@ public abstract class BData
     /**
      * Identifier for unique fields
      */
-    public final static String IdFor(String name){
-        if (null != name){
-            String nameString = name;
-            return gap.data.Hash.For(nameString);
+    public final static String IdFor(Person person){
+        if (null != person){
+            String personString = gap.Strings.KeyToString(person);
+            return gap.data.Hash.For(personString);
         }
         else
             throw new IllegalArgumentException();
@@ -104,9 +104,9 @@ public abstract class BData
     /**
      * Instance lookup
      */
-    public final static B ForLongName(String name){
-        if (null != name){
-            Key key = B.KeyLongIdFor( name);
+    public final static B ForLongPerson(Person person){
+        if (null != person){
+            Key key = B.KeyLongIdFor( person);
             B instance = (B)gap.data.Store.GetClass(key);
             if (null != instance)
                 return instance;
@@ -122,16 +122,16 @@ public abstract class BData
     /**
      * Instance lookup or create
      */
-    public static B GetCreateLong(String name){
-        return GetCreateLongName( name);
+    public static B GetCreateLong(Person person){
+        return GetCreateLongPerson( person);
     }
     /**
      * Instance lookup or create
      */
-    public final static B GetCreateLongName(String name){
-        B b = B.ForLongName( name);
+    public final static B GetCreateLongPerson(Person person){
+        B b = B.ForLongPerson( person);
         if (null == b){
-            b = new B( name);
+            b = new B( person);
             b = (B)gap.data.Store.PutClass(b);
         }
         return b;
@@ -332,7 +332,7 @@ public abstract class BData
         InheritFromKey("inheritFromKey",Type.Primitive),
         Key("key",Type.Primitive),
         Id("id",Type.Primitive),
-        Name("name",Type.Primitive);
+        Person("person",Type.BigTable);
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
         public static final String[] AllNames;
@@ -386,8 +386,8 @@ public abstract class BData
                 return instance.getKey();
             case Id:
                 return instance.getId();
-            case Name:
-                return instance.getName(mayInherit);
+            case Person:
+                return instance.getPersonId();
             default:
                 throw new IllegalArgumentException(field.toString()+" in B");
             }
@@ -405,8 +405,8 @@ public abstract class BData
                 return instance.setKey(gap.Objects.KeyFromObject(value));
             case Id:
                 return instance.setId(gap.Objects.StringFromObject(value));
-            case Name:
-                return instance.setName(gap.Objects.StringFromObject(value));
+            case Person:
+                return instance.setPersonId(gap.Objects.StringFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in B");
             }
@@ -424,8 +424,8 @@ public abstract class BData
                 return instance.getKey();
             case Id:
                 return instance.getId();
-            case Name:
-                return instance.getName(MayNotInherit);
+            case Person:
+                return instance.getPersonId();
             default:
                 throw new IllegalArgumentException(field.toString()+" in B");
             }
@@ -446,8 +446,8 @@ public abstract class BData
             case Id:
                 instance.setId( (String)value);
                 return;
-            case Name:
-                instance.setName( (String)value);
+            case Person:
+                instance.setPersonId( (String)value);
                 return;
             default:
                 throw new IllegalArgumentException(field.toString()+" in B");
@@ -558,7 +558,9 @@ public abstract class BData
     private transient B inheritFrom;
 
 
-    private String name;
+    private String personId;
+    private transient Key personKey;
+    private transient Person person;
 
 
 
@@ -566,11 +568,11 @@ public abstract class BData
     protected BData() {
         super();
     }
-    protected BData(String name) {
+    protected BData(Person person) {
         super();
-        this.setName(name);
+        this.setPerson(person);
         {
-            final String id = B.IdFor(name);
+            final String id = B.IdFor(person);
             final Key key = B.KeyLongFor(id);
             this.setKey(key);
         }
@@ -579,7 +581,7 @@ public abstract class BData
 
     public void destroy(){
         this.inheritFrom = null;
-        this.name = null;
+        this.person = null;
     }
     public final String getId(){
 
@@ -587,7 +589,7 @@ public abstract class BData
         if (null != id)
             return id;
         else
-            return B.IdFor(this.name);
+            return B.IdFor(this.person);
     }
     public final boolean setId(String id){
         if (null == id){
@@ -644,35 +646,85 @@ public abstract class BData
         else
             return false;
     }
-    public final boolean hasName(boolean mayInherit){
-        return (null != this.getName(mayInherit));
+    public final boolean hasPerson(boolean mayInherit){
+        return (null != this.getPerson(mayInherit));
     }
-    public final boolean hasNotName(boolean mayInherit){
-        return (null == this.getName(mayInherit));
+    public final boolean hasNotPerson(boolean mayInherit){
+        return (null == this.getPerson(mayInherit));
     }
-    public final boolean dropName(){
-        if (null != this.name){
-            this.fieldStatistics.markDirty(B.Field.Name);
-            this.name = null;
+    public final boolean dropPerson(){
+        if (null != this.person){
+            this.fieldStatistics.markDirty(B.Field.Person);
+            this.person = null;
+            this.personId = null;
+            this.personKey = null;
             return true;
         }
         else
             return false;
     }
-    public final String getName(){
-        return this.name;
+    public final String getPersonId(){
+        return this.personId;
     }
-    public final String getName(boolean mayInherit){
-        return this.getName();
-    }
-    public final boolean setName(String name){
-        if (IsNotEqual(this.name,name)){
-            this.fieldStatistics.markDirty(B.Field.Name);
-            this.name = name;
+    public final boolean setPersonId(String personId){
+        if (IsNotEqual(this.personId,personId)){
+            this.fieldStatistics.markDirty(B.Field.Person);
+            this.personId = personId;
+            this.personKey = null;
+            this.person = null;
             return true;
         }
         else
             return false;
+    }
+    public final Key getPersonKey(){
+        if (null == this.personKey){
+            /*
+             * BigTable dereferencing
+             */
+            if (null != this.personId){
+                this.personKey = Person.KeyLongFor(this.personId);
+            }
+        }
+        return this.personKey;
+    }
+    public final Person getPerson(){
+        Person person = this.person;
+        if (null == person){
+            /*
+             * BigTable dereference
+             */
+            Key personKey = this.getPersonKey();
+
+            if (null != personKey){
+                person = Person.Get(personKey);
+                this.person = person;
+            }
+        }
+        return person;
+    }
+    public final Person getPerson(boolean mayInherit){
+        return this.getPerson();
+    }
+    public final boolean setPerson(Person person){
+        if (IsNotEqual(this.person,person)){
+            this.fieldStatistics.markDirty(B.Field.Person);
+            this.person = person;
+            if (null != person){
+                this.personId = person.getId();
+                this.personKey = person.getKey();
+            }
+            else {
+                this.personId = null;
+                this.personKey = null;
+            }
+            return true;
+        }
+        else
+            return false;
+    }
+    public boolean setPerson(json.Json json){
+        return this.setPersonId(json.asString());
     }
     /*
      * Data binding supports
@@ -692,6 +744,16 @@ public abstract class BData
     }
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
+    }
+    public json.Json toJson(){
+        json.Json json = new json.ObjectJson();
+         person = this.getPerson();
+        json.set("person",person.getId());
+        return json;
+    }
+    public boolean fromJson(json.Json json){
+        boolean modified = false;
+        return modified;
     }
     public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;
@@ -729,8 +791,8 @@ public abstract class BData
         return (B)this;
     }
     public final B markDirty(java.io.Serializable instance){
-        if (instance == this.name){
-            gap.data.Field field = B.Field.Name;
+        if (instance == this.person){
+            gap.data.Field field = B.Field.Person;
             return this.markDirty(field);
         }
         else
@@ -769,14 +831,19 @@ public abstract class BData
                 }
                 else
                     return false;
-            case Name:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
+            case Person:
+                if (name.has(1)){
+                    Person person = this.getPerson(true);
+                    if (null != person)
+                        return person.hasVariable(new TemplateName(name));
+                    else
+                        return false;
+                }
                 else {
                     /*
                      * Synthesize section for Field (EXISTS)
                      */
-                    return this.hasName(true);
+                    return this.hasPerson(true);
                 }
             default:
                 throw new IllegalStateException(field.name());
@@ -795,11 +862,16 @@ public abstract class BData
                     return this.getId();
                 else
                     return null;
-            case Name:
-                if (name.has(1))
-                    throw new IllegalStateException(field.name());
+            case Person:
+                if (name.has(1)){
+                    Person person = this.getPerson(Notation.MayInherit);
+                    if (null != person)
+                        return person.getVariable(new TemplateName(name));
+                    else
+                        return null;
+                }
                 else
-                    return this.getName(true);
+                    return this.getPersonId();
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -815,8 +887,13 @@ public abstract class BData
                 switch (field){
                 case Id:
                     throw new UnsupportedOperationException(field.name());
-                case Name:
-                    throw new IllegalStateException(field.name());
+                case Person:
+
+                    Person person = this.getPerson(true);
+                    if (null != person)
+                        person.setVariable(new TemplateName(name),value);
+
+                    return ;
                 default:
                     throw new IllegalStateException(field.name());
                 }
@@ -832,8 +909,12 @@ public abstract class BData
         Field field = B.Field.For(name.getTerm());
         if (null != field){
             switch (field){
-            case Name:
-                return null;
+            case Person:
+                Person person = this.getPerson(true);
+                if (null != person)
+                    return person.getSection(new TemplateName(name));
+                else
+                    return null;
             default:
                 throw new IllegalStateException(field.name());
             }

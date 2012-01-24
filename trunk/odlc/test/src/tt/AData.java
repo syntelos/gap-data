@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see A
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-23T11:31:01.504Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-24T11:33:38.661Z")
 public abstract class AData
     extends gap.data.BigTable
     implements DataInheritance<A>
@@ -717,6 +717,9 @@ public abstract class AData
         else
             return false;
     }
+    public boolean setName(json.Json json){
+        return this.setName((String)json.getValue(String.class));
+    }
     public final boolean hasChildren(boolean mayInherit){
         return (this.getChildren(mayInherit).isNotEmpty());
     }
@@ -896,6 +899,16 @@ public abstract class AData
     }
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
+    }
+    public json.Json toJson(){
+        json.Json json = new json.ObjectJson();
+         name = this.getName();
+        json.set("name",name);
+        return json;
+    }
+    public boolean fromJson(json.Json json){
+        boolean modified = false;
+        return modified;
     }
     public boolean updateFrom(Request req) throws ValidationError {
         boolean change = false;
