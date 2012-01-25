@@ -99,76 +99,61 @@ import java.util.Set;
  * @version Gap-Data
  */
 public abstract class Json
+    extends Object
 {
     public static Json Decode(String json) { 
 
         return (Json)new Reader().read(json); 
     }
+    public static Json Decode(gap.Request q){
+
+        return (Json)new Reader().read(q.getBodyString()); 
+    }
     public static String Encode(Json json){ 
 
         return json.toString();
     }
-    public static Json Wrap(Object anything) 
-    {
-        if (anything == null)
+    public static Json Wrap(Object object){
+        if (null == object)
             return NullJson.Instance;
-        else if (anything instanceof Json)
-            return (Json)anything;
 
-        else if (anything instanceof String)
-            return new StringJson((String)anything);
+        else if (object instanceof Json)
+            return (Json)object;
 
-        else if (anything instanceof Boolean)
-            return new BooleanJson((Boolean)anything);
+        else if (object instanceof String)
+            return new StringJson((String)object);
 
-        else if (anything instanceof Number)
-            return new NumberJson((Number)anything);
+        else if (object instanceof Boolean)
+            return new BooleanJson((Boolean)object);
 
-        else if (anything instanceof Collection<?>)
-            {
-                Json L = new ArrayJson();
-                for (Object x : (Collection<?>)anything)
-                    L.add(Json.Wrap(x));
-                return L;
+        else if (object instanceof Number)
+            return new NumberJson((Number)object);
+
+        else if (object instanceof Builder)
+            return ((Builder)object).toJson();
+
+        else if (object instanceof Iterable)
+            return new ArrayJson( (Iterable)object);
+
+        else if (object.getClass().isArray())
+            return new ArrayJson((Object[])object);
+
+        else if (object instanceof Map)
+            return new ObjectJson( (Map)object);
+
+        else {
+            final Primitive primitive = Primitive.For(object.getClass());
+            if (null != primitive)
+                return new StringJson( Strings.ToString(primitive, object));
+            else {
+                /*
+                 * Inert string coder protocol
+                 * 
+                 * (String)toString <-> ctor(String)
+                 */
+                return new StringJson( object.toString());
             }
-        else if (anything instanceof Map<?,?>)
-            {
-                Json O = new ObjectJson();
-                for (Map.Entry<?,?> x : ((Map<?,?>)anything).entrySet())
-                    O.set(x.getKey().toString(), Json.Wrap(x.getValue()));
-                return O;
-            }
-        else if (anything.getClass().isArray())
-            {
-                Class<?> comp = anything.getClass().getComponentType();
-                if (!comp.isPrimitive())
-                    return new ArrayJson((Object[])anything);
-                else {
-                    Json A = new ArrayJson();
-                    if (boolean.class == comp)
-                        for (boolean b : (boolean[])anything) A.add(b);
-                    else if (byte.class == comp)
-                        for (byte b : (byte[])anything) A.add(b);
-                    else if (char.class == comp)
-                        for (char b : (char[])anything) A.add(b);
-                    else if (short.class == comp)
-                        for (short b : (short[])anything) A.add(b);
-                    else if (int.class == comp)
-                        for (int b : (int[])anything) A.add(b);
-                    else if (long.class == comp)
-                        for (long b : (long[])anything) A.add(b);
-                    else if (float.class == comp)
-                        for (float b : (float[])anything) A.add(b);
-                    else if (double.class == comp)
-                        for (double b : (double[])anything) A.add(b);
-                    else
-                        throw new IllegalArgumentException("Unrecognized array component type "+comp.getName());
-
-                    return A;
-                }
-            }
-        else
-            throw new IllegalArgumentException(anything.getClass().getName());
+        }
     }
 		
 
@@ -319,10 +304,10 @@ public abstract class Json
      * {@link #Wrap} method.
      * </p>
      * 
-     * @param anything Any Java object that can be converted to a Json instance.
+     * @param object Any Java object that can be converted to a Json instance.
      * @return this
      */
-    public final Json add(Object anything) { return add(Json.Wrap(anything)); }
+    public final Json add(Object object) { return add(Json.Wrap(object)); }
 	
     /**
      * <p>
@@ -381,13 +366,13 @@ public abstract class Json
      * <p>
      * Remove the specified Java object (converted to a Json instance) 
      * from a <code>Json</code> array. This is equivalent to 
-     * <code>remove({@link #Wrap(anything)})</code>.
+     * <code>remove({@link #Wrap(object)})</code>.
      * </p>
      * 
-     * @param anything The object to delete.
+     * @param object The object to delete.
      * @return this
      */
-    public final Json remove(Object anything) { return remove(Json.Wrap(anything)); }
+    public final Json remove(Object object) { return remove(Json.Wrap(object)); }
 	
     /**
      * <p>
@@ -445,10 +430,20 @@ public abstract class Json
                 else
                     return Objects.From(primitive, value);
             }
+            else if (Builder.class.isAssignableFrom(clas)){
+
+                return Builder.Immutable.Construct( (Class<Builder>)clas, this);
+            }
+            else if (value instanceof String)
+                return Builder.Immutable.Construct( clas, (String)value);
             else
-                throw new IllegalArgumentException("Conversion from "+value.getClass().getName()+" to "+clas.getName());
+                return Builder.Immutable.Construct( clas, value);
         }
     }
+    public Object getValue(String name){ throw new UnsupportedOperationException(); }
+
+    public Object getValue(String name, Class clas){ throw new UnsupportedOperationException(); }
+
     /**
      * <p>Return the boolean value of a boolean <code>Json</code> instance. Call
      * {@link #isBoolean()} first if you're not sure this instance is indeed a

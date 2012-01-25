@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 /**
  * 
  */
@@ -48,7 +50,15 @@ public class ObjectJson
             throw new IllegalArgumentException("Odd number of arguments for sequence of name-value pairs.");
         else {
             for (int i = 0; i < args.length; i++)
-                this.set(args[i].toString(), Json.Wrap(args[++i]));
+                this.set(args[i].toString(), args[++i]);
+        }
+    }
+    public ObjectJson(Map map){
+        super();
+
+        for (Map.Entry entry : (Set<Map.Entry>)map.entrySet()){
+
+            this.set( (String)entry.getKey(), entry.getValue());
         }
     }
 
@@ -75,8 +85,13 @@ public class ObjectJson
         Json p = object.get(property);
         if (p == null)
             return false;
-        else
-            return p.equals(Json.Wrap(value));
+        else {
+            Object po = p.getValue();
+            if (null == po)
+                return false;
+            else
+                return po.equals(value);
+        }
     }		
 		
     public Json at(String property)
@@ -91,7 +106,22 @@ public class ObjectJson
         object.putAll(((ObjectJson)x).object);
         return this;
     }
-		
+    public Object getValue(String property){
+
+        Json wrap = object.get(property);
+        if (null != wrap)
+            return wrap.getValue();
+        else
+            return null;
+    }
+    public Object getValue(String property, Class clas){
+
+        Json wrap = object.get(property);
+        if (null != wrap)
+            return wrap.getValue(clas);
+        else
+            return null;
+    }
     public Json set(String property, Json el)
     {
         el.enclosing = this;
@@ -151,9 +181,16 @@ public class ObjectJson
         sb.append('}');
         return sb.toString();
     }
-    public int hashCode() { return object.hashCode(); }
+    public int hashCode() { 
+        int h = 0;
+        for (String key: object.keySet()){
+
+            h ^= key.hashCode();
+        }
+        return h;
+    }
     public boolean equals(Object x)
     {			
-        return x instanceof ObjectJson && ((ObjectJson)x).object.equals(object); 
+        return (x instanceof ObjectJson) && ((ObjectJson)x).object.equals(object); 
     }				
 }

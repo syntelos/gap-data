@@ -1263,7 +1263,7 @@ public abstract class {{=class_name}}Data
     }
     public json.Json toJson(){
         json.Json json = new json.ObjectJson();{{#pfield}}
-        {{=field_type}} {{=field_name}} = this.get{{=field_nameCamel}}();{{#field_is_primitive}}
+        {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}();{{#field_is_primitive}}
         json.set("{{=field_name}}",{{=field_name}});{{/field_is_primitive}}{{#field_is_bigTable}}
         json.set("{{=field_name}}",{{=field_name}}.getId());{{/field_is_bigTable}}{{/pfield}}
         return json;
