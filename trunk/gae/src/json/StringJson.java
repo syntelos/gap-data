@@ -46,7 +46,10 @@ public class StringJson
         this.val = val;
     }
 
-		
+
+    public boolean isNull(){
+        return (null == val || 1 > val.length());
+    }
     public Json dup() { return new StringJson(val, null); }		
     public boolean isString() { return true; }
     public Object getValue() { return val; }

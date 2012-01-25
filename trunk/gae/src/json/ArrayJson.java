@@ -29,7 +29,7 @@ import java.util.List;
 public class ArrayJson
     extends Json
 {
-    private List<Json> L = new ArrayList<Json>();
+    private List<Json> list = new ArrayList<Json>();
 
 		
     public ArrayJson() {
@@ -52,32 +52,35 @@ public class ArrayJson
     }
 		
 
+    public boolean isNull(){
+        return (0 == list.size());
+    }
     public Json dup() 
     { 
         ArrayJson j = new ArrayJson();
-        for (Json e : L)
+        for (Json e : list)
             {
                 Json v = e.dup();
                 v.enclosing = j;
-                j.L.add(v);
+                j.list.add(v);
             }
         return j;
     }
 		
-    public List<Json> asJsonList() { return L; }
+    public List<Json> asJsonList() { return list; }
     public List<Object> asList() 
     {
         ArrayList<Object> A = new ArrayList<Object>();
-        for (Json x: L)
+        for (Json x: list)
             A.add(x.getValue());
         return A; 
     }
     public boolean is(int index, Object value) 
     { 
-        if (index < 0 || index >= L.size())
+        if (index < 0 || index >= list.size())
             return false;
         else {
-            Json p = L.get(index);
+            Json p = list.get(index);
             if (null == p)
                 return false;
             else {
@@ -91,9 +94,9 @@ public class ArrayJson
     }       		
     public Object getValue() { return asList(); }
     public boolean isArray() { return true; }
-    public Json at(int index) { return L.get(index); }
-    public Json add(Json el) { L.add(el); el.enclosing = this; return this; }
-    public Json remove(Json el) { L.remove(el); el.enclosing = null; return this; }
+    public Json at(int index) { return list.get(index); }
+    public Json add(Json el) { list.add(el); el.enclosing = this; return this; }
+    public Json remove(Json el) { list.remove(el); el.enclosing = null; return this; }
 
     public Json with(Json object) 
     {
@@ -101,13 +104,13 @@ public class ArrayJson
             throw new UnsupportedOperationException();
         // what about "enclosing" here? we don't have a provision where a Json 
         // element belongs to more than one enclosing elements...
-        L.addAll(((ArrayJson)object).L);
+        list.addAll(((ArrayJson)object).list);
         return this;
     }
 		
     public Json atDel(int index) 
     { 
-        Json el = L.remove(index); 
+        Json el = list.remove(index); 
         if (el != null) 
             el.enclosing = null; 
         return el; 
@@ -115,7 +118,7 @@ public class ArrayJson
 		
     public Json delAt(int index) 
     { 
-        Json el = L.remove(index); 
+        Json el = list.remove(index); 
         if (el != null) 
             el.enclosing = null; 
         return this; 
@@ -126,7 +129,7 @@ public class ArrayJson
         StringBuilder sb = new StringBuilder();
         sb.append('[');
 
-        for (Iterator<Json> i = L.iterator(); i.hasNext(); )
+        for (Iterator<Json> i = list.iterator(); i.hasNext(); )
             {
                 for (int dd = 0; dd < d; dd++){
                     sb.append(' ');
@@ -139,9 +142,9 @@ public class ArrayJson
         sb.append(']');
         return sb.toString();
     }
-    public int hashCode() { return L.hashCode(); }
+    public int hashCode() { return list.hashCode(); }
     public boolean equals(Object x)
     {			
-        return (x instanceof ArrayJson) && ((ArrayJson)x).L.equals(L); 
+        return (x instanceof ArrayJson) && ((ArrayJson)x).list.equals(list); 
     }		
 }

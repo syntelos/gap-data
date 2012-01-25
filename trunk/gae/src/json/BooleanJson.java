@@ -30,6 +30,7 @@ public class BooleanJson
 {
     private boolean val;
 
+
     public BooleanJson() {
         super();
     }
@@ -44,6 +45,7 @@ public class BooleanJson
         super(); 
         this.val = val;
     }
+
 		
     public Json dup() { return new BooleanJson(val, null); }		
     public boolean asBoolean() { return val; }		

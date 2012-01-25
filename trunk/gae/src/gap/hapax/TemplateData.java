@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-24T11:26:14.258Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-25T10:27:19.470Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -721,7 +721,10 @@ public abstract class TemplateData
             return false;
     }
     public boolean setName(json.Json json){
-        return this.setName((String)json.getValue(String.class));
+        if (null == json)
+            return false;
+        else
+            return this.setName((String)json.getValue(String.class));
     }
     public final boolean hasLastModified(boolean mayInherit){
         return (null != this.getLastModified(mayInherit));
@@ -772,7 +775,10 @@ public abstract class TemplateData
             return false;
     }
     public boolean setLastModified(json.Json json){
-        return this.setLastModified((Long)json.getValue(Long.class));
+        if (null == json)
+            return false;
+        else
+            return this.setLastModified((Long)json.getValue(Long.class));
     }
     public final boolean setLastModified(Number lastModified){
         if (IsNotEqual(this.lastModified,lastModified)){
@@ -835,7 +841,10 @@ public abstract class TemplateData
             return false;
     }
     public boolean setTemplateSourceHapax(json.Json json){
-        return this.setTemplateSourceHapax((Text)json.getValue(Text.class));
+        if (null == json)
+            return false;
+        else
+            return this.setTemplateSourceHapax((Text)json.getValue(Text.class));
     }
     public final boolean hasTemplateTargetHapax(boolean mayInherit){
         return (this.getTemplateTargetHapax(mayInherit).isNotEmpty());
@@ -943,11 +952,11 @@ public abstract class TemplateData
     }
     public json.Json toJson(){
         json.Json json = new json.ObjectJson();
-         name = this.getName();
+        String name = this.getName();
         json.set("name",name);
-         lastModified = this.getLastModified();
+        Long lastModified = this.getLastModified();
         json.set("lastModified",lastModified);
-         templateSourceHapax = this.getTemplateSourceHapax();
+        Text templateSourceHapax = this.getTemplateSourceHapax();
         json.set("templateSourceHapax",templateSourceHapax);
         return json;
     }
