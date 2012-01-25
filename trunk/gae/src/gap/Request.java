@@ -25,6 +25,8 @@ import gap.data.*;
 import gap.hapax.*;
 import gap.service.*;
 
+import json.Json;
+
 import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletRequest;
@@ -124,6 +126,7 @@ public class Request
     public final ContentType contentType;
     public final boolean isAdmin, isMember;
     private String bodyString;
+    private Json bodyJson;
 
 
     public Request(String ns, HttpServletRequest req, Method method, Protocol protocol, Path path, 
@@ -287,6 +290,9 @@ public class Request
     public final String getPath(int idx){
         return this.path.getComponent(idx);
     }
+    public final String getTail(){
+        return this.path.getTail();
+    }
     public final boolean hasSource(){
         return this.path.hasSource();
     }
@@ -350,6 +356,20 @@ public class Request
             catch (Exception drop){
 
                 this.bodyString = "";
+            }
+        }
+        return body;
+    }
+    public final Json getBodyJson(){
+        Json body = this.bodyJson;
+        if (null == body){
+            try {
+                body = Json.Decode(this);
+                this.bodyJson = body;
+            }
+            catch (Exception drop){
+
+                this.bodyJson = new json.NullJson();
             }
         }
         return body;

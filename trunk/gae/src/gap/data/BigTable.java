@@ -63,7 +63,8 @@ import java.math.BigDecimal;
 public abstract class BigTable
     extends gap.hapax.AbstractData
     implements gap.data.TableClass,
-               RequestCreateUpdate
+               RequestCreateUpdate,
+               json.Builder
 {
     /**
      * Initialize data bean classes, called in the class

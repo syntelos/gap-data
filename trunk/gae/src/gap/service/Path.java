@@ -298,6 +298,19 @@ public final class Path
     public String getSub(){
         return this.sub;
     }
+    /**
+     * @return Last path info component
+     */
+    public String getTail(){
+        Component[] components = this.components;
+        if (null != components)
+            return components[components.length-1].term;
+        else
+            return null;
+    }
+    /**
+     * @return First path info component
+     */
     public String getSource(){
         return this.getComponent(0);
     }

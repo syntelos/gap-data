@@ -44,6 +44,12 @@ public class ArrayJson
             this.add(x);
         }
     }
+    public ArrayJson(Iterable args) {
+        super();
+        for (Object x : args){
+            this.add(x);
+        }
+    }
 		
 
     public Json dup() 
@@ -70,8 +76,18 @@ public class ArrayJson
     { 
         if (index < 0 || index >= L.size())
             return false;
-        else
-            return L.get(index).equals(Json.Wrap(value));
+        else {
+            Json p = L.get(index);
+            if (null == p)
+                return false;
+            else {
+                Object po = p.getValue();
+                if (null == po)
+                    return false;
+                else
+                    return po.equals(value);
+            }
+        }
     }       		
     public Object getValue() { return asList(); }
     public boolean isArray() { return true; }
@@ -126,6 +142,6 @@ public class ArrayJson
     public int hashCode() { return L.hashCode(); }
     public boolean equals(Object x)
     {			
-        return x instanceof ArrayJson && ((ArrayJson)x).L.equals(L); 
+        return (x instanceof ArrayJson) && ((ArrayJson)x).L.equals(L); 
     }		
 }
