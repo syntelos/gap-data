@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-24T11:26:14.743Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-25T10:27:20.132Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -827,7 +827,10 @@ public abstract class TemplateNodeData
             return false;
     }
     public boolean setNodeType(json.Json json){
-        return this.setNodeType((String)json.getValue(String.class));
+        if (null == json)
+            return false;
+        else
+            return this.setNodeType((String)json.getValue(String.class));
     }
     public final boolean hasOffset(boolean mayInherit){
         return (null != this.getOffset(mayInherit));
@@ -860,7 +863,10 @@ public abstract class TemplateNodeData
             return false;
     }
     public boolean setOffset(json.Json json){
-        return this.setOffset((Integer)json.getValue(Integer.class));
+        if (null == json)
+            return false;
+        else
+            return this.setOffset((Integer)json.getValue(Integer.class));
     }
     public final boolean setOffset(Number offset){
         if (IsNotEqual(this.offset,offset)){
@@ -923,7 +929,10 @@ public abstract class TemplateNodeData
             return false;
     }
     public boolean setLineNumber(json.Json json){
-        return this.setLineNumber((Integer)json.getValue(Integer.class));
+        if (null == json)
+            return false;
+        else
+            return this.setLineNumber((Integer)json.getValue(Integer.class));
     }
     public final boolean setLineNumber(Number lineNumber){
         if (IsNotEqual(this.lineNumber,lineNumber)){
@@ -986,7 +995,10 @@ public abstract class TemplateNodeData
             return false;
     }
     public boolean setIndex(json.Json json){
-        return this.setIndex((Integer)json.getValue(Integer.class));
+        if (null == json)
+            return false;
+        else
+            return this.setIndex((Integer)json.getValue(Integer.class));
     }
     public final boolean setIndex(Number index){
         if (IsNotEqual(this.index,index)){
@@ -1049,7 +1061,10 @@ public abstract class TemplateNodeData
             return false;
     }
     public boolean setNodeContent(json.Json json){
-        return this.setNodeContent((Text)json.getValue(Text.class));
+        if (null == json)
+            return false;
+        else
+            return this.setNodeContent((Text)json.getValue(Text.class));
     }
     public final boolean hasIndexCloseRelative(boolean mayInherit){
         return (null != this.getIndexCloseRelative(mayInherit));
@@ -1100,7 +1115,10 @@ public abstract class TemplateNodeData
             return false;
     }
     public boolean setIndexCloseRelative(json.Json json){
-        return this.setIndexCloseRelative((Integer)json.getValue(Integer.class));
+        if (null == json)
+            return false;
+        else
+            return this.setIndexCloseRelative((Integer)json.getValue(Integer.class));
     }
     public final boolean setIndexCloseRelative(Number indexCloseRelative){
         if (IsNotEqual(this.indexCloseRelative,indexCloseRelative)){
@@ -1135,17 +1153,17 @@ public abstract class TemplateNodeData
     }
     public json.Json toJson(){
         json.Json json = new json.ObjectJson();
-         nodeType = this.getNodeType();
+        String nodeType = this.getNodeType();
         json.set("nodeType",nodeType);
-         offset = this.getOffset();
+        Integer offset = this.getOffset();
         json.set("offset",offset);
-         lineNumber = this.getLineNumber();
+        Integer lineNumber = this.getLineNumber();
         json.set("lineNumber",lineNumber);
-         index = this.getIndex();
+        Integer index = this.getIndex();
         json.set("index",index);
-         nodeContent = this.getNodeContent();
+        Text nodeContent = this.getNodeContent();
         json.set("nodeContent",nodeContent);
-         indexCloseRelative = this.getIndexCloseRelative();
+        Integer indexCloseRelative = this.getIndexCloseRelative();
         json.set("indexCloseRelative",indexCloseRelative);
         return json;
     }

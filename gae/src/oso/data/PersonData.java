@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-24T11:26:13.406Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-25T10:27:18.380Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -675,7 +675,10 @@ public abstract class PersonData
             return false;
     }
     public boolean setLogonId(json.Json json){
-        return this.setLogonId((String)json.getValue(String.class));
+        if (null == json)
+            return false;
+        else
+            return this.setLogonId((String)json.getValue(String.class));
     }
     /*
      * Data binding supports
@@ -698,7 +701,7 @@ public abstract class PersonData
     }
     public json.Json toJson(){
         json.Json json = new json.ObjectJson();
-         logonId = this.getLogonId();
+        String logonId = this.getLogonId();
         json.set("logonId",logonId);
         return json;
     }

@@ -63,6 +63,9 @@ public class ObjectJson
     }
 
 
+    public boolean isNull(){
+        return (0 == object.size());
+    }
     public Json dup() 
     { 
         ObjectJson j = new ObjectJson();

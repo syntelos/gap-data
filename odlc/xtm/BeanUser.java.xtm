@@ -55,5 +55,12 @@ public final class {{=class_name}}
     }
     public void store(){
         Store(this);
-    }
+    }{{#pfield}}
+    /**
+     * To disable json access via 'fromJson', redefine this method to "return false".
+     */
+    @Override
+    public boolean set{{=field_nameCamel}}(json.Json json){
+        return super.set{{=field_nameCamel}}(json);
+    }{{/pfield}}
 }

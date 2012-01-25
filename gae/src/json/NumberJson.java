@@ -45,7 +45,10 @@ public class NumberJson
         super(); 
         this.val = val;
     }
-		
+
+    public boolean isNull(){
+        return (null == val);
+    }
     public Json dup() { return new NumberJson(val, null); }		
     public boolean isNumber() { return true; }		
     public Object getValue() { return val; }
