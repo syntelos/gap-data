@@ -7,6 +7,8 @@ import gap.*;
 import gap.data.*;
 import gap.util.*;
 
+import json.Json;
+
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.blobstore.*;
 
@@ -28,11 +30,30 @@ public final class {{=class_name}}
     }{{#class_re_not_child}}
     public {{=class_name}}({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}) {
         super({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+    }
+    public {{=class_name}}(Json json){
+        super();{{#field_unique}}
+        {{field_class}} {{field_name}} = ({{=field_class}})json.getValue("{{=field_name}}",{{=field_class}}.class);
+        {{/field_unique}}
+        if ({{#field_unique}}{{#field_unique_it_NotFirst}} && {{/field_unique_it_NotFirst}}null != {{field_name}}){
+            Key key = {{=class_name}}.KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});{{#field_unique}}
+            this.set{{field_nameCamel}}({{=field_name}});{{/field_unique}}
+            this.setKey(key);
+            this.fillFrom(gap.data.Store.Get(key));
+            this.markClean();
+            /*
+             */
+            this.fromJson(json);
+            if (this.isDirty())
+                this.save();
+        }
+        else {
+            throw new IllegalArgumentException("Unable to create new");
+        }
     }{{/class_re_not_child}}{{#class_re_child}}
     public {{=class_name}}(Key ancestor, {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}) {
         super(ancestor, {{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
     }{{/class_re_child}}
-
 
     public void onread(){
     }
@@ -60,7 +81,7 @@ public final class {{=class_name}}
      * To disable json access via 'fromJson', redefine this method to "return false".
      */
     @Override
-    public boolean set{{=field_nameCamel}}(json.Json json){
+    public boolean set{{=field_nameCamel}}(Json json){
         return super.set{{=field_nameCamel}}(json);
     }{{/pfield}}
 }
