@@ -528,13 +528,16 @@ public abstract class BigTable
     }
     public final Entity fillFrom(Entity entity){
 
-        for (Field field: this.getClassFields()){
+        if (null != entity){
 
-            java.io.Serializable object = (java.io.Serializable)entity.getProperty(field.getFieldName());
+            for (Field field: this.getClassFields()){
 
-            this.defineStorage(field,object);
+                java.io.Serializable object = (java.io.Serializable)entity.getProperty(field.getFieldName());
+
+                this.defineStorage(field,object);
+            }
+            this.setKey(entity.getKey());
         }
-        this.setKey(entity.getKey());
         return entity;
     }
     /*

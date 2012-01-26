@@ -361,7 +361,7 @@ public final class Store
         else
             throw new IllegalArgumentException("Incomplete key '"+key+"'.");
     }
-    protected static Entity Get(Key key){
+    public static Entity Get(Key key){
         if (key.isComplete()){
             Entity entity = C.Get(key);
             if (null != entity)
