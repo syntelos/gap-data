@@ -612,6 +612,21 @@ public class Request
     public int getContentLength() {
         return this.request.getContentLength();
     }
+    public boolean isContentTypeNil(){
+        return (ContentType.Nil == this.contentType);
+    }
+    public boolean isContentTypeForm(){
+        return (ContentType.Form == this.contentType);
+    }
+    public boolean isContentTypeMultipart(){
+        return (ContentType.Multipart == this.contentType);
+    }
+    public boolean isContentTypeJson(){
+        return (ContentType.Json == this.contentType);
+    }
+    public boolean isContentTypeXml(){
+        return (ContentType.Xml == this.contentType);
+    }
     public String getContentType() {
         return this.request.getContentType();
     }
