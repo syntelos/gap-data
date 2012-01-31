@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-26T08:53:56.642Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-30T18:40:32.162Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -242,7 +242,7 @@ public abstract class TemplateData
     public final static void Delete(Key instanceKey){
         if (null != instanceKey){
 
-            gap.data.Store.DeleteKey(instanceKey);
+            gap.data.Store.Delete(instanceKey);
         }
     }
     /**
@@ -250,8 +250,8 @@ public abstract class TemplateData
      */
     public final static void Clean(Template instance){
         if (null != instance){
-            Key key = instance.getKey();
-            gap.data.Store.CleanKey(key);
+
+            gap.data.Store.Clean(instance.getKey());
         }
     }
     /**
@@ -259,6 +259,7 @@ public abstract class TemplateData
      */
     public final static void Save(Template instance){
         if (null != instance){
+
             gap.data.Store.PutClass(instance);
         }
     }
@@ -267,6 +268,7 @@ public abstract class TemplateData
      */
     public final static void Store(Template instance){
         if (null != instance){
+
             gap.data.Store.PutClass(instance);
         }
     }

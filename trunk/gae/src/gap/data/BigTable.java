@@ -137,57 +137,7 @@ public abstract class BigTable
      */
     public final static String ToString(Key key){
 
-        if (null != key && key.isComplete()){
-            String s = ToStringBuilder(key).toString();
-            if (0 < s.length())
-                return s;
-        }
-        throw new IllegalArgumentException("Incomplete key ("+key+")");
-    }
-    public final static StringBuilder ToStringBuilder(Key key){
-        if (null != key)
-
-            return ToStringBuilder(new StringBuilder(),key);
-        else
-            throw new IllegalArgumentException();
-    }
-    private final static StringBuilder ToStringBuilder(StringBuilder strbuf, Key k){
-
-        final Key p = k.getParent();
-        if (null != p && (!KEQ(p,k)))
-            ToStringBuilder(strbuf,p);
-
-        final String n = k.getName();
-
-        if (null != n && 0 != n.length()){
-            strbuf.append('/');
-            strbuf.append(k.getKind());
-            strbuf.append(':');
-            strbuf.append(n);
-        }
-        return strbuf;
-    }
-    /**
-     * @return Key node equivalence
-     */
-    private final static boolean KEQ(Key a, Key b){
-        if (a == b)
-            return true;
-        else if (a.getKind().equals(b.getKind())){
-            long ai = a.getId();
-            long bi = b.getId();
-            if (ai == bi){
-                String an = a.getName();
-                String bn = b.getName();
-                if (null == an)
-                    return (null == bn);
-                else if (null == bn)
-                    return false;
-                else
-                    return an.equals(bn);
-            }
-        }
-        return false;
+        return gap.Strings.KeyToString(key);
     }
     /**
      * @return True for Key(/Kind:ID)
@@ -539,6 +489,33 @@ public abstract class BigTable
             this.setKey(entity.getKey());
         }
         return entity;
+    }
+    /**
+     * @return Key string
+     */
+    public String toString(){
+        String s = gap.Strings.KeyToString(this.getKey());
+        if (null != s)
+            return s;
+        else
+            return "/"+this.getClassKind()+":<0>";
+    }
+    /**
+     * @return To string hash code
+     */
+    public int hashCode(){
+        return this.toString().hashCode();
+    }
+    /**
+     * @return To string equivalence
+     */
+    public boolean equals(Object that){
+        if (this == that)
+            return true;
+        else if (null == that)
+            return false;
+        else
+            return this.toString().equals(that.toString());
     }
     /*
      */

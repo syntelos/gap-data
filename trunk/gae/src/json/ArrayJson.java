@@ -129,16 +129,19 @@ public class ArrayJson
         StringBuilder sb = new StringBuilder();
         sb.append('[');
 
-        for (Iterator<Json> i = list.iterator(); i.hasNext(); )
-            {
-                for (int dd = 0; dd < d; dd++){
-                    sb.append(' ');
-                }
-                sb.append(i.next().toString(d+1));
-                if (i.hasNext())
-                    sb.append(',');
-                sb.append('\n');
+        for (Iterator<Json> i = list.iterator(); i.hasNext(); ){
+            Json value = i.next();
+            for (int dd = -1; dd < d; dd++){
+                sb.append(' ');
             }
+            sb.append(value.toString(d+1));
+            if (i.hasNext())
+                sb.append(',');
+            sb.append('\n');
+        }
+        for (int dd = 0; dd < d; dd++){
+            sb.append(' ');
+        }
         sb.append(']');
         return sb.toString();
     }

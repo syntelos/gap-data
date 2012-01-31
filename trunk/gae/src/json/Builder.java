@@ -20,6 +20,7 @@ package json;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * <h3>Methods</h3>
@@ -84,38 +85,71 @@ public interface Builder
             }
         }
         public final static Object Construct(Class clas, String model){
-            try {
-                Constructor ctor = clas.getConstructor(String.class);
+            if (java.lang.Enum.class.isAssignableFrom(clas)){
+                try {
+                    Method valueOf = clas.getMethod("valueOf",String.class);
 
-                return ctor.newInstance(model);
-            }
-            catch (NoSuchMethodException exc){
+                    return valueOf.invoke(null,model);
+                }
+                catch (NoSuchMethodException exc){
 
-                throw new IllegalStateException(clas.getName(),exc);
-            }
-            catch (SecurityException exc){
-
-                throw new IllegalStateException(clas.getName(),exc);
-            }
-            catch (InstantiationException exc){
-
-                throw new IllegalStateException(clas.getName(),exc);
-            }
-            catch (IllegalAccessException exc){
-
-                throw new IllegalStateException(clas.getName(),exc);
-            }
-            catch (IllegalArgumentException exc){
-
-                throw new IllegalStateException(clas.getName(),exc);
-            }
-            catch (InvocationTargetException exc){
-
-                Throwable target = exc.getCause();
-                if (null != target)
-                    throw new IllegalStateException(clas.getName(),target);
-                else
                     throw new IllegalStateException(clas.getName(),exc);
+                }
+                catch (SecurityException exc){
+
+                    throw new IllegalStateException(clas.getName(),exc);
+                }
+                catch (IllegalAccessException exc){
+
+                    throw new IllegalStateException(clas.getName(),exc);
+                }
+                catch (IllegalArgumentException exc){
+
+                    throw new IllegalStateException(clas.getName(),exc);
+                }
+                catch (InvocationTargetException exc){
+
+                    Throwable target = exc.getCause();
+                    if (null != target)
+                        throw new IllegalStateException(clas.getName(),target);
+                    else
+                        throw new IllegalStateException(clas.getName(),exc);
+                }
+            }
+            else {
+                try {
+                    Constructor ctor = clas.getConstructor(String.class);
+
+                    return ctor.newInstance(model);
+                }
+                catch (NoSuchMethodException exc){
+
+                    throw new IllegalStateException(clas.getName(),exc);
+                }
+                catch (SecurityException exc){
+
+                    throw new IllegalStateException(clas.getName(),exc);
+                }
+                catch (InstantiationException exc){
+
+                    throw new IllegalStateException(clas.getName(),exc);
+                }
+                catch (IllegalAccessException exc){
+
+                    throw new IllegalStateException(clas.getName(),exc);
+                }
+                catch (IllegalArgumentException exc){
+
+                    throw new IllegalStateException(clas.getName(),exc);
+                }
+                catch (InvocationTargetException exc){
+
+                    Throwable target = exc.getCause();
+                    if (null != target)
+                        throw new IllegalStateException(clas.getName(),target);
+                    else
+                        throw new IllegalStateException(clas.getName(),exc);
+                }
             }
         }
         public final static Object Construct(Class clas, Object model){

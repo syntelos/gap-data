@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-26T08:53:55.583Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-30T18:40:31.349Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -240,7 +240,7 @@ public abstract class PersonData
     public final static void Delete(Key instanceKey){
         if (null != instanceKey){
 
-            gap.data.Store.DeleteKey(instanceKey);
+            gap.data.Store.Delete(instanceKey);
         }
     }
     /**
@@ -248,8 +248,8 @@ public abstract class PersonData
      */
     public final static void Clean(Person instance){
         if (null != instance){
-            Key key = instance.getKey();
-            gap.data.Store.CleanKey(key);
+
+            gap.data.Store.Clean(instance.getKey());
         }
     }
     /**
@@ -257,6 +257,7 @@ public abstract class PersonData
      */
     public final static void Save(Person instance){
         if (null != instance){
+
             gap.data.Store.PutClass(instance);
         }
     }
@@ -265,6 +266,7 @@ public abstract class PersonData
      */
     public final static void Store(Person instance){
         if (null != instance){
+
             gap.data.Store.PutClass(instance);
         }
     }

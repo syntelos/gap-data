@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-26T08:53:57.317Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-30T18:40:32.663Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -232,6 +232,7 @@ public abstract class TemplateNodeData
      */
     public final static void Delete(Template parent){
         if (null != parent){
+
             DeleteChildrenOf(parent.getKey());
         }
     }
@@ -240,6 +241,7 @@ public abstract class TemplateNodeData
      */
     public final static void DeleteChildrenOf(Key parentKey){
         if (null != parentKey){
+
              gap.data.Store.DeleteCollection(KIND,TemplateNode.CreateQueryFor(parentKey));
         }
     }
@@ -258,7 +260,7 @@ public abstract class TemplateNodeData
     public final static void Delete(Key instanceKey){
         if (null != instanceKey){
 
-            gap.data.Store.DeleteKey(instanceKey);
+            gap.data.Store.Delete(instanceKey);
         }
     }
     /**
@@ -266,8 +268,8 @@ public abstract class TemplateNodeData
      */
     public final static void Clean(TemplateNode instance){
         if (null != instance){
-            Key key = instance.getKey();
-            gap.data.Store.CleanKey(key);
+
+            gap.data.Store.Clean(instance.getKey());
         }
     }
     /**
@@ -275,6 +277,7 @@ public abstract class TemplateNodeData
      */
     public final static void Save(TemplateNode instance){
         if (null != instance){
+
             gap.data.Store.PutClass(instance);
         }
     }
@@ -283,6 +286,7 @@ public abstract class TemplateNodeData
      */
     public final static void Store(TemplateNode instance){
         if (null != instance){
+
             gap.data.Store.PutClass(instance);
         }
     }

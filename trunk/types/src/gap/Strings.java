@@ -26,6 +26,7 @@ import static gap.Primitive.* ;
 import jauk.Re;
 
 import com.google.appengine.api.datastore.Blob;
+import com.google.appengine.api.datastore.KeyFactory;
 
 import java.lang.reflect.Method;
 
@@ -35,6 +36,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import java.util.Random;
+import java.util.StringTokenizer;
 
 
 /**
@@ -417,8 +419,12 @@ public abstract class Strings {
             return null;
     }
     public final static com.google.appengine.api.datastore.Key KeyFromString(java.lang.String string){
-        if (null != string)
-            return com.google.appengine.api.datastore.KeyFactory.stringToKey(string);
+        if (null != string){
+
+            Strings.KeyParser parser = new Strings.KeyParser(string);
+
+            return parser.key;
+        }
         else
             return null;
     }
@@ -428,9 +434,15 @@ public abstract class Strings {
 	else
 	    return null;
     }
-    public final static java.lang.String KeyToString(com.google.appengine.api.datastore.Key instance){
-        if (null != instance)
-            return com.google.appengine.api.datastore.KeyFactory.keyToString(instance);
+    public final static java.lang.String KeyToString(com.google.appengine.api.datastore.Key key){
+        if (null != key){
+            if (key.isComplete()){
+                java.lang.String s = KeyToStringBuilder(key).toString();
+                if (0 < s.length())
+                    return s;
+            }
+            throw new IllegalArgumentException("Incomplete key ("+key+")");
+        }
         else
             return null;
     }
@@ -567,7 +579,7 @@ public abstract class Strings {
         }
         return RandomIdentifierPathclean(B64.encodeBytes(bits));
     }
-    private final static String RandomIdentifierPathclean(String r){
+    private final static java.lang.String RandomIdentifierPathclean(java.lang.String r){
         char[] cary = r.toCharArray();
         final int count = cary.length;
         boolean change = false;
@@ -598,8 +610,126 @@ public abstract class Strings {
             }
         }
         if (change)
-            return new String(cary,0,count);
+            return new java.lang.String(cary,0,count);
         else
             return r;
+    }
+    public final static java.lang.StringBuilder KeyToStringBuilder(com.google.appengine.api.datastore.Key key){
+        if (null != key)
+
+            return KeyToStringBuilder(new java.lang.StringBuilder(),key);
+        else
+            throw new IllegalArgumentException();
+    }
+    private final static java.lang.StringBuilder KeyToStringBuilder(java.lang.StringBuilder strbuf, com.google.appengine.api.datastore.Key k){
+
+        final com.google.appengine.api.datastore.Key p = k.getParent();
+        if (null != p && (!KEQ(p,k)))
+            KeyToStringBuilder(strbuf,p);
+
+        final java.lang.String n = k.getName();
+
+        if (null != n && 0 != n.length()){
+            strbuf.append('/');
+            strbuf.append(k.getKind());
+            strbuf.append(':');
+            strbuf.append(n);
+        }
+        return strbuf;
+    }
+    /**
+     * @return Key node equivalence
+     */
+    private final static boolean KEQ(com.google.appengine.api.datastore.Key a, com.google.appengine.api.datastore.Key b){
+        if (a == b)
+            return true;
+        else if (a.getKind().equals(b.getKind())){
+            long ai = a.getId();
+            long bi = b.getId();
+            if (ai == bi){
+                java.lang.String an = a.getName();
+                java.lang.String bn = b.getName();
+                if (null == an)
+                    return (null == bn);
+                else if (null == bn)
+                    return false;
+                else
+                    return an.equals(bn);
+            }
+        }
+        return false;
+    }
+    /**
+     * Parse output of KeyToString into components and DataStore Key.
+     */
+    public final static class KeyParser {
+
+        public final static class Component {
+
+
+            public final java.lang.String component, kind, name;
+
+
+            public Component(java.lang.String component){
+                super();
+                final int cidx = component.indexOf(':');
+                if (0 < cidx){
+                    this.component = component;
+                    this.kind = component.substring(0,cidx);
+                    this.name = component.substring(cidx+1);
+                }
+                else
+                    throw new IllegalArgumentException(component);
+            }
+
+
+            public final static Component[] Add(Component[] list, Component item){
+                if (null == item)
+                    return list;
+                else if (null == list)
+                    return new Component[]{item};
+                else {
+                    int len = list.length;
+                    Component[] copier = new Component[len+1];
+                    java.lang.System.arraycopy(list,0,copier,0,len);
+                    copier[len] = item;
+                    return copier;
+                }
+            }
+        }
+
+
+        public final java.lang.String string;
+
+        public final Component[] components;
+
+        public final com.google.appengine.api.datastore.Key key;
+
+
+        public KeyParser(java.lang.String string){
+            super();
+            if (null != string && 3 < string.length() && '/' == string.charAt(0)){
+                this.string = string;
+                final StringTokenizer strtok = new StringTokenizer(string,"/");
+                final int count = strtok.countTokens();
+                {
+                    KeyParser.Component[] components = new KeyParser.Component[count];
+                    com.google.appengine.api.datastore.Key key = null;
+                    for (int cidx = 0; cidx < count; cidx++){
+
+                        KeyParser.Component c = new KeyParser.Component(strtok.nextToken());
+                        components[cidx] = c;
+                        if (null == key)
+                            key = KeyFactory.createKey(c.kind,c.name);
+                        else
+                            key = KeyFactory.createKey(key,c.kind,c.name);
+                    }
+                    this.components = components;
+                    this.key = key;
+                }
+            }
+            else
+                throw new IllegalArgumentException(string);
+        }
     }
 }
