@@ -20,9 +20,11 @@
 package gap.service;
 
 import gap.Primitive;
+import gap.data.Collection;
 import gap.data.HasName;
 import static gap.data.List.Type.*;
 import static gap.data.Map.Type.*;
+import gap.data.TableClass;
 import gap.hapax.TemplateName;
 import gap.hapax.TemplateRenderer;
 import gap.hapax.TemplateDataDictionary;
@@ -669,8 +671,11 @@ public final class OD
                 final String fieldTypeCleanClean = CleanCleanTypeName(fieldType);
                 final ClassDescriptor fieldTypeClassDescriptor = Classes.For(fieldType);
                 final Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
+                final boolean isBigTable = IsTypeClassBigTable(fieldTypeClassDescriptor,fieldTypeClass);
+                final boolean isCollection = IsTypeClassCollection(field,fieldTypeClass);
+
                 final boolean isEnumerated = IsFieldEnumerated(field,fieldTypeClassDescriptor,fieldTypeClass);
-                final Primitive fieldTypePrimitive = Primitive.For(fieldTypeClass,isEnumerated);
+                final Primitive fieldTypePrimitive = Primitive.For(fieldTypeClass,isEnumerated,isBigTable,isCollection);
                 final String[] fieldTypeParameters = FieldTypeParameters(ToString(field.getType()));
 
                 final gap.data.List.Type listType;
@@ -691,9 +696,9 @@ public final class OD
                 boolean isPersistent = false;
                 boolean isInheritable = true;
                 boolean isRelation = false;
-                boolean isCollection = false;
                 boolean isTransient = false;
                 boolean isUnique = false;
+
 
 
                 if (IsFieldDefaultSortBy(field))
@@ -712,13 +717,12 @@ public final class OD
                      * Populate 'pfield' section
                      */
                     if (IsFieldUnique(field)){
-                        if (IsTypeClassCollection(field,fieldTypeClass))
+                        if (isCollection)
 			    throw new ODStateException(field,"Unique field '"+fieldName+"' of collection type.");
                         else {
                             isUnique = true;
 
                             isInheritable = false;
-                            isCollection = false;
 
                             defaultSortByOpt = fieldName;
 
@@ -736,8 +740,6 @@ public final class OD
                     }
                     else {
                         dataField.addSection(TemplateNames.FieldIsNotUnique);
-
-                        isCollection = IsTypeClassCollection(field,fieldTypeClass);
 
                         if (isCollection){
                             dataField.addSection(TemplateNames.FieldIsCollection);
@@ -772,8 +774,7 @@ public final class OD
                     dataField.addSection(TemplateNames.FieldIsNotTransient);
                     dataField.addSection(TemplateNames.FieldIsNotRelation);
                 }
-                else if (IsTypeClassCollection(field,fieldTypeClass)){
-                    isCollection = true;
+                else if (isCollection){
 
                     dataField = top.addSection(new TemplateName(prefix,"cfield"));
                     top.addSection(new TemplateName(prefix,"field"), dataField);
@@ -1051,17 +1052,8 @@ public final class OD
                     }
                 }
                 else {
-                    dataField.addSection(TemplateNames.FieldIsNotPrimitive);
-                    dataField.addSection(TemplateNames.FieldIsNotKey);
-                    dataField.addSection(TemplateNames.FieldIsNotEnum);
-                    dataField.addSection(TemplateNames.FieldIsNotBoolean);
-                    dataField.addSection(TemplateNames.FieldIsNotNumber);
-                    dataField.addSection(TemplateNames.FieldIsNotCharacter);
-                    dataField.addSection(TemplateNames.FieldIsNotBigInteger);
-                    dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
-                    dataField.addSection(TemplateNames.FieldIsNotSerializable);
 
-                    if (IsTypeClassBigTable(fieldTypeClassDescriptor,fieldTypeClass)){
+                    if (isBigTable){
                         dataField.setVariable(TemplateNames.FieldToStringPrefix,"gap.Strings.KeyToString(");
                         dataField.setVariable(TemplateNames.FieldToStringSuffix,")");
 
@@ -1078,16 +1070,37 @@ public final class OD
                             dataField.addSection(TemplateNames.FieldIsShort);
                         else
                             dataField.addSection(TemplateNames.FieldIsLong);
+
+                        dataField.addSection(TemplateNames.FieldIsNotPrimitive);
+                        dataField.addSection(TemplateNames.FieldIsNotKey);
+                        dataField.addSection(TemplateNames.FieldIsNotEnum);
+                        dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                        dataField.addSection(TemplateNames.FieldIsNotNumber);
+                        dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                        dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                        dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                        dataField.addSection(TemplateNames.FieldIsNotSerializable);
                     }
                     else {
                         dataField.addSection(TemplateNames.FieldIsNotBigTable);
 
-                        dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+')');
-                        dataField.setVariable(TemplateNames.FieldFromObjectSuffix,"");
                         /*
                          */
                         if (null != listType){
                             dataField.addSection(TemplateNames.FieldIsNotMap);
+
+                            dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+')');
+                            dataField.setVariable(TemplateNames.FieldFromObjectSuffix,"");
+
+                            dataField.addSection(TemplateNames.FieldIsNotPrimitive);
+                            dataField.addSection(TemplateNames.FieldIsNotKey);
+                            dataField.addSection(TemplateNames.FieldIsNotEnum);
+                            dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                            dataField.addSection(TemplateNames.FieldIsNotNumber);
+                            dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                            dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                            dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                            dataField.addSection(TemplateNames.FieldIsNotSerializable);
 
                             if (1 == fieldTypeParameters.length){
 
@@ -1130,20 +1143,19 @@ public final class OD
 
                                     dataField.setVariable(TemplateNames.FieldImplClassName,ListImplClassName(fieldTypeClean,className,component));
                                 }
-                                else {
+                                else if (ListPrimitive == listType){
+
                                     Class componentClass = FieldClass(pkg,typeParameter,imports);
                                     if (null != componentClass){
-                                        Primitive primitive = Primitive.For(componentClass);
-                                        if (null != primitive){
+                                        Primitive componentPrimitive = Primitive.For(componentClass);
 
-                                            dataField.setVariable(TemplateNames.FieldImplClassName,ListPrimitiveClassName(primitive));
-                                        }
-                                        else
-                                            throw new ODStateException(field,"Field '"+fieldName+"' in '"+listType.name()+"' expected primitive component type '"+typeParameter+"'.");
+                                        dataField.setVariable(TemplateNames.FieldImplClassName,ListPrimitiveClassName(componentPrimitive));
                                     }
                                     else
-                                        throw new ODStateException(field,"Field '"+fieldName+"' in '"+listType.name()+"' unable to resolve class of component type '"+typeParameter+"'.");
+                                        throw new ODStateException(field,"In field '"+fieldType+" "+fieldName+"', require pre-compilation for class analysis of component type '"+typeParameter+"'.");
                                 }
+                                else
+                                    throw new ODStateException(field,"In field '"+fieldType+" "+fieldName+"', expecting List.Primitive for component type '"+typeParameter+"'.");
                             }
                             else
                                 throw new ODStateException(field,"Field '"+fieldName+"' type list missing type parameter.");
@@ -1151,6 +1163,19 @@ public final class OD
                         else if (null != mapChild){
 
                             dataField.addSection(TemplateNames.FieldIsNotList);
+
+                            dataField.setVariable(TemplateNames.FieldFromObjectPrefix,"("+fieldType+')');
+                            dataField.setVariable(TemplateNames.FieldFromObjectSuffix,"");
+
+                            dataField.addSection(TemplateNames.FieldIsNotPrimitive);
+                            dataField.addSection(TemplateNames.FieldIsNotKey);
+                            dataField.addSection(TemplateNames.FieldIsNotEnum);
+                            dataField.addSection(TemplateNames.FieldIsNotBoolean);
+                            dataField.addSection(TemplateNames.FieldIsNotNumber);
+                            dataField.addSection(TemplateNames.FieldIsNotCharacter);
+                            dataField.addSection(TemplateNames.FieldIsNotBigInteger);
+                            dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
+                            dataField.addSection(TemplateNames.FieldIsNotSerializable);
 
                             if (2 == fieldTypeParameters.length){
 
@@ -1203,8 +1228,9 @@ public final class OD
                             else
                                 throw new ODStateException(field,"Field '"+fieldName+"' type map missing type parameter.");
                         }
-                        else
-                            throw new ODStateException(field,"Field '"+fieldName+"' type?");
+                        else {
+                            throw new ODStateException(field,"Invalid table or collection type of field '"+fieldType+" "+fieldName+"'.");
+                        }
                     }
                 }
 

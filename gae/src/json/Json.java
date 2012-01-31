@@ -143,7 +143,7 @@ public abstract class Json
 
         else {
             final Primitive primitive = Primitive.For(object.getClass());
-            if (null != primitive)
+            if (Json.Use(primitive))
                 return new StringJson( Strings.ToString(primitive, object));
             else {
                 /*
@@ -424,7 +424,7 @@ public abstract class Json
             return value;
         else {
             final Primitive primitive = Primitive.For(clas);
-            if (null != primitive){
+            if (Json.Use(primitive)){
                 if (value instanceof String)
                     return Strings.FromString(primitive, (String)value);
                 else
@@ -593,4 +593,20 @@ public abstract class Json
     }
     public abstract String toString(final int d);
 
+    public final static boolean Use(Primitive p){
+        if (null == p)
+            return false;
+        else {
+            /*
+             * Use plain string rather than GD's encodings for...
+             */
+            switch(p){
+            case Enum:
+            case Serializable:
+                return false;
+            default:
+                return true;
+            }
+        }
+    }
 }

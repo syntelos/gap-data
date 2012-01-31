@@ -508,9 +508,9 @@ public final class Store
         else
             throw new IllegalArgumentException("Failed to acquire write lock");
     }
-    public static void DeleteKey(Key key){
-        final Lock lock = new Lock(key);
-        if (lock.enter()){
+    public static void Delete(Key key){
+        final Lock lock = Lock.Accept(key);
+        if (lock.accept()){
             try {
                 C.Delete(key);
                 P.Delete(key);
@@ -522,7 +522,7 @@ public final class Store
         else
             throw new IllegalArgumentException("Failed to acquire write lock");
     }
-    public static void CleanKey(Key key){
+    public static void Clean(Key key){
         C.Delete(key);
     }
     public static void DeleteCollection(Kind access, Query query){

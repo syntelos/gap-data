@@ -179,6 +179,19 @@ public enum Primitive {
         else
             return Primitive.For(type);
     }
+    public final static Primitive For(Class type, boolean isEnum, boolean isTable, boolean isCollection){
+        if (isEnum)
+            return Primitive.Enum;
+        else {
+            final Primitive primitive = Primitive.For(type);
+            if (null != primitive)
+                return primitive;
+            else if ((!isTable)&&(!isCollection))
+                return Primitive.Serializable;
+            else
+                return null;
+        }
+    }
     public final static Primitive For(String name){
         Primitive type = Primitive.Map.get(name);
         if (null != type)

@@ -165,22 +165,27 @@ public class ObjectJson
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
 
-        for (Iterator<Map.Entry<String, Json>> i = object.entrySet().iterator(); i.hasNext(); )
-            {
-                Map.Entry<String, Json> x  = i.next();
+        for (Iterator<Map.Entry<String, Json>> i = object.entrySet().iterator(); i.hasNext(); ){
+            Map.Entry<String, Json> x  = i.next();
 
-                for (int dd = 0; dd < d; dd++){
-                    sb.append(' ');
-                }
-                sb.append('"');
-                sb.append(Escaper.Plain.escapeJsonString(x.getKey()));
-                sb.append('"');
-                sb.append(":");
-                sb.append(x.getValue().toString());
-                if (i.hasNext())
-                    sb.append(',');
-                sb.append('\n');
+            String name = Escaper.Plain.escapeJsonString(x.getKey());
+            Json value = x.getValue();
+
+            for (int dd = -1; dd < d; dd++){
+                sb.append(' ');
             }
+            sb.append('"');
+            sb.append(name);
+            sb.append('"');
+            sb.append(": ");
+            sb.append(value.toString(d+1));
+            if (i.hasNext())
+                sb.append(',');
+            sb.append('\n');
+        }
+        for (int dd = 0; dd < d; dd++){
+            sb.append(' ');
+        }
         sb.append('}');
         return sb.toString();
     }
