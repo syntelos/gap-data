@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-30T18:40:31.349Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-01T20:07:38.161Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -797,12 +797,10 @@ public abstract class PersonData
                     return this.hasLogonId(true);
                 }
             default:
-                throw new IllegalStateException(field.name());
+                break;
             }
         }
-        else {
-            return super.hasVariable(name);
-        }
+        return super.hasVariable(name);
     }
     public String getVariable(TemplateName name){
         Field field = Person.Field.For(name.getTerm());
@@ -819,12 +817,10 @@ public abstract class PersonData
                 else
                     return this.getLogonId(true);
             default:
-                throw new IllegalStateException(field.name());
+                break;
             }
         }
-        else {
-            return super.getVariable(name);
-        }
+        return super.getVariable(name);
     }
     public void setVariable(TemplateName name, String value){
         Field field = Person.Field.For(name.getTerm());

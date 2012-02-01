@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-30T18:40:32.663Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-01T20:07:39.871Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -1397,12 +1397,10 @@ public abstract class TemplateNodeData
                     return this.hasIndexCloseRelative(true);
                 }
             default:
-                throw new IllegalStateException(field.name());
+                break;
             }
         }
-        else {
-            return super.hasVariable(name);
-        }
+        return super.hasVariable(name);
     }
     public String getVariable(TemplateName name){
         Field field = TemplateNode.Field.For(name.getTerm());
@@ -1444,12 +1442,10 @@ public abstract class TemplateNodeData
                 else
                     return gap.Strings.IntegerToString(this.getIndexCloseRelative(true));
             default:
-                throw new IllegalStateException(field.name());
+                break;
             }
         }
-        else {
-            return super.getVariable(name);
-        }
+        return super.getVariable(name);
     }
     public void setVariable(TemplateName name, String value){
         Field field = TemplateNode.Field.For(name.getTerm());

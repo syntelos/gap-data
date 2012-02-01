@@ -1375,7 +1375,7 @@ public abstract class {{=class_name}}Data
                     return (null != id);
                 }
                 else
-                    return false;{{#pfield}}
+                    return false;{{#field}}
             case {{=field_nameCamel}}:{{#field_is_bigTable}}
                 if (name.has(1)){
                     {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}(true);
@@ -1389,7 +1389,7 @@ public abstract class {{=class_name}}Data
                      * Synthesize section for Field (EXISTS)
                      */
                     return this.has{{=field_nameCamel}}(true);
-                }{{/field_is_bigTable}}{{#field_is_not_bigTable}}
+                }{{/field_is_bigTable}}{{#field_is_primitive}}
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else {{{#field_is_boolean}}
@@ -1401,14 +1401,12 @@ public abstract class {{=class_name}}Data
                      * Synthesize section for Field (EXISTS)
                      */
                     return this.has{{=field_nameCamel}}(true);{{/field_is_not_boolean}}
-                }{{/field_is_not_bigTable}}{{/pfield}}
+                }{{/field_is_primitive}}{{/field}}
             default:
-                throw new IllegalStateException(field.name());
+                break;
             }
         }
-        else {
-            return super.hasVariable(name);
-        }
+        return super.hasVariable(name);
     }
     public String getVariable(TemplateName name){
         Field field = {{=class_name}}.Field.For(name.getTerm());
@@ -1418,7 +1416,7 @@ public abstract class {{=class_name}}Data
                 if (name.is(0))
                     return this.getId();
                 else
-                    return null;{{#pfield}}
+                    return null;{{#field}}
             case {{=field_nameCamel}}:{{#field_is_bigTable}}
                 if (name.has(1)){
                     {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}(Notation.MayInherit);
@@ -1429,18 +1427,16 @@ public abstract class {{=class_name}}Data
                 }
                 else{{#field_is_unique}}
                     return this.get{{=field_nameCamel}}Id();{{/field_is_unique}}{{#field_is_not_unique}}
-                    return this.get{{=field_nameCamel}}Id(Notation.MayInherit);{{/field_is_not_unique}}{{/field_is_bigTable}}{{#field_is_not_bigTable}}
+                    return this.get{{=field_nameCamel}}Id(Notation.MayInherit);{{/field_is_not_unique}}{{/field_is_bigTable}}{{#field_is_primitive}}
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
-                    return {{=field_to_string_prefix}}this.get{{=field_nameCamel}}(true){{=field_to_string_suffix}};{{/field_is_not_bigTable}}{{/pfield}}
+                    return {{=field_to_string_prefix}}this.get{{=field_nameCamel}}(true){{=field_to_string_suffix}};{{/field_is_primitive}}{{/field}}
             default:
-                throw new IllegalStateException(field.name());
+                break;
             }
         }
-        else {
-            return super.getVariable(name);
-        }
+        return super.getVariable(name);
     }
     public void setVariable(TemplateName name, String value){
         Field field = {{=class_name}}.Field.For(name.getTerm());
@@ -1448,15 +1444,15 @@ public abstract class {{=class_name}}Data
             if (name.has(1)){
                 switch (field){
                 case Id:
-                    throw new UnsupportedOperationException(field.name());{{#pfield}}
+                    throw new UnsupportedOperationException(field.name());{{#field}}
                 case {{=field_nameCamel}}:{{#field_is_bigTable}}
 
                     {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}(true);
                     if (null != {{=field_name}})
                         {{=field_name}}.setVariable(new TemplateName(name),value);
 
-                    return ;{{/field_is_bigTable}}{{#field_is_not_bigTable}}
-                    throw new IllegalStateException(field.name());{{/field_is_not_bigTable}}{{/pfield}}
+                    return ;{{/field_is_bigTable}}{{#field_is_primitive}}
+                    throw new IllegalStateException(field.name());{{/field_is_primitive}}{{/field}}
                 default:
                     throw new IllegalStateException(field.name());
                 }
@@ -1471,14 +1467,23 @@ public abstract class {{=class_name}}Data
     public List.Short<TemplateDataDictionary> getSection(TemplateName name){
         Field field = {{=class_name}}.Field.For(name.getTerm());
         if (null != field){
-            switch (field){{{#pfield}}
+            switch (field){{{#field}}
             case {{=field_nameCamel}}:{{#field_is_bigTable}}
                 {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}(true);
-                if (null != {{=field_name}})
-                    return {{=field_name}}.getSection(new TemplateName(name));
+                if (null != {{=field_name}}){
+                    if (name.has(1))
+                        return {{=field_name}}.getSection(new TemplateName(name));
+                    else
+                        return new gap.util.ShortList( this, {{=field_name}});
+                }
                 else
-                    return null;{{/field_is_bigTable}}{{#field_is_not_bigTable}}
-                return null;{{/field_is_not_bigTable}}{{/pfield}}
+                    return null;{{/field_is_bigTable}}{{#field_is_list_short}}
+                /*
+                 * compiler type coersion
+                 */
+                Object {{=field_name}} = this.get{{=field_nameCamel}}(true);
+                return (List.Short<TemplateDataDictionary>){{=field_name}};{{/field_is_list_short}}{{#field_is_not_bigTable}}{{#field_is_not_list_short}}
+                return null;{{/field_is_not_list_short}}{{/field_is_not_bigTable}}{{/field}}
             default:
                 throw new IllegalStateException(field.name());
             }

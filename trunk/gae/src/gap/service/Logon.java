@@ -138,7 +138,7 @@ public final class Logon
                  * Ensure that every login enters the system, so that
                  * other users' processes can work with this user.
                  */
-                this.person = Person.GetCreateLong(email);
+                this.person = Person.GetCreateLongLogonId(email);
             }
             catch (Exception any){
                 LogRecord rec = new LogRecord(Level.SEVERE,"error");
