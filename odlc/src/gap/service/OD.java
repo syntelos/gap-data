@@ -860,6 +860,17 @@ public final class OD
                     dataField.addSection(TemplateNames.FieldIsPrimitive);
                     dataField.addSection(TemplateNames.FieldIsNotBigTable);
 
+                    dataField.addSection(TemplateNames.FieldIsNotMap);
+                    dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
+                    dataField.addSection(TemplateNames.FieldIsNotMapLong);
+                    dataField.addSection(TemplateNames.FieldIsNotMapLongOrShort);
+                    dataField.addSection(TemplateNames.FieldIsNotMapShort);
+                    dataField.addSection(TemplateNames.FieldIsNotList);
+                    dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
+                    dataField.addSection(TemplateNames.FieldIsNotListLongOrShort);
+                    dataField.addSection(TemplateNames.FieldIsNotListLong);
+                    dataField.addSection(TemplateNames.FieldIsNotListShort);
+
                     if (isNumber){
                         dataField.addSection(TemplateNames.FieldIsNumber);
                         switch(fieldTypePrimitive){
@@ -1080,6 +1091,17 @@ public final class OD
                         dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                         dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
                         dataField.addSection(TemplateNames.FieldIsNotSerializable);
+
+                        dataField.addSection(TemplateNames.FieldIsNotMap);
+                        dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
+                        dataField.addSection(TemplateNames.FieldIsNotMapLong);
+                        dataField.addSection(TemplateNames.FieldIsNotMapLongOrShort);
+                        dataField.addSection(TemplateNames.FieldIsNotMapShort);
+                        dataField.addSection(TemplateNames.FieldIsNotList);
+                        dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
+                        dataField.addSection(TemplateNames.FieldIsNotListLongOrShort);
+                        dataField.addSection(TemplateNames.FieldIsNotListLong);
+                        dataField.addSection(TemplateNames.FieldIsNotListShort);
                     }
                     else {
                         dataField.addSection(TemplateNames.FieldIsNotBigTable);
@@ -1101,6 +1123,12 @@ public final class OD
                             dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                             dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
                             dataField.addSection(TemplateNames.FieldIsNotSerializable);
+
+                            dataField.addSection(TemplateNames.FieldIsNotMap);
+                            dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
+                            dataField.addSection(TemplateNames.FieldIsNotMapLong);
+                            dataField.addSection(TemplateNames.FieldIsNotMapLongOrShort);
+                            dataField.addSection(TemplateNames.FieldIsNotMapShort);
 
                             if (1 == fieldTypeParameters.length){
 
@@ -1176,6 +1204,12 @@ public final class OD
                             dataField.addSection(TemplateNames.FieldIsNotBigInteger);
                             dataField.addSection(TemplateNames.FieldIsNotBigDecimal);
                             dataField.addSection(TemplateNames.FieldIsNotSerializable);
+
+                            dataField.addSection(TemplateNames.FieldIsNotList);
+                            dataField.addSection(TemplateNames.FieldIsNotListPrimitive);
+                            dataField.addSection(TemplateNames.FieldIsNotListLongOrShort);
+                            dataField.addSection(TemplateNames.FieldIsNotListLong);
+                            dataField.addSection(TemplateNames.FieldIsNotListShort);
 
                             if (2 == fieldTypeParameters.length){
 

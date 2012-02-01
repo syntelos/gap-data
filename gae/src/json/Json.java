@@ -158,7 +158,7 @@ public abstract class Json
 		
 
 
-    Json enclosing = null;
+    protected Json enclosing = null;
 
 	
     protected Json() {
