@@ -102,6 +102,8 @@ public final class TemplateName
 
         public final boolean complement;
 
+        private Component path;
+
         /**
          * Copies syntactically cleaned information to "this.source"
          * except any complement operator.  See also TemplateName
@@ -153,6 +155,29 @@ public final class TemplateName
         }
 
 
+        public Component append(Component child){
+            if (null == this.path){
+                this.path = child;
+                return this;
+            }
+            else {
+                return this.path.append(child);
+            }
+        }
+        public Component get(int idx){
+            if (0 == idx)
+                return this;
+            else if (null == this.path || 0 > idx)
+                return null;
+            else
+                return this.path.get(idx-1);
+        }
+        public boolean hasNext(){
+            return (null != this.path);
+        }
+        public Component next(){
+            return this.path;
+        }
         public int indexOf(lxl.Index<String> index){
             int idx = index.get(this.term);
             if (this.complement){
@@ -175,7 +200,7 @@ public final class TemplateName
             if (this.complement){
 
                 if (null == section)
-                    return TemplateDataDictionary.Abstract.EmptySection.clone();
+                    return AbstractData.EmptySection.clone();
                 else
                     return null;
             }
@@ -194,7 +219,7 @@ public final class TemplateName
                 if (this.complement){
 
                     if (null == dict)
-                        return TemplateDataDictionary.Abstract.EmptyDictionary.clone(p);
+                        return AbstractData.EmptyDictionary.clone(p);
                     else
                         return null;
                 }
@@ -211,7 +236,7 @@ public final class TemplateName
 
                     if (this.complement){
                         if (null == dict)
-                            return TemplateDataDictionary.Abstract.EmptyDictionary.clone(p);
+                            return AbstractData.EmptyDictionary.clone(p);
                         else
                             return null;
                     }
@@ -248,16 +273,42 @@ public final class TemplateName
                     throw new ArrayIndexOutOfBoundsException("In '"+this.source+"' at list size '"+list.size()+"'.");
             }
         }
+        public String dereference(List<TemplateDataDictionary> branch){
+
+            if (this.hasNext())
+                return this.next().dereference(branch.get(this.index));
+            else 
+                return null;
+        }
+        public String dereference(TemplateDataDictionary section){
+            if (null == section)
+                return null;
+            else {
+                if (this.hasNext()){
+                    if (section instanceof TemplateDataDictionary.Sections){
+
+                        final List.Short<TemplateDataDictionary> branch = (((TemplateDataDictionary.Sections)section).getSections()).get(this.term);
+
+                        if (null != branch)
+                            return this.next().dereference(branch.get(this.index));
+                    }
+                    return null;
+                }
+                else {
+                    return section.getVariable(new TemplateName(this.term));
+                }
+            }
+        }
         public List.Short<TemplateDataDictionary> reference(lxl.Map<String,List.Short<TemplateDataDictionary>> dict, 
                                                             TemplateDataDictionary data)
         {
             List.Short<TemplateDataDictionary> section = this.dereferenceT(dict);
             if (null == section){
-                section = TemplateDataDictionary.Abstract.Add(section,data);
+                section = AbstractData.Add(section,data);
                 dict.put(this.term,section);
             }
             else
-                section = TemplateDataDictionary.Abstract.Add(section,data);
+                section = AbstractData.Add(section,data);
 
             return section;
         }
@@ -313,29 +364,25 @@ public final class TemplateName
         extends Object
         implements java.util.Iterator<Component>
     {
-        private final Component[] list;
-        private final int count;
-        private int index;
+
+        private Component list;
 
 
-        public Iterator(Component[] list){
+        public Iterator(Component list){
             super();
             this.list = list;
-            this.count = list.length;
         }
 
+
         public boolean hasNext(){
-            return (this.index < this.count);
+            return (null != this.list && this.list.hasNext());
         }
         public Component next(){
-            int index = this.index;
-            if (index < this.count){
-                Component next = this.list[index];
-                this.index++;
-                return next;
-            }
+            if (null != this.list && this.list.hasNext())
+
+                return (this.list = this.list.next());
             else
-                throw new java.util.NoSuchElementException(String.valueOf(index));
+                throw new java.util.NoSuchElementException();
         }
         public void remove(){
             throw new java.lang.UnsupportedOperationException();
@@ -347,11 +394,11 @@ public final class TemplateName
 
     public final String source;
 
-    public final Component path[];
-
     public final int count;
 
     public final boolean complement;
+
+    private final Component path;
 
 
     public TemplateName(String base, String name){
@@ -366,11 +413,16 @@ public final class TemplateName
             StringBuilder strbuf = new StringBuilder();
             StringTokenizer strtok = new StringTokenizer(source,"/");
             int count = strtok.countTokens();
-            Component[] path = new Component[count];
+            Component path = null;
             for (int cc = 0; cc < count; cc++){
                 Component el = new Component(complement,strtok.nextToken());
                 complement = (complement || el.complement);
-                path[cc] = el;
+
+                if (null == path)
+                    path = el;
+                else
+                    path.append(el);
+
                 if (0 != cc)
                     strbuf.append('/');
                 strbuf.append(el.source);
@@ -399,13 +451,11 @@ public final class TemplateName
             int count = (shift.count-1);
             if (0 < count){
                 this.count = count;
-                Component[] path = new Component[count];
-                System.arraycopy(shift.path,1,path,0,count);
-                this.path = path;
+                this.path = shift.path;
             }
             else {
                 this.count = 0;
-                this.path = new Component[0];
+                this.path = null;
             }
             this.complement = shift.complement;
         }
@@ -436,8 +486,8 @@ public final class TemplateName
         return (idx == (this.count-1));
     }
     public Component get(int idx){
-        if (-1 < idx && idx < this.count)
-            return this.path[idx];
+        if (null != this.path)
+            return this.path.get(idx);
         else
             return null;
     }
@@ -465,7 +515,7 @@ public final class TemplateName
     }
     public int indexOf(lxl.Index<String> index){
         if (0 < this.count)
-            return this.path[0].indexOf(index);
+            return this.get(0).indexOf(index);
         else
             return -1;
     }
@@ -474,7 +524,7 @@ public final class TemplateName
      */
     public int getIndex(int idx){
         if (-1 < idx && idx < this.count)
-            return this.path[idx].index;
+            return this.get(idx).index;
         else
             throw new IllegalArgumentException(String.valueOf(idx));
     }
@@ -495,14 +545,17 @@ public final class TemplateName
     public StringBuilder getBaseBuffer(){
         StringBuilder strbuf = new StringBuilder();
 
-        final Component path[] = this.path;
         final int count = this.count, term = (count-1);
 
+        Component el = this.path;
+
         for (int cc = 0; cc < term; cc++){
-            Component el = path[cc];
+
             if (0 != strbuf.length())
                 strbuf.append('/');
             strbuf.append(el.source);
+
+            el = el.next();
         }
         /*
          */
@@ -523,10 +576,9 @@ public final class TemplateName
      * @see #getBase()
      */
     public String getName(){
-        if (0 < this.count){
-            Component[] components = this.path;
-            return components[components.length-1].term;
-        }
+        final int count = this.count;
+        if (0 < count)
+            return this.path.get(count-1).term;
         else
             return "";
     }
@@ -534,10 +586,9 @@ public final class TemplateName
      * @return First term (component name) at the current path depth
      */
     public String getTerm(){
-        if (0 < this.count){
-            Component[] components = this.path;
-            return components[0].term;
-        }
+        final int count = this.count;
+        if (0 < count)
+            return this.path.get(0).term;
         else
             return "";
     }
@@ -562,6 +613,28 @@ public final class TemplateName
     public List.Short<TemplateDataDictionary> dereferenceT(lxl.Map<String,List.Short<TemplateDataDictionary>> map){
 
         return this.first().dereferenceT(map);
+    }
+    /**
+     * Called from BeanData getVariable as a special entry within
+     * the field dereferencing operation.
+     */
+    public String dereference(List<TemplateDataDictionary> section){
+        Component path = this.path;
+        if (null != path)
+            return path.dereference(section);
+        else
+            return null;
+    }
+    /**
+     * Ignore polarity.  Dereference name component list branches to
+     * sections, and the list leaf to a variable.
+     */
+    public String dereference(TemplateDataDictionary section){
+        Component path = this.path;
+        if (null != path)
+            return path.dereference(section);
+        else
+            return null;
     }
     /**
      * Ignore polarity
@@ -597,12 +670,17 @@ public final class TemplateName
         if (this == that)
             return 0;
         else if (this.count == that.count){
-
+            Component thisPath = this.path;
+            Component thatPath = that.path;
             for (int cc = 0; cc < this.count; cc++){
 
-                int c = this.path[cc].compareTo(that.path[cc]);
+                int c = thisPath.compareTo(thatPath);
                 if (0 != c)
                     return c;
+                else {
+                    thisPath = thisPath.next();
+                    thatPath = thatPath.next();
+                }
             }
             return 0;
         }

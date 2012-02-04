@@ -27,7 +27,13 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
 /**
- * A gap data list for standalone uses, not table class fields.
+ * A gap data list for standalone use, not table class fields.
+ *
+ * Instances of this class are not compatible with Object I/O
+ * including serialization and storage.
+ * 
+ * @see AbstractData#Add
+ * @see TemplateName
  * 
  * @author jdp
  */

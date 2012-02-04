@@ -320,6 +320,9 @@ public final class Path
     public boolean hasNotSource(){
         return (1 > this.size);
     }
+    public boolean isSourceTail(){
+        return (1 == this.size);
+    }
     public String getGroup(){
         return this.getComponent(1);
     }
@@ -329,6 +332,9 @@ public final class Path
     public boolean hasNotGroup(){
         return (2 > this.size);
     }
+    public boolean isGroupTail(){
+        return (2 == this.size);
+    }
     public String getItem(){
         return this.getComponent(2);
     }
@@ -337,6 +343,9 @@ public final class Path
     }
     public boolean hasNotItem(){
         return (3 > this.size);
+    }
+    public boolean isItemTail(){
+        return (3 == this.size);
     }
     /**
      * @see gap.data.Resource

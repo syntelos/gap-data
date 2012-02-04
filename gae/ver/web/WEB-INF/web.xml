@@ -13,6 +13,11 @@
     <servlet-class>gap.hapax.TemplateServlet</servlet-class>
     <load-on-startup>-1</load-on-startup>
   </servlet>
+  <servlet>
+    <servlet-name>TemplateNode</servlet-name>
+    <servlet-class>gap.hapax.TemplateNodeServlet</servlet-class>
+    <load-on-startup>-1</load-on-startup>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>Person</servlet-name>
@@ -21,6 +26,10 @@
   <servlet-mapping>
     <servlet-name>Template</servlet-name>
     <url-pattern>/templates/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>TemplateNode</servlet-name>
+    <url-pattern>/template-nodes/*</url-pattern>
   </servlet-mapping>
 
   <error-page>

@@ -299,6 +299,9 @@ public class Request
     public final boolean hasNotSource(){
         return this.path.hasNotSource();
     }
+    public final boolean isSourceTail(){
+        return this.path.isSourceTail();
+    }
     public final String getSource(){
         return this.path.getSource();
     }
@@ -308,6 +311,9 @@ public class Request
     public final boolean hasNotGroup(){
         return this.path.hasNotGroup();
     }
+    public final boolean isGroupTail(){
+        return this.path.isGroupTail();
+    }
     public final String getGroup(){
         return this.path.getGroup();
     }
@@ -316,6 +322,9 @@ public class Request
     }
     public final boolean hasNotItem(){
         return this.path.hasNotItem();
+    }
+    public final boolean isItemTail(){
+        return this.path.isItemTail();
     }
     public final String getItem(){
         return this.path.getItem();

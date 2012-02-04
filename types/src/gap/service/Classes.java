@@ -738,6 +738,9 @@ public class Classes {
                 try {
                     return Class.forName(packageClassName);
                 }
+                catch (NoClassDefFoundError err){
+                    return null;
+                }
                 catch (ClassNotFoundException exc){
                     return null;
                 }

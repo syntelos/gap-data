@@ -80,7 +80,7 @@ public final class Main
             String packageName = OD.PackageName(pack);
             File packagePath = new File(src,packageName.replace('.','/'));
             /*
-             * Bean Data
+             * Mandatory Bean Data
              */
             {
                 File beanJava = new File(packagePath,parentClassName+"Data.java");
@@ -94,7 +94,7 @@ public final class Main
                 }
             }
             /*
-             * Bean User
+             * Conditional Bean User
              */
             {
                 File beanJava = new File(packagePath,parentClassName+".java");
@@ -110,7 +110,7 @@ public final class Main
                 }
             }
             /*
-             * Bean Servlet
+             * Conditional Bean Servlet
              */
             {
                 File servletJava = new File(packagePath,parentClassName+"Servlet.java");
@@ -119,32 +119,21 @@ public final class Main
                     try {
                         if (OD.GenerateServletSource(TemplateNames.BeanServlet, pack, imports, clas, out)){
                             products.add(servletJava);
-                            /*
-                             * Services Record
-                             */
-                            if (null != servlets){
-                                servlets.add(pack.getName()+'.'+parentClassName+"Servlet");
-                            }
                         }
                     }
                     finally {
                         out.close();
                     }
                 }
-                else if (OD.IsClassRelationPrimary(clas)){
-                    /*
-                     * Services Record
-                     */
-                    if (null != servlets){
-                        servlets.add(pack.getName()+'.'+parentClassName+"Servlet");
-                    }
-                }
             }
             /*
-             * Services Record
+             * Services Records
              */
             if (null != beans){
                 beans.add(pack.getName()+'.'+parentClassName);
+            }
+            if (null != servlets){
+                servlets.add(pack.getName()+'.'+parentClassName+"Servlet");
             }
             /*
              * Lists
