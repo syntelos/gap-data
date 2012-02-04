@@ -38,7 +38,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-01T20:07:39.139Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-02T22:33:26.815Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -879,7 +879,7 @@ public abstract class TemplateData
                 }
             }
             /*
-             * Collection type coersion
+             * compiler type coercion
              */
             {
                 Object tmp = new ListTemplateTemplateNode((Template)this);
@@ -1116,6 +1116,16 @@ public abstract class TemplateData
                     return this.hasTemplateSourceHapax(true);
                 }
             case TemplateTargetHapax:
+                /*
+                 * compiler type coercion
+                 */
+                List<TemplateDataDictionary> templateTargetHapax;
+                {
+                    Object _templateTargetHapax = this.getTemplateTargetHapax(true);
+                    templateTargetHapax = (List<TemplateDataDictionary>)_templateTargetHapax;
+                }
+                return (null != name.dereference(templateTargetHapax));
+                
             default:
                 break;
             }
@@ -1147,6 +1157,16 @@ public abstract class TemplateData
                 else
                     return gap.Strings.TextToString(this.getTemplateSourceHapax(true));
             case TemplateTargetHapax:
+                /*
+                 * compiler type coercion
+                 */
+                List<TemplateDataDictionary> templateTargetHapax;
+                {
+                    Object _templateTargetHapax = this.getTemplateTargetHapax(true);
+                    templateTargetHapax = (List<TemplateDataDictionary>)_templateTargetHapax;
+                }
+                return name.dereference(templateTargetHapax);
+                
             default:
                 break;
             }
@@ -1167,6 +1187,7 @@ public abstract class TemplateData
                 case TemplateSourceHapax:
                     throw new IllegalStateException(field.name());
                 case TemplateTargetHapax:
+                    throw new IllegalStateException(field.name());
                 default:
                     throw new IllegalStateException(field.name());
                 }
@@ -1190,7 +1211,7 @@ public abstract class TemplateData
                 return null;
             case TemplateTargetHapax:
                 /*
-                 * compiler type coersion
+                 * compiler type coercion
                  */
                 Object templateTargetHapax = this.getTemplateTargetHapax(true);
                 return (List.Short<TemplateDataDictionary>)templateTargetHapax;
