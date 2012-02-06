@@ -99,7 +99,7 @@ Application Initialization
    Each application instance in the application system is initialized
    when the first instance of gap/servlet/Servlet is intialized.  This
    initialization process is light as possible, because initialization
-   occurs on a user request.
+   may occur on a user request.
 
    The gap/util/Services class drives this work through class
    initialization.
@@ -182,6 +182,10 @@ References: Long and Short
        }
      }
 
+
+See also
+
+   * Required sibling/peer subpackage "opensocial" 
 
 For more info
 
