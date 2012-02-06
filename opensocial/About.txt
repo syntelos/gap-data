@@ -1,0 +1,6 @@
+
+ The class "oso.data.Person" is used by the Gap Data runtime
+ (subpackage "gae") for all logins.  This "oso" (opensocial)
+ subpackage separates this class from the "gae" subpackage for the
+ benefit of applications that modify this class.
+

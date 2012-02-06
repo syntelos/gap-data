@@ -6,10 +6,14 @@
 
    <ant dir="odlc" />
 
+   <ant dir="opensocial" />
+
    <ant dir="gae" />
  </target>
 
  <target name="odl" description="Generate Java from ODL in the GAE subpackage">
+
+   <ant dir="opensocial" target="odl"/>
 
    <ant dir="gae" target="odl"/>
  </target>
@@ -20,6 +24,8 @@
 
    <ant dir="odlc" target="clean"/>
 
+   <ant dir="opensocial" target="clean"/>
+
    <ant dir="gae" target="clean"/>
  </target>
 
@@ -28,6 +34,8 @@
    <ant dir="types" target="test"/>
 
    <ant dir="odlc" target="test"/>
+
+   <ant dir="opensocial" target="test"/>
 
    <ant dir="gae" target="test"/>
  </target>
@@ -43,6 +51,8 @@
 
    <ant dir="odlc" target="version"/>
 
+   <ant dir="opensocial" target="version"/>
+
    <ant dir="gae" target="version"/>
  </target>
 
@@ -51,6 +61,8 @@
    <ant dir="types" target="minor"/>
 
    <ant dir="odlc" target="minor"/>
+
+   <ant dir="opensocial" target="minor"/>
 
    <ant dir="gae" target="minor"/>
  </target>
@@ -61,6 +73,8 @@
 
    <ant dir="odlc" target="major"/>
 
+   <ant dir="opensocial" target="major"/>
+
    <ant dir="gae" target="major"/>
  </target>
 
@@ -69,6 +83,8 @@
    <ant dir="types" target="build"/>
 
    <ant dir="odlc" target="build"/>
+
+   <ant dir="opensocial" target="build"/>
 
    <ant dir="gae" target="build"/>
  </target>
