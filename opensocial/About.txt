@@ -4,3 +4,12 @@
  subpackage separates this class from the "gae" subpackage for the
  benefit of applications that modify this class.
 
+ To use this implementation, copy the product JAR file into
+ application "lib" directory, contents of directory "odl" into the
+ application "lib/odl" directory, and merge the contents of
+ "src/META-INF/services" files with the application services files.
+
+ To replicate this implementation, copy the odl files into the
+ application odl tree and compile -- run "ant odl" in the application
+ directory.
+
