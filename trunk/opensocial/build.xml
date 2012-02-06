@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="gap-data-oso" default="update">
+  <tstamp/>
+  <property name="compiler.source" value="1.6"/>
+  <property name="compiler.target" value="1.6"/>
+  <property name="compiler.optimize" value="false"/>
+  <property name="compiler.debug" value="true"/>
+  <property name="compiler.deprecation" value="false"/>
+
+  <property name="src" value="src"/>
+  <property name="ver.src" value="ver/src"/>
+  <property name="bin" value="bin"/>
+  <property name="lib" value="lib"/>
+  <property name="odl" value="odl"/>
+
+  <property file="../update.properties"/>
+
+  <property file="${user.home}/update.properties"/>
+
+  <import file="ant/build.in.java.xml"/>
+  <import file="ant/build.in.odl.xml"/>
+  <import file="ant/build.in.update.xml"/>
+  <import file="ant/build.in.version.xml"/>
+
+
+  <path id="lib.path">
+    <pathelement path="${bin}" />
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <path id="odl.path">
+    <fileset dir="ant">
+      <include name="**/gap-data-odlc-*.jar" />
+    </fileset>
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+
+  <target name="clean" description="Delete all products: 'bin', 'jar', etc..">
+
+    <clean bin="${bin}" this="."/>
+  </target>
+
+  <target name="cleanb" description="Delete classes, then compile, then package.">
+
+    <flush dir="${bin}" type="class"/>
+
+    <antcall target="update"/>
+  </target>
+
+  <target name="odl" description="Generate 'src/pkg/*.java' files from 'odl/pkg/*.odl' files.  Requires prequisite plain 'ant' run.">
+
+    <odl-write classpathref="odl.path"/>
+
+  </target>
+
+  <target name="update" if="gap.data.oso.update" depends="local.update" description="Copy jar product to targets defined in '{user.home}/update.properties' name 'gap.data.oso.update'.">
+
+    <do-update src="${target.jar}" tgt="${gap.data.oso.update}" />
+  </target>
+
+  <target name="local.update" if="local.gap.data.oso.update" depends="jar">
+
+    <do-update src="${target.jar}" tgt="${local.gap.data.oso.update}" />
+  </target>
+
+  <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">
+    <archive.cleanly/>
+
+    <archive target="${target.jar}" bin="${bin}">
+    </archive>
+
+    <flush dir="${bin}" type="class"/>
+  </target>
+
+  <target name="compile" depends="version" description="Compile code from 'src' to bin.">
+
+    <compile src="${src}" ver="${ver.src}" bin="${bin}" classpath.id="lib.path"/>
+
+    <mkdir dir="${bin}/META-INF"/>
+
+    <copy todir="${bin}/META-INF">
+      <fileset dir="${src}/META-INF" />
+    </copy>
+
+  </target>
+
+  <target name="version" description="Report current project version.">
+    <version/>
+    <property name="target.jar" value="${ant.project.name}-${this.version}.jar"/>
+  </target>
+
+  <target name="build" description="Increment project version build number.">
+    <version-build/>
+    <version/>
+  </target>
+
+  <target name="major" description="Increment project version major number.">
+    <version-major/>
+    <version/>
+  </target>
+
+  <target name="minor" description="Increment project version minor number.">
+    <version-minor/>
+    <version/>
+  </target>
+
+  <target name="test" description="Run defined unit tests">
+  </target>
+
+</project>
