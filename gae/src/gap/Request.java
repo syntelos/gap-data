@@ -28,6 +28,7 @@ import gap.service.*;
 import json.Json;
 
 import java.nio.charset.Charset;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -350,9 +351,76 @@ public class Request
     public final String getParameter(String name){
         String[] valueAry = this.parameters.get(name);
         if (null != valueAry && 0 != valueAry.length)
-            return valueAry[0];
+
+            return this.getParameter(name,valueAry);
         else
             return null;
+    }
+    /**
+     * Dereference value array, call {@link #isParameterClean} or
+     * {@link #cleanParameter}.  Called from {@link #getParameter} on
+     * non-empty value arrays.
+     * 
+     * This process is defined here to rewrite CRLF to LF, permitting
+     * simple programming over text fields.  
+     * 
+     * Admittedly expensive, this should rather be in
+     * "getTextParameter" methods.  Although who would remember that
+     * those methods exist, and use them consistently.  That's
+     * precisely the kind of corner case feature that I forget about,
+     * rediscover two years later, and then drop as too obscure.
+     * 
+     * It seems best to rely on universalized text.  As defined here,
+     * all CR, TAB, FF, BEL, and NUL are converted to LF in keeping
+     * with a "structured HTML" / "parametric data" conception of
+     * text.
+     * 
+     * TODO: Preserve scan info for cleaning process, as via Jauk
+     * match.  The return type from isParameterClean changes with the
+     * arguments to cleanParameter.
+     */
+    public String getParameter(String name, String[] valueAry){
+
+        final String value = valueAry[0];
+        if (this.isParameterClean(value))
+            return value;
+        else 
+            return this.cleanParameter(value);
+    }
+    /**
+     * @return False on finding a character value less than 0x20 and not LF
+     */
+    public boolean isParameterClean(String value){
+        final char[] cary = value.toCharArray();
+        final int count = cary.length;
+        for (int cc = 0; cc < count; cc++){
+            char ch = cary[cc];
+            if (ch < 0x20 && '\n' != ch)
+                return false;
+        }
+        return true;
+    }
+    /**
+     * @return Replace CR, TAB, FF, BEL, and NUL with LF
+     */
+    public String cleanParameter(String value){
+        final StringTokenizer strtok = new StringTokenizer(value,"\0\b\t\n\f\r",true);
+        final StringBuilder strbuf = new StringBuilder();
+        final int count = strtok.countTokens();
+        for (int cc = 0; cc < count; cc++){
+
+            final String tok = strtok.nextToken();
+
+            if (1 != tok.length()){
+
+                strbuf.append(tok);
+            }
+            else if (0 != strbuf.length() && '\n' == tok.charAt(0)){
+
+                strbuf.append('\n');
+            }
+        }
+        return strbuf.toString();
     }
     public final String getBodyString(){
         String body = this.bodyString;

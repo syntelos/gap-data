@@ -398,7 +398,7 @@ public final class Parameters
     }
     public Parameters(HttpServletRequest req, int page, Class<? extends gap.data.TableClass> table){
         super();
-        Map<String,String[]> parameters = (Map<String,String[]>)req.getParameterMap();
+        Map<String,String[]> parameters = this.scrub(req.getParameterMap());
         this.parameters = parameters;
         this.size = parameters.size();
         this.page = new Special.Page(parameters, page);
@@ -486,5 +486,9 @@ public final class Parameters
             return super.getVariable(name);
         else
             return this.valueOf(name.getTerm()," ");
+    }
+    public Map<String,String[]> scrub(Map parameters){
+
+        return (Map<String,String[]>)parameters;
     }
 }
