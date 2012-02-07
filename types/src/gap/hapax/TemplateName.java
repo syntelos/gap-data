@@ -451,7 +451,7 @@ public final class TemplateName
             int count = (shift.count-1);
             if (0 < count){
                 this.count = count;
-                this.path = shift.path;
+                this.path = shift.path.next();
             }
             else {
                 this.count = 0;
