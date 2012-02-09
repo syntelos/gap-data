@@ -139,6 +139,20 @@ public abstract class BigTable
 
         return gap.Strings.KeyToString(key);
     }
+    public final static boolean Equals(Key a, Key b){
+        if (null == a)
+            return (null == b);
+        else if (null == b)
+            return false;
+        else if (a.getKind().equals(b.getKind())){
+            String na = a.getName();
+            String nb = b.getName();
+            if (null != na && null != nb && na.equals(nb)){
+                return Equals(a.getParent(),b.getParent());
+            }
+        }
+        return false;
+    }
     /**
      * @return True for Key(/Kind:ID)
      */

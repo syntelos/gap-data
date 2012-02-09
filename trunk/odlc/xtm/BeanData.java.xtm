@@ -27,6 +27,8 @@ import gap.hapax.TemplateDataDictionary;
 import gap.hapax.TemplateName;
 import gap.util.*;
 
+import json.Json;
+
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.blobstore.BlobKey;
 
@@ -1096,25 +1098,7 @@ public abstract class {{=class_name}}Data
         }
         else
             return false;
-    }
-    public boolean set{{=field_nameCamel}}(json.Json json){
-        if (null == json)
-            return false;
-        else
-            return this.set{{=field_nameCamel}}(({{=field_class}})json.getValue({{=field_class}}.class));
-    }{{#field_is_number}}
-    public final boolean set{{=field_nameCamel}}(Number {{=field_name}}){
-        if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
-            this.fieldStatistics.markDirty({{=class_name}}.Field.{{=field_nameCamel}});
-            if ({{=field_name}} instanceof {{=field_class}})
-                this.{{=field_name}} = ({{=field_class}}){{=field_name}};
-            else
-                this.{{=field_name}} = new {{=field_class}}( {{=field_name}}.{{=field_numberValue}}());
-            return true;
-        }
-        else
-            return false;
-    }{{/field_is_number}}{{/pfield}}{{!
+    }{{/pfield}}{{!
  }}{{#cfield}}
     public final boolean has{{=field_nameCamel}}(boolean mayInherit){
         return (this.get{{=field_nameCamel}}(mayInherit).isNotEmpty());
@@ -1250,7 +1234,33 @@ public abstract class {{=class_name}}Data
         }
         else
             return false;
-    }{{/tfield}}
+    }{{/tfield}}{{#field}}
+    public Json toJson{{=field_nameCamel}}(){
+        {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}();
+        return Json.Wrap( {{=field_name}});
+    }
+    public boolean fromJson{{=field_nameCamel}}(Json json){{{#field_is_collection}}
+        /*
+         * [TODO] json.getValue(colClas,comClas) not expressed by (e.g.) "List.Short<Component>.class"
+         */
+        return false;{{/field_is_collection}}{{#field_is_not_collection}}
+        if (null == json)
+            return false;
+        else
+            return this.set{{=field_nameCamel}}(({{=field_class}})json.getValue({{=field_class}}.class));{{/field_is_not_collection}}
+    }{{#field_is_number}}
+    public final boolean set{{=field_nameCamel}}(Number {{=field_name}}){
+        if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
+            this.fieldStatistics.markDirty({{=class_name}}.Field.{{=field_nameCamel}});
+            if ({{=field_name}} instanceof {{=field_class}})
+                this.{{=field_name}} = ({{=field_class}}){{=field_name}};
+            else
+                this.{{=field_name}} = new {{=field_class}}( {{=field_name}}.{{=field_numberValue}}());
+            return true;
+        }
+        else
+            return false;
+    }{{/field_is_number}}{{/field}}
     /*
      * Data binding supports
      */
@@ -1270,15 +1280,16 @@ public abstract class {{=class_name}}Data
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
-    public json.Json toJson(){
-        json.Json json = new json.ObjectJson();{{#pfield}}
-        {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}();
-        json.set("{{=field_name}}",{{=field_name}});{{/pfield}}
+    public Json toJson(){
+        Json json = new json.ObjectJson();{{#field}}
+        Json {{=field_name}} = this.toJson{{=field_nameCamel}}();
+        if (null != {{=field_name}})
+            json.set("{{=field_name}}",{{=field_name}});{{/field}}
         return json;
     }
-    public boolean fromJson(json.Json json){
-        boolean modified = false;{{#pfield}}{{#field_is_not_unique}}
-        modified = (this.set{{=field_nameCamel}}(json.at("{{=field_name}}")) || modified);{{/field_is_not_unique}}{{/pfield}}
+    public boolean fromJson(Json json){
+        boolean modified = false;{{#field}}{{#field_is_not_unique}}
+        modified = (this.fromJson{{=field_nameCamel}}(json.at("{{=field_name}}")) || modified);{{/field_is_not_unique}}{{/field}}
         return modified;
     }
     public boolean updateFrom(Request req) throws ValidationError {

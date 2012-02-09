@@ -76,12 +76,19 @@ public final class {{=class_name}}
     }
     public void store(){
         Store(this);
-    }{{#pfield}}
+    }{{#field}}
+    /**
+     * To disable json access via 'toJson', redefine this method to "return null".
+     */
+    @Override
+    public Json toJson{{=field_nameCamel}}(){
+        return super.toJson{{=field_nameCamel}}();
+    }
     /**
      * To disable json access via 'fromJson', redefine this method to "return false".
      */
     @Override
-    public boolean set{{=field_nameCamel}}(Json json){
-        return super.set{{=field_nameCamel}}(json);
-    }{{/pfield}}
+    public boolean fromJson{{=field_nameCamel}}(Json json){
+        return super.fromJson{{=field_nameCamel}}(json);
+    }{{/field}}
 }

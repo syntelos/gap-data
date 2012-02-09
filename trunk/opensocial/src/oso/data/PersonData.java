@@ -26,6 +26,8 @@ import gap.hapax.TemplateDataDictionary;
 import gap.hapax.TemplateName;
 import gap.util.*;
 
+import json.Json;
+
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.blobstore.BlobKey;
 
@@ -38,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-06T17:49:07.600Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-08T23:15:35.964Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -676,7 +678,11 @@ public abstract class PersonData
         else
             return false;
     }
-    public boolean setLogonId(json.Json json){
+    public Json toJsonLogonId(){
+        String logonId = this.getLogonId();
+        return Json.Wrap( logonId);
+    }
+    public boolean fromJsonLogonId(Json json){
         if (null == json)
             return false;
         else
@@ -701,13 +707,14 @@ public abstract class PersonData
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
-    public json.Json toJson(){
-        json.Json json = new json.ObjectJson();
-        String logonId = this.getLogonId();
-        json.set("logonId",logonId);
+    public Json toJson(){
+        Json json = new json.ObjectJson();
+        Json logonId = this.toJsonLogonId();
+        if (null != logonId)
+            json.set("logonId",logonId);
         return json;
     }
-    public boolean fromJson(json.Json json){
+    public boolean fromJson(Json json){
         boolean modified = false;
         return modified;
     }
