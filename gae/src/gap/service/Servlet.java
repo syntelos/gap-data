@@ -24,6 +24,12 @@ import gap.data.*;
 import gap.hapax.*;
 import gap.util.*;
 
+import com.google.appengine.api.capabilities.CapabilitiesService;
+import com.google.appengine.api.capabilities.Capability;
+import com.google.appengine.api.capabilities.CapabilityState;
+import com.google.appengine.api.capabilities.CapabilityStatus;
+import static com.google.appengine.api.capabilities.CapabilityStatus.*;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.UserServiceFactory;
 
@@ -188,12 +194,13 @@ public class Servlet
             uri = req.getRequestURI();
         }
         Request request = null;
+        Response response = null;
         try {
             Logon logon = Logon.Enter(new Logon(ns,req.getUserPrincipal(),uri,UserServiceFactory.getUserService()));
 
             request = this.createRequest(ns,req,method,protocol,path,accept,fm,logon,uri);
 
-            Response response = this.createResponse(request,rep);
+            response = this.createResponse(request,rep);
             if (null != response)
                 this.service(request, response);
         }
@@ -201,8 +208,12 @@ public class Servlet
             LogRecord rec = new LogRecord(Level.SEVERE,"error");
             rec.setThrown(any);
             Log.log(rec);
-            if (null != request)
-                this.error(request,rep,500,"Internal error",any);
+            if (null != request){
+                if (null != response)
+                    this.error(request,response,500,"Internal error",any);
+                else
+                    this.error(request,new Response(rep),500,"Internal error",any);
+            }
             else
                 this.error(req,rep,500,"Internal error",any);
         }
@@ -419,11 +430,13 @@ public class Servlet
     protected final void error(HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage, Throwable any)
         throws IOException, ServletException
     {
-        if (req instanceof Request && rep instanceof Response){
-            Request request = (Request)req;
-            TemplateDataDictionary top = request;
+        rep.resetBuffer();
 
-            rep.resetBuffer();
+        if (this.isAvailableStorageRead() && req instanceof Request && rep instanceof Response){
+
+            Request request = (Request)req;
+
+            TemplateDataDictionary top = request;
 
             TemplateDataDictionary error = top.addSection(TemplateNames.Error);
 
@@ -599,6 +612,77 @@ public class Servlet
         return new Response(rep);
     }
 
+    public final boolean isAvailableStorageRead(){
+
+        return (this.isAvailableDatastore() && this.isAvailableMemcache());
+    }
+    public final boolean isAvailableStorageWrite(){
+
+        return (this.isAvailableDatastoreWrite() && this.isAvailableMemcache());
+    }
+    public final boolean isAvailableBlobstore(){
+        return IsAvailable(Capability.BLOBSTORE);
+    }
+    public final java.util.Date getScheduledBlobstore(){
+        return GetScheduled(Capability.BLOBSTORE);
+    }
+    public final boolean isAvailableDatastore(){
+        return IsAvailable(Capability.DATASTORE);
+    }
+    public final java.util.Date getScheduledDatastore(){
+        return GetScheduled(Capability.DATASTORE);
+    }
+    public final boolean isAvailableDatastoreWrite(){
+        return IsAvailable(Capability.DATASTORE_WRITE);
+    }
+    public final java.util.Date getScheduledDatastoreWrite(){
+        return GetScheduled(Capability.DATASTORE_WRITE);
+    }
+    public final boolean isAvailableImages(){
+        return IsAvailable(Capability.IMAGES);
+    }
+    public final java.util.Date getScheduledImages(){
+        return GetScheduled(Capability.IMAGES);
+    }
+    public final boolean isAvailableMail(){
+        return IsAvailable(Capability.MAIL);
+    }
+    public final java.util.Date getScheduledMail(){
+        return GetScheduled(Capability.MAIL);
+    }
+    public final boolean isAvailableProspectiveSearch(){
+        return IsAvailable(Capability.PROSPECTIVE_SEARCH);
+    }
+    public final java.util.Date getScheduledProspectiveSearch(){
+        return GetScheduled(Capability.PROSPECTIVE_SEARCH);
+    }
+    public final boolean isAvailableMemcache(){
+        return IsAvailable(Capability.MEMCACHE);
+    }
+    public final java.util.Date getScheduledMemcache(){
+        return GetScheduled(Capability.MEMCACHE);
+    }
+    public final boolean isAvailableTaskqueue(){
+        return IsAvailable(Capability.TASKQUEUE);
+    }
+    public final java.util.Date getScheduledTaskqueue(){
+        return GetScheduled(Capability.TASKQUEUE);
+    }
+    public final boolean isAvailableUrlFetch(){
+        return IsAvailable(Capability.URL_FETCH);
+    }
+    public final java.util.Date getScheduledUrlFetch(){
+        return GetScheduled(Capability.URL_FETCH);
+    }
+    public final boolean isAvailableXmpp(){
+        return IsAvailable(Capability.XMPP);
+    }
+    public final java.util.Date getScheduledXmpp(){
+        return GetScheduled(Capability.XMPP);
+    }
+
+
+
     /*
      */
     protected final static String Safe(String string){
@@ -732,4 +816,122 @@ public class Servlet
             t.printStackTrace(out);
         }
     }
+
+    private static CapabilitiesService CapService;
+
+    protected final static CapabilitiesService CapService(){
+        if (null == CapService){
+
+            CapService = com.google.appengine.api.capabilities.CapabilitiesServiceFactory.getCapabilitiesService();
+        }
+        return CapService;
+    }
+    protected final static CapabilityState GetState(Capability cap){
+
+        return CapService().getStatus(cap);
+    }
+    /**
+     * @return True for not disabled
+     */
+    protected final static boolean IsAvailable(Capability cap){
+
+        CapabilityState state = GetState(cap);
+        CapabilityStatus status = state.getStatus();
+        switch(status){
+        case DISABLED:
+            return false;
+        case ENABLED:
+        case SCHEDULED_MAINTENANCE:
+            return true;
+        default:
+            throw new IllegalStateException(status.name());
+        }
+    }
+    /**
+     * @return Null for not scheduled, or the planned maintenance date
+     */
+    protected final static java.util.Date GetScheduled(Capability cap){
+
+        CapabilityState state = GetState(cap);
+        CapabilityStatus status = state.getStatus();
+        switch(status){
+        case DISABLED:
+        case ENABLED:
+            return null;
+        case SCHEDULED_MAINTENANCE:
+            return state.getScheduledDate();
+        default:
+            throw new IllegalStateException(status.name());
+        }
+    }
+
+    public final static boolean IsAvailableStorageRead(){
+
+        return (IsAvailableDatastore() && IsAvailableMemcache());
+    }
+    public final static boolean IsAvailableStorageWrite(){
+
+        return (IsAvailableDatastoreWrite() && IsAvailableMemcache());
+    }
+    public final static boolean IsAvailableBlobstore(){
+        return IsAvailable(Capability.BLOBSTORE);
+    }
+    public final static java.util.Date GetScheduledBlobstore(){
+        return GetScheduled(Capability.BLOBSTORE);
+    }
+    public final static boolean IsAvailableDatastore(){
+        return IsAvailable(Capability.DATASTORE);
+    }
+    public final static java.util.Date GetScheduledDatastore(){
+        return GetScheduled(Capability.DATASTORE);
+    }
+    public final static boolean IsAvailableDatastoreWrite(){
+        return IsAvailable(Capability.DATASTORE_WRITE);
+    }
+    public final static java.util.Date GetScheduledDatastoreWrite(){
+        return GetScheduled(Capability.DATASTORE_WRITE);
+    }
+    public final static boolean IsAvailableImages(){
+        return IsAvailable(Capability.IMAGES);
+    }
+    public final static java.util.Date GetScheduledImages(){
+        return GetScheduled(Capability.IMAGES);
+    }
+    public final static boolean IsAvailableMail(){
+        return IsAvailable(Capability.MAIL);
+    }
+    public final static java.util.Date GetScheduledMail(){
+        return GetScheduled(Capability.MAIL);
+    }
+    public final static boolean IsAvailableProspectiveSearch(){
+        return IsAvailable(Capability.PROSPECTIVE_SEARCH);
+    }
+    public final static java.util.Date GetScheduledProspectiveSearch(){
+        return GetScheduled(Capability.PROSPECTIVE_SEARCH);
+    }
+    public final static boolean IsAvailableMemcache(){
+        return IsAvailable(Capability.MEMCACHE);
+    }
+    public final static java.util.Date GetScheduledMemcache(){
+        return GetScheduled(Capability.MEMCACHE);
+    }
+    public final static boolean IsAvailableTaskqueue(){
+        return IsAvailable(Capability.TASKQUEUE);
+    }
+    public final static java.util.Date GetScheduledTaskqueue(){
+        return GetScheduled(Capability.TASKQUEUE);
+    }
+    public final static boolean IsAvailableUrlFetch(){
+        return IsAvailable(Capability.URL_FETCH);
+    }
+    public final static java.util.Date GetScheduledUrlFetch(){
+        return GetScheduled(Capability.URL_FETCH);
+    }
+    public final static boolean IsAvailableXmpp(){
+        return IsAvailable(Capability.XMPP);
+    }
+    public final static java.util.Date GetScheduledXmpp(){
+        return GetScheduled(Capability.XMPP);
+    }
+
 }

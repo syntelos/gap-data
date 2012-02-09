@@ -26,6 +26,8 @@ import gap.hapax.TemplateDataDictionary;
 import gap.hapax.TemplateName;
 import gap.util.*;
 
+import json.Json;
+
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.blobstore.BlobKey;
 
@@ -38,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-02T22:33:26.815Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-08T23:15:47.890Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -722,12 +724,6 @@ public abstract class TemplateData
         else
             return false;
     }
-    public boolean setName(json.Json json){
-        if (null == json)
-            return false;
-        else
-            return this.setName((String)json.getValue(String.class));
-    }
     public final boolean hasLastModified(boolean mayInherit){
         return (null != this.getLastModified(mayInherit));
     }
@@ -771,24 +767,6 @@ public abstract class TemplateData
         if (IsNotEqual(this.lastModified,lastModified)){
             this.fieldStatistics.markDirty(Template.Field.LastModified);
             this.lastModified = lastModified;
-            return true;
-        }
-        else
-            return false;
-    }
-    public boolean setLastModified(json.Json json){
-        if (null == json)
-            return false;
-        else
-            return this.setLastModified((Long)json.getValue(Long.class));
-    }
-    public final boolean setLastModified(Number lastModified){
-        if (IsNotEqual(this.lastModified,lastModified)){
-            this.fieldStatistics.markDirty(Template.Field.LastModified);
-            if (lastModified instanceof Long)
-                this.lastModified = (Long)lastModified;
-            else
-                this.lastModified = new Long( lastModified.longValue());
             return true;
         }
         else
@@ -841,12 +819,6 @@ public abstract class TemplateData
         }
         else
             return false;
-    }
-    public boolean setTemplateSourceHapax(json.Json json){
-        if (null == json)
-            return false;
-        else
-            return this.setTemplateSourceHapax((Text)json.getValue(Text.class));
     }
     public final boolean hasTemplateTargetHapax(boolean mayInherit){
         return (this.getTemplateTargetHapax(mayInherit).isNotEmpty());
@@ -933,6 +905,55 @@ public abstract class TemplateData
         else
             throw new IllegalArgumentException();
     }
+    public Json toJsonName(){
+        String name = this.getName();
+        return Json.Wrap( name);
+    }
+    public boolean fromJsonName(Json json){
+        if (null == json)
+            return false;
+        else
+            return this.setName((String)json.getValue(String.class));
+    }
+    public Json toJsonLastModified(){
+        Long lastModified = this.getLastModified();
+        return Json.Wrap( lastModified);
+    }
+    public boolean fromJsonLastModified(Json json){
+        if (null == json)
+            return false;
+        else
+            return this.setLastModified((Long)json.getValue(Long.class));
+    }
+    public final boolean setLastModified(Number lastModified){
+        if (IsNotEqual(this.lastModified,lastModified)){
+            this.fieldStatistics.markDirty(Template.Field.LastModified);
+            if (lastModified instanceof Long)
+                this.lastModified = (Long)lastModified;
+            else
+                this.lastModified = new Long( lastModified.longValue());
+            return true;
+        }
+        else
+            return false;
+    }
+    public Json toJsonTemplateSourceHapax(){
+        Text templateSourceHapax = this.getTemplateSourceHapax();
+        return Json.Wrap( templateSourceHapax);
+    }
+    public boolean fromJsonTemplateSourceHapax(Json json){
+        if (null == json)
+            return false;
+        else
+            return this.setTemplateSourceHapax((Text)json.getValue(Text.class));
+    }
+    public Json toJsonTemplateTargetHapax(){
+        List.Short<TemplateNode> templateTargetHapax = this.getTemplateTargetHapax();
+        return Json.Wrap( templateTargetHapax);
+    }
+    public boolean fromJsonTemplateTargetHapax(Json json){
+        return false;
+    }
     /*
      * Data binding supports
      */
@@ -952,20 +973,27 @@ public abstract class TemplateData
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
-    public json.Json toJson(){
-        json.Json json = new json.ObjectJson();
-        String name = this.getName();
-        json.set("name",name);
-        Long lastModified = this.getLastModified();
-        json.set("lastModified",lastModified);
-        Text templateSourceHapax = this.getTemplateSourceHapax();
-        json.set("templateSourceHapax",templateSourceHapax);
+    public Json toJson(){
+        Json json = new json.ObjectJson();
+        Json name = this.toJsonName();
+        if (null != name)
+            json.set("name",name);
+        Json lastModified = this.toJsonLastModified();
+        if (null != lastModified)
+            json.set("lastModified",lastModified);
+        Json templateSourceHapax = this.toJsonTemplateSourceHapax();
+        if (null != templateSourceHapax)
+            json.set("templateSourceHapax",templateSourceHapax);
+        Json templateTargetHapax = this.toJsonTemplateTargetHapax();
+        if (null != templateTargetHapax)
+            json.set("templateTargetHapax",templateTargetHapax);
         return json;
     }
-    public boolean fromJson(json.Json json){
+    public boolean fromJson(Json json){
         boolean modified = false;
-        modified = (this.setLastModified(json.at("lastModified")) || modified);
-        modified = (this.setTemplateSourceHapax(json.at("templateSourceHapax")) || modified);
+        modified = (this.fromJsonLastModified(json.at("lastModified")) || modified);
+        modified = (this.fromJsonTemplateSourceHapax(json.at("templateSourceHapax")) || modified);
+        modified = (this.fromJsonTemplateTargetHapax(json.at("templateTargetHapax")) || modified);
         return modified;
     }
     public boolean updateFrom(Request req) throws ValidationError {
