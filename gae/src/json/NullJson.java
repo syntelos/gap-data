@@ -31,9 +31,8 @@ public class NullJson
     public final static NullJson Instance = new NullJson();
 
 
-    public NullJson() {}
-    public NullJson(Json e) {
-        super(e);
+    public NullJson() {
+        super();
     }
 
 		

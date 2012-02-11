@@ -35,9 +35,6 @@ public class ArrayJson
     public ArrayJson() {
         super();
     }
-    public ArrayJson(Json e) {
-        super(e);
-    }
     public ArrayJson(Object... args) {
         super();
         for (Object x : args){
@@ -61,7 +58,6 @@ public class ArrayJson
         for (Json e : list)
             {
                 Json v = e.dup();
-                v.enclosing = j;
                 j.list.add(v);
             }
         return j;
@@ -95,39 +91,37 @@ public class ArrayJson
     public Object getValue() { return asList(); }
     public boolean isArray() { return true; }
     public Json at(int index) { return list.get(index); }
-    public Json add(Json el) { list.add(el); el.enclosing = this; return this; }
-    public Json remove(Json el) { list.remove(el); el.enclosing = null; return this; }
+    public Json add(Json el) { list.add(el); return this; }
+    public Json remove(Json el) { list.remove(el); return this; }
 
     public Json with(Json object) 
     {
         if (!object.isArray())
             throw new UnsupportedOperationException();
-        // what about "enclosing" here? we don't have a provision where a Json 
-        // element belongs to more than one enclosing elements...
-        list.addAll(((ArrayJson)object).list);
-        return this;
+        else {
+            list.addAll(((ArrayJson)object).list);
+            return this;
+        }
     }
 		
     public Json atDel(int index) 
     { 
         Json el = list.remove(index); 
-        if (el != null) 
-            el.enclosing = null; 
+
         return el; 
     }
 		
     public Json delAt(int index) 
     { 
         Json el = list.remove(index); 
-        if (el != null) 
-            el.enclosing = null; 
+
         return this; 
     }
 		
     public String toString(final int d)
     {
         StringBuilder sb = new StringBuilder();
-        sb.append('[');
+        sb.append("[\n");
 
         for (Iterator<Json> i = list.iterator(); i.hasNext(); ){
             Json value = i.next();

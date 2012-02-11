@@ -34,20 +34,13 @@ public class BooleanJson
     public BooleanJson() {
         super();
     }
-    public BooleanJson(Json e) {
-        super(e);
-    }
-    public BooleanJson(Boolean val, Json e) { 
-        super(e); 
-        this.val = val;
-    }
     public BooleanJson(Boolean val) { 
         super(); 
         this.val = val;
     }
 
 		
-    public Json dup() { return new BooleanJson(val, null); }		
+    public Json dup() { return new BooleanJson(val); }
     public boolean asBoolean() { return val; }		
     public boolean isBoolean() { return true;	}		
     public String toString(int d) { 

@@ -34,13 +34,6 @@ public class NumberJson
     public NumberJson(){
         super();
     }
-    public NumberJson(Json e) {
-        super(e);
-    }
-    public NumberJson(Number val, Json e) { 
-        super(e); 
-        this.val = val;
-    }
     public NumberJson(Number val) { 
         super(); 
         this.val = val;
@@ -49,7 +42,7 @@ public class NumberJson
     public boolean isNull(){
         return (null == val);
     }
-    public Json dup() { return new NumberJson(val, null); }		
+    public Json dup() { return new NumberJson(val); }
     public boolean isNumber() { return true; }		
     public Object getValue() { return val; }
     public String asString() { return val.toString(); }

@@ -90,9 +90,6 @@ import java.util.Set;
  * Object)} will create an object property with a default value if it
  * doesn't exist already.  </p>
  * 
- * <p> The enclosing entity can be accessed with {@link #up()} method.
- * </p>
- *
  * 
  * @author Borislav Iordanov
  * @author John Pritchard
@@ -158,40 +155,16 @@ public abstract class Json
 		
 
 
-    protected Json enclosing = null;
-
 	
     protected Json() {
         super();
     }
-    protected Json(Json enclosing) { 
-        super();
-        this.enclosing = enclosing;
-    }
+
+	
 	
     /**
-     * <p>Explicitly set the parent of this element. The parent is presumably an array
-     * or an object. Normally, there's no need to call this method as the parent is
-     * automatically set by the framework. You may need to call it however, if you implement
-     * your own {@link Factory} with your own implementations of the Json types.
-     * </p>
-     *  
-     * @param enclosing The parent element.
-     */
-    public void attachTo(Json enclosing) { this.enclosing = enclosing; }
-	
-    /**
-     * <p>Return the <code>Json</code> entity, if any, enclosing this 
-     * <code>Json</code>. The returned value can be <code>null</code> or
-     * a <code>Json</code> object or list, but not one of the primitive types.</p>
-     */
-    public final Json up() { return enclosing; }
-	
-    /**
-     * <p>Return a clone (a duplicate) of this <code>Json</code> entity. Note that cloning
-     * is deep if array and objects. Primitives are also cloned, even though their values are immutable
-     * because the new enclosing entity (the result of the {@link #up()} method) may be different.
-     * since they are immutable.</p>
+     * Return a clone (a duplicate) of this <code>Json</code>
+     * entity.  Cloning is deep in array and objects. 
      */
     public Json dup() { return this; }
 	

@@ -95,6 +95,10 @@ public interface List<V>
         extends List<V>, Collection.PrimitiveC<V>
     {
         /**
+         * Define literal instance of ancestor
+         */
+        public List.Primitive<V> setAncestor(TableClass ancestor);
+        /**
          * Add to list
          */
         public List.Primitive<V> add(V instance);

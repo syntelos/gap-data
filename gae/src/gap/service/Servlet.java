@@ -430,68 +430,76 @@ public class Servlet
     protected final void error(HttpServletRequest req, HttpServletResponse rep, int status, String statusMessage, Throwable any)
         throws IOException, ServletException
     {
-        rep.resetBuffer();
+        try {
+            rep.resetBuffer();
 
-        if (this.isAvailableStorageRead() && req instanceof Request && rep instanceof Response){
+            if (this.isAvailableStorageRead() && req instanceof Request && rep instanceof Response){
 
-            Request request = (Request)req;
+                Request request = (Request)req;
 
-            TemplateDataDictionary top = request;
+                TemplateDataDictionary top = request;
 
-            TemplateDataDictionary error = top.addSection(TemplateNames.Error);
+                TemplateDataDictionary error = top.addSection(TemplateNames.Error);
 
-            String errors_exception = Error.Attribute.ToString.Exception(req,any);
-            String errors_status, errors_message;
-            String errors_type = Error.Attribute.ToString.Type(req,any);
-            String errors_uri = Error.Attribute.ToString.URI(req,any);
-            if (0 < status){
+                String errors_exception = Error.Attribute.ToString.Exception(req,any);
+                String errors_status, errors_message;
+                String errors_type = Error.Attribute.ToString.Type(req,any);
+                String errors_uri = Error.Attribute.ToString.URI(req,any);
+                if (0 < status){
+                    rep.setStatus(status,statusMessage);
+
+                    errors_status = String.valueOf(status);
+                    errors_message = statusMessage;
+                }
+                else {
+                    errors_status = Error.Attribute.ToString.Status(req,any);
+                    errors_message = Error.Attribute.ToString.Message(req,any);
+                }
+                error.setVariable(TemplateNames.ErrorMessage,errors_message);
+                error.setVariable(TemplateNames.ErrorException,errors_exception);
+                error.setVariable(TemplateNames.ErrorStatus,errors_status);
+
+                error.setVariable(TemplateNames.ErrorType,errors_type);
+                error.setVariable(TemplateNames.ErrorUri,errors_uri);
+
+                String templateName = null;
+
+                if (request.accept("text/html"))
+                    templateName = "errors.html";
+
+                else if (request.accept("application/json")){
+                    error.setVariable(TemplateNames.ErrorExceptionJson,QuoteJson(errors_exception));
+                    error.setVariable(TemplateNames.ErrorMessageJson,QuoteJson(errors_message));
+                    templateName = "errors.json";
+                }
+                else if (request.accept("text/xml"))
+                    templateName = "errors.xml";
+
+                else if (request.accept("application/xml"))
+                    templateName = "errors.xml";
+
+                if (null != templateName){
+                    try {
+                        TemplateRenderer template = Templates.GetTemplate(templateName);
+                        if (null != template)
+                            this.render(request, ((Response)rep), template);
+                    }
+                    catch (TemplateException exc){
+                        LogRecord rec = new LogRecord(Level.SEVERE,"error");
+                        rec.setThrown(exc);
+                        Log.log(rec);
+                    }
+                }
+            }
+            else if (0 < status)
                 rep.setStatus(status,statusMessage);
-
-                errors_status = String.valueOf(status);
-                errors_message = statusMessage;
-            }
-            else {
-                errors_status = Error.Attribute.ToString.Status(req,any);
-                errors_message = Error.Attribute.ToString.Message(req,any);
-            }
-            error.setVariable(TemplateNames.ErrorMessage,errors_message);
-            error.setVariable(TemplateNames.ErrorException,errors_exception);
-            error.setVariable(TemplateNames.ErrorStatus,errors_status);
-
-            error.setVariable(TemplateNames.ErrorType,errors_type);
-            error.setVariable(TemplateNames.ErrorUri,errors_uri);
-
-            String templateName = null;
-
-            if (request.accept("text/html"))
-                templateName = "errors.html";
-
-            else if (request.accept("application/json")){
-                error.setVariable(TemplateNames.ErrorExceptionJson,QuoteJson(errors_exception));
-                error.setVariable(TemplateNames.ErrorMessageJson,QuoteJson(errors_message));
-                templateName = "errors.json";
-            }
-            else if (request.accept("text/xml"))
-                templateName = "errors.xml";
-
-            else if (request.accept("application/xml"))
-                templateName = "errors.xml";
-
-            if (null != templateName){
-                try {
-                    TemplateRenderer template = Templates.GetTemplate(templateName);
-                    if (null != template)
-                        this.render(request, ((Response)rep), template);
-                }
-                catch (TemplateException exc){
-                    LogRecord rec = new LogRecord(Level.SEVERE,"error");
-                    rec.setThrown(exc);
-                    Log.log(rec);
-                }
-            }
         }
-        else if (0 < status)
+        catch (Exception exc){
+
+            Log.log(Level.INFO,alto.io.u.Chbuf.fcat(req.getServletPath(),req.getPathInfo()),exc);
+
             rep.setStatus(status,statusMessage);
+        }
     }
     protected final void undefined(Request req, Response rep)
         throws ServletException, IOException

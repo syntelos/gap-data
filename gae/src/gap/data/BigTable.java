@@ -210,6 +210,7 @@ public abstract class BigTable
         try {
             BigTable instance = (BigTable)table.newInstance();
             instance.fillFrom(entity);
+            instance.markClean();
             return instance;
         }
         catch (java.lang.InstantiationException exc){
@@ -486,7 +487,7 @@ public abstract class BigTable
                     entity.removeProperty(fieldName);
             }
             else
-                entity.removeProperty(fieldName); //[TEMP propagate change not storing key onto itself]
+                entity.removeProperty(fieldName); // (do not store key into entity)
         }
         return entity;
     }

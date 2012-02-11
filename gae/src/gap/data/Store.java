@@ -481,11 +481,11 @@ public final class Store
                 }
                 else {
                     /*
-                     * Write dirty
+                     * Write dirty (push changes local dirty)
                      */
                     table.fillTo(entity);
                     /*
-                     * Read clean
+                     * Read clean (pull changes not local dirty)
                      */
                     table.fillFrom(entity);
                 }
