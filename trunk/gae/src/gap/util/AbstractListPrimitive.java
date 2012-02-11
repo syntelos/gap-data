@@ -71,7 +71,7 @@ public abstract class AbstractListPrimitive<V>
 
 
 
-    protected gap.data.BigTable ancestor;
+    protected transient gap.data.BigTable ancestor;
 
     protected Key ancestorKey;
 
@@ -100,6 +100,15 @@ public abstract class AbstractListPrimitive<V>
     }
     public abstract gap.Primitive getType();
 
+    public final List.Primitive<V> setAncestor(TableClass ancestor){
+        this.ancestor = (BigTable)ancestor;
+        if (null != ancestor){
+            Key ancestorKey = ancestor.getKey();
+            if (null != ancestorKey)
+                this.setValueClassAncestorKey(ancestorKey);
+        }
+        return this;
+    }
     public final Key getValueClassAncestorKey(){
         return this.ancestorKey;
     }

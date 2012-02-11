@@ -783,7 +783,7 @@ public abstract class {{=class_name}}Data
         }
     }
 
-    private transient final {{=class_name}}.Field.Statistics fieldStatistics = new {{=class_name}}.Field.Statistics();
+    private transient {{=class_name}}.Field.Statistics fieldStatistics = new {{=class_name}}.Field.Statistics();
 
     private transient {{=class_name}} inheritFrom;
 
@@ -825,6 +825,14 @@ public abstract class {{=class_name}}Data
     }{{/class_re_child}}
 
 
+    private {{=class_name}}.Field.Statistics fieldStatistics(){
+        {{=class_name}}.Field.Statistics fieldStatistics = this.fieldStatistics;
+        if (null == fieldStatistics){
+            fieldStatistics = new {{=class_name}}.Field.Statistics();
+            this.fieldStatistics = fieldStatistics;
+        }
+        return fieldStatistics;
+    }
     public void destroy(){
         this.inheritFrom = null;{{#pfield}}
         this.{{=field_name}} = null;{{/pfield}}{{#cfield}}
@@ -956,7 +964,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean drop{{=field_nameCamel}}(){
         if (null != this.{{=field_name}}){
-            this.fieldStatistics.markDirty({{=class_name}}.Field.{{=field_nameCamel}});
+            this.fieldStatistics().markDirty({{=class_name}}.Field.{{=field_nameCamel}});
             this.{{=field_name}} = null;{{#field_is_bigTable}}
             this.{{=field_name}}Id = null;
             this.{{=field_name}}Key = null;{{/field_is_bigTable}}
@@ -970,7 +978,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean set{{=field_nameCamel}}Id(String {{=field_name}}Id){
         if (IsNotEqual(this.{{=field_name}}Id,{{=field_name}}Id)){
-            this.fieldStatistics.markDirty({{=class_name}}.Field.{{=field_nameCamel}});
+            this.fieldStatistics().markDirty({{=class_name}}.Field.{{=field_nameCamel}});
             this.{{=field_name}}Id = {{=field_name}}Id;
             this.{{=field_name}}Key = null;
             this.{{=field_name}} = null;
@@ -1067,7 +1075,7 @@ public abstract class {{=class_name}}Data
     }
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}, boolean withInheritance){
         if (IsNotEqual(this.{{=field_name}},this.get{{=field_nameCamel}}(withInheritance))){
-            this.fieldStatistics.markDirty({{=class_name}}.Field.{{=field_nameCamel}});
+            this.fieldStatistics().markDirty({{=class_name}}.Field.{{=field_nameCamel}});
             this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
             if (null != {{=field_name}}){
                 this.{{=field_name}}Id = {{=field_name}}.getId();
@@ -1084,7 +1092,7 @@ public abstract class {{=class_name}}Data
     }{{/field_is_inheritable}}
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
         if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
-            this.fieldStatistics.markDirty({{=class_name}}.Field.{{=field_nameCamel}});
+            this.fieldStatistics().markDirty({{=class_name}}.Field.{{=field_nameCamel}});
             this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
             if (null != {{=field_name}}){
                 this.{{=field_name}}Id = {{=field_name}}.getId();
@@ -1139,7 +1147,10 @@ public abstract class {{=class_name}}Data
             }
             this.{{=field_name}} = {{=field_name}};
             {{=field_name}}.init();
-        }
+        }{{#field_is_list_primitive}}
+        else
+            {{=field_name}}.setAncestor(this);{{/field_is_list_primitive}}
+
         return {{=field_name}};
     }
     public final boolean set{{=field_nameCamel}}({{=field_class}} {{=field_name}}){
@@ -1251,7 +1262,7 @@ public abstract class {{=class_name}}Data
     }{{#field_is_number}}
     public final boolean set{{=field_nameCamel}}(Number {{=field_name}}){
         if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
-            this.fieldStatistics.markDirty({{=class_name}}.Field.{{=field_nameCamel}});
+            this.fieldStatistics().markDirty({{=class_name}}.Field.{{=field_nameCamel}});
             if ({{=field_name}} instanceof {{=field_class}})
                 this.{{=field_name}} = ({{=field_class}}){{=field_name}};
             else
@@ -1330,46 +1341,44 @@ public abstract class {{=class_name}}Data
     }
     public final {{=class_name}} markClean(){
 
-        this.fieldStatistics.markClean();
+        this.fieldStatistics().markClean();
         return ({{=class_name}})this;
     }
     public final {{=class_name}} markDirty(){
 
-        this.fieldStatistics.markDirty();
+        this.fieldStatistics().markDirty();
         return ({{=class_name}})this;
     }
     public final {{=class_name}} markDirty(gap.data.Field field){
 
-        this.fieldStatistics.markDirty(field);
+        this.fieldStatistics().markDirty(field);
         return ({{=class_name}})this;
     }
-    public final {{=class_name}} markDirty(java.io.Serializable instance){{{#field}}{{#field_it_First}}
-        if (instance == this.{{=field_name}}){
+    public final {{=class_name}} markDirty(java.io.Serializable instance){{{#field}}
+        {{#field_it_NotFirst}}else {{/field_it_NotFirst}}if (instance == this.{{=field_name}}){
             gap.data.Field field = {{=class_name}}.Field.{{=field_nameCamel}};
             return this.markDirty(field);
-        }{{/field_it_First}}{{#field_it_NotFirst}}
-        else if (instance == this.{{=field_name}}){
-            gap.data.Field field = {{=class_name}}.Field.{{=field_nameCamel}};
-            return this.markDirty(field);
-        }{{/field_it_NotFirst}}{{/field}}
+        }{{/field}}
+        else if (null != instance)
+            throw new IllegalArgumentException(instance.getClass().getName());
         else
-            return ({{=class_name}})this;
+            throw new IllegalArgumentException();
     }
     public final Iterable<gap.data.Field> listClean(){
 
-        return this.fieldStatistics.listClean();
+        return this.fieldStatistics().listClean();
     }
     public final Iterable<gap.data.Field> listDirty(){
 
-        return this.fieldStatistics.listDirty();
+        return this.fieldStatistics().listDirty();
     }
     public final boolean isClean(){
 
-        return this.fieldStatistics.isClean();
+        return this.fieldStatistics().isClean();
     }
     public final boolean isDirty(){
 
-        return this.fieldStatistics.isDirty();
+        return this.fieldStatistics().isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return {{=class_name}}.ClassDescriptorFor();

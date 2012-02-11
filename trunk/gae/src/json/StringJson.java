@@ -34,13 +34,6 @@ public class StringJson
     public StringJson() {
         super();
     }
-    public StringJson(Json e) {
-        super(e);
-    }
-    public StringJson(String val, Json e) { 
-        super(e); 
-        this.val = val;
-    }
     public StringJson(String val) { 
         super();
         this.val = val;
@@ -50,7 +43,7 @@ public class StringJson
     public boolean isNull(){
         return (null == val || 1 > val.length());
     }
-    public Json dup() { return new StringJson(val, null); }		
+    public Json dup() { return new StringJson(val); }
     public boolean isString() { return true; }
     public Object getValue() { return val; }
     public String asString() { return val; }

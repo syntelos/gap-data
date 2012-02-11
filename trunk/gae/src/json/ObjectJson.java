@@ -37,9 +37,6 @@ public class ObjectJson
     public ObjectJson() {
         super();
     }
-    public ObjectJson(Json e) { 
-        super(e);
-    }
     /**
      * @param args Sequence of name-value pairs 
      */
@@ -72,7 +69,7 @@ public class ObjectJson
         for (Map.Entry<String, Json> e : object.entrySet())
             {
                 Json v = e.getValue().dup();
-                v.enclosing = j;
+
                 j.object.put(e.getKey(), v);
             }
         return j;
@@ -127,7 +124,6 @@ public class ObjectJson
     }
     public Json set(String property, Json el)
     {
-        el.enclosing = this;
         object.put(property, el);
         return this;
     }
@@ -135,16 +131,14 @@ public class ObjectJson
     public Json atDel(String property) 
     {
         Json el = object.remove(property);
-        if (el != null)
-            el.enclosing = null;
+
         return el;
     }
 		
     public Json delAt(String property) 
     {
         Json el = object.remove(property);
-        if (el != null)
-            el.enclosing = null;
+
         return this;
     }
 		
