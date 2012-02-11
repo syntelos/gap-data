@@ -512,7 +512,7 @@ public abstract class BigTable
         if (null != s)
             return s;
         else
-            return "/"+this.getClassKind()+":<0>";
+            return "/"+this.getClassKind()+":<?>";
     }
     /**
      * @return To string hash code
