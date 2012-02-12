@@ -16,6 +16,7 @@
 
 package gap.checkout;
 
+import com.google.checkout.sdk.commands.Environment;
 
 /**
  * Checkout servlet
@@ -27,5 +28,13 @@ public class Servlet
 
     public Servlet(){
         super();
+    }
+
+
+    protected final Environment getCheckoutProduction(){
+        return Environment.PRODUCTION;
+    }
+    protected final Environment getCheckoutTest(){
+        return Environment.SANDBOX;
     }
 }

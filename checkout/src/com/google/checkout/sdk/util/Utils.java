@@ -72,7 +72,7 @@ public class Utils
     private static final SimpleDateFormat SDF = new SimpleDateFormat(
                                                                      "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-    private static final JAXBContext Context = Utils.MakeJaxbContext();
+    private static final JAXBContext JaxbContext = Utils.MakeJaxbContext();
 
     private static JAXBContext MakeJaxbContext() {
         try {
@@ -85,7 +85,7 @@ public class Utils
 
     @SuppressWarnings("unchecked")
     public static <T> JAXBElement<T> FromXML(InputStream is) throws JAXBException {
-        return (JAXBElement<T>)Context.createUnmarshaller().unmarshal(is);
+        return (JAXBElement<T>)JaxbContext.createUnmarshaller().unmarshal(is);
     }
 
     public static void ToXML(JAXBElement<?> jaxbElement, OutputStream os) {
@@ -96,7 +96,7 @@ public class Utils
     public static <T> JAXBElement<T> FromXML(String xmlString)
         throws JAXBException
     {
-        return (JAXBElement<T>)Context.createUnmarshaller().unmarshal(new StringReader(xmlString));
+        return (JAXBElement<T>)JaxbContext.createUnmarshaller().unmarshal(new StringReader(xmlString));
     }
 
     public static String ToXML(JAXBElement<?> jaxbElement) {
