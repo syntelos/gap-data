@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="google-checkout-java-sdk" default="jar">
+
+  <property name="src" value="src/java"/>
+  <property name="lib" value="lib"/>
+  <property name="bin" value="bin"/>
+  <property name="dst" value="."/>
+
+  <property name="compiler.source" value="1.6"/>
+  <property name="compiler.target" value="1.6"/>
+  <property name="compiler.debug" value="true"/>
+  <property name="compiler.encoding" value="utf-8"/>
+
+  <property name="this.version" value="2.5.0"/>
+  <property name="target.jar" value="${ant.project.name}-${this.version}.jar"/>
+
+
+
+  <path id="lib.path">
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <target name="jar" depends="compile" description="Package bin to target jar, clean bin.">
+
+    <delete file="${target.jar}"/>
+
+    <jar jarfile="${target.jar}" basedir="${bin}" />
+
+    <delete dir="${bin}"/>
+  </target>
+
+  <target name="compile" description="Compile src to bin">
+    <mkdir dir="${bin}"/>
+
+    <javac srcdir="${src}" destdir="${bin}" debug="${compiler.debug}" encoding="${compiler.encoding}"
+           classpathref="lib.path" source="${compiler.source}" target="${compiler.target}">
+    </javac>
+  </target>
+
+  <target name="clean" description="Delete products">
+    <delete dir="${bin}"/>
+  </target>
+
+  <target name="cleanb" depends="clean" description="Clean build">
+    <antcall target="loader"/>
+  </target>
+
+</project>

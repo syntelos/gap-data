@@ -1,0 +1,5 @@
+
+ Originally from http://code.google.com/p/google-checkout-java-sdk/
+
+ Rewritten to Gap-Data's OpenSocial architecture
+
