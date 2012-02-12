@@ -322,7 +322,7 @@ public final class Store
 
         return N.Get();
     }
-    public static BigTable GetClass(Key key){
+    public static <T> T GetClass(Key key){
         if (key.isComplete()){
             Entity entity = C.Get(key);
             if (null != entity){
@@ -334,7 +334,7 @@ public final class Store
                 }
                 table.setFromMemcache();
                 table.onread();
-                return table;
+                return (T)table;
             }
             else {
                 entity = P.Get(key);
@@ -352,7 +352,7 @@ public final class Store
                     }
                     table.setFromDatastore();
                     table.onread();
-                    return table;
+                    return (T)table;
                 }
                 else
                     return null;
@@ -372,9 +372,9 @@ public final class Store
         else
             throw new IllegalArgumentException("Incomplete key '"+key+"'.");
     }
-    public static gap.util.ArrayList<BigTable> GetClass(Iterable<Key> keys){
+    public static <T> List<T> GetClass(Iterable<Key> keys){
 
-        gap.util.ArrayList<BigTable> list = new gap.util.ArrayList<BigTable>();
+        gap.util.ArrayList<T> list = new gap.util.ArrayList();
 
         for (Key key : keys){
 
@@ -388,7 +388,7 @@ public final class Store
                 }
                 table.setFromMemcache();
                 table.onread();
-                list.add(table);
+                list.add( (T)table);
             }
             else {
                 entity = P.Get(key);
@@ -406,7 +406,7 @@ public final class Store
                     }
                     table.setFromDatastore();
                     table.onread();
-                    list.add(table);
+                    list.add( (T)table);
                 }
             }
         }
