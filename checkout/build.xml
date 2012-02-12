@@ -11,7 +11,7 @@
   <property name="compiler.debug" value="true"/>
   <property name="compiler.encoding" value="utf-8"/>
 
-  <property name="this.version" value="2.5.0"/>
+  <property name="this.version" value="2.5.1"/>
   <property name="target.jar" value="${ant.project.name}-${this.version}.jar"/>
 
 

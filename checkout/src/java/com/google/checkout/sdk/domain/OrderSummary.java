@@ -42,7 +42,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="shopping-cart" type="{http://checkout.google.com/schema/2}ShoppingCart"/>
  *         &lt;element name="order-adjustment" type="{http://checkout.google.com/schema/2}OrderAdjustment"/>
  *         &lt;element name="buyer-shipping-address" type="{http://checkout.google.com/schema/2}Address"/>
- *         &lt;element name="demographic-data" type="{http://checkout.google.com/schema/2}DemographicData" minOccurs="0"/>
  *         &lt;element name="buyer-marketing-preferences" type="{http://checkout.google.com/schema/2}BuyerMarketingPreferences"/>
  *         &lt;element name="promotions" minOccurs="0">
  *           &lt;complexType>
@@ -100,8 +99,7 @@ public class OrderSummary {
     protected OrderAdjustment orderAdjustment;
     @XmlElement(name = "buyer-shipping-address", namespace = "http://checkout.google.com/schema/2", required = true)
     protected Address buyerShippingAddress;
-    @XmlElement(name = "demographic-data", namespace = "http://checkout.google.com/schema/2")
-    protected DemographicData demographicData;
+
     @XmlElement(name = "buyer-marketing-preferences", namespace = "http://checkout.google.com/schema/2", required = true)
     protected BuyerMarketingPreferences buyerMarketingPreferences;
     @XmlElement(namespace = "http://checkout.google.com/schema/2")
@@ -393,30 +391,6 @@ public class OrderSummary {
      */
     public void setBuyerShippingAddress(Address value) {
         this.buyerShippingAddress = value;
-    }
-
-    /**
-     * Gets the value of the demographicData property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DemographicData }
-     *     
-     */
-    public DemographicData getDemographicData() {
-        return demographicData;
-    }
-
-    /**
-     * Sets the value of the demographicData property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DemographicData }
-     *     
-     */
-    public void setDemographicData(DemographicData value) {
-        this.demographicData = value;
     }
 
     /**

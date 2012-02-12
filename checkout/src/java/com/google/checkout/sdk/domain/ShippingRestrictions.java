@@ -194,7 +194,6 @@ public class ShippingRestrictions {
             @XmlElement(name = "postal-area", namespace = "http://checkout.google.com/schema/2", type = PostalArea.class),
             @XmlElement(name = "us-zip-area", namespace = "http://checkout.google.com/schema/2", type = USZipArea.class),
             @XmlElement(name = "us-state-area", namespace = "http://checkout.google.com/schema/2", type = USStateArea.class),
-            @XmlElement(name = "eu-area", namespace = "http://checkout.google.com/schema/2", type = EUArea.class),
             @XmlElement(name = "us-country-area", namespace = "http://checkout.google.com/schema/2", type = USCountryArea.class),
             @XmlElement(name = "world-area", namespace = "http://checkout.google.com/schema/2", type = WorldArea.class)
         })
@@ -270,7 +269,6 @@ public class ShippingRestrictions {
     public static class ExcludedAreas {
 
         @XmlElements({
-            @XmlElement(name = "eu-area", namespace = "http://checkout.google.com/schema/2", type = EUArea.class),
             @XmlElement(name = "us-country-area", namespace = "http://checkout.google.com/schema/2", type = USCountryArea.class),
             @XmlElement(name = "us-state-area", namespace = "http://checkout.google.com/schema/2", type = USStateArea.class),
             @XmlElement(name = "world-area", namespace = "http://checkout.google.com/schema/2", type = WorldArea.class),

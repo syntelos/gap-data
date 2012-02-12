@@ -87,8 +87,7 @@ public class NewOrderNotification implements com.google.checkout.sdk.notificatio
     protected OrderAdjustment orderAdjustment;
     @XmlElement(name = "buyer-shipping-address", namespace = "http://checkout.google.com/schema/2", required = true)
     protected Address buyerShippingAddress;
-    @XmlElement(name = "demographic-data", namespace = "http://checkout.google.com/schema/2")
-    protected DemographicData demographicData;
+
     @XmlElement(name = "buyer-marketing-preferences", namespace = "http://checkout.google.com/schema/2", required = true)
     protected BuyerMarketingPreferences buyerMarketingPreferences;
     @XmlElement(namespace = "http://checkout.google.com/schema/2")
@@ -270,30 +269,6 @@ public class NewOrderNotification implements com.google.checkout.sdk.notificatio
      */
     public void setBuyerShippingAddress(Address value) {
         this.buyerShippingAddress = value;
-    }
-
-    /**
-     * Gets the value of the demographicData property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DemographicData }
-     *     
-     */
-    public DemographicData getDemographicData() {
-        return demographicData;
-    }
-
-    /**
-     * Sets the value of the demographicData property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DemographicData }
-     *     
-     */
-    public void setDemographicData(DemographicData value) {
-        this.demographicData = value;
     }
 
     /**

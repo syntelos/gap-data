@@ -90,14 +90,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GiftAidOptions }
-     * 
-     */
-    public GiftAidOptions createGiftAidOptions() {
-        return new GiftAidOptions();
-    }
-
-    /**
      * Create an instance of {@link GiftCertificateAdjustment }
      * 
      */
@@ -295,14 +287,6 @@ public class ObjectFactory {
      */
     public OrderAdjustment.Shipping createOrderAdjustmentShipping() {
         return new OrderAdjustment.Shipping();
-    }
-
-    /**
-     * Create an instance of {@link EmploymentInformation }
-     * 
-     */
-    public EmploymentInformation createEmploymentInformation() {
-        return new EmploymentInformation();
     }
 
     /**
@@ -1074,14 +1058,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link EUArea }
-     * 
-     */
-    public EUArea createEUArea() {
-        return new EUArea();
-    }
-
-    /**
      * Create an instance of {@link ChargeOrderRequest }
      * 
      */
@@ -1295,14 +1271,6 @@ public class ObjectFactory {
      */
     public MerchantCalculationResults.Results createMerchantCalculationResultsResults() {
         return new MerchantCalculationResults.Results();
-    }
-
-    /**
-     * Create an instance of {@link DemographicData }
-     * 
-     */
-    public DemographicData createDemographicData() {
-        return new DemographicData();
     }
 
     /**

@@ -234,8 +234,7 @@ public class DefaultTaxRule {
         protected PostalArea postalArea;
         @XmlElement(name = "world-area", namespace = "http://checkout.google.com/schema/2")
         protected WorldArea worldArea;
-        @XmlElement(name = "eu-area", namespace = "http://checkout.google.com/schema/2")
-        protected EUArea euArea;
+
 
         /**
          * Gets the value of the usStateArea property.
@@ -357,30 +356,6 @@ public class DefaultTaxRule {
             this.worldArea = value;
         }
 
-        /**
-         * Gets the value of the euArea property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link EUArea }
-         *     
-         */
-        public EUArea getEuArea() {
-            return euArea;
-        }
-
-        /**
-         * Sets the value of the euArea property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link EUArea }
-         *     
-         */
-        public void setEuArea(EUArea value) {
-            this.euArea = value;
-        }
-
     }
 
 
@@ -420,7 +395,7 @@ public class DefaultTaxRule {
             @XmlElement(name = "us-zip-area", namespace = "http://checkout.google.com/schema/2", type = USZipArea.class),
             @XmlElement(name = "us-country-area", namespace = "http://checkout.google.com/schema/2", type = USCountryArea.class),
             @XmlElement(name = "us-state-area", namespace = "http://checkout.google.com/schema/2", type = USStateArea.class),
-            @XmlElement(name = "eu-area", namespace = "http://checkout.google.com/schema/2", type = EUArea.class),
+
             @XmlElement(name = "postal-area", namespace = "http://checkout.google.com/schema/2", type = PostalArea.class),
             @XmlElement(name = "world-area", namespace = "http://checkout.google.com/schema/2", type = WorldArea.class)
         })
