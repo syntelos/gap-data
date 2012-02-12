@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="google-checkout-java-sdk" default="jar">
 
-  <property name="src" value="src/java"/>
+  <property name="src" value="src"/>
   <property name="lib" value="lib"/>
   <property name="bin" value="bin"/>
   <property name="dst" value="."/>
