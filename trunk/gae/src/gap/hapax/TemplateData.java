@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-08T23:15:47.890Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-12T02:50:35.879Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -593,7 +593,7 @@ public abstract class TemplateData
         }
     }
 
-    private transient final Template.Field.Statistics fieldStatistics = new Template.Field.Statistics();
+    private transient Template.Field.Statistics fieldStatistics = new Template.Field.Statistics();
 
     private transient Template inheritFrom;
 
@@ -620,6 +620,14 @@ public abstract class TemplateData
     }
 
 
+    private Template.Field.Statistics fieldStatistics(){
+        Template.Field.Statistics fieldStatistics = this.fieldStatistics;
+        if (null == fieldStatistics){
+            fieldStatistics = new Template.Field.Statistics();
+            this.fieldStatistics = fieldStatistics;
+        }
+        return fieldStatistics;
+    }
     public void destroy(){
         this.inheritFrom = null;
         this.name = null;
@@ -702,7 +710,7 @@ public abstract class TemplateData
     }
     public final boolean dropName(){
         if (null != this.name){
-            this.fieldStatistics.markDirty(Template.Field.Name);
+            this.fieldStatistics().markDirty(Template.Field.Name);
             this.name = null;
             return true;
         }
@@ -717,7 +725,7 @@ public abstract class TemplateData
     }
     public final boolean setName(String name){
         if (IsNotEqual(this.name,name)){
-            this.fieldStatistics.markDirty(Template.Field.Name);
+            this.fieldStatistics().markDirty(Template.Field.Name);
             this.name = name;
             return true;
         }
@@ -732,7 +740,7 @@ public abstract class TemplateData
     }
     public final boolean dropLastModified(){
         if (null != this.lastModified){
-            this.fieldStatistics.markDirty(Template.Field.LastModified);
+            this.fieldStatistics().markDirty(Template.Field.LastModified);
             this.lastModified = null;
             return true;
         }
@@ -756,7 +764,7 @@ public abstract class TemplateData
     }
     public final boolean setLastModified(Long lastModified, boolean withInheritance){
         if (IsNotEqual(this.lastModified,this.getLastModified(withInheritance))){
-            this.fieldStatistics.markDirty(Template.Field.LastModified);
+            this.fieldStatistics().markDirty(Template.Field.LastModified);
             this.lastModified = lastModified;
             return true;
         }
@@ -765,7 +773,7 @@ public abstract class TemplateData
     }
     public final boolean setLastModified(Long lastModified){
         if (IsNotEqual(this.lastModified,lastModified)){
-            this.fieldStatistics.markDirty(Template.Field.LastModified);
+            this.fieldStatistics().markDirty(Template.Field.LastModified);
             this.lastModified = lastModified;
             return true;
         }
@@ -780,7 +788,7 @@ public abstract class TemplateData
     }
     public final boolean dropTemplateSourceHapax(){
         if (null != this.templateSourceHapax){
-            this.fieldStatistics.markDirty(Template.Field.TemplateSourceHapax);
+            this.fieldStatistics().markDirty(Template.Field.TemplateSourceHapax);
             this.templateSourceHapax = null;
             return true;
         }
@@ -804,7 +812,7 @@ public abstract class TemplateData
     }
     public final boolean setTemplateSourceHapax(Text templateSourceHapax, boolean withInheritance){
         if (IsNotEqual(this.templateSourceHapax,this.getTemplateSourceHapax(withInheritance))){
-            this.fieldStatistics.markDirty(Template.Field.TemplateSourceHapax);
+            this.fieldStatistics().markDirty(Template.Field.TemplateSourceHapax);
             this.templateSourceHapax = templateSourceHapax;
             return true;
         }
@@ -813,7 +821,7 @@ public abstract class TemplateData
     }
     public final boolean setTemplateSourceHapax(Text templateSourceHapax){
         if (IsNotEqual(this.templateSourceHapax,templateSourceHapax)){
-            this.fieldStatistics.markDirty(Template.Field.TemplateSourceHapax);
+            this.fieldStatistics().markDirty(Template.Field.TemplateSourceHapax);
             this.templateSourceHapax = templateSourceHapax;
             return true;
         }
@@ -860,6 +868,7 @@ public abstract class TemplateData
             this.templateTargetHapax = templateTargetHapax;
             templateTargetHapax.init();
         }
+
         return templateTargetHapax;
     }
     public final boolean setTemplateTargetHapax(List.Short<TemplateNode> templateTargetHapax){
@@ -927,7 +936,7 @@ public abstract class TemplateData
     }
     public final boolean setLastModified(Number lastModified){
         if (IsNotEqual(this.lastModified,lastModified)){
-            this.fieldStatistics.markDirty(Template.Field.LastModified);
+            this.fieldStatistics().markDirty(Template.Field.LastModified);
             if (lastModified instanceof Long)
                 this.lastModified = (Long)lastModified;
             else
@@ -952,6 +961,9 @@ public abstract class TemplateData
         return Json.Wrap( templateTargetHapax);
     }
     public boolean fromJsonTemplateTargetHapax(Json json){
+        /*
+         * [TODO] json.getValue(colClas,comClas) not expressed by (e.g.) "List.Short<Component>.class"
+         */
         return false;
     }
     /*
@@ -1050,17 +1062,17 @@ public abstract class TemplateData
     }
     public final Template markClean(){
 
-        this.fieldStatistics.markClean();
+        this.fieldStatistics().markClean();
         return (Template)this;
     }
     public final Template markDirty(){
 
-        this.fieldStatistics.markDirty();
+        this.fieldStatistics().markDirty();
         return (Template)this;
     }
     public final Template markDirty(gap.data.Field field){
 
-        this.fieldStatistics.markDirty(field);
+        this.fieldStatistics().markDirty(field);
         return (Template)this;
     }
     public final Template markDirty(java.io.Serializable instance){
@@ -1080,24 +1092,26 @@ public abstract class TemplateData
             gap.data.Field field = Template.Field.TemplateTargetHapax;
             return this.markDirty(field);
         }
+        else if (null != instance)
+            throw new IllegalArgumentException(instance.getClass().getName());
         else
-            return (Template)this;
+            throw new IllegalArgumentException();
     }
     public final Iterable<gap.data.Field> listClean(){
 
-        return this.fieldStatistics.listClean();
+        return this.fieldStatistics().listClean();
     }
     public final Iterable<gap.data.Field> listDirty(){
 
-        return this.fieldStatistics.listDirty();
+        return this.fieldStatistics().listDirty();
     }
     public final boolean isClean(){
 
-        return this.fieldStatistics.isClean();
+        return this.fieldStatistics().isClean();
     }
     public final boolean isDirty(){
 
-        return this.fieldStatistics.isDirty();
+        return this.fieldStatistics().isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return Template.ClassDescriptorFor();

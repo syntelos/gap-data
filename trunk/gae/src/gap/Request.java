@@ -100,7 +100,7 @@ public class Request
     }
     public static enum Field {
         body, ns, hostname, method, protocol, path, accept, fileManager, parameters, userReference, 
-            logon, logonUrl, logonText, contentType, isAdmin, isMember, isNotAdmin, isNotMember, version;
+            logon, logonUrl, logonText, contentType, isAdmin, isMember, isNotAdmin, isNotMember, version, viewer;
 
         public static Field For(String name){
             try {
@@ -509,6 +509,15 @@ public class Request
                     return gap.Version.HasVariable(new TemplateName(name));
                 else
                     return true;
+            case viewer:{
+                Person viewer = this.getViewer();
+                if (null == viewer)
+                    return false;
+                else if (name.has(1))
+                    return viewer.hasVariable(new TemplateName(name));
+                else
+                    return true;
+            }
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -605,7 +614,15 @@ public class Request
                     return gap.Version.GetVariable(new TemplateName(name));
                 else
                     return gap.Version.Short;
-
+            case viewer:{
+                Person viewer = this.getViewer();
+                if (null == viewer)
+                    return null;
+                else if (name.has(1))
+                    return viewer.getVariable(new TemplateName(name));
+                else 
+                    return viewer.getLogonId();
+            }
             default:
                 throw new IllegalStateException(field.name());
             }
