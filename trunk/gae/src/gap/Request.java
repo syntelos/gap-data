@@ -100,7 +100,7 @@ public class Request
     }
     public static enum Field {
         body, ns, hostname, method, protocol, path, accept, fileManager, parameters, userReference, 
-            logon, logonUrl, logonText, contentType, isAdmin, isMember, isNotAdmin, isNotMember, version, viewer;
+            logon, logonUrl, logonText, contentType, isAdmin, isMember, isOAuth, isNotAdmin, isNotMember, isNotOAuth, version, viewer;
 
         public static Field For(String name){
             try {
@@ -125,7 +125,7 @@ public class Request
     public final Logon logon;
     public final String logonUrl, logonText;
     public final ContentType contentType;
-    public final boolean isAdmin, isMember;
+    public final boolean isAdmin, isMember, isOAuth;
     private String bodyString;
     private Json bodyJson;
 
@@ -146,11 +146,10 @@ public class Request
         this.userReference = uri;
         this.logon = logon;
         this.contentType = ContentType.For(req);
+
         this.isAdmin = logon.serviceAdmin;
-
-        String logonId = logon.serviceLogon;
-
-        this.isMember = (null != logonId);
+        this.isMember = logon.serviceMember;
+        this.isOAuth = logon.serviceOAuth;
 
         if (logon.isLoggedIn()){
             this.logonUrl = logon.getLogoutURL();
@@ -504,6 +503,10 @@ public class Request
                 return (name.is(0) && this.isAdmin);
             case isNotMember:
                 return (name.is(0) && this.isMember);
+            case isOAuth:
+                return (name.is(0) && this.isOAuth);
+            case isNotOAuth:
+                return (name.is(0) && this.isOAuth);
             case version:
                 if (name.has(1))
                     return gap.Version.HasVariable(new TemplateName(name));
@@ -608,6 +611,17 @@ public class Request
                     return null;
                 else
                     return "NotMember";
+
+            case isOAuth:
+                if (name.is(0) && this.isOAuth)
+                    return "OAuth";
+                else
+                    return null;
+            case isNotOAuth:
+                if (name.is(0) && this.isOAuth)
+                    return null;
+                else
+                    return "NotOAuth";
 
             case version:
                 if (name.has(1))
