@@ -941,5 +941,49 @@ public class Servlet
     public final static java.util.Date GetScheduledXmpp(){
         return GetScheduled(Capability.XMPP);
     }
-
+    /*
+     * Convenient utilities as for data beans (from BigTable)
+     */
+    public final static boolean IsEqual(Key a, Key b){
+        if (null == a)
+            return (null == b);
+        else if (null == b)
+            return false;
+        else if (a.getKind().equals(b.getKind())){
+            String na = a.getName();
+            String nb = b.getName();
+            if (null != na && null != nb && na.equals(nb)){
+                return IsEqual(a.getParent(),b.getParent());
+            }
+        }
+        return false;
+    }
+    public final static boolean IsEqual(Object a, Object b){
+        if (a == b)
+            return true;
+        else if (null == a || null == b)
+            return false;
+        else
+            return (a.equals(b));
+    }
+    public final static boolean IsNotEqual(Object a, Object b){
+        if (a == b)
+            return false;
+        else if (null == a || null == b)
+            return true;
+        else
+            return (!a.equals(b));
+    }
+    public final static boolean IsTrue(Boolean bool){
+        if (null == bool)
+            return false;
+        else
+            return bool;
+    }
+    public final static boolean IsNotTrue(Boolean bool){
+        if (null == bool)
+            return true;
+        else
+            return (!bool);
+    }
 }
