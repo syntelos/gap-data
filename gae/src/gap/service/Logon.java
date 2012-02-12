@@ -28,6 +28,11 @@ import gap.hapax.TemplateName;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 
+import com.google.appengine.api.oauth.OAuthRequestException;
+import com.google.appengine.api.oauth.OAuthService;
+import com.google.appengine.api.oauth.OAuthServiceFactory;
+import com.google.appengine.api.oauth.OAuthServiceFailureException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -99,13 +104,15 @@ public final class Logon
         }
     }
 
+    public final static OAuthService OAuth = OAuthServiceFactory.getOAuthService();
+
 
     public final String ns;
     public final Principal principal;
     public final UserService service;
     public final User serviceUser;
-    public final boolean serviceAdmin;
-    public final String serviceLogon, requestUrl;
+    public final boolean serviceAdmin, serviceMember, serviceOAuth;
+    public final String serviceLogon, requestUrl, oauthConsumer;
 
     private Person person;
     private String loginUrl, logoutUrl;
@@ -117,21 +124,50 @@ public final class Logon
         this.principal = principal;
         this.requestUrl = uri;
         this.service = service;
+        /*
+         * Sublimate authentication for application programming
+         */
+        {
+            String oauthConsumer;
+            try {
+                oauthConsumer = OAuth.getOAuthConsumerKey();
+            }
+            catch (OAuthRequestException exc){
+                oauthConsumer = null;
+            }
+            catch (OAuthServiceFailureException exc){
+                oauthConsumer = null;
+            }
+            this.oauthConsumer = oauthConsumer;
+
+            this.serviceOAuth = (null != oauthConsumer);
+
+            if (this.serviceOAuth){
+
+                Logon.Log.log(Level.INFO,String.format("OAuth consumer '%s'",oauthConsumer));
+            }
+        }
+        /*
+         */
         if (null == principal){
             this.loginUrl = service.createLoginURL(uri);
             this.serviceUser = null;
             this.serviceAdmin = false;
             this.serviceLogon = null;
+            this.serviceMember = this.serviceOAuth;
         }
         else {
             this.logoutUrl = service.createLogoutURL(uri);
             this.serviceAdmin = service.isUserAdmin();
+            this.serviceMember = true;
 
             User guser = service.getCurrentUser();
             this.serviceUser = guser;
 
             String email = guser.getEmail();
             this.serviceLogon = email;
+
+            Logon.Log.log(Level.INFO,String.format("Logon Principal '%s'",email));
 
             try {
                 /*
