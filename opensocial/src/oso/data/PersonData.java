@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-08T23:15:35.964Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-12T02:50:26.279Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -557,7 +557,7 @@ public abstract class PersonData
         }
     }
 
-    private transient final Person.Field.Statistics fieldStatistics = new Person.Field.Statistics();
+    private transient Person.Field.Statistics fieldStatistics = new Person.Field.Statistics();
 
     private transient Person inheritFrom;
 
@@ -581,6 +581,14 @@ public abstract class PersonData
     }
 
 
+    private Person.Field.Statistics fieldStatistics(){
+        Person.Field.Statistics fieldStatistics = this.fieldStatistics;
+        if (null == fieldStatistics){
+            fieldStatistics = new Person.Field.Statistics();
+            this.fieldStatistics = fieldStatistics;
+        }
+        return fieldStatistics;
+    }
     public void destroy(){
         this.inheritFrom = null;
         this.logonId = null;
@@ -656,7 +664,7 @@ public abstract class PersonData
     }
     public final boolean dropLogonId(){
         if (null != this.logonId){
-            this.fieldStatistics.markDirty(Person.Field.LogonId);
+            this.fieldStatistics().markDirty(Person.Field.LogonId);
             this.logonId = null;
             return true;
         }
@@ -671,7 +679,7 @@ public abstract class PersonData
     }
     public final boolean setLogonId(String logonId){
         if (IsNotEqual(this.logonId,logonId)){
-            this.fieldStatistics.markDirty(Person.Field.LogonId);
+            this.fieldStatistics().markDirty(Person.Field.LogonId);
             this.logonId = logonId;
             return true;
         }
@@ -740,17 +748,17 @@ public abstract class PersonData
     }
     public final Person markClean(){
 
-        this.fieldStatistics.markClean();
+        this.fieldStatistics().markClean();
         return (Person)this;
     }
     public final Person markDirty(){
 
-        this.fieldStatistics.markDirty();
+        this.fieldStatistics().markDirty();
         return (Person)this;
     }
     public final Person markDirty(gap.data.Field field){
 
-        this.fieldStatistics.markDirty(field);
+        this.fieldStatistics().markDirty(field);
         return (Person)this;
     }
     public final Person markDirty(java.io.Serializable instance){
@@ -758,24 +766,26 @@ public abstract class PersonData
             gap.data.Field field = Person.Field.LogonId;
             return this.markDirty(field);
         }
+        else if (null != instance)
+            throw new IllegalArgumentException(instance.getClass().getName());
         else
-            return (Person)this;
+            throw new IllegalArgumentException();
     }
     public final Iterable<gap.data.Field> listClean(){
 
-        return this.fieldStatistics.listClean();
+        return this.fieldStatistics().listClean();
     }
     public final Iterable<gap.data.Field> listDirty(){
 
-        return this.fieldStatistics.listDirty();
+        return this.fieldStatistics().listDirty();
     }
     public final boolean isClean(){
 
-        return this.fieldStatistics.isClean();
+        return this.fieldStatistics().isClean();
     }
     public final boolean isDirty(){
 
-        return this.fieldStatistics.isDirty();
+        return this.fieldStatistics().isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return Person.ClassDescriptorFor();
