@@ -119,7 +119,7 @@ public class NotificationHandler extends BaseNotificationHandler {
    *    retrieved.
    */
   public Notification getNotificationFromRequest(HttpServletRequest request) throws CheckoutException {
-    if (Utils.isSerialNumberRequest(request)) {
+    if (Utils.IsSerialNumberRequest(request)) {
       String serialNumber = request.getParameter(SERIAL_NUMBER_PARAMETER);
       if (serialNumber == null) {
         throw new CheckoutException("Couldn't find serial number in parameters");
@@ -131,7 +131,7 @@ public class NotificationHandler extends BaseNotificationHandler {
         throw new CheckoutException("Invalid auth found");
       }
       try {
-        return (Notification)Utils.fromXML(request.getInputStream()).getValue();
+        return (Notification)Utils.FromXML(request.getInputStream()).getValue();
       } catch (Exception e) {
         throw new CheckoutException("Could not retrieve notification", e);
       }

@@ -88,7 +88,7 @@ class BaseNotificationHandler {
     NotificationAcknowledgment ack = new NotificationAcknowledgment();
     ack.setSerialNumber(serialNumber);
 
-    Utils.toXML(ack.toJAXB(), response.getOutputStream());
+    Utils.ToXML(ack.toJAXB(), response.getOutputStream());
 
     logger.log(Level.INFO,
         "Sent response ack:\n" + Utils.SEND_AND_RECEIVE_DEBUGGING_STRING,

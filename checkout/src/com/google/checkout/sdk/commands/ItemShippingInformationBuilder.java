@@ -44,7 +44,7 @@ public class ItemShippingInformationBuilder {
   private final List<ItemShippingInformation> shippingDatas = new ArrayList<ItemShippingInformation>();
 
   public ItemShippingInformationBuilder addShipping(String merchantItemId, TrackingDataBuilder trackingDatas) {
-    return addShipping(Utils.makeItemId(merchantItemId), trackingDatas);
+    return addShipping(Utils.MakeItemId(merchantItemId), trackingDatas);
   }
 
   public ItemShippingInformationBuilder addShipping(ItemId id, TrackingDataBuilder trackingDatas) {

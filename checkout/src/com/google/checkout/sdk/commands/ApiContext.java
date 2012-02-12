@@ -196,7 +196,7 @@ public class ApiContext {
   public Money makeMoney(BigDecimal value) {
     Money money = new Money();
     money.setCurrency(getMerchantCurrencyCode());
-    money.setValue(Utils.normalize(value));
+    money.setValue(Utils.Normalize(value));
 
     return money;
   }
@@ -225,7 +225,7 @@ public class ApiContext {
   public Object postCommand(CommandType command, JAXBElement<?> jaxbDomainObject)
       throws CheckoutException {
     HttpURLConnection connection = makeConnection(environment.getUrl(command, merchantId));
-    return Utils.postJAXB(connection, jaxbDomainObject);
+    return Utils.PostJAXB(connection, jaxbDomainObject);
   }
 
   /**
@@ -237,7 +237,7 @@ public class ApiContext {
    */
   public String postCommand(CommandType command, String commandXml) throws CheckoutException {
     HttpURLConnection connection = makeConnection(environment.getUrl(command, merchantId));
-    return Utils.postXML(connection, commandXml);
+    return Utils.PostXML(connection, commandXml);
   }
 
   /**

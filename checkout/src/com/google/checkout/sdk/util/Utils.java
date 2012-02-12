@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (C) 2007 Google Inc.
+ * Copyright (C) 2012 John Pritchard, Gap Data
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +19,7 @@ package com.google.checkout.sdk.util;
 
 import com.google.checkout.sdk.commands.CheckoutException;
 import com.google.checkout.sdk.domain.ItemId;
-import com.google.checkout.sdk.domain.ObjectFactory;
+import com.google.checkout.sdk.util.HttpUrlException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,12 +69,12 @@ public class Utils
     public static final String XML_MIME_TYPE = "application/xml";
 
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat(
+    private static final SimpleDateFormat SDF = new SimpleDateFormat(
                                                                      "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-    private static final JAXBContext context = makeJaxbContext();
+    private static final JAXBContext Context = Utils.MakeJaxbContext();
 
-    private static JAXBContext makeJaxbContext() {
+    private static JAXBContext MakeJaxbContext() {
         try {
             return JAXBContext.newInstance("com.google.checkout.sdk.domain");
         } catch (JAXBException e) {
@@ -81,27 +82,24 @@ public class Utils
         }
     }
 
-    public static ObjectFactory objectFactory() {
-        return new ObjectFactory();
-    }
 
     @SuppressWarnings("unchecked")
-        public static <T> JAXBElement<T> fromXML(InputStream is) throws JAXBException {
-        return (JAXBElement<T>)context.createUnmarshaller().unmarshal(is);
+    public static <T> JAXBElement<T> FromXML(InputStream is) throws JAXBException {
+        return (JAXBElement<T>)Context.createUnmarshaller().unmarshal(is);
     }
 
-    public static void toXML(JAXBElement<?> jaxbElement, OutputStream os) {
+    public static void ToXML(JAXBElement<?> jaxbElement, OutputStream os) {
         JAXB.marshal(jaxbElement, os);
     }
 
     @SuppressWarnings("unchecked")
-        public static <T> JAXBElement<T> fromXML(String xmlString)
+    public static <T> JAXBElement<T> FromXML(String xmlString)
         throws JAXBException
     {
-        return (JAXBElement<T>)context.createUnmarshaller().unmarshal(new StringReader(xmlString));
+        return (JAXBElement<T>)Context.createUnmarshaller().unmarshal(new StringReader(xmlString));
     }
 
-    public static String toXML(JAXBElement<?> jaxbElement) {
+    public static String ToXML(JAXBElement<?> jaxbElement) {
         StringWriter stringWriter = new StringWriter();
         JAXB.marshal(jaxbElement, stringWriter);
         return stringWriter.toString();
@@ -115,7 +113,9 @@ public class Utils
      * @return The string as returned by the server
      * @throws HttpUrlException If any operation fails
      */
-    public static String postXML(HttpURLConnection socket, String xmlString) throws HttpUrlException {
+    public static String PostXML(HttpURLConnection socket, String xmlString)
+        throws HttpUrlException
+    {
         try {
             Exception underlying = null;
             try {
@@ -123,7 +123,7 @@ public class Utils
                 writer.write(xmlString);
                 writer.close();
                 if (socket.getResponseCode() == 200) {
-                    String slurp = slurp(socket.getInputStream());
+                    String slurp = Slurp(socket.getInputStream());
 
                     Log.log(Level.INFO, "Received from:\t{0}\nContent:\t{1}",
                             new Object[]{socket.getURL(), slurp});
@@ -134,7 +134,7 @@ public class Utils
             catch (IOException e) {
                 underlying = e;
             }
-            throw makeUrlException(socket, xmlString, underlying);
+            throw MakeUrlException(socket, xmlString, underlying);
         }
         finally {
             socket.disconnect();
@@ -142,15 +142,15 @@ public class Utils
     }
 
     @SuppressWarnings("unchecked")
-        public static <V> V postJAXB( HttpURLConnection socket, JAXBElement<?> jaxbElement)
+    public static <V> V PostJAXB( HttpURLConnection socket, JAXBElement<?> jaxbElement)
         throws CheckoutException
     {
         try {
             Exception underlying = null;
             try {
-                toXML(jaxbElement, socket.getOutputStream());
+                ToXML(jaxbElement, socket.getOutputStream());
                 if (socket.getResponseCode() == 200) {
-                    JAXBElement<V> response = fromXML(socket.getInputStream());
+                    JAXBElement<V> response = FromXML(socket.getInputStream());
 
                     Log.log(Level.INFO, SEND_AND_RECEIVE_DEBUGGING_STRING,
                             new Object[]{200, socket.getURL(), jaxbElement.getValue(), response.getValue()});
@@ -164,14 +164,14 @@ public class Utils
             catch (JAXBException e) {
                 underlying = e;
             }
-            throw makeUrlException(socket, jaxbElement.getValue(), underlying);
+            throw MakeUrlException(socket, jaxbElement.getValue(), underlying);
         }
         finally {
             socket.disconnect();
         }
     }
 
-    public static String slurp(InputStream from) throws IOException {
+    public static String Slurp(InputStream from) throws IOException {
         if (from == null)
             return "";
         else {
@@ -191,14 +191,14 @@ public class Utils
         }
     }
 
-    public static String getDateString(XMLGregorianCalendar date) {
+    public static String GetDateString(XMLGregorianCalendar date) {
         if (date == null) {
             return "null";
         }
         else {
             TimeZone tz = TimeZone.getTimeZone("UTC");
-            sdf.setTimeZone(tz);
-            String ret = sdf.format(date);
+            SDF.setTimeZone(tz);
+            String ret = SDF.format(date);
 
             return ret.substring(0, ret.length() - 5) + "Z";
         }
@@ -213,7 +213,7 @@ public class Utils
      * one should be fetched.
      * @return True if a notification should be fetched rather than parsed.
      */
-    public static boolean isSerialNumberRequest(HttpServletRequest request) {
+    public static boolean IsSerialNumberRequest(HttpServletRequest request) {
         String mimeType = request.getHeader(CONTENT_TYPE);
         if (mimeType == null || mimeType.isEmpty()) {
             return true;
@@ -222,13 +222,13 @@ public class Utils
             return !mimeType.toLowerCase().contains(XML_MIME_TYPE);
     }
 
-    public static ItemId makeItemId(String itemId) {
+    public static ItemId MakeItemId(String itemId) {
         ItemId id = new ItemId();
         id.setMerchantItemId(itemId);
         return id;
     }
 
-    public static BigDecimal normalize(BigDecimal value) {
+    public static BigDecimal Normalize(BigDecimal value) {
         value = value.stripTrailingZeros();
         if (value.scale() < 0) {
             value = value.setScale(0);
@@ -236,14 +236,15 @@ public class Utils
         return value;
     }
 
-    private static HttpUrlException makeUrlException(HttpURLConnection hurlc,
+    private static HttpUrlException MakeUrlException(HttpURLConnection hurlc,
                                                      Object triedToSend,
-                                                     Throwable possibleUnderlying) {
+                                                     Throwable possibleUnderlying)
+    {
         URL url = hurlc.getURL();
         int responseCode;
         String slurp;
         try {
-            slurp = Utils.slurp(hurlc.getErrorStream());
+            slurp = Utils.Slurp(hurlc.getErrorStream());
         }
         catch (IOException e) {
             if (possibleUnderlying != null) {

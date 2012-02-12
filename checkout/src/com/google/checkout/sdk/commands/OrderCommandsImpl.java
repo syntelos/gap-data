@@ -109,7 +109,7 @@ class OrderCommandsImpl implements OrderCommands {
   public ItemCommands itemCommands(List<String> itemIds) throws CheckoutException {
     List<ItemId> copyIds = new ArrayList<ItemId>();
     for (String s : itemIds) {
-      copyIds.add(Utils.makeItemId(s));
+      copyIds.add(Utils.MakeItemId(s));
     }
     return new ItemCommandsImpl(this, copyIds);
   }
@@ -118,7 +118,7 @@ class OrderCommandsImpl implements OrderCommands {
   public ItemCommands itemCommands(String... itemIds) throws CheckoutException {
     List<ItemId> copyIds = new ArrayList<ItemId>();
     for (String s : itemIds) {
-      copyIds.add(Utils.makeItemId(s));
+      copyIds.add(Utils.MakeItemId(s));
     }
     return new ItemCommandsImpl(this, copyIds);
   }
@@ -127,7 +127,7 @@ class OrderCommandsImpl implements OrderCommands {
   public ItemCommands itemCommands(ItemId... itemIds) throws CheckoutException {
     List<ItemId> copyIds = new ArrayList<ItemId>();
     for (ItemId s : itemIds) {
-      copyIds.add(Utils.makeItemId(s.getMerchantItemId()));
+      copyIds.add(Utils.MakeItemId(s.getMerchantItemId()));
     }
     return new ItemCommandsImpl(this, copyIds);
   }
