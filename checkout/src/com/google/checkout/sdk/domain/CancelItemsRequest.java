@@ -254,11 +254,14 @@ public class CancelItemsRequest {
 
 
     public javax.xml.bind.JAXBElement<CancelItemsRequest> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createCancelItems(this);
+      return (new ObjectFactory()).createCancelItems(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

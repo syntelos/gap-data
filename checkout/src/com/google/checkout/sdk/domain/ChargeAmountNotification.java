@@ -265,11 +265,14 @@ public class ChargeAmountNotification implements com.google.checkout.sdk.notific
 
 
     public javax.xml.bind.JAXBElement<ChargeAmountNotification> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createChargeAmountNotification(this);
+        return (new ObjectFactory()).createChargeAmountNotification(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

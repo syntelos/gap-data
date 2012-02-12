@@ -128,11 +128,14 @@ public class DeliverOrderRequest {
 
 
     public javax.xml.bind.JAXBElement<DeliverOrderRequest> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createDeliverOrder(this);
+      return (new ObjectFactory()).createDeliverOrder(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

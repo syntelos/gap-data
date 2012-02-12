@@ -184,11 +184,14 @@ public class RiskInformationNotification implements com.google.checkout.sdk.noti
 
 
     public javax.xml.bind.JAXBElement<RiskInformationNotification> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createRiskInformationNotification(this);
+        return (new ObjectFactory()).createRiskInformationNotification(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

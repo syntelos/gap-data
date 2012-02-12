@@ -128,11 +128,14 @@ public class SendBuyerMessageRequest {
 
 
     public javax.xml.bind.JAXBElement<SendBuyerMessageRequest> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createSendBuyerMessage(this);
+      return (new ObjectFactory()).createSendBuyerMessage(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

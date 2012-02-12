@@ -69,11 +69,14 @@ public class UnarchiveOrderRequest {
 
 
     public javax.xml.bind.JAXBElement<UnarchiveOrderRequest> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createUnarchiveOrder(this);
+      return (new ObjectFactory()).createUnarchiveOrder(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

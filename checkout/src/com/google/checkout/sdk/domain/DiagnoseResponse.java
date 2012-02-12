@@ -195,11 +195,14 @@ public class DiagnoseResponse {
 
 
     public javax.xml.bind.JAXBElement<DiagnoseResponse> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createDiagnosis(this);
+      return (new ObjectFactory()).createDiagnosis(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

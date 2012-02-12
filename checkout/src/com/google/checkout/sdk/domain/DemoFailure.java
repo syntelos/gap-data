@@ -64,11 +64,14 @@ public class DemoFailure {
 
 
     public javax.xml.bind.JAXBElement<DemoFailure> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createDemoFailure(this);
+      return (new ObjectFactory()).createDemoFailure(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

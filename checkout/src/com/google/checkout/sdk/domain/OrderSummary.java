@@ -591,11 +591,14 @@ public class OrderSummary {
 
 
     public javax.xml.bind.JAXBElement<OrderSummary> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createOrderSummary(this);
+        return (new ObjectFactory()).createOrderSummary(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

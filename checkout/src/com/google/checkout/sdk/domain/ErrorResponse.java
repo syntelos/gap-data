@@ -195,11 +195,14 @@ public class ErrorResponse {
 
 
     public javax.xml.bind.JAXBElement<ErrorResponse> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createError(this);
+      return (new ObjectFactory()).createError(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

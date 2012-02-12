@@ -140,11 +140,14 @@ public class MerchantCalculationResults {
 
 
     public javax.xml.bind.JAXBElement<MerchantCalculationResults> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createMerchantCalculationResults(this);
+      return (new ObjectFactory()).createMerchantCalculationResults(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

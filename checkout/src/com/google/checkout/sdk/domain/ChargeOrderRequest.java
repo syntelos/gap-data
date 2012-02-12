@@ -101,11 +101,14 @@ public class ChargeOrderRequest {
 
 
     public javax.xml.bind.JAXBElement<ChargeOrderRequest> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createChargeOrder(this);
+      return (new ObjectFactory()).createChargeOrder(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }

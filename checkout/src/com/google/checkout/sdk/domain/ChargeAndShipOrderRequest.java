@@ -324,11 +324,14 @@ public class ChargeAndShipOrderRequest {
 
 
     public javax.xml.bind.JAXBElement<ChargeAndShipOrderRequest> toJAXB() {
-      return com.google.checkout.sdk.util.Utils.objectFactory().createChargeAndShipOrder(this);
+      return (new ObjectFactory()).createChargeAndShipOrder(this);
     }
 
     @Override
     public String toString() {
-      return com.google.checkout.sdk.util.Utils.toXML(toJAXB());
+
+       java.io.StringWriter string = new java.io.StringWriter();
+       javax.xml.bind.JAXB.marshal(toJAXB(),string);
+       return string.toString();
     }
 }
