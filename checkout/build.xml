@@ -1,50 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="google-checkout-java-sdk" default="jar">
-
-  <property name="src" value="src"/>
-  <property name="lib" value="lib"/>
-  <property name="bin" value="bin"/>
-  <property name="dst" value="."/>
-
+<project name="gap-data-checkout" default="update">
+  <tstamp/>
   <property name="compiler.source" value="1.6"/>
   <property name="compiler.target" value="1.6"/>
+  <property name="compiler.optimize" value="false"/>
   <property name="compiler.debug" value="true"/>
-  <property name="compiler.encoding" value="utf-8"/>
+  <property name="compiler.deprecation" value="false"/>
 
-  <property name="this.version" value="2.5.1"/>
-  <property name="target.jar" value="${ant.project.name}-${this.version}.jar"/>
+  <property name="src" value="src"/>
+  <property name="ver.src" value="ver/src"/>
+  <property name="bin" value="bin"/>
+  <property name="lib" value="lib"/>
+  <property name="odl" value="odl"/>
 
+  <property file="../trunk/update.properties"/>
+
+  <property file="${user.home}/update.properties"/>
+
+  <import file="ant/build.in.java.xml"/>
+  <import file="ant/build.in.odl.xml"/>
+  <import file="ant/build.in.update.xml"/>
+  <import file="ant/build.in.version.xml"/>
 
 
   <path id="lib.path">
+    <pathelement path="${bin}" />
     <fileset dir="${lib}">
       <include name="**/*.jar" />
     </fileset>
   </path>
 
-  <target name="jar" depends="compile" description="Package bin to target jar, clean bin.">
+  <path id="odl.path">
+    <fileset dir="ant">
+      <include name="**/gap-data-odlc-*.jar" />
+    </fileset>
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
 
-    <delete file="${target.jar}"/>
 
-    <jar jarfile="${target.jar}" basedir="${bin}" />
+  <target name="clean" description="Delete all products: 'bin', 'jar', etc..">
 
-    <delete dir="${bin}"/>
+    <clean bin="${bin}" this="."/>
   </target>
 
-  <target name="compile" description="Compile src to bin">
-    <mkdir dir="${bin}"/>
+  <target name="cleanb" description="Delete classes, then compile, then package.">
 
-    <javac srcdir="${src}" destdir="${bin}" debug="${compiler.debug}" encoding="${compiler.encoding}"
-           classpathref="lib.path" source="${compiler.source}" target="${compiler.target}">
-    </javac>
+    <flush dir="${bin}" type="class"/>
+
+    <antcall target="update"/>
   </target>
 
-  <target name="clean" description="Delete products">
-    <delete dir="${bin}"/>
+  <target name="odl" description="Generate 'src/pkg/*.java' files from 'odl/pkg/*.odl' files.  Requires prequisite plain 'ant' run.">
+
+    <odl-write classpathref="odl.path"/>
+
   </target>
 
-  <target name="cleanb" depends="clean" description="Clean build">
-    <antcall target="loader"/>
+  <target name="update" if="gap.data.checkout.update" depends="local.update" description="Copy jar product to targets defined in '{user.home}/update.properties' name 'gap.data.checkout.update'.">
+
+    <do-update src="${target.jar}" tgt="${gap.data.checkout.update}" />
+  </target>
+
+  <target name="local.update" if="local.gap.data.checkout.update" depends="jar">
+
+    <do-update src="${target.jar}" tgt="${local.gap.data.checkout.update}" />
+  </target>
+
+  <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">
+    <archive.cleanly/>
+
+    <archive target="${target.jar}" bin="${bin}">
+    </archive>
+
+    <flush dir="${bin}" type="class"/>
+  </target>
+
+  <target name="compile" depends="version" description="Compile code from 'src' to bin.">
+
+    <compile src="${src}" ver="${ver.src}" bin="${bin}" classpath.id="lib.path"/>
+
+    <mkdir dir="${bin}/META-INF"/>
+
+    <copy todir="${bin}/META-INF">
+      <fileset dir="${src}/META-INF" />
+    </copy>
+
+  </target>
+
+  <target name="version" description="Report current project version.">
+    <version/>
+    <property name="target.jar" value="${ant.project.name}-${this.version}.jar"/>
+  </target>
+
+  <target name="build" description="Increment project version build number.">
+    <version-build/>
+    <version/>
+  </target>
+
+  <target name="major" description="Increment project version major number.">
+    <version-major/>
+    <version/>
+  </target>
+
+  <target name="minor" description="Increment project version minor number.">
+    <version-minor/>
+    <version/>
+  </target>
+
+  <target name="test" description="Run defined unit tests">
   </target>
 
 </project>

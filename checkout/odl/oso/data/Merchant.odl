@@ -1,0 +1,14 @@
+//                       -*-Java-*-
+package oso.data;
+path /merchants;
+
+/**
+ * The essential merchant data structure separates credentials from code.
+ */
+class Merchant version 1 {
+    *unique String identifier;
+    String merchantId;
+    String merchantKey;
+    String currency;
+    Boolean test;
+}
