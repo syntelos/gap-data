@@ -27,6 +27,7 @@ import json.Json;
 
 import com.google.checkout.sdk.commands.CartPoster;
 import com.google.checkout.sdk.commands.CheckoutException;
+import com.google.checkout.sdk.commands.Environment;
 import com.google.checkout.sdk.commands.EnvironmentInterface;
 import com.google.checkout.sdk.commands.EnvironmentInterface.CommandType;
 import com.google.checkout.sdk.commands.OrderCommands;
@@ -81,7 +82,7 @@ public final class Merchant
 
                     merchant = new Merchant(gap.Strings.RandomIdentifier());
                     merchant.setCurrencyCode(Merchant.DefaultCurrencyCode);
-                    merchant.setTest(Boolean.TRUE);
+                    merchant.setTest(Test.TEST);
                     merchant.save();
                 }
                 return merchant;
@@ -133,12 +134,42 @@ public final class Merchant
     public void setEnvironment(EnvironmentInterface environment){
         this.environment = environment;
     }
+    public Merchant setEnvironment(){
+        Test test = this.getTest();
+        if (null == test)
+            throw new IllegalStateException();
+        else {
+            switch(test){
+            case TEST:
+                this.environment = Environment.SANDBOX;
+                return this;
+            case LIVE:
+                this.environment = Environment.PRODUCTION;
+                return this;
+            case DIAG:
+                this.environment = Environment.DIAGNOSE;
+                return this;
+            default:
+                throw new IllegalStateException(test.name());
+            }
+        }
+    }
     public boolean isTest(){
-        Boolean test = this.getTest();
-        if (null == test || test)
+        Test test = this.getTest();
+        if (null == test)
             return true;
-        else
-            return false;
+        else {
+            switch(test){
+            case TEST:
+                return true;
+            case LIVE:
+                return false;
+            case DIAG:
+                return true;
+            default:
+                throw new IllegalStateException(test.name());
+            }
+        }
     }
 
     /*

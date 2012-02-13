@@ -1,6 +1,8 @@
 /*******************************************************************************
  * Copyright (C) 2012 John Pritchard, Gap Data
  *
+ * Portions Copyright (C) 2009 Google Inc.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -14,40 +16,13 @@
  * the License.
  ******************************************************************************/
 
-package gap.checkout;
+package oso.data;
 
-import gap.Request;
-import gap.Response;
-
-import oso.data.Merchant;
 
 /**
- * Checkout servlet defined for an application having one merchant.
- * 
+ * @see Merchant
  */
-public abstract class Servlet
-    extends gap.service.Servlet
-{
+public enum Test {
 
-
-    public Servlet(){
-        super();
-    }
-
-
-    /**
-     * This method is responsible for calling set environment on the
-     * merchant instance object before returning it.
-     * 
-     * This method has been defined, here, for an application having
-     * one merchant.
-     * 
-     * @return Merchant instance with checkout environment
-     */
-    public Merchant getMerchant(Request q, Response p){
-        /*
-         * For applications having one merchant, exclusively.
-         */
-        return Merchant.Instance().setEnvironment();
-    }
+    TEST, LIVE, DIAG;
 }

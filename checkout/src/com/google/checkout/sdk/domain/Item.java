@@ -62,10 +62,6 @@ public class Item {
 
     @XmlElement(name = "item-weight", namespace = "http://checkout.google.com/schema/2")
     protected ItemWeight itemWeight;
-    @XmlElement(name = "digital-content", namespace = "http://checkout.google.com/schema/2")
-    protected DigitalContent digitalContent;
-    @XmlElement(name = "tax-table-selector", namespace = "http://checkout.google.com/schema/2")
-    protected String taxTableSelector;
     @XmlElement(name = "item-name", namespace = "http://checkout.google.com/schema/2", required = true)
     protected String itemName;
     @XmlElement(name = "item-description", namespace = "http://checkout.google.com/schema/2", required = true)
@@ -74,6 +70,10 @@ public class Item {
     protected Money unitPrice;
     @XmlElement(namespace = "http://checkout.google.com/schema/2")
     protected int quantity;
+    @XmlElement(name = "digital-content", namespace = "http://checkout.google.com/schema/2")
+    protected DigitalContent digitalContent;
+    @XmlElement(name = "tax-table-selector", namespace = "http://checkout.google.com/schema/2")
+    protected String taxTableSelector;
     @XmlElement(name = "merchant-item-id", namespace = "http://checkout.google.com/schema/2")
     protected String merchantItemId;
     @XmlElement(name = "merchant-private-item-data", namespace = "http://checkout.google.com/schema/2")

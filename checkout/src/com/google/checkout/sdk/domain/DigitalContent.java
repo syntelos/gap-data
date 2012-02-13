@@ -53,19 +53,19 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 })
 public class DigitalContent {
 
+    @XmlElement(name = "display-disposition", namespace = "http://checkout.google.com/schema/2")
+    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+    @XmlSchemaType(name = "token")
+    protected String displayDisposition;
+    @XmlElement(name = "email-delivery", namespace = "http://checkout.google.com/schema/2")
+    protected Boolean emailDelivery;
+    @XmlElement(namespace = "http://checkout.google.com/schema/2")
+    protected String description;
     @XmlElement(namespace = "http://checkout.google.com/schema/2")
     protected String key;
     @XmlElement(namespace = "http://checkout.google.com/schema/2")
     @XmlSchemaType(name = "anyURI")
     protected String url;
-    @XmlElement(name = "email-delivery", namespace = "http://checkout.google.com/schema/2")
-    protected Boolean emailDelivery;
-    @XmlElement(namespace = "http://checkout.google.com/schema/2")
-    protected String description;
-    @XmlElement(name = "display-disposition", namespace = "http://checkout.google.com/schema/2")
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "token")
-    protected String displayDisposition;
 
     /**
      * Gets the value of the key property.

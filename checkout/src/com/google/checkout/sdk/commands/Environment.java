@@ -27,64 +27,70 @@ package com.google.checkout.sdk.commands;
  *
  */
 public class Environment implements EnvironmentInterface {
-  /**
-   * The real Checkout environment. This environment charges users,
-   * charges fees, and gives payouts.
-   */
-  public static final Environment PRODUCTION = new Environment(
-      "https://checkout.google.com/api/checkout/v2/merchantCheckout/Merchant/%s",
-      "https://checkout.google.com/api/checkout/v2/request/Merchant/%s",
-      "https://checkout.google.com/api/checkout/v2/reports/Merchant/%s");
+    /**
+     * The real Checkout environment. This environment charges users,
+     * charges fees, and gives payouts.
+     */
+    public static final Environment PRODUCTION = new Environment("https://checkout.google.com/api/checkout/v2/merchantCheckout/Merchant/%s",
+                                                                 "https://checkout.google.com/api/checkout/v2/request/Merchant/%s",
+                                                                 "https://checkout.google.com/api/checkout/v2/reports/Merchant/%s");
 
-  /**
-   * The test Checkout environment. This environment does not authenticate
-   * credit cards, does not charge anyone, and cannot generate real revenue.
-   * Orders can, however, be placed in this environment, and they go through
-   * the full order lifecycle.
-   */
-  public static final Environment SANDBOX = new Environment(
-      "https://sandbox.google.com/checkout/api/checkout/v2/merchantCheckout/Merchant/%s",
-      "https://sandbox.google.com/checkout/api/checkout/v2/request/Merchant/%s",
-      "https://sandbox.google.com/checkout/api/checkout/v2/reports/Merchant/%s");
+    /**
+     * The test Checkout environment. This environment does not authenticate
+     * credit cards, does not charge anyone, and cannot generate real revenue.
+     * Orders can, however, be placed in this environment, and they go through
+     * the full order lifecycle.
+     */
+    public static final Environment SANDBOX = new Environment("https://sandbox.google.com/checkout/api/checkout/v2/merchantCheckout/Merchant/%s",
+                                                              "https://sandbox.google.com/checkout/api/checkout/v2/request/Merchant/%s",
+                                                              "https://sandbox.google.com/checkout/api/checkout/v2/reports/Merchant/%s");
 
-  private final String cartPostUrlFormatString;
-  private final String orderProcessingUrlFormatString;
-  private final String reportsUrlFormatString;
+    /**
+     * The test Diagnosis environment. This environment replies with
+     * diagnosis messages.
+     */
+    public static final Environment DIAGNOSE = new Environment("https://sandbox.google.com/checkout/api/checkout/v2/merchantCheckout/Merchant/%s/diagnose",
+                                                               "https://sandbox.google.com/checkout/api/checkout/v2/request/Merchant/%s/diagnose",
+                                                               "https://sandbox.google.com/checkout/api/checkout/v2/reports/Merchant/%s/diagnose");
 
-  /**
-   * For unit testing purposes, you may create your own Environments, using urls
-   * which you presumably control. Otherwise, {@link #PRODUCTION} or
-   * {@link #SANDBOX} are more appropriate.
-   * @param cartPostUrlFormatString Where to send carts to be purchased.
-   * @param postPurchaseUrlFormatString Where to send commands.
-   * @param reportsUrlFormatString Whence to request order data.
-   */
-  public Environment(
-      String cartPostUrlFormatString,
-      String postPurchaseUrlFormatString,
-      String reportsUrlFormatString) {
-    this.cartPostUrlFormatString = cartPostUrlFormatString;
-    this.orderProcessingUrlFormatString = postPurchaseUrlFormatString;
-    this.reportsUrlFormatString = reportsUrlFormatString;
-  }
 
-  /**
-   * You should never have to directly invoke this method. Instead, it's used
-   * by {@link ApiContext}'s helper objects to, ultimately, communicate with
-   * Google Checkout.
-   * @return The appropriate URL for the requested command.
-   */
-  @Override
-  public String getUrl(CommandType command, String merchantId) {
-    switch(command) {
-      case CART_POST:
-        return String.format(cartPostUrlFormatString, merchantId);
-      case ORDER_PROCESSING:
-        return String.format(orderProcessingUrlFormatString, merchantId);
-      case REPORTS:
-        return String.format(reportsUrlFormatString, merchantId);
-      default:
-        throw new IllegalArgumentException("Unrecognized command: " + command);
+    private final String cartPostUrlFormatString;
+    private final String orderProcessingUrlFormatString;
+    private final String reportsUrlFormatString;
+
+
+    /**
+     * @param cartPostUrlFormatString Where to send carts to be purchased.
+     * @param postPurchaseUrlFormatString Where to send commands.
+     * @param reportsUrlFormatString Whence to request order data.
+     */
+    public Environment(String cartPostUrlFormatString,
+                       String postPurchaseUrlFormatString,
+                       String reportsUrlFormatString)
+    {
+        super();
+        this.cartPostUrlFormatString = cartPostUrlFormatString;
+        this.orderProcessingUrlFormatString = postPurchaseUrlFormatString;
+        this.reportsUrlFormatString = reportsUrlFormatString;
     }
-  }
+
+    /**
+     * This method is used by {@link ApiContext}
+     * 
+     * @return The API URL for the argument command, formatted with
+     * the argument merchantId
+     */
+    @Override
+    public String getUrl(CommandType command, String merchantId) {
+        switch(command) {
+        case CART_POST:
+            return String.format(cartPostUrlFormatString, merchantId);
+        case ORDER_PROCESSING:
+            return String.format(orderProcessingUrlFormatString, merchantId);
+        case REPORTS:
+            return String.format(reportsUrlFormatString, merchantId);
+        default:
+            throw new IllegalArgumentException("Unrecognized command: " + command);
+        }
+    }
 }

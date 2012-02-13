@@ -22,33 +22,27 @@ package com.google.checkout.sdk.commands;
  * {@code Enviornment.SANDBOX}.
  *
  * @see Environment
- *
  */
 public interface EnvironmentInterface {
-  String getUrl(CommandType command, String merchantId);
 
-  /**
-   * One of Google Checkout's communication channels. Each "channel" (the word
-   * is not intended to refer to any specific technology) has a separate URL,
-   * and is demuxed via {@link EnvironmentInterface#getUrl}. You should not
-   * have to reference this type directly unless you are overloading
-   * {@link EnvironmentInterface} for testing purposes.
-   */
-  public static enum CommandType {
     /**
-     * The URL to which to send server to server cart posts.
-     * @see ApiContext#cartPoster()
+     *  Google Checkout APIs.
      */
-    CART_POST,
-    /**
-     * The URL to which to send post-purchase order processing requests.
-     * @see ApiContext#orderCommands
-     */
-    ORDER_PROCESSING,
-    /**
-     * The URL to which to request information.
-     * @see ApiContext#reportsRequester
-     */
-    REPORTS
-  }
+    public static enum CommandType {
+        /**
+         * @see ApiContext#cartPoster()
+         */
+        CART_POST,
+        /**
+         * @see ApiContext#orderCommands
+         */
+        ORDER_PROCESSING,
+        /**
+         * @see ApiContext#reportsRequester
+         */
+        REPORTS;
+    }
+
+    public String getUrl(CommandType command, String merchantId);
+
 }

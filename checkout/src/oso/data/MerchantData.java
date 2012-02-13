@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see Merchant
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-12T23:20:39.408Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-13T06:24:02.383Z")
 public abstract class MerchantData
     extends gap.data.BigTable
     implements DataInheritance<Merchant>
@@ -430,7 +430,7 @@ public abstract class MerchantData
             case CurrencyCode:
                 return instance.setCurrencyCode(gap.Objects.StringFromObject(value));
             case Test:
-                return instance.setTest(gap.Objects.BooleanFromObject(value));
+                return instance.setTest((Test)gap.Objects.EnumFromObject(value));
             default:
                 throw new IllegalArgumentException(field.toString()+" in Merchant");
             }
@@ -456,8 +456,9 @@ public abstract class MerchantData
                 return instance.getMerchantKey(MayNotInherit);
             case CurrencyCode:
                 return instance.getCurrencyCode(MayNotInherit);
-            case Test:
-                return instance.getTest(MayNotInherit);
+            case Test:{
+                return Strings.EnumToString( instance.getTest(MayNotInherit));
+            }
             default:
                 throw new IllegalArgumentException(field.toString()+" in Merchant");
             }
@@ -490,9 +491,11 @@ public abstract class MerchantData
             case CurrencyCode:
                 instance.setCurrencyCode( (String)value);
                 return;
-            case Test:
-                instance.setTest( (Boolean)value);
+            case Test:{
+                Test _test = (Test)Strings.EnumFromString( (String)value);
+                instance.setTest( _test);
                 return;
+            }
             default:
                 throw new IllegalArgumentException(field.toString()+" in Merchant");
             }
@@ -606,7 +609,7 @@ public abstract class MerchantData
     private String merchantId;
     private String merchantKey;
     private String currencyCode;
-    private Boolean test;
+    private Test test;
 
 
 
@@ -893,12 +896,12 @@ public abstract class MerchantData
         else
             return false;
     }
-    public final Boolean getTest(){
+    public final Test getTest(){
         return this.getTest(Notation.MayInherit);
     }
-    public final Boolean getTest(boolean mayInherit){
+    public final Test getTest(boolean mayInherit){
         if (mayInherit){
-            Boolean test = this.test;
+            Test test = this.test;
             if (null == test && this.hasInheritFrom()){
                 Merchant inheritFrom = this.getInheritFrom();
                 return inheritFrom.getTest(Notation.MayInherit);
@@ -908,7 +911,7 @@ public abstract class MerchantData
         else
             return this.test;
     }
-    public final boolean setTest(Boolean test, boolean withInheritance){
+    public final boolean setTest(Test test, boolean withInheritance){
         if (IsNotEqual(this.test,this.getTest(withInheritance))){
             this.fieldStatistics().markDirty(Merchant.Field.Test);
             this.test = test;
@@ -917,7 +920,7 @@ public abstract class MerchantData
         else
             return false;
     }
-    public final boolean setTest(Boolean test){
+    public final boolean setTest(Test test){
         if (IsNotEqual(this.test,test)){
             this.fieldStatistics().markDirty(Merchant.Field.Test);
             this.test = test;
@@ -967,14 +970,14 @@ public abstract class MerchantData
             return this.setCurrencyCode((String)json.getValue(String.class));
     }
     public Json toJsonTest(){
-        Boolean test = this.getTest();
+        Test test = this.getTest();
         return Json.Wrap( test);
     }
     public boolean fromJsonTest(Json json){
         if (null == json)
             return false;
         else
-            return this.setTest((Boolean)json.getValue(Boolean.class));
+            return this.setTest((Test)json.getValue(Test.class));
     }
     /*
      * Data binding supports
@@ -1063,7 +1066,7 @@ public abstract class MerchantData
         String testRequest = req.getParameter("test");
         if (null != testRequest && 0 < testRequest.length()){
             try {
-                Boolean test = gap.Strings.BooleanFromString(testRequest);
+                Test test = Test.valueOf(testRequest);
                 if (this.setTest(test)){
                     change = true;
                 }
@@ -1092,7 +1095,7 @@ public abstract class MerchantData
         if (null != currencyCode && this.setCurrencyCode(currencyCode)){
             change = true;
         }
-        Boolean test = proto.getTest(mayInherit);
+        Test test = proto.getTest(mayInherit);
         if (null != test && this.setTest(test)){
             change = true;
         }
@@ -1221,9 +1224,9 @@ public abstract class MerchantData
                     throw new IllegalStateException(field.name());
                 else {
                     /*
-                     * Synthesize section for Boolean (EXISTS && TRUE)
+                     * Synthesize section for Field (EXISTS)
                      */
-                    return (this.hasTest(true) && this.getTest(true));
+                    return this.hasTest(true);
                 }
             default:
                 break;
@@ -1264,7 +1267,7 @@ public abstract class MerchantData
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
-                    return gap.Strings.BooleanToString(this.getTest(true));
+                    return gap.Strings.EnumToString(this.getTest(true));
             default:
                 break;
             }

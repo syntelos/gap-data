@@ -27,7 +27,7 @@ class Merchant
      */
     String currencyCode;
     /*
-     * Use test environment
+     * Environment types include Test, Live and Diagnose
      */
-    Boolean test;
+    Test test;
 }
