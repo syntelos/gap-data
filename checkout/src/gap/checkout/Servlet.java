@@ -26,7 +26,7 @@ import com.google.checkout.sdk.commands.Environment;
 /**
  * Checkout servlet defined for an application having one merchant.
  * 
- * @see oso.data.MerchantServlet
+ * 
  */
 public abstract class Servlet
     extends gap.service.Servlet

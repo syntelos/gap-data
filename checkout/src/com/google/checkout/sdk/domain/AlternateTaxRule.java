@@ -44,7 +44,6 @@ import javax.xml.bind.annotation.XmlType;
  *                   &lt;element name="us-country-area" type="{http://checkout.google.com/schema/2}USCountryArea"/>
  *                   &lt;element name="postal-area" type="{http://checkout.google.com/schema/2}PostalArea"/>
  *                   &lt;element name="world-area" type="{http://checkout.google.com/schema/2}WorldArea"/>
- *                   &lt;element name="eu-area" type="{http://checkout.google.com/schema/2}EUArea"/>
  *                 &lt;/choice>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -61,7 +60,6 @@ import javax.xml.bind.annotation.XmlType;
  *                     &lt;element name="us-country-area" type="{http://checkout.google.com/schema/2}USCountryArea"/>
  *                     &lt;element name="postal-area" type="{http://checkout.google.com/schema/2}PostalArea"/>
  *                     &lt;element name="world-area" type="{http://checkout.google.com/schema/2}WorldArea"/>
- *                     &lt;element name="eu-area" type="{http://checkout.google.com/schema/2}EUArea"/>
  *                   &lt;/choice>
  *                 &lt;/sequence>
  *               &lt;/restriction>
@@ -177,7 +175,6 @@ public class AlternateTaxRule {
      *         &lt;element name="us-country-area" type="{http://checkout.google.com/schema/2}USCountryArea"/>
      *         &lt;element name="postal-area" type="{http://checkout.google.com/schema/2}PostalArea"/>
      *         &lt;element name="world-area" type="{http://checkout.google.com/schema/2}WorldArea"/>
-     *         &lt;element name="eu-area" type="{http://checkout.google.com/schema/2}EUArea"/>
      *       &lt;/choice>
      *     &lt;/restriction>
      *   &lt;/complexContent>
@@ -192,8 +189,7 @@ public class AlternateTaxRule {
         "usZipArea",
         "usCountryArea",
         "postalArea",
-        "worldArea",
-        "euArea"
+        "worldArea"
     })
     public static class TaxArea {
 
@@ -347,7 +343,6 @@ public class AlternateTaxRule {
      *           &lt;element name="us-country-area" type="{http://checkout.google.com/schema/2}USCountryArea"/>
      *           &lt;element name="postal-area" type="{http://checkout.google.com/schema/2}PostalArea"/>
      *           &lt;element name="world-area" type="{http://checkout.google.com/schema/2}WorldArea"/>
-     *           &lt;element name="eu-area" type="{http://checkout.google.com/schema/2}EUArea"/>
      *         &lt;/choice>
      *       &lt;/sequence>
      *     &lt;/restriction>
@@ -390,7 +385,6 @@ public class AlternateTaxRule {
          * 
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link EUArea }
          * {@link USStateArea }
          * {@link USZipArea }
          * {@link WorldArea }

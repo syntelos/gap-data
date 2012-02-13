@@ -38,7 +38,6 @@ import javax.xml.bind.annotation.XmlType;
  *                     &lt;element name="us-country-area" type="{http://checkout.google.com/schema/2}USCountryArea"/>
  *                     &lt;element name="postal-area" type="{http://checkout.google.com/schema/2}PostalArea"/>
  *                     &lt;element name="world-area" type="{http://checkout.google.com/schema/2}WorldArea"/>
- *                     &lt;element name="eu-area" type="{http://checkout.google.com/schema/2}EUArea"/>
  *                   &lt;/choice>
  *                 &lt;/sequence>
  *               &lt;/restriction>
@@ -56,7 +55,6 @@ import javax.xml.bind.annotation.XmlType;
  *                     &lt;element name="us-country-area" type="{http://checkout.google.com/schema/2}USCountryArea"/>
  *                     &lt;element name="postal-area" type="{http://checkout.google.com/schema/2}PostalArea"/>
  *                     &lt;element name="world-area" type="{http://checkout.google.com/schema/2}WorldArea"/>
- *                     &lt;element name="eu-area" type="{http://checkout.google.com/schema/2}EUArea"/>
  *                   &lt;/choice>
  *                 &lt;/sequence>
  *               &lt;/restriction>
@@ -174,7 +172,6 @@ public class ShippingRestrictions {
      *           &lt;element name="us-country-area" type="{http://checkout.google.com/schema/2}USCountryArea"/>
      *           &lt;element name="postal-area" type="{http://checkout.google.com/schema/2}PostalArea"/>
      *           &lt;element name="world-area" type="{http://checkout.google.com/schema/2}WorldArea"/>
-     *           &lt;element name="eu-area" type="{http://checkout.google.com/schema/2}EUArea"/>
      *         &lt;/choice>
      *       &lt;/sequence>
      *     &lt;/restriction>
@@ -220,7 +217,6 @@ public class ShippingRestrictions {
          * {@link PostalArea }
          * {@link USZipArea }
          * {@link USStateArea }
-         * {@link EUArea }
          * {@link USCountryArea }
          * {@link WorldArea }
          * 
@@ -252,7 +248,6 @@ public class ShippingRestrictions {
      *           &lt;element name="us-country-area" type="{http://checkout.google.com/schema/2}USCountryArea"/>
      *           &lt;element name="postal-area" type="{http://checkout.google.com/schema/2}PostalArea"/>
      *           &lt;element name="world-area" type="{http://checkout.google.com/schema/2}WorldArea"/>
-     *           &lt;element name="eu-area" type="{http://checkout.google.com/schema/2}EUArea"/>
      *         &lt;/choice>
      *       &lt;/sequence>
      *     &lt;/restriction>
@@ -295,7 +290,6 @@ public class ShippingRestrictions {
          * 
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link EUArea }
          * {@link USCountryArea }
          * {@link USStateArea }
          * {@link WorldArea }
