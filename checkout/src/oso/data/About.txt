@@ -1,0 +1,5 @@
+
+ This package would normally include a MerchantServlet class, which
+ has been relocated into the CPI project temporarily for development.
+
+ http://code.google.com/p/cpi/source/svn/trunk/server/src/oso/data/MerchantServlet.java
