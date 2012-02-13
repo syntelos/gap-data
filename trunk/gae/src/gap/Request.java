@@ -27,6 +27,11 @@ import gap.service.*;
 
 import json.Json;
 
+import com.google.appengine.api.capabilities.Capability;
+
+import com.google.appengine.api.mail.MailService;
+import com.google.appengine.api.mail.MailServiceFactory;
+
 import java.nio.charset.Charset;
 import java.util.StringTokenizer;
 
@@ -882,5 +887,54 @@ public class Request
     }
     public boolean isRequestedSessionIdFromUrl() {
         return this.request.isRequestedSessionIdFromUrl();
+    }
+
+    /*
+     * Capabilities
+     */
+    public final boolean isAvailableStorageRead(){
+        return gap.service.Servlet.IsAvailableStorageRead();
+    }
+    public final boolean isAvailableStorageWrite(){
+        return gap.service.Servlet.IsAvailableStorageWrite();
+    }
+    public final boolean isAvailableBlobstore(){
+        return gap.service.Servlet.IsAvailableBlobstore();
+    }
+    public final boolean isAvailableDatastore(){
+        return gap.service.Servlet.IsAvailableDatastore();
+    }
+    public final boolean isAvailableDatastoreWrite(){
+        return gap.service.Servlet.IsAvailableDatastoreWrite();
+    }
+    public final boolean isAvailableImages(){
+        return gap.service.Servlet.IsAvailableImages();
+    }
+    public final boolean isAvailableMail(){
+        return gap.service.Servlet.IsAvailableMail();
+    }
+    public final boolean isAvailableProspectiveSearch(){
+        return gap.service.Servlet.IsAvailableProspectiveSearch();
+    }
+    public final boolean isAvailableMemcache(){
+        return gap.service.Servlet.IsAvailableMemcache();
+    }
+    public final boolean isAvailableTaskqueue(){
+        return gap.service.Servlet.IsAvailableTaskqueue();
+    }
+    public final boolean isAvailableUrlFetch(){
+        return gap.service.Servlet.IsAvailableUrlFetch();
+    }
+    public final boolean isAvailableXmpp(){
+        return gap.service.Servlet.IsAvailableXmpp();
+    }
+    /**
+     * @return Mail service when available, otherwise null
+     */
+    public final MailService getMailService(){
+        if (this.isAvailableMail())
+            return MailServiceFactory.getMailService();
+        else
+            return null;
     }
 }
