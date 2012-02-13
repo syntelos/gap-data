@@ -42,7 +42,7 @@ public abstract class Servlet
      * This method is responsible for calling set environment on the
      * merchant instance object before returning it.
      * 
-     * This is defined in Merchant Servlet for an application having
+     * This method has been defined, here, for an application having
      * one merchant.
      * 
      * @return Merchant instance with checkout environment

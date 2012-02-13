@@ -31,61 +31,77 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * <p>This is the root type to be used in manufacturing your own checkout
- * notification servlet. You should extend this class with your business logic.
- * You should use this class if you are interested in using
- * {@link NotificationHandler#handleNotification} to do either or both of:
- * <ol>
- *  <li>handling notifications</li>
- *  <li>handling database transactionality</li>
- * </ol>
- * </p>
+ * <p> Instances of this class are request-response events for
+ * notifications.  Notifications are Google Checkout API Callbacks,
+ * and are an optional component of application implementation. </p>
+ * 
+ * <p> Notification events are processed via the {@link
+ * com.google.checkout.sdk.commands.ApiContext ApiContext} into the
+ * methods defined this interface. </p>
  *
- * <p>To provide business logic for handling a particular notification, override
- * the {@code onFooNotification} methods.  If you have business logic that
- * applies to all notifications, such as storing the OrderSummary from all
- * notifications in the database or logging each notification to {@code stderr},
- * you can override the {@link #onAllNotifications} method. It is invoked before
- * the more specific {@code onFooNotification} method.</p>
+ * <h3>On Notification Methods</h3>
  *
- * <p>To glue your business logic to database transactionality you'll need to
- * override the transaction logic methods:
+ * <p>Define application logic for handling a particular notification
+ * through the definition of the on notification methods. </p>
+ *
+ * <h3>On All Notifications Method</h3>
+ *
+ * <p> The {@link #onAllNotifications} method is invoked before more
+ * specific on notification methods.</p>
+ *
+ * <h3>Transaction Logic Methods</h3>
  * <ol>
  *  <li>{@link #startTransaction}</li>
  *  <li>{@link #rollBackTransaction}</li>
  *  <li>{@link #commitTransaction}</li>
  * </ol>
- * and to make sure each notification is processed exactly once, you'll need to
- * override the notification transactional logic methods:
+ * 
+ * <p> Define the transaction methods {@link #startTransaction},
+ * {@link #rollBackTransaction}, and {@link #commitTransaction} to act
+ * on any (optional) data transaction interface.  In this case, ensure
+ * that {@link #commitTransaction} is executed before any
+ * acknowledgment is sent back to Google Checkout.</p>
+ *
+ * <h3>Notification Logic Methods</h3>
  * <ol>
  *  <li>{@link #hasAlreadyHandled}</li>
  *  <li>{@link #rememberSerialNumber}</li>
  * </ol>
- * If you're using a framework to manage your own transactions, you should
- * either plug {@link #startTransaction}, {@link #rollBackTransaction},
- * and {@link #commitTransaction} into this framework, or leave them
- * unimplemented. You should try to make sure that (as the example code below
- * does) {@link #commitTransaction} or its equivalent is executed before any
- * acknowledgment is sent back to Google Checkout.</p>
- *
- * <p>To use this class: in a Servlet that you've made to handle the
- * {@code POST}s from Google Checkout, pass in a new instance of your
- * subclass of {@link NotificationDispatcher} to
- * {@link NotificationHandler#handleNotification} like so:
+ * 
+ * <p> Define the notification logic methods to ensure that the
+ * notification event is handled once, uniquely.</p>
+ * 
+ * <h3>Usage</h3>
+ * 
+ * <p> Define a servlet receiving notifications, and dispatch the
+ * notifications via an instance of this class.  </p>
+ * 
+ * <p> In the following example, the definition of this class is
+ * represented by a class named "LocalNotificationDispatcher".
+ * 
  * <pre>
  *
- * public class YetAnotherNotificationDispatcher implements NotificationDispatcher {...}
+ * public class LocalNotificationDispatcher
+ *     implements NotificationDispatcher
+ * {
+ *   ...
+ * }
  *
- * public class YetAnotherServlet extends HttpServlet {
+ * public class NotificationServlet
+ *     extends gap.checkout.Servlet
+ * {
  * 
  *   @Override
- *   protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+ *   protected void doPost(HttpServletRequest q, HttpServletResponse p) {
  * 
- *     apiContext.handleNotification(new YetAnotherNotificationDispatcher(request, response));
+ *       this.getMerchant(q,p).handleNotification(new LocalNotificationDispatcher(q, p));
  *   }
  * }
  * </pre>
  * </p>
+ * 
+ * @see com.google.checkout.sdk.commands.ApiContext
+ * @see https://checkout.google.com/sell/settings?section=Integration
  */
 public interface NotificationDispatcher {
 
