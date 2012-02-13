@@ -433,7 +433,10 @@ public class Servlet
         try {
             rep.resetBuffer();
 
-            if (this.isAvailableStorageRead() && req instanceof Request && rep instanceof Response){
+            if (this.isAvailableStorageRead() && 
+                req instanceof Request && rep instanceof Response &&
+                ((Request)req).acceptHtml())
+            {
 
                 Request request = (Request)req;
 
