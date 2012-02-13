@@ -193,6 +193,13 @@ public final class Lock
         else
             return new Lock(key);
     }
+    public static Lock Accept(Kind kind){
+        Lock accept = Lock.TL.get();
+        if (null != accept)
+            return new Lock(accept);
+        else
+            return new Lock(kind);
+    }
 
 
     public final String string;
@@ -207,6 +214,9 @@ public final class Lock
 
     public Lock(Key key){
         this(BigTable.ToString(key));
+    }
+    public Lock(Kind kind){
+        this(kind.name);
     }
     public Lock(String guid){
         super();
