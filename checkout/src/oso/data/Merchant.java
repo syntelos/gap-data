@@ -33,7 +33,7 @@ import com.google.checkout.sdk.commands.OrderCommandsImpl;
 import com.google.checkout.sdk.commands.ReportsRequester;
 import com.google.checkout.sdk.domain.Money;
 import com.google.checkout.sdk.domain.OrderSummary;
-import com.google.checkout.sdk.notifications.BaseNotificationDispatcher;
+import com.google.checkout.sdk.notifications.NotificationDispatcher;
 import com.google.checkout.sdk.notifications.Notification;
 import com.google.checkout.sdk.notifications.NotificationHandler;
 import com.google.checkout.sdk.util.Base64Coder;
@@ -156,7 +156,7 @@ public final class Merchant
     public ReportsRequester reportsRequester() {
         return new ReportsRequester(this);
     }
-    public void handleNotification(BaseNotificationDispatcher notificationDispatcher)
+    public void handleNotification(NotificationDispatcher notificationDispatcher)
         throws CheckoutException
     {
         new NotificationHandler(this).handleNotification(notificationDispatcher);

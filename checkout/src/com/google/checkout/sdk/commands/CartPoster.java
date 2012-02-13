@@ -46,7 +46,7 @@ import java.math.BigDecimal;
  * buy page, where they may select their credit card, shipping address,
  * shipping options, and actually purchase the cart. You can discover their
  * purchase by listening for notifications, which
- * {@link ApiContext#handleNotification(com.google.checkout.sdk.notifications.BaseNotificationDispatcher)}
+ * {@link ApiContext#handleNotification(com.google.checkout.sdk.notifications.NotificationDispatcher)}
  * can help with.
  *
  * @see ApiContext#cartPoster()

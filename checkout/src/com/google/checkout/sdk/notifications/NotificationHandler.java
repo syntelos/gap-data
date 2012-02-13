@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * This class provides methods for handling notifications from checkout.
  *
- * To handle notifications, extend the BaseNotificationDispatcher class with your
+ * To handle notifications, extend the NotificationDispatcher class with your
  * business-specific logic.  Then, in a Servlet that's handling the POST form checkout,
  * pass in a new instance of your child class to NotificationHandler.handleNotification():
  *
@@ -70,8 +70,8 @@ public class NotificationHandler extends BaseNotificationHandler {
      *
      * @throws CheckoutException if an exceptions occurred in steps 1 through 5.
      */
-    public void handleNotification(BaseNotificationDispatcher dispatcher) throws CheckoutException {
-        Notification notification = getNotificationFromRequest(dispatcher.request);
+    public void handleNotification(NotificationDispatcher dispatcher) throws CheckoutException {
+        Notification notification = getNotificationFromRequest(dispatcher.getRequest());
         String serialNumber = notification.getSerialNumber();
         OrderSummary orderSummary = notification.getOrderSummary();
 
@@ -85,13 +85,14 @@ public class NotificationHandler extends BaseNotificationHandler {
             }
 
             dispatcher.commitTransaction(serialNumber, orderSummary, notification);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.log(Level.INFO, "Caught exception while processing", e);
             try {
                 dispatcher.rollBackTransaction(serialNumber, orderSummary, notification);
-                dispatcher.response.sendError(
-                                              HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Error in Server");
-            } catch (Exception secondaryException) {
+                dispatcher.getResponse().sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Error in Server");
+            }
+            catch (Exception secondaryException) {
                 logger.log(Level.WARNING, "Secondary Exception caught while rolling back transaction.",
                            secondaryException);
             }
@@ -99,9 +100,9 @@ public class NotificationHandler extends BaseNotificationHandler {
         }
 
         try {
-            sendNotificationAcknowledgment(
-                                           serialNumber, dispatcher.response, notification, dispatcher.request);
-        } catch (Exception e) {
+            sendNotificationAcknowledgment(serialNumber, dispatcher.getResponse(), notification, dispatcher.getRequest());
+        }
+        catch (Exception e) {
             // No big deal.  If Checkout re-sends this notification
             // dispatcher.hasAlreadyHandled() will return true.
             logger.log(Level.FINE, "Nominal exception while sending notification acknowledgment:", e);
@@ -126,14 +127,16 @@ public class NotificationHandler extends BaseNotificationHandler {
                 throw new CheckoutException("Couldn't find serial number in parameters");
             }
             return apiContext.reportsRequester().requestNotification(serialNumber);
-        } else {
+        }
+        else {
             String auth = request.getHeader("Authorization");
             if (!apiContext.isValidAuth(auth)) {
                 throw new CheckoutException("Invalid auth found");
             }
             try {
                 return (Notification)Utils.FromXML(request.getInputStream()).getValue();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new CheckoutException("Could not retrieve notification", e);
             }
         }

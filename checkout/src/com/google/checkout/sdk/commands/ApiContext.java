@@ -18,7 +18,7 @@ package com.google.checkout.sdk.commands;
 import com.google.checkout.sdk.commands.EnvironmentInterface.CommandType;
 import com.google.checkout.sdk.domain.Money;
 import com.google.checkout.sdk.domain.OrderSummary;
-import com.google.checkout.sdk.notifications.BaseNotificationDispatcher;
+import com.google.checkout.sdk.notifications.NotificationDispatcher;
 import com.google.checkout.sdk.notifications.Notification;
 import com.google.checkout.sdk.notifications.NotificationHandler;
 import com.google.checkout.sdk.util.Base64Coder;
@@ -95,7 +95,7 @@ public interface ApiContext {
      * <p>Uses the given notification dispatcher to handle a notification POST for
      * Checkout.  Can handle XML, HTML and serial-number notifications.</p>
      *
-     * <p>To handle notifications, extend the {@link BaseNotificationDispatcher}
+     * <p>To handle notifications, extend the {@link NotificationDispatcher}
      * class with your business-specific logic.  Then, in a {@code Servlet} that's
      * handling the {@code POST} from Checkout, pass in a new instance of your
      * child class to this method:
@@ -119,7 +119,7 @@ public interface ApiContext {
      *    exceptions at all if there is an error while responding to Google
      *    Checkout after handling the notification.
      */
-    public void handleNotification(BaseNotificationDispatcher notificationDispatcher)
+    public void handleNotification(NotificationDispatcher notificationDispatcher)
         throws CheckoutException;
 
     /**

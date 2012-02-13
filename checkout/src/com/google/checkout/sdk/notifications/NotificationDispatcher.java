@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2012 John Pritchard, Gap Data
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -69,31 +70,37 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <p>To use this class: in a Servlet that you've made to handle the
  * {@code POST}s from Google Checkout, pass in a new instance of your
- * subclass of {@link BaseNotificationDispatcher} to
+ * subclass of {@link NotificationDispatcher} to
  * {@link NotificationHandler#handleNotification} like so:
- * <code>
- * public class MyNotificationDispatcher extends BaseNotificationDispatcher {...}
+ * <pre>
  *
- * public class MyServlet extends HttpServlet {
- *   public void doPost(HttpServletRequest request, HttpServletResponse response) {
- *     apiContext.handleNotification(
- *          new MyNotificationDispatcher(request, response));
+ * public class YetAnotherNotificationDispatcher implements NotificationDispatcher {...}
+ *
+ * public class YetAnotherServlet extends HttpServlet {
+ * 
+ *   @Override
+ *   protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+ * 
+ *     apiContext.handleNotification(new YetAnotherNotificationDispatcher(request, response));
  *   }
  * }
- * </code>
+ * </pre>
  * </p>
  */
-public abstract class BaseNotificationDispatcher {
+public interface NotificationDispatcher {
 
-    final HttpServletRequest request;
-    final HttpServletResponse response;
+    /*
+     * The following methods must be defined
+     */
 
-
-    protected BaseNotificationDispatcher(HttpServletRequest request, HttpServletResponse response) {
-        super();
-        this.request = request;
-        this.response = response;
-    }
+    /**
+     * @return The current request
+     */
+    public HttpServletRequest getRequest();
+    /**
+     * @return The current response
+     */
+    public HttpServletResponse getResponse();
 
     /**
      * With a read lock, determine whether this notification has already been
@@ -107,9 +114,9 @@ public abstract class BaseNotificationDispatcher {
      * @return True if this notification has already been successfully handled and
      *    committed; otherwise false.
      */
-    protected abstract boolean hasAlreadyHandled(String serialNumber,
-                                                 OrderSummary orderSummary,
-                                                 Notification notification)
+    public boolean hasAlreadyHandled(String serialNumber,
+                                     OrderSummary orderSummary,
+                                     Notification notification)
         throws CheckoutException;
 
 
@@ -123,10 +130,14 @@ public abstract class BaseNotificationDispatcher {
      *    being handled.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected abstract void rememberSerialNumber(String serialNumber,
-                                                 OrderSummary orderSummary,
-                                                 Notification notification)
+    public void rememberSerialNumber(String serialNumber,
+                                     OrderSummary orderSummary,
+                                     Notification notification)
         throws CheckoutException;
+
+    /*
+     * The following methods are optionally defined
+     */
 
     /**
      * Start a new database transaction for handling this notification.
@@ -137,12 +148,10 @@ public abstract class BaseNotificationDispatcher {
      *    being handled.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void startTransaction(String serialNumber,
+    public void startTransaction(String serialNumber,
                                     OrderSummary orderSummary,
                                     Notification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * The notification was successfully handled, so commit the current
@@ -154,12 +163,10 @@ public abstract class BaseNotificationDispatcher {
      *    being handled.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void commitTransaction(String serialNumber,
+    public void commitTransaction(String serialNumber,
                                      OrderSummary orderSummary,
                                      Notification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * An error occurred while handling the notification, so roll back the current
@@ -171,12 +178,10 @@ public abstract class BaseNotificationDispatcher {
      *    being handled.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void rollBackTransaction(String serialNumber,
+    public void rollBackTransaction(String serialNumber,
                                        OrderSummary orderSummary,
                                        Notification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * Should be overridden with the behavior that should happen when your system
@@ -185,11 +190,9 @@ public abstract class BaseNotificationDispatcher {
      * @param orderSummary The parsed OrderSummary object from the notification.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void onAllNotifications(OrderSummary orderSummary,
+    public void onAllNotifications(OrderSummary orderSummary,
                                       Notification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * Should be overridden with the behavior that should happen when your system
@@ -197,11 +200,9 @@ public abstract class BaseNotificationDispatcher {
      * @param orderSummary The parsed OrderSummary object from the notification.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void onRefundAmountNotification(OrderSummary orderSummary,
+    public void onRefundAmountNotification(OrderSummary orderSummary,
                                               RefundAmountNotification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * Should be overridden with the behavior that should happen when your system
@@ -209,11 +210,9 @@ public abstract class BaseNotificationDispatcher {
      * @param orderSummary The parsed OrderSummary object from the notification.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void onRiskInformationNotification(OrderSummary orderSummary,
+    public void onRiskInformationNotification(OrderSummary orderSummary,
                                                  RiskInformationNotification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * Should be overridden with the behavior that should happen when your system
@@ -221,11 +220,9 @@ public abstract class BaseNotificationDispatcher {
      * @param orderSummary The parsed OrderSummary object from the notification.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void onOrderStateChangeNotification(OrderSummary orderSummary,
+    public void onOrderStateChangeNotification(OrderSummary orderSummary,
                                                   OrderStateChangeNotification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * Should be overridden with the behavior that should happen when your system
@@ -233,11 +230,9 @@ public abstract class BaseNotificationDispatcher {
      * @param orderSummary The parsed OrderSummary object from the notification.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void onNewOrderNotification(OrderSummary orderSummary,
+    public void onNewOrderNotification(OrderSummary orderSummary,
                                           NewOrderNotification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * Should be overridden with the behavior that should happen when your system
@@ -245,11 +240,9 @@ public abstract class BaseNotificationDispatcher {
      * @param orderSummary The parsed OrderSummary object from the notification.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void onChargebackAmountNotification(OrderSummary orderSummary,
+    public void onChargebackAmountNotification(OrderSummary orderSummary,
                                                   ChargebackAmountNotification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * Should be overridden with the behavior that should happen when your system
@@ -257,11 +250,9 @@ public abstract class BaseNotificationDispatcher {
      * @param orderSummary The parsed OrderSummary object from the notification.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void onChargeAmountNotification(OrderSummary orderSummary,
+    public void onChargeAmountNotification(OrderSummary orderSummary,
                                               ChargeAmountNotification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * Should be overridden with the behavior that should happen when your system
@@ -269,11 +260,9 @@ public abstract class BaseNotificationDispatcher {
      * @param orderSummary The parsed OrderSummary object from the notification.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void onAuthorizationAmountNotification(OrderSummary orderSummary,
+    public void onAuthorizationAmountNotification(OrderSummary orderSummary,
                                                      AuthorizationAmountNotification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
 
     /**
      * Should be overridden with the behavior that should happen when your system
@@ -281,9 +270,8 @@ public abstract class BaseNotificationDispatcher {
      * @param orderSummary The parsed OrderSummary object from the notification.
      * @param notification The parsed JAXB object of the notification itself.
      */
-    protected void onRiskAmountNotification(OrderSummary orderSummary,
+    public void onRiskAmountNotification(OrderSummary orderSummary,
                                             RefundAmountNotification notification)
-        throws CheckoutException
-    {
-    }
+        throws CheckoutException;
+
 }

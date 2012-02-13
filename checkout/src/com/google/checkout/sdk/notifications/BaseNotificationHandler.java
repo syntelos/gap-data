@@ -50,7 +50,7 @@ public class BaseNotificationHandler {
      * Calls one of the onFooNotification() methods on the given dispatcher.
      */
     protected void dispatchByType(Notification notification, OrderSummary orderSummary,
-                                  BaseNotificationDispatcher dispatcher)
+                                  NotificationDispatcher dispatcher)
         throws CheckoutException
     {
         final DispatchType type = DispatchType.For(notification);
@@ -85,7 +85,7 @@ public class BaseNotificationHandler {
     }
 
     protected void dispatchUnknownNotification(Notification notification, OrderSummary orderSummary,
-                                               BaseNotificationDispatcher dispatcher)
+                                               NotificationDispatcher dispatcher)
         throws CheckoutException
     {
         throw new CheckoutException("Unrecognized notification type " + notification);
