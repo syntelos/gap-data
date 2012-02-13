@@ -51,11 +51,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * @version 1.1 - ksim - March 6th, 2007 - Added functions regarding streaming
  * @version 1.2 - ksim - March 10th, 2007 - Added functions regarding DOM
  *          manipulation
- * @version 2.0 - jdp - 12 Feb 2012 - conversion to servlet in gap-data
+ * @version 1.3 - jdp - 12 Feb 2012 - minor cleanup
  */
 
 public class Utils
-    extends gap.service.Servlet
+    extends Object
 {
 
     public static final String SEND_AND_RECEIVE_DEBUGGING_STRING =
@@ -69,8 +69,9 @@ public class Utils
     public static final String XML_MIME_TYPE = "application/xml";
 
 
-    private static final SimpleDateFormat SDF = new SimpleDateFormat(
-                                                                     "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    private final static Logger Log = Logger.getLogger("com.google.checkout.sdk");
+
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
     private static final JAXBContext JaxbContext = Utils.MakeJaxbContext();
 

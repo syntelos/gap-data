@@ -15,6 +15,8 @@
  ******************************************************************************/
 package com.google.checkout.sdk.notifications;
 
+import com.google.checkout.sdk.commands.CheckoutException;
+
 import com.google.checkout.sdk.domain.AuthorizationAmountNotification;
 import com.google.checkout.sdk.domain.ChargeAmountNotification;
 import com.google.checkout.sdk.domain.ChargebackAmountNotification;
@@ -82,192 +84,206 @@ import javax.servlet.http.HttpServletResponse;
  * </p>
  */
 public abstract class BaseNotificationDispatcher {
-  final HttpServletRequest request;
-  final HttpServletResponse response;
 
-  protected BaseNotificationDispatcher(
-      HttpServletRequest request, HttpServletResponse response) {
-    this.request = request;
-    this.response = response;
-  }
-
-  /**
-   * With a read lock, determine whether this notification has already been
-   * handled.
-   * @param serialNumber The serial number of this notification, which is
-   *    unique to this order/notification pair, but stable across each attempt
-   *    to deliver the notification.
-   * @param orderSummary The state of the order whose notification is currently
-   *    being handled.
-   * @param notification The parsed JAXB object of the notification itself.
-   * @return True if this notification has already been successfully handled and
-   *    committed; otherwise false.
-   */
-  protected abstract boolean hasAlreadyHandled(
-      String serialNumber,
-      OrderSummary orderSummary,
-      Notification notification) throws Exception;
+    final HttpServletRequest request;
+    final HttpServletResponse response;
 
 
-  /**
-   * Save away the serialNumber so that if hasAlreadyHandled is called with this
-   * serial number in the future, it will return "true".
-   * @param serialNumber The serial number of this notification, which is
-   *    unique to this order/notification pair, but stable across each attempt
-   *    to deliver the notification.
-   * @param orderSummary The state of the order whose notification is currently
-   *    being handled.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected abstract void rememberSerialNumber(
-      String serialNumber,
-      OrderSummary orderSummary,
-      Notification notification) throws Exception;
+    protected BaseNotificationDispatcher(HttpServletRequest request, HttpServletResponse response) {
+        super();
+        this.request = request;
+        this.response = response;
+    }
 
-  /**
-   * Start a new database transaction for handling this notification.
-   * @param serialNumber The serial number of this notification, which is
-   *    unique to this order/notification pair, but stable across each attempt
-   *    to deliver the notification.
-   * @param orderSummary The state of the order whose notification is currently
-   *    being handled.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void startTransaction(
-      String serialNumber,
-      OrderSummary orderSummary,
-      Notification notification) throws Exception {
-  }
+    /**
+     * With a read lock, determine whether this notification has already been
+     * handled.
+     * @param serialNumber The serial number of this notification, which is
+     *    unique to this order/notification pair, but stable across each attempt
+     *    to deliver the notification.
+     * @param orderSummary The state of the order whose notification is currently
+     *    being handled.
+     * @param notification The parsed JAXB object of the notification itself.
+     * @return True if this notification has already been successfully handled and
+     *    committed; otherwise false.
+     */
+    protected abstract boolean hasAlreadyHandled(String serialNumber,
+                                                 OrderSummary orderSummary,
+                                                 Notification notification)
+        throws CheckoutException;
 
-  /**
-   * The notification was successfully handled, so commit the current
-   * transaction.
-   * @param serialNumber The serial number of this notification, which is
-   *    unique to this order/notification pair, but stable across each attempt
-   *    to deliver the notification.
-   * @param orderSummary The state of the order whose notification is currently
-   *    being handled.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void commitTransaction(
-      String serialNumber,
-      OrderSummary orderSummary,
-      Notification notification) throws Exception {
-  }
 
-  /**
-   * An error occurred while handling the notification, so roll back the current
-   * transaction.
-   * @param serialNumber The serial number of this notification, which is
-   *    unique to this order/notification pair, but stable across each attempt
-   *    to deliver the notification.
-   * @param orderSummary The state of the order whose notification is currently
-   *    being handled.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void rollBackTransaction(
-      String serialNumber,
-      OrderSummary orderSummary,
-      Notification notification) throws Exception {
-  }
+    /**
+     * Save away the serialNumber so that if hasAlreadyHandled is called with this
+     * serial number in the future, it will return "true".
+     * @param serialNumber The serial number of this notification, which is
+     *    unique to this order/notification pair, but stable across each attempt
+     *    to deliver the notification.
+     * @param orderSummary The state of the order whose notification is currently
+     *    being handled.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected abstract void rememberSerialNumber(String serialNumber,
+                                                 OrderSummary orderSummary,
+                                                 Notification notification)
+        throws CheckoutException;
 
-  /**
-   * Should be overridden with the behavior that should happen when your system
-   * encounters any new notification from Checkout.  This method will be called
-   * before the specific onFooNotification() methods.
-   * @param orderSummary The parsed OrderSummary object from the notification.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void onAllNotifications(
-      OrderSummary orderSummary,
-      Notification notification) throws Exception {
-  }
+    /**
+     * Start a new database transaction for handling this notification.
+     * @param serialNumber The serial number of this notification, which is
+     *    unique to this order/notification pair, but stable across each attempt
+     *    to deliver the notification.
+     * @param orderSummary The state of the order whose notification is currently
+     *    being handled.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void startTransaction(String serialNumber,
+                                    OrderSummary orderSummary,
+                                    Notification notification)
+        throws CheckoutException
+    {
+    }
 
-  /**
-   * Should be overridden with the behavior that should happen when your system
-   * encounters a not-yet-handled RefundAmountNotification.
-   * @param orderSummary The parsed OrderSummary object from the notification.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void onRefundAmountNotification(
-      OrderSummary orderSummary,
-      RefundAmountNotification notification) throws Exception {
-  }
+    /**
+     * The notification was successfully handled, so commit the current
+     * transaction.
+     * @param serialNumber The serial number of this notification, which is
+     *    unique to this order/notification pair, but stable across each attempt
+     *    to deliver the notification.
+     * @param orderSummary The state of the order whose notification is currently
+     *    being handled.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void commitTransaction(String serialNumber,
+                                     OrderSummary orderSummary,
+                                     Notification notification)
+        throws CheckoutException
+    {
+    }
 
-  /**
-   * Should be overridden with the behavior that should happen when your system
-   * encounters a not-yet-handled RiskInformationNotification.
-   * @param orderSummary The parsed OrderSummary object from the notification.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void onRiskInformationNotification(
-      OrderSummary orderSummary,
-      RiskInformationNotification notification) throws Exception {
-  }
+    /**
+     * An error occurred while handling the notification, so roll back the current
+     * transaction.
+     * @param serialNumber The serial number of this notification, which is
+     *    unique to this order/notification pair, but stable across each attempt
+     *    to deliver the notification.
+     * @param orderSummary The state of the order whose notification is currently
+     *    being handled.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void rollBackTransaction(String serialNumber,
+                                       OrderSummary orderSummary,
+                                       Notification notification)
+        throws CheckoutException
+    {
+    }
 
-  /**
-   * Should be overridden with the behavior that should happen when your system
-   * encounters a not-yet-handled OrderStateChangeNotification.
-   * @param orderSummary The parsed OrderSummary object from the notification.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void onOrderStateChangeNotification(
-      OrderSummary orderSummary,
-      OrderStateChangeNotification notification) throws Exception {
-  }
+    /**
+     * Should be overridden with the behavior that should happen when your system
+     * encounters any new notification from Checkout.  This method will be called
+     * before the specific onFooNotification() methods.
+     * @param orderSummary The parsed OrderSummary object from the notification.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void onAllNotifications(OrderSummary orderSummary,
+                                      Notification notification)
+        throws CheckoutException
+    {
+    }
 
-  /**
-   * Should be overridden with the behavior that should happen when your system
-   * encounters a not-yet-handled NewOrderNotification.
-   * @param orderSummary The parsed OrderSummary object from the notification.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void onNewOrderNotification(
-      OrderSummary orderSummary,
-      NewOrderNotification notification) throws Exception {
-  }
+    /**
+     * Should be overridden with the behavior that should happen when your system
+     * encounters a not-yet-handled RefundAmountNotification.
+     * @param orderSummary The parsed OrderSummary object from the notification.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void onRefundAmountNotification(OrderSummary orderSummary,
+                                              RefundAmountNotification notification)
+        throws CheckoutException
+    {
+    }
 
-  /**
-   * Should be overridden with the behavior that should happen when your system
-   * encounters a not-yet-handled ChargebackAmountNotification.
-   * @param orderSummary The parsed OrderSummary object from the notification.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void onChargebackAmountNotification(
-      OrderSummary orderSummary,
-      ChargebackAmountNotification notification) throws Exception {
-  }
+    /**
+     * Should be overridden with the behavior that should happen when your system
+     * encounters a not-yet-handled RiskInformationNotification.
+     * @param orderSummary The parsed OrderSummary object from the notification.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void onRiskInformationNotification(OrderSummary orderSummary,
+                                                 RiskInformationNotification notification)
+        throws CheckoutException
+    {
+    }
 
-  /**
-   * Should be overridden with the behavior that should happen when your system
-   * encounters a not-yet-handled ChargeAmountNotification.
-   * @param orderSummary The parsed OrderSummary object from the notification.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void onChargeAmountNotification(
-      OrderSummary orderSummary,
-      ChargeAmountNotification notification) throws Exception {
-  }
+    /**
+     * Should be overridden with the behavior that should happen when your system
+     * encounters a not-yet-handled OrderStateChangeNotification.
+     * @param orderSummary The parsed OrderSummary object from the notification.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void onOrderStateChangeNotification(OrderSummary orderSummary,
+                                                  OrderStateChangeNotification notification)
+        throws CheckoutException
+    {
+    }
 
-  /**
-   * Should be overridden with the behavior that should happen when your system
-   * encounters a not-yet-handled AuthorizationAmountNotification.
-   * @param orderSummary The parsed OrderSummary object from the notification.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void onAuthorizationAmountNotification(
-      OrderSummary orderSummary,
-      AuthorizationAmountNotification notification) throws Exception {
-  }
+    /**
+     * Should be overridden with the behavior that should happen when your system
+     * encounters a not-yet-handled NewOrderNotification.
+     * @param orderSummary The parsed OrderSummary object from the notification.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void onNewOrderNotification(OrderSummary orderSummary,
+                                          NewOrderNotification notification)
+        throws CheckoutException
+    {
+    }
 
-  /**
-   * Should be overridden with the behavior that should happen when your system
-   * encounters a not-yet-handled RefundAmountNotification.
-   * @param orderSummary The parsed OrderSummary object from the notification.
-   * @param notification The parsed JAXB object of the notification itself.
-   */
-  protected void onRiskAmountNotification(
-      OrderSummary orderSummary,
-      RefundAmountNotification notification) throws Exception {
-  }
+    /**
+     * Should be overridden with the behavior that should happen when your system
+     * encounters a not-yet-handled ChargebackAmountNotification.
+     * @param orderSummary The parsed OrderSummary object from the notification.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void onChargebackAmountNotification(OrderSummary orderSummary,
+                                                  ChargebackAmountNotification notification)
+        throws CheckoutException
+    {
+    }
+
+    /**
+     * Should be overridden with the behavior that should happen when your system
+     * encounters a not-yet-handled ChargeAmountNotification.
+     * @param orderSummary The parsed OrderSummary object from the notification.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void onChargeAmountNotification(OrderSummary orderSummary,
+                                              ChargeAmountNotification notification)
+        throws CheckoutException
+    {
+    }
+
+    /**
+     * Should be overridden with the behavior that should happen when your system
+     * encounters a not-yet-handled AuthorizationAmountNotification.
+     * @param orderSummary The parsed OrderSummary object from the notification.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void onAuthorizationAmountNotification(OrderSummary orderSummary,
+                                                     AuthorizationAmountNotification notification)
+        throws CheckoutException
+    {
+    }
+
+    /**
+     * Should be overridden with the behavior that should happen when your system
+     * encounters a not-yet-handled RefundAmountNotification.
+     * @param orderSummary The parsed OrderSummary object from the notification.
+     * @param notification The parsed JAXB object of the notification itself.
+     */
+    protected void onRiskAmountNotification(OrderSummary orderSummary,
+                                            RefundAmountNotification notification)
+        throws CheckoutException
+    {
+    }
 }

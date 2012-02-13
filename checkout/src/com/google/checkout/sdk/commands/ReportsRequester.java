@@ -32,54 +32,54 @@ import javax.xml.bind.JAXBElement;
  */
 public class ReportsRequester {
 
-  private final ApiContext apiContext;
+    private final ApiContext apiContext;
 
-  ReportsRequester(ApiContext apiContext) {
-    this.apiContext = apiContext;
-  }
+    public ReportsRequester(ApiContext apiContext) {
+        this.apiContext = apiContext;
+    }
 
-  /**
-   * Fetches the notification object XML which corresponds to
-   * {@code serialNumber}. This object is an element of
-   * {@code com.google.checkout.sdk.domain}:
-   * <ul>
-   *   <li>{@link com.google.checkout.sdk.domain.NewOrderNotification}</li>
-   *   <li>{@link com.google.checkout.sdk.domain.AuthorizationAmountNotification}</li>
-   *   <li>{@link com.google.checkout.sdk.domain.OrderStateChangeNotification}</li>
-   *   <li>And so on.</li>
-   * </ul>
-   * @param serialNumber The serial number of the notification to fetch.
-   * @return The notification corresponding to the serial number.
-   * @throws CheckoutException If underlying communication throws an exception.
-   */
-  public Notification requestNotification(String serialNumber) throws CheckoutException {
-    NotificationHistoryRequest request = new NotificationHistoryRequest();
-    request.setSerialNumber(serialNumber);
-    // this is a specific notification domain object.
-    return (Notification)postRequest(request.toJAXB());
-  }
+    /**
+     * Fetches the notification object XML which corresponds to
+     * {@code serialNumber}. This object is an element of
+     * {@code com.google.checkout.sdk.domain}:
+     * <ul>
+     *   <li>{@link com.google.checkout.sdk.domain.NewOrderNotification}</li>
+     *   <li>{@link com.google.checkout.sdk.domain.AuthorizationAmountNotification}</li>
+     *   <li>{@link com.google.checkout.sdk.domain.OrderStateChangeNotification}</li>
+     *   <li>And so on.</li>
+     * </ul>
+     * @param serialNumber The serial number of the notification to fetch.
+     * @return The notification corresponding to the serial number.
+     * @throws CheckoutException If underlying communication throws an exception.
+     */
+    public Notification requestNotification(String serialNumber) throws CheckoutException {
+        NotificationHistoryRequest request = new NotificationHistoryRequest();
+        request.setSerialNumber(serialNumber);
+        // this is a specific notification domain object.
+        return (Notification)postRequest(request.toJAXB());
+    }
 
-  /**
-   * Fetches the order summaries which correspond to the specified
-   * {@code googleOrderNumbers}. They will reflect the current state of those
-   * orders.
-   * @param googleOrderNumbers The order ids of interest.
-   * @return A list of the relevant objects
-   * @throws CheckoutException If underlying communication throws an exception.
-   */
-  public List<OrderSummary> requestOrderSummaries(List<String> googleOrderNumbers)
-      throws CheckoutException {
-    OrderSummaryRequest request = new OrderSummaryRequest();
-    OrderSummaryRequest.OrderNumbers orderNumbers = new OrderSummaryRequest.OrderNumbers();
-    orderNumbers.getGoogleOrderNumber().addAll(googleOrderNumbers);
-    request.setOrderNumbers(orderNumbers);
+    /**
+     * Fetches the order summaries which correspond to the specified
+     * {@code googleOrderNumbers}. They will reflect the current state of those
+     * orders.
+     * @param googleOrderNumbers The order ids of interest.
+     * @return A list of the relevant objects
+     * @throws CheckoutException If underlying communication throws an exception.
+     */
+    public List<OrderSummary> requestOrderSummaries(List<String> googleOrderNumbers)
+        throws CheckoutException {
+        OrderSummaryRequest request = new OrderSummaryRequest();
+        OrderSummaryRequest.OrderNumbers orderNumbers = new OrderSummaryRequest.OrderNumbers();
+        orderNumbers.getGoogleOrderNumber().addAll(googleOrderNumbers);
+        request.setOrderNumbers(orderNumbers);
 
-    OrderSummaryResponse response = (OrderSummaryResponse)postRequest(request.toJAXB());
+        OrderSummaryResponse response = (OrderSummaryResponse)postRequest(request.toJAXB());
 
-    return response.getOrderSummaries().getOrderSummary();
-  }
+        return response.getOrderSummaries().getOrderSummary();
+    }
 
-  protected Object postRequest(JAXBElement<?> request) {
-    return apiContext.postCommand(CommandType.REPORTS, request);
-  }
+    protected Object postRequest(JAXBElement<?> request) {
+        return apiContext.postCommand(CommandType.REPORTS, request);
+    }
 }

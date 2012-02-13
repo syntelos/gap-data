@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see Merchant
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-12T22:03:18.272Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-12T23:20:39.408Z")
 public abstract class MerchantData
     extends gap.data.BigTable
     implements DataInheritance<Merchant>
@@ -339,7 +339,7 @@ public abstract class MerchantData
         Identifier("identifier",Type.Primitive),
         MerchantId("merchantId",Type.Primitive),
         MerchantKey("merchantKey",Type.Primitive),
-        Currency("currency",Type.Primitive),
+        CurrencyCode("currencyCode",Type.Primitive),
         Test("test",Type.Primitive);
 
         private final static lxl.Map<String,Field> FieldName = new lxl.Map<String,Field>();
@@ -400,8 +400,8 @@ public abstract class MerchantData
                 return instance.getMerchantId(mayInherit);
             case MerchantKey:
                 return instance.getMerchantKey(mayInherit);
-            case Currency:
-                return instance.getCurrency(mayInherit);
+            case CurrencyCode:
+                return instance.getCurrencyCode(mayInherit);
             case Test:
                 return instance.getTest(mayInherit);
             default:
@@ -427,8 +427,8 @@ public abstract class MerchantData
                 return instance.setMerchantId(gap.Objects.StringFromObject(value));
             case MerchantKey:
                 return instance.setMerchantKey(gap.Objects.StringFromObject(value));
-            case Currency:
-                return instance.setCurrency(gap.Objects.StringFromObject(value));
+            case CurrencyCode:
+                return instance.setCurrencyCode(gap.Objects.StringFromObject(value));
             case Test:
                 return instance.setTest(gap.Objects.BooleanFromObject(value));
             default:
@@ -454,8 +454,8 @@ public abstract class MerchantData
                 return instance.getMerchantId(MayNotInherit);
             case MerchantKey:
                 return instance.getMerchantKey(MayNotInherit);
-            case Currency:
-                return instance.getCurrency(MayNotInherit);
+            case CurrencyCode:
+                return instance.getCurrencyCode(MayNotInherit);
             case Test:
                 return instance.getTest(MayNotInherit);
             default:
@@ -487,8 +487,8 @@ public abstract class MerchantData
             case MerchantKey:
                 instance.setMerchantKey( (String)value);
                 return;
-            case Currency:
-                instance.setCurrency( (String)value);
+            case CurrencyCode:
+                instance.setCurrencyCode( (String)value);
                 return;
             case Test:
                 instance.setTest( (Boolean)value);
@@ -605,7 +605,7 @@ public abstract class MerchantData
     private String identifier;
     private String merchantId;
     private String merchantKey;
-    private String currency;
+    private String currencyCode;
     private Boolean test;
 
 
@@ -638,7 +638,7 @@ public abstract class MerchantData
         this.identifier = null;
         this.merchantId = null;
         this.merchantKey = null;
-        this.currency = null;
+        this.currencyCode = null;
         this.test = null;
     }
     public final String getId(){
@@ -830,49 +830,49 @@ public abstract class MerchantData
         else
             return false;
     }
-    public final boolean hasCurrency(boolean mayInherit){
-        return (null != this.getCurrency(mayInherit));
+    public final boolean hasCurrencyCode(boolean mayInherit){
+        return (null != this.getCurrencyCode(mayInherit));
     }
-    public final boolean hasNotCurrency(boolean mayInherit){
-        return (null == this.getCurrency(mayInherit));
+    public final boolean hasNotCurrencyCode(boolean mayInherit){
+        return (null == this.getCurrencyCode(mayInherit));
     }
-    public final boolean dropCurrency(){
-        if (null != this.currency){
-            this.fieldStatistics().markDirty(Merchant.Field.Currency);
-            this.currency = null;
+    public final boolean dropCurrencyCode(){
+        if (null != this.currencyCode){
+            this.fieldStatistics().markDirty(Merchant.Field.CurrencyCode);
+            this.currencyCode = null;
             return true;
         }
         else
             return false;
     }
-    public final String getCurrency(){
-        return this.getCurrency(Notation.MayInherit);
+    public final String getCurrencyCode(){
+        return this.getCurrencyCode(Notation.MayInherit);
     }
-    public final String getCurrency(boolean mayInherit){
+    public final String getCurrencyCode(boolean mayInherit){
         if (mayInherit){
-            String currency = this.currency;
-            if (null == currency && this.hasInheritFrom()){
+            String currencyCode = this.currencyCode;
+            if (null == currencyCode && this.hasInheritFrom()){
                 Merchant inheritFrom = this.getInheritFrom();
-                return inheritFrom.getCurrency(Notation.MayInherit);
+                return inheritFrom.getCurrencyCode(Notation.MayInherit);
             }
-            return currency;
+            return currencyCode;
         }
         else
-            return this.currency;
+            return this.currencyCode;
     }
-    public final boolean setCurrency(String currency, boolean withInheritance){
-        if (IsNotEqual(this.currency,this.getCurrency(withInheritance))){
-            this.fieldStatistics().markDirty(Merchant.Field.Currency);
-            this.currency = currency;
+    public final boolean setCurrencyCode(String currencyCode, boolean withInheritance){
+        if (IsNotEqual(this.currencyCode,this.getCurrencyCode(withInheritance))){
+            this.fieldStatistics().markDirty(Merchant.Field.CurrencyCode);
+            this.currencyCode = currencyCode;
             return true;
         }
         else
             return false;
     }
-    public final boolean setCurrency(String currency){
-        if (IsNotEqual(this.currency,currency)){
-            this.fieldStatistics().markDirty(Merchant.Field.Currency);
-            this.currency = currency;
+    public final boolean setCurrencyCode(String currencyCode){
+        if (IsNotEqual(this.currencyCode,currencyCode)){
+            this.fieldStatistics().markDirty(Merchant.Field.CurrencyCode);
+            this.currencyCode = currencyCode;
             return true;
         }
         else
@@ -956,15 +956,15 @@ public abstract class MerchantData
         else
             return this.setMerchantKey((String)json.getValue(String.class));
     }
-    public Json toJsonCurrency(){
-        String currency = this.getCurrency();
-        return Json.Wrap( currency);
+    public Json toJsonCurrencyCode(){
+        String currencyCode = this.getCurrencyCode();
+        return Json.Wrap( currencyCode);
     }
-    public boolean fromJsonCurrency(Json json){
+    public boolean fromJsonCurrencyCode(Json json){
         if (null == json)
             return false;
         else
-            return this.setCurrency((String)json.getValue(String.class));
+            return this.setCurrencyCode((String)json.getValue(String.class));
     }
     public Json toJsonTest(){
         Boolean test = this.getTest();
@@ -1006,9 +1006,9 @@ public abstract class MerchantData
         Json merchantKey = this.toJsonMerchantKey();
         if (null != merchantKey)
             json.set("merchantKey",merchantKey);
-        Json currency = this.toJsonCurrency();
-        if (null != currency)
-            json.set("currency",currency);
+        Json currencyCode = this.toJsonCurrencyCode();
+        if (null != currencyCode)
+            json.set("currencyCode",currencyCode);
         Json test = this.toJsonTest();
         if (null != test)
             json.set("test",test);
@@ -1018,7 +1018,7 @@ public abstract class MerchantData
         boolean modified = false;
         modified = (this.fromJsonMerchantId(json.at("merchantId")) || modified);
         modified = (this.fromJsonMerchantKey(json.at("merchantKey")) || modified);
-        modified = (this.fromJsonCurrency(json.at("currency")) || modified);
+        modified = (this.fromJsonCurrencyCode(json.at("currencyCode")) || modified);
         modified = (this.fromJsonTest(json.at("test")) || modified);
         return modified;
     }
@@ -1048,16 +1048,16 @@ public abstract class MerchantData
                 throw new ValidationError(ClassName,"merchantKey",merchantKeyRequest,exc);
             }
         }
-        String currencyRequest = req.getParameter("currency");
-        if (null != currencyRequest && 0 < currencyRequest.length()){
+        String currencyCodeRequest = req.getParameter("currencyCode");
+        if (null != currencyCodeRequest && 0 < currencyCodeRequest.length()){
             try {
-                String currency = currencyRequest;
-                if (this.setCurrency(currency)){
+                String currencyCode = currencyCodeRequest;
+                if (this.setCurrencyCode(currencyCode)){
                     change = true;
                 }
             }
             catch (RuntimeException exc){
-                throw new ValidationError(ClassName,"currency",currencyRequest,exc);
+                throw new ValidationError(ClassName,"currencyCode",currencyCodeRequest,exc);
             }
         }
         String testRequest = req.getParameter("test");
@@ -1088,8 +1088,8 @@ public abstract class MerchantData
         if (null != merchantKey && this.setMerchantKey(merchantKey)){
             change = true;
         }
-        String currency = proto.getCurrency(mayInherit);
-        if (null != currency && this.setCurrency(currency)){
+        String currencyCode = proto.getCurrencyCode(mayInherit);
+        if (null != currencyCode && this.setCurrencyCode(currencyCode)){
             change = true;
         }
         Boolean test = proto.getTest(mayInherit);
@@ -1134,8 +1134,8 @@ public abstract class MerchantData
             gap.data.Field field = Merchant.Field.MerchantKey;
             return this.markDirty(field);
         }
-        else if (instance == this.currency){
-            gap.data.Field field = Merchant.Field.Currency;
+        else if (instance == this.currencyCode){
+            gap.data.Field field = Merchant.Field.CurrencyCode;
             return this.markDirty(field);
         }
         else if (instance == this.test){
@@ -1207,14 +1207,14 @@ public abstract class MerchantData
                      */
                     return this.hasMerchantKey(true);
                 }
-            case Currency:
+            case CurrencyCode:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else {
                     /*
                      * Synthesize section for Field (EXISTS)
                      */
-                    return this.hasCurrency(true);
+                    return this.hasCurrencyCode(true);
                 }
             case Test:
                 if (name.has(1))
@@ -1255,11 +1255,11 @@ public abstract class MerchantData
                     throw new IllegalStateException(field.name());
                 else
                     return this.getMerchantKey(true);
-            case Currency:
+            case CurrencyCode:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else
-                    return this.getCurrency(true);
+                    return this.getCurrencyCode(true);
             case Test:
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
@@ -1284,7 +1284,7 @@ public abstract class MerchantData
                     throw new IllegalStateException(field.name());
                 case MerchantKey:
                     throw new IllegalStateException(field.name());
-                case Currency:
+                case CurrencyCode:
                     throw new IllegalStateException(field.name());
                 case Test:
                     throw new IllegalStateException(field.name());
@@ -1309,7 +1309,7 @@ public abstract class MerchantData
                 return null;
             case MerchantKey:
                 return null;
-            case Currency:
+            case CurrencyCode:
                 return null;
             case Test:
                 return null;

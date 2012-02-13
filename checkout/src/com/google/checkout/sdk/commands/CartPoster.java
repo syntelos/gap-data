@@ -53,154 +53,154 @@ import java.math.BigDecimal;
  */
 public class CartPoster {
 
-  private final ApiContext apiContext;
+    private final ApiContext apiContext;
 
-  CartPoster(ApiContext apiContext) {
-    this.apiContext = apiContext;
-  }
-
-  /**
-   * @return A Checkout shopping-cart builder.
-   */
-  public CheckoutShoppingCartBuilder makeCart() {
-    return new CheckoutShoppingCartBuilder(this);
-  }
-
-  /**
-   * Post Cart object to Google Checkout.
-   * @param cart The Checkout Shopping Cart object.
-   * @return CheckoutRedirect containing a url to which to redirect the buyer
-   *   for purchase.
-   * @throws CheckoutException If underlying I/O operations throw or an
-   *    unsuccessful response is given. Since the buyer hasn't seen a buy page
-   *    yet in this event, you do not need to do any special handling with
-   *    respect to Checkout.
-   */
-  public CheckoutRedirect postCart(CheckoutShoppingCart cart) throws CheckoutException {
-    return (CheckoutRedirect)apiContext.postCommand(CommandType.CART_POST, cart.toJAXB());
-  }
-
-  /**
-   * <p>A helper for constructing and sending Checkout Shopping Carts to Google
-   * Checkout. An example of use:
-   * <code>
-   * ApiContext apiContext = new ApiContext(...);
-   * CheckoutRedirect redirect =
-   *    apiContext.cartPoster().makeCart() // creates a CheckoutShoppingCartBuilder
-   *        .addItem(
-   *            "Red Shoes", "A pair of size 10 trainers", 50.0, 1) // with an item
-   *        .addItem(
-   *            "Awesome Laces", "A pair of incredibly cool laces", 10.0, 4) // another item
-   *        .buildAndPost();
-   * ... // show the redirect to the user, somehow
-   * </code>
-   * This will offer a pair of shoes (at 50 dollars each, if the ApiContext we
-   * created said we were selling in dollars) and 4 sets of laces (10 dollars
-   * each) to a buyer.</p>
-   * <p>If you need to modify a cart before posting it (this Builder is
-   * intended to be quick and easy, not exhaustive!), you can either use the
-   * builder partially, as in:
-   * <code>
-   * ApiContext apiContext = new ApiContext(...);
-   * CheckoutShoppingCart checkoutShoppingCart =
-   *    apiContext.cartPoster().makeCart() // creates a CheckoutShoppingCartBuilder
-   *        .addItem(
-   *            "Red Shoes", "A pair of size 10 trainers", 50.0, 1) // with an item
-   *        .addItem(
-   *            "Awesome Laces", "A pair of incredibly cool laces", 10.0, 4) // another item
-   *        .build();
-   * MerchantCheckoutFlowSupport flowSupport = new MerchanTCheckoutFlowSupport();
-   * ... // modify the flow support -- add some taxes or shipping
-   * checkoutShoppingCart.setCheckoutFlowSupport(flowSupport);
-   * CheckoutRedirect redirect = apiContext.cartPoster().postCart(checkoutShoppingCart);
-   * ... // show the redirect to the user, somehow
-   * </code>
-   * Or dispense with the builder entirely, and perform all operations on the
-   * {@link CheckoutShoppingCart} manually, ignoring this class.</p>
-   * <p>It is an error to invoke any methods on this class after {@link #build()}
-   * or {@link #buildAndPost()} have been invoked.</p>
-   *
-   * @see CartPoster#makeCart()
-   */
-  public static final class CheckoutShoppingCartBuilder {
-    private final CartPoster cartPoster;
-    private ShoppingCart shoppingCart;
-    private OrderProcessingSupport orderProcessingSupport;
-    private boolean hasBeenBuilt;
-
-    CheckoutShoppingCartBuilder(CartPoster cartPoster) {
-      this.cartPoster = cartPoster;
-      this.shoppingCart = new ShoppingCart();
-      this.hasBeenBuilt = false;
-      shoppingCart.setItems(new Items());
+    public CartPoster(ApiContext apiContext) {
+        this.apiContext = apiContext;
     }
 
     /**
-     * Adds a line-item to be purchased.
-     * @return This builder.
+     * @return A Checkout shopping-cart builder.
      */
-    public CheckoutShoppingCartBuilder addItem(String name,
-        String description, double unitPrice, int quantity) {
-      return addItem(name, description, BigDecimal.valueOf(unitPrice), quantity);
+    public CheckoutShoppingCartBuilder makeCart() {
+        return new CheckoutShoppingCartBuilder(this);
     }
 
     /**
-     * Adds a line-item to be purchased.
-     * @return This builder.
-     */
-    public CheckoutShoppingCartBuilder addItem(String name,
-        String description, BigDecimal unitPrice, int quantity) {
-
-      Item newItem = new Item();
-      newItem.setItemName(name);
-      newItem.setItemDescription(description);
-      newItem.setUnitPrice(cartPoster.apiContext.makeMoney(unitPrice));
-      newItem.setQuantity(quantity);
-
-      return addItem(newItem);
-    }
-
-    /**
-     * Adds a line-item to be purchased.
-     * @return This builder.
-     */
-    public CheckoutShoppingCartBuilder addItem(Item item) {
-      if (hasBeenBuilt) {
-        throw new IllegalStateException();
-      }
-      shoppingCart.getItems().getItem().add(item);
-      return this;
-    }
-
-    /**
-     * Create -- but do not post! -- the constructed cart. After this method is
-     * invoked, you may not use this Builder anymore.
-     * @return The java domain checkout shopping cart object.
-     */
-    public CheckoutShoppingCart build() {
-      if (hasBeenBuilt) {
-        throw new IllegalStateException();
-      }
-      this.hasBeenBuilt = true;
-      CheckoutShoppingCart checkoutShoppingCart = new CheckoutShoppingCart();
-      checkoutShoppingCart.setShoppingCart(shoppingCart);
-      checkoutShoppingCart.setOrderProcessingSupport(orderProcessingSupport);
-      return checkoutShoppingCart;
-    }
-
-
-    /**
-     * Posts the constructed cart to Google Checkout. This is implemented as
-     * a call to {@link CartPoster#postCart(CheckoutShoppingCart)} and so all
-     * the caveats there apply here. After this method is invoked, you may not
-     * use this Builder anymore.
+     * Post Cart object to Google Checkout.
+     * @param cart The Checkout Shopping Cart object.
      * @return CheckoutRedirect containing a url to which to redirect the buyer
      *   for purchase.
-     * @throws CheckoutException if
-     *    {@link CartPoster#postCart(CheckoutShoppingCart)} throws an exception.
+     * @throws CheckoutException If underlying I/O operations throw or an
+     *    unsuccessful response is given. Since the buyer hasn't seen a buy page
+     *    yet in this event, you do not need to do any special handling with
+     *    respect to Checkout.
      */
-    public CheckoutRedirect buildAndPost() throws CheckoutException {
-      return cartPoster.postCart(build());
+    public CheckoutRedirect postCart(CheckoutShoppingCart cart) throws CheckoutException {
+        return (CheckoutRedirect)apiContext.postCommand(CommandType.CART_POST, cart.toJAXB());
     }
-  }
+
+    /**
+     * <p>A helper for constructing and sending Checkout Shopping Carts to Google
+     * Checkout. An example of use:
+     * <code>
+     * ApiContext apiContext = new ApiContext(...);
+     * CheckoutRedirect redirect =
+     *    apiContext.cartPoster().makeCart() // creates a CheckoutShoppingCartBuilder
+     *        .addItem(
+     *            "Red Shoes", "A pair of size 10 trainers", 50.0, 1) // with an item
+     *        .addItem(
+     *            "Awesome Laces", "A pair of incredibly cool laces", 10.0, 4) // another item
+     *        .buildAndPost();
+     * ... // show the redirect to the user, somehow
+     * </code>
+     * This will offer a pair of shoes (at 50 dollars each, if the ApiContext we
+     * created said we were selling in dollars) and 4 sets of laces (10 dollars
+     * each) to a buyer.</p>
+     * <p>If you need to modify a cart before posting it (this Builder is
+     * intended to be quick and easy, not exhaustive!), you can either use the
+     * builder partially, as in:
+     * <code>
+     * ApiContext apiContext = new ApiContext(...);
+     * CheckoutShoppingCart checkoutShoppingCart =
+     *    apiContext.cartPoster().makeCart() // creates a CheckoutShoppingCartBuilder
+     *        .addItem(
+     *            "Red Shoes", "A pair of size 10 trainers", 50.0, 1) // with an item
+     *        .addItem(
+     *            "Awesome Laces", "A pair of incredibly cool laces", 10.0, 4) // another item
+     *        .build();
+     * MerchantCheckoutFlowSupport flowSupport = new MerchanTCheckoutFlowSupport();
+     * ... // modify the flow support -- add some taxes or shipping
+     * checkoutShoppingCart.setCheckoutFlowSupport(flowSupport);
+     * CheckoutRedirect redirect = apiContext.cartPoster().postCart(checkoutShoppingCart);
+     * ... // show the redirect to the user, somehow
+     * </code>
+     * Or dispense with the builder entirely, and perform all operations on the
+     * {@link CheckoutShoppingCart} manually, ignoring this class.</p>
+     * <p>It is an error to invoke any methods on this class after {@link #build()}
+     * or {@link #buildAndPost()} have been invoked.</p>
+     *
+     * @see CartPoster#makeCart()
+     */
+    public static final class CheckoutShoppingCartBuilder {
+        private final CartPoster cartPoster;
+        private ShoppingCart shoppingCart;
+        private OrderProcessingSupport orderProcessingSupport;
+        private boolean hasBeenBuilt;
+
+        CheckoutShoppingCartBuilder(CartPoster cartPoster) {
+            this.cartPoster = cartPoster;
+            this.shoppingCart = new ShoppingCart();
+            this.hasBeenBuilt = false;
+            shoppingCart.setItems(new Items());
+        }
+
+        /**
+         * Adds a line-item to be purchased.
+         * @return This builder.
+         */
+        public CheckoutShoppingCartBuilder addItem(String name,
+                                                   String description, double unitPrice, int quantity) {
+            return addItem(name, description, BigDecimal.valueOf(unitPrice), quantity);
+        }
+
+        /**
+         * Adds a line-item to be purchased.
+         * @return This builder.
+         */
+        public CheckoutShoppingCartBuilder addItem(String name,
+                                                   String description, BigDecimal unitPrice, int quantity) {
+
+            Item newItem = new Item();
+            newItem.setItemName(name);
+            newItem.setItemDescription(description);
+            newItem.setUnitPrice(cartPoster.apiContext.makeMoney(unitPrice));
+            newItem.setQuantity(quantity);
+
+            return addItem(newItem);
+        }
+
+        /**
+         * Adds a line-item to be purchased.
+         * @return This builder.
+         */
+        public CheckoutShoppingCartBuilder addItem(Item item) {
+            if (hasBeenBuilt) {
+                throw new IllegalStateException();
+            }
+            shoppingCart.getItems().getItem().add(item);
+            return this;
+        }
+
+        /**
+         * Create -- but do not post! -- the constructed cart. After this method is
+         * invoked, you may not use this Builder anymore.
+         * @return The java domain checkout shopping cart object.
+         */
+        public CheckoutShoppingCart build() {
+            if (hasBeenBuilt) {
+                throw new IllegalStateException();
+            }
+            this.hasBeenBuilt = true;
+            CheckoutShoppingCart checkoutShoppingCart = new CheckoutShoppingCart();
+            checkoutShoppingCart.setShoppingCart(shoppingCart);
+            checkoutShoppingCart.setOrderProcessingSupport(orderProcessingSupport);
+            return checkoutShoppingCart;
+        }
+
+
+        /**
+         * Posts the constructed cart to Google Checkout. This is implemented as
+         * a call to {@link CartPoster#postCart(CheckoutShoppingCart)} and so all
+         * the caveats there apply here. After this method is invoked, you may not
+         * use this Builder anymore.
+         * @return CheckoutRedirect containing a url to which to redirect the buyer
+         *   for purchase.
+         * @throws CheckoutException if
+         *    {@link CartPoster#postCart(CheckoutShoppingCart)} throws an exception.
+         */
+        public CheckoutRedirect buildAndPost() throws CheckoutException {
+            return cartPoster.postCart(build());
+        }
+    }
 }

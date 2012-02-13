@@ -42,99 +42,100 @@ import javax.servlet.http.HttpServletResponse;
  * </code>
  */
 public class NotificationHandler extends BaseNotificationHandler {
-  private static final String SERIAL_NUMBER_PARAMETER = "serial-number";
 
-  private final ApiContext apiContext;
+    private static final String SERIAL_NUMBER_PARAMETER = "serial-number";
 
-  public NotificationHandler(ApiContext apiContext) {
-    this.apiContext = apiContext;
-  }
+    private final ApiContext apiContext;
 
-  /**
-   * Uses the given notification dispatcher to handle a notification POST for Checkout.  Can handle
-   * XML, HTML and serial-number notifications.
-   *
-   * 1. Gets the notification from the request, re-throwing any exceptions.
-   * 2. Calls dispatcher.startTransaction()
-   * 3. Calls dispatcher.hasAlreadyHandled() to see if the notification has already been handled.
-   * 4. If the notification has not been handled:
-   *        Calls dispatcher.onAllNotifications()
-   *        Calls dispatcher.onFooNotification() where X is the notification type.
-   *        Calls dispatcher.rememberSerialNumber()
-   * 5. Calls dispatcher.commitTransaction()
-   * 6. Sends a notification acknowledgment, ignoring any exceptions.
-   *
-   * If any exceptions occur during steps 2 through 5,
-   * calls dispatcher.rollbackTransaction() and throws a CheckoutException.
-   *
-   * @throws CheckoutException if an exceptions occurred in steps 1 through 5.
-   */
-  public void handleNotification(BaseNotificationDispatcher dispatcher) throws CheckoutException {
-    Notification notification = getNotificationFromRequest(dispatcher.request);
-    String serialNumber = notification.getSerialNumber();
-    OrderSummary orderSummary = notification.getOrderSummary();
-
-    try {
-      dispatcher.startTransaction(serialNumber, orderSummary, notification);
-
-      if (!dispatcher.hasAlreadyHandled(serialNumber, orderSummary, notification)) {
-        dispatcher.onAllNotifications(orderSummary, notification);
-        dispatchByType(notification, orderSummary, dispatcher);
-        dispatcher.rememberSerialNumber(serialNumber, orderSummary, notification);
-      }
-
-      dispatcher.commitTransaction(serialNumber, orderSummary, notification);
-    } catch (Exception e) {
-      logger.log(Level.INFO, "Caught exception while processing", e);
-      try {
-        dispatcher.rollBackTransaction(serialNumber, orderSummary, notification);
-        dispatcher.response.sendError(
-            HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Error in Server");
-      } catch (Exception secondaryException) {
-        logger.log(Level.WARNING, "Secondary Exception caught while rolling back transaction.",
-            secondaryException);
-      }
-      throw new CheckoutException("Rolled back transaction due to exception.", e);
+    public NotificationHandler(ApiContext apiContext) {
+        this.apiContext = apiContext;
     }
 
-    try {
-      sendNotificationAcknowledgment(
-          serialNumber, dispatcher.response, notification, dispatcher.request);
-    } catch (Exception e) {
-      // No big deal.  If Checkout re-sends this notification
-      // dispatcher.hasAlreadyHandled() will return true.
-      logger.log(Level.FINE, "Exception while sending notification acknowledgment:", e);
+    /**
+     * Uses the given notification dispatcher to handle a notification POST for Checkout.  Can handle
+     * XML, HTML and serial-number notifications.
+     *
+     * 1. Gets the notification from the request, re-throwing any exceptions.
+     * 2. Calls dispatcher.startTransaction()
+     * 3. Calls dispatcher.hasAlreadyHandled() to see if the notification has already been handled.
+     * 4. If the notification has not been handled:
+     *        Calls dispatcher.onAllNotifications()
+     *        Calls dispatcher.onFooNotification() where X is the notification type.
+     *        Calls dispatcher.rememberSerialNumber()
+     * 5. Calls dispatcher.commitTransaction()
+     * 6. Sends a notification acknowledgment, ignoring any exceptions.
+     *
+     * If any exceptions occur during steps 2 through 5,
+     * calls dispatcher.rollbackTransaction() and throws a CheckoutException.
+     *
+     * @throws CheckoutException if an exceptions occurred in steps 1 through 5.
+     */
+    public void handleNotification(BaseNotificationDispatcher dispatcher) throws CheckoutException {
+        Notification notification = getNotificationFromRequest(dispatcher.request);
+        String serialNumber = notification.getSerialNumber();
+        OrderSummary orderSummary = notification.getOrderSummary();
+
+        try {
+            dispatcher.startTransaction(serialNumber, orderSummary, notification);
+
+            if (!dispatcher.hasAlreadyHandled(serialNumber, orderSummary, notification)) {
+                dispatcher.onAllNotifications(orderSummary, notification);
+                dispatchByType(notification, orderSummary, dispatcher);
+                dispatcher.rememberSerialNumber(serialNumber, orderSummary, notification);
+            }
+
+            dispatcher.commitTransaction(serialNumber, orderSummary, notification);
+        } catch (Exception e) {
+            logger.log(Level.INFO, "Caught exception while processing", e);
+            try {
+                dispatcher.rollBackTransaction(serialNumber, orderSummary, notification);
+                dispatcher.response.sendError(
+                                              HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Error in Server");
+            } catch (Exception secondaryException) {
+                logger.log(Level.WARNING, "Secondary Exception caught while rolling back transaction.",
+                           secondaryException);
+            }
+            throw new CheckoutException("Rolled back transaction due to exception.", e);
+        }
+
+        try {
+            sendNotificationAcknowledgment(
+                                           serialNumber, dispatcher.response, notification, dispatcher.request);
+        } catch (Exception e) {
+            // No big deal.  If Checkout re-sends this notification
+            // dispatcher.hasAlreadyHandled() will return true.
+            logger.log(Level.FINE, "Nominal exception while sending notification acknowledgment:", e);
+        }
     }
-  }
 
 
-  /**
-   * Returns the a JAXB notification object for the given request.
-   *
-   * Can handle XML, HTML and serial-number notification. For HTML and serial-number notifications,
-   * makes a call to Checkout to get the notification XML.  For XML requests, validates
-   * the basic auth headers.
-   *
-   * @throws CheckoutException if the basic auth header was invalid or the notification could not be
-   *    retrieved.
-   */
-  public Notification getNotificationFromRequest(HttpServletRequest request) throws CheckoutException {
-    if (Utils.IsSerialNumberRequest(request)) {
-      String serialNumber = request.getParameter(SERIAL_NUMBER_PARAMETER);
-      if (serialNumber == null) {
-        throw new CheckoutException("Couldn't find serial number in parameters");
-      }
-      return apiContext.reportsRequester().requestNotification(serialNumber);
-    } else {
-      String auth = request.getHeader("Authorization");
-      if (!apiContext.isValidAuth(auth)) {
-        throw new CheckoutException("Invalid auth found");
-      }
-      try {
-        return (Notification)Utils.FromXML(request.getInputStream()).getValue();
-      } catch (Exception e) {
-        throw new CheckoutException("Could not retrieve notification", e);
-      }
+    /**
+     * Returns the a JAXB notification object for the given request.
+     *
+     * Can handle XML, HTML and serial-number notification. For HTML and serial-number notifications,
+     * makes a call to Checkout to get the notification XML.  For XML requests, validates
+     * the basic auth headers.
+     *
+     * @throws CheckoutException if the basic auth header was invalid or the notification could not be
+     *    retrieved.
+     */
+    public Notification getNotificationFromRequest(HttpServletRequest request) throws CheckoutException {
+        if (Utils.IsSerialNumberRequest(request)) {
+            String serialNumber = request.getParameter(SERIAL_NUMBER_PARAMETER);
+            if (serialNumber == null) {
+                throw new CheckoutException("Couldn't find serial number in parameters");
+            }
+            return apiContext.reportsRequester().requestNotification(serialNumber);
+        } else {
+            String auth = request.getHeader("Authorization");
+            if (!apiContext.isValidAuth(auth)) {
+                throw new CheckoutException("Invalid auth found");
+            }
+            try {
+                return (Notification)Utils.FromXML(request.getInputStream()).getValue();
+            } catch (Exception e) {
+                throw new CheckoutException("Could not retrieve notification", e);
+            }
+        }
     }
-  }
 }

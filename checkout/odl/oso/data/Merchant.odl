@@ -5,10 +5,29 @@ path /merchants;
 /**
  * The essential merchant data structure separates credentials from code.
  */
-class Merchant version 1 {
+class Merchant
+    version 1
+{
+    /*
+     * Random string defined on first instance creation
+     */
     *unique String identifier;
+    /*
+     * Google merchant identifier
+     * @see https://checkout.google.com/sell/settings?section=Integration
+     */
     String merchantId;
+    /*
+     * Google merchant private key
+     * @see https://checkout.google.com/sell/settings?section=Integration
+     */
     String merchantKey;
-    String currency;
+    /*
+     * @see java.util.Currency
+     */
+    String currencyCode;
+    /*
+     * Use test environment
+     */
     Boolean test;
 }

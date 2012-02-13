@@ -25,8 +25,11 @@ import com.google.checkout.sdk.domain.OrderStateChangeNotification;
 import com.google.checkout.sdk.domain.OrderSummary;
 import com.google.checkout.sdk.domain.RefundAmountNotification;
 import com.google.checkout.sdk.domain.RiskInformationNotification;
+import static com.google.checkout.sdk.notifications.Notification.DispatchType;
+import static com.google.checkout.sdk.notifications.Notification.DispatchType.*;
 import com.google.checkout.sdk.util.Utils;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,59 +42,70 @@ import javax.servlet.http.HttpServletResponse;
  * public methods.
  *
  */
-class BaseNotificationHandler {
-  protected static final Logger logger =
-    Logger.getLogger(NotificationHandler.class.getName());
+public class BaseNotificationHandler {
 
-  /**
-   * Calls one of the onFooNotification() methods on the given dispatcher.
-   */
-  protected void dispatchByType(Notification notification, OrderSummary orderSummary,
-      BaseNotificationDispatcher dispatcher) throws Exception {
-    if (notification instanceof AuthorizationAmountNotification) {
-      dispatcher.onAuthorizationAmountNotification(
-          orderSummary, (AuthorizationAmountNotification)notification);
-    } else if (notification instanceof ChargeAmountNotification) {
-      dispatcher.onChargeAmountNotification(
-          orderSummary, (ChargeAmountNotification)notification);
-    } else if (notification instanceof ChargebackAmountNotification) {
-      dispatcher.onChargebackAmountNotification(
-          orderSummary, (ChargebackAmountNotification)notification);
-    } else if (notification instanceof NewOrderNotification) {
-      dispatcher.onNewOrderNotification(
-          orderSummary, (NewOrderNotification)notification);
-    } else if (notification instanceof OrderStateChangeNotification) {
-      dispatcher.onOrderStateChangeNotification(
-          orderSummary, (OrderStateChangeNotification)notification);
-    } else if (notification instanceof RefundAmountNotification) {
-      dispatcher.onRefundAmountNotification(
-          orderSummary, (RefundAmountNotification)notification);
-    } else if (notification instanceof RiskInformationNotification) {
-      dispatcher.onRiskInformationNotification(
-          orderSummary, (RiskInformationNotification)notification);
-    } else {
-      dispatchUnknownNotification(notification, orderSummary, dispatcher);
+    protected static final Logger logger = Logger.getLogger("com.google.checkout.sdk");
+
+    /**
+     * Calls one of the onFooNotification() methods on the given dispatcher.
+     */
+    protected void dispatchByType(Notification notification, OrderSummary orderSummary,
+                                  BaseNotificationDispatcher dispatcher)
+        throws CheckoutException
+    {
+        final DispatchType type = DispatchType.For(notification);
+        switch(type){
+        case AuthorizationAmount:
+            dispatcher.onAuthorizationAmountNotification(orderSummary, (AuthorizationAmountNotification)notification);
+            return;
+        case ChargeAmount:
+            dispatcher.onChargeAmountNotification(orderSummary, (ChargeAmountNotification)notification);
+            return;
+        case ChargebackAmount:
+            dispatcher.onChargebackAmountNotification(orderSummary, (ChargebackAmountNotification)notification);
+            return;
+        case NewOrder:
+            dispatcher.onNewOrderNotification(orderSummary, (NewOrderNotification)notification);
+            return;
+        case OrderStateChange:
+            dispatcher.onOrderStateChangeNotification(orderSummary, (OrderStateChangeNotification)notification);
+            return;
+        case RefundAmount:
+            dispatcher.onRefundAmountNotification(orderSummary, (RefundAmountNotification)notification);
+            return;
+        case RiskInformation:
+            dispatcher.onRiskInformationNotification(orderSummary, (RiskInformationNotification)notification);
+            return;
+        case Unknown:
+            dispatchUnknownNotification(notification, orderSummary, dispatcher);
+            return;
+        default:
+            throw new IllegalStateException(type.name());
+        }
     }
-  }
 
-  protected void dispatchUnknownNotification(Notification notification, OrderSummary orderSummary,
-      BaseNotificationDispatcher dispatcher) throws Exception {
-    throw new CheckoutException("Unrecognized notification type " + notification);
-  }
+    protected void dispatchUnknownNotification(Notification notification, OrderSummary orderSummary,
+                                               BaseNotificationDispatcher dispatcher)
+        throws CheckoutException
+    {
+        throw new CheckoutException("Unrecognized notification type " + notification);
+    }
 
-  /**
-   * Sends a NotificationAcknowledgment with the given serial number.
-   * @throws Exception if the acknowledgment could not be sent.
-   */
-  protected void sendNotificationAcknowledgment(String serialNumber, HttpServletResponse response,
-      Notification notification, HttpServletRequest request) throws Exception {
-    NotificationAcknowledgment ack = new NotificationAcknowledgment();
-    ack.setSerialNumber(serialNumber);
+    /**
+     * Sends a NotificationAcknowledgment with the given serial number.
+     * @throws Exception if the acknowledgment could not be sent.
+     */
+    protected void sendNotificationAcknowledgment(String serialNumber, HttpServletResponse response,
+                                                  Notification notification, HttpServletRequest request)
+        throws CheckoutException, IOException
+    {
+        NotificationAcknowledgment ack = new NotificationAcknowledgment();
+        ack.setSerialNumber(serialNumber);
 
-    Utils.ToXML(ack.toJAXB(), response.getOutputStream());
+        Utils.ToXML(ack.toJAXB(), response.getOutputStream());
 
-    logger.log(Level.INFO,
-        "Sent response ack:\n" + Utils.SEND_AND_RECEIVE_DEBUGGING_STRING,
-        new Object[]{200, request.getRemoteAddr(), notification, ack});
-  }
+        logger.log(Level.INFO,
+                   "Sent response ack:\n" + Utils.SEND_AND_RECEIVE_DEBUGGING_STRING,
+                   new Object[]{200, request.getRemoteAddr(), notification, ack});
+    }
 }

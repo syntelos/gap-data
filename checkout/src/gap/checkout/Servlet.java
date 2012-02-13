@@ -16,13 +16,20 @@
 
 package gap.checkout;
 
+import gap.Request;
+import gap.Response;
+
+import oso.data.Merchant;
+
 import com.google.checkout.sdk.commands.Environment;
 
 /**
- * Checkout servlet
+ * Checkout servlet defined for an application having one merchant.
+ * 
+ * @see oso.data.MerchantServlet
  */
-public class Servlet
-    extends com.google.checkout.sdk.util.Utils
+public abstract class Servlet
+    extends gap.service.Servlet
 {
 
 
@@ -30,6 +37,28 @@ public class Servlet
         super();
     }
 
+
+    /**
+     * This method is responsible for calling set environment on the
+     * merchant instance object before returning it.
+     * 
+     * This is defined in Merchant Servlet for an application having
+     * one merchant.
+     * 
+     * @return Merchant instance with checkout environment
+     */
+    public Merchant getMerchant(Request q, Response p){
+        /*
+         * For applications having one merchant, exclusively.
+         */
+        Merchant merchant = Merchant.Instance();
+        if (merchant.isTest())
+            merchant.setEnvironment(this.getCheckoutTest());
+        else
+            merchant.setEnvironment(this.getCheckoutProduction());
+
+        return merchant;
+    }
 
     protected final Environment getCheckoutProduction(){
         return Environment.PRODUCTION;
