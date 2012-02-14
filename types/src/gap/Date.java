@@ -40,6 +40,10 @@ public abstract class Date {
 
     private static final DateTimeFormatter ISO8601 = ISODateTimeFormat.dateTime()
         .withZone(DateTimeZone.UTC); 
+
+    private static final DateTimeFormatter SimpleDate = DateTimeFormat
+        .forPattern("dd MMM yyyy")
+        .withLocale(Locale.US);
  
 
     public static java.util.Date Parse(String dateStr) {
@@ -82,5 +86,11 @@ public abstract class Date {
     }
     public static String FormatISO8601(long timeStamp) {
         return ISO8601.print(timeStamp);
+    }
+    public static String FormatSimpleDate(java.util.Date date) {
+        return FormatSimpleDate(date.getTime());
+    }
+    public static String FormatSimpleDate(long timeStamp) {
+        return SimpleDate.print(timeStamp);
     }
 }
