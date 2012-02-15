@@ -76,7 +76,7 @@ public final class Logon
         return true;
     }
     public static boolean IsMember(){
-        return LTL.get().isLoggedIn();
+        return LTL.get().serviceMember;
     }
     public static boolean IsAdmin(){
         return LTL.get().serviceAdmin;
@@ -213,12 +213,6 @@ public final class Logon
             return user.getNickname();
         else 
             return null;
-    }
-    public boolean isLoggedIn(){
-        return (null != this.principal);
-    }
-    public boolean isLoggedOut(){
-        return (null == this.principal);
     }
     public String getLoginURL(){
         String loginUrl = this.loginUrl;

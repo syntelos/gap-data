@@ -158,7 +158,7 @@ public class Request
         this.isOAuth = logon.serviceOAuth;
         this.isNotOAuth = (!logon.serviceOAuth);
 
-        if (logon.isLoggedIn()){
+        if (logon.serviceMember){
             this.logonUrl = logon.getLogoutURL();
             this.logonText = logon.serviceLogon;
         }
@@ -212,12 +212,6 @@ public class Request
      */
     public final String getUserNick(){
         return this.logon.getUserNick();
-    }
-    public final boolean isLoggedIn(){
-        return this.logon.isLoggedIn();
-    }
-    public final boolean isLoggedOut(){
-        return this.logon.isLoggedOut();
     }
     /**
      * @return Never null, one of the login or logout url for current
