@@ -133,6 +133,7 @@ public class Request
     public final boolean isAdmin, isMember, isOAuth;
     private String bodyString;
     private Json bodyJson;
+    private Person person;
 
 
     public Request(String ns, HttpServletRequest req, Method method, Protocol protocol, Path path, 
@@ -190,12 +191,6 @@ public class Request
     /**
      * @return May be null
      */
-    public final String getUserId(){
-        return this.logon.getUserId();
-    }
-    /**
-     * @return May be null
-     */
     public final String getAppsDomain(){
         return this.ns;
     }
@@ -249,11 +244,21 @@ public class Request
     public final String getHostname(){
         return this.hostname;
     }
-    public final boolean hasViewer(){
-        return this.logon.hasPerson();
+    public boolean hasViewer(){
+
+        return this.logon.serviceMember;
     }
-    public final Person getViewer(){
-        return this.logon.getPerson();
+    public Person getViewer(){
+
+        if (this.logon.serviceMember){
+
+            if (null == this.person){
+                this.person = Person.GetCreateLongLogonId(this.logon.serviceLogon);
+            }
+            return this.person;
+        }
+        else
+            return null;
     }
     public final boolean acceptHtml(){
         return this.accept.accept("text/html");
@@ -490,10 +495,15 @@ public class Request
             case userReference:
                 return name.is(0);
             case logon:
-                if (name.has(1))
-                    return this.logon.hasVariable(new TemplateName(name));
+                if (this.isMember){
+                    if (name.has(1) && (null != this.person || this.isAvailableStorageRead()))
+                        this.getViewer().hasVariable(new TemplateName(name));
+                    else
+                        return true;
+                }
                 else
-                    return true;
+                    return false;
+
             case logonUrl:
                 return true;
             case logonText:
@@ -517,15 +527,16 @@ public class Request
                     return gap.Version.HasVariable(new TemplateName(name));
                 else
                     return true;
-            case viewer:{
-                Person viewer = this.getViewer();
-                if (null == viewer)
-                    return false;
-                else if (name.has(1))
-                    return viewer.hasVariable(new TemplateName(name));
+            case viewer:
+                if (this.isMember){
+                    if (name.has(1) && (null != this.person || this.isAvailableStorageRead()))
+                        this.getViewer().hasVariable(new TemplateName(name));
+                    else
+                        return true;
+                }
                 else
-                    return true;
-            }
+                    return false;
+
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -583,10 +594,15 @@ public class Request
             case userReference:
                 return this.userReference;
             case logon:
-                if (name.has(1))
-                    return this.logon.getVariable(new TemplateName(name));
+                if (this.isMember){
+                    if (name.has(1) && (null != this.person || this.isAvailableStorageRead()))
+                        this.getViewer().getVariable(new TemplateName(name));
+                    else
+                        return this.logon.serviceLogon;
+                }
                 else
                     return null;
+
             case logonUrl:
                 return this.logonUrl;
             case logonText:
@@ -633,15 +649,16 @@ public class Request
                     return gap.Version.GetVariable(new TemplateName(name));
                 else
                     return gap.Version.Short;
-            case viewer:{
-                Person viewer = this.getViewer();
-                if (null == viewer)
+            case viewer:
+                if (this.isMember){
+                    if (name.has(1) && (null != this.person || this.isAvailableStorageRead()))
+                        this.getViewer().getVariable(new TemplateName(name));
+                    else
+                        return this.logon.serviceLogon;
+                }
+                else
                     return null;
-                else if (name.has(1))
-                    return viewer.getVariable(new TemplateName(name));
-                else 
-                    return viewer.getLogonId();
-            }
+
             default:
                 throw new IllegalStateException(field.name());
             }
@@ -671,7 +688,26 @@ public class Request
             case userReference:
                 return EmptySection;
             case logon:
-                return this.logon.getSection(new TemplateName(name));
+                if (this.isMember){
+                    if (null != this.person || this.isAvailableStorageRead()){
+                        if (name.has(1))
+                            return this.getViewer().getSection(new TemplateName(name));
+                        else {
+                            List.Short<TemplateDataDictionary> section = new gap.util.ArrayList();
+                            section.add(this.getViewer());
+                            return section;
+                        }
+                    }
+                    else {
+                        List.Short<TemplateDataDictionary> section = new gap.util.ArrayList();
+                        /*
+                         */
+                        return section;
+                    }
+                }
+                else
+                    return null;
+
             case logonUrl:
             case logonText:
             case contentType:
@@ -698,6 +734,28 @@ public class Request
                     return EmptySection;
             case version:
                 return EmptySection;
+
+            case viewer:
+                if (this.isMember){
+                    if (null != this.person || this.isAvailableStorageRead()){
+                        if (name.has(1))
+                            return this.getViewer().getSection(new TemplateName(name));
+                        else {
+                            List.Short<TemplateDataDictionary> section = new gap.util.ArrayList();
+                            section.add(this.getViewer());
+                            return section;
+                        }
+                    }
+                    else {
+                        List.Short<TemplateDataDictionary> section = new gap.util.ArrayList();
+                        /*
+                         */
+                        return section;
+                    }
+                }
+                else
+                    return null;
+
             default:
                 throw new IllegalStateException(field.name());
             }
