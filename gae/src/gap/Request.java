@@ -130,7 +130,7 @@ public class Request
     public final Logon logon;
     public final String logonUrl, logonText;
     public final ContentType contentType;
-    public final boolean isAdmin, isMember, isOAuth;
+    public final boolean isAdmin, isMember, isOAuth, isNotOAuth;
     private String bodyString;
     private Json bodyJson;
     private Person person;
@@ -156,6 +156,7 @@ public class Request
         this.isAdmin = logon.serviceAdmin;
         this.isMember = logon.serviceMember;
         this.isOAuth = logon.serviceOAuth;
+        this.isNotOAuth = (!logon.serviceOAuth);
 
         if (logon.isLoggedIn()){
             this.logonUrl = logon.getLogoutURL();
