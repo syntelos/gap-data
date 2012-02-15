@@ -125,34 +125,43 @@ public final class Logon
          * Sublimate authentication for application programming
          */
         User guser = null;
-        boolean isAdmin = false;
+        boolean isAdmin = false, isOAuth = false;
         String oauthConsumer;
 
         try {
             oauthConsumer = OAuth.getOAuthConsumerKey();
             guser = OAuth.getCurrentUser();
             isAdmin = OAuth.isUserAdmin();
+            isOAuth = true;
         }
         catch (OAuthRequestException exc){
+
             oauthConsumer = null;
         }
         catch (OAuthServiceFailureException exc){
+
             oauthConsumer = null;
         }
         this.oauthConsumer = oauthConsumer;
 
-        this.serviceOAuth = (null != oauthConsumer);
+        this.serviceOAuth = isOAuth;
         /*
          */
-        if (this.serviceOAuth){
+        if (isOAuth){
 
             Logon.Log.log(Level.INFO,String.format("OAuth '%s'",oauthConsumer));
         }
         else {
-            guser = service.getCurrentUser();
-            isAdmin = service.isUserAdmin();
+            try {
+                guser = service.getCurrentUser();
+                if (null != guser)
+                    isAdmin = service.isUserAdmin();
+            }
+            catch (IllegalStateException nologin){
+            }
         }
-
+        /*
+         */
         if (null == guser){
             this.loginUrl = service.createLoginURL(uri);
             this.serviceUser = null;
