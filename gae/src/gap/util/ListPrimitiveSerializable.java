@@ -27,9 +27,11 @@ import java.io.Serializable;
  * 
  * @author jdp
  */
-public class ListPrimitiveSerializable
+public final class ListPrimitiveSerializable
     extends AbstractListPrimitive<Serializable>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveSerializable(){
         super();

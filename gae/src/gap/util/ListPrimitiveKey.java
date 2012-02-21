@@ -29,11 +29,15 @@ import com.google.appengine.api.datastore.Key;
  * An ordered list with scan for index, or an unordered set with a
  * sorted index.
  * 
+ * @see gap.service.Selection
  * @author jdp
  */
 public class ListPrimitiveKey
     extends AbstractListPrimitive<Key>
 {
+    private final static long serialVersionUID = 5567372790939261769L;
+
+
     public final static boolean KeySet = false, KeyList = true;
 
 

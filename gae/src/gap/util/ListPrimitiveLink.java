@@ -27,9 +27,11 @@ import com.google.appengine.api.datastore.Link;
  * 
  * @author jdp
  */
-public class ListPrimitiveLink
+public final class ListPrimitiveLink
     extends AbstractListPrimitive<Link>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveLink(){
         super();

@@ -25,9 +25,11 @@ package gap.util;
  * 
  * @author jdp
  */
-public class ListPrimitiveFloat
+public final class ListPrimitiveFloat
     extends AbstractListPrimitive<Float>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveFloat(){
         super();

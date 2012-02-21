@@ -27,9 +27,11 @@ import java.util.Date;
  * 
  * @author jdp
  */
-public class ListPrimitiveDate
+public final class ListPrimitiveDate
     extends AbstractListPrimitive<Date>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveDate(){
         super();

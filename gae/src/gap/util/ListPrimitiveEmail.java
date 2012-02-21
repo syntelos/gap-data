@@ -27,9 +27,11 @@ import com.google.appengine.api.datastore.Email;
  * 
  * @author jdp
  */
-public class ListPrimitiveEmail
+public final class ListPrimitiveEmail
     extends AbstractListPrimitive<Email>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveEmail(){
         super();

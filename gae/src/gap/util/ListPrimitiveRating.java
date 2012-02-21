@@ -27,9 +27,11 @@ import com.google.appengine.api.datastore.Rating;
  * 
  * @author jdp
  */
-public class ListPrimitiveRating
+public final class ListPrimitiveRating
     extends AbstractListPrimitive<Rating>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveRating(){
         super();

@@ -27,9 +27,11 @@ import com.google.appengine.api.datastore.GeoPt;
  * 
  * @author jdp
  */
-public class ListPrimitiveGeoPt
+public final class ListPrimitiveGeoPt
     extends AbstractListPrimitive<GeoPt>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveGeoPt(){
         super();

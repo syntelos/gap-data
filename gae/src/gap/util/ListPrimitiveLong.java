@@ -25,9 +25,11 @@ package gap.util;
  * 
  * @author jdp
  */
-public class ListPrimitiveLong
+public final class ListPrimitiveLong
     extends AbstractListPrimitive<Long>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveLong(){
         super();
