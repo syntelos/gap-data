@@ -130,7 +130,7 @@ public final class Store
          * Defines query for keys only
          * @see BigTableIterator
          */
-        protected static BigTableIterator QueryNClass(Query query, Page page){
+        protected static <T extends BigTable> BigTableIterator<T> QueryNClass(Query query, Page page){
 
             query.setKeysOnly();
 
@@ -142,7 +142,7 @@ public final class Store
          * Defines query for keys only
          * @see BigTableIterator
          */
-        protected static BigTableIterator QueryNClass(Query query){
+        protected static <T extends BigTable> BigTableIterator<T> QueryNClass(Query query){
 
             query.setKeysOnly();
 
@@ -322,7 +322,7 @@ public final class Store
 
         return N.Get();
     }
-    public static <T> T GetClass(Key key){
+    public static <T extends BigTable> T GetClass(Key key){
         if (key.isComplete()){
             Entity entity = C.Get(key);
             if (null != entity){
@@ -372,7 +372,7 @@ public final class Store
         else
             throw new IllegalArgumentException("Incomplete key '"+key+"'.");
     }
-    public static <T> List<T> GetClass(Iterable<Key> keys){
+    public static <T extends BigTable> List<T> GetClass(Iterable<Key> keys){
 
         gap.util.ArrayList<T> list = new gap.util.ArrayList();
 
@@ -412,21 +412,21 @@ public final class Store
         }
         return list;
     }
-    public static BigTable Query1Class(Query q){
+    public static <T extends BigTable> T Query1Class(Query q){
         Key key = Store.P.Query1(q);
         if (null != key)
             return Store.GetClass(key);
         else
             return null;
     }
-    public static BigTableIterator QueryNClass(Query q, Page p){
+    public static <T extends BigTable> BigTableIterator<T> QueryNClass(Query q, Page p){
 
         if (null == p)
             return Store.P.QueryNClass(q);
         else
             return Store.P.QueryNClass(q,p);
     }
-    public static BigTableIterator QueryNClass(Query q){
+    public static <T extends BigTable> BigTableIterator<T> QueryNClass(Query q){
 
         return Store.P.QueryNClass(q);
     }
@@ -445,7 +445,7 @@ public final class Store
 
         return Store.P.QueryN(q);
     }
-    public static BigTable PutClass(BigTable table){
+    public static <T extends BigTable> T PutClass(T table){
         /*
          */
         if (table instanceof AdminReadWrite){

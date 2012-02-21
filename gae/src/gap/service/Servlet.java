@@ -153,7 +153,7 @@ public class Servlet
             return re;
     }
     @Override
-    public final void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
 
         if (null == Config)
             Config = config;

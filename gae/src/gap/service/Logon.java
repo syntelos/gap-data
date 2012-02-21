@@ -125,51 +125,39 @@ public final class Logon
          * Sublimate authentication for application programming
          */
         User guser = null;
+        String oauthConsumer = null;
         boolean isAdmin = false, isOAuth = false;
-        String oauthConsumer;
 
-        try {
-            oauthConsumer = OAuth.getOAuthConsumerKey();
-            guser = OAuth.getCurrentUser();
-            isAdmin = OAuth.isUserAdmin();
-            isOAuth = true;
-        }
-        catch (OAuthRequestException exc){
-
-            oauthConsumer = null;
-        }
-        catch (OAuthServiceFailureException exc){
-
-            oauthConsumer = null;
-        }
-        this.oauthConsumer = oauthConsumer;
-
-        this.serviceOAuth = isOAuth;
-        /*
-         */
-        if (isOAuth){
-
-            Logon.Log.log(Level.INFO,String.format("OAuth '%s'",oauthConsumer));
-        }
-        else {
+        if (null != principal){
             try {
                 guser = service.getCurrentUser();
                 if (null != guser)
                     isAdmin = service.isUserAdmin();
             }
             catch (IllegalStateException nologin){
+                try {
+                    oauthConsumer = OAuth.getOAuthConsumerKey();
+                    guser = OAuth.getCurrentUser();
+                    isAdmin = OAuth.isUserAdmin();
+                    isOAuth = true;
+                    Logon.Log.log(Level.INFO,String.format("OAuth '%s'",oauthConsumer));
+                }
+                catch (OAuthRequestException exc){
+                }
+                catch (OAuthServiceFailureException exc){
+                }
             }
-        }
-        /*
-         */
-        if (null == guser){
-            this.loginUrl = service.createLoginURL(uri);
-            this.serviceUser = null;
-            this.serviceAdmin = false;
-            this.serviceLogon = null;
-            this.serviceMember = false;
-        }
-        else {
+            /*
+             * Hoping this structure is good, because it works for dev
+             * 
+             * However, not sure of...
+             * 
+             *  + OAuth has principal
+             *  + OAuth is "no login" for user service
+             */
+            this.oauthConsumer = oauthConsumer;
+            this.serviceOAuth = isOAuth;
+
             this.logoutUrl = service.createLogoutURL(uri);
             this.serviceAdmin = isAdmin;
             this.serviceMember = true;
@@ -180,6 +168,15 @@ public final class Logon
             this.serviceLogon = email;
 
             Logon.Log.log(Level.INFO,String.format("Logon '%s'",email));
+        }
+        else {
+            this.loginUrl = service.createLoginURL(uri);
+            this.serviceUser = null;
+            this.serviceAdmin = false;
+            this.serviceLogon = null;
+            this.serviceMember = false;
+            this.oauthConsumer = null;
+            this.serviceOAuth = false;
         }
     }
 
