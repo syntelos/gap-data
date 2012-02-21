@@ -254,28 +254,23 @@ public final class OD
     {
         if (null != xtm && null != pkg && null != imports && null != cd && null != out){
 
-            if (IsClassRelationPrimary(cd)){
+            TemplateRenderer template = Templates.GetTemplate(xtm);
+            TemplateDataDictionary top = new gap.hapax.AbstractData();
 
-                TemplateRenderer template = Templates.GetTemplate(xtm);
-                TemplateDataDictionary top = new gap.hapax.AbstractData();
+            DefineDescription(xtm,top);
 
-                DefineDescription(xtm,top);
+            DefinePrimitives(top);
 
-                DefinePrimitives(top);
+            DefineClass(pkg,cd,imports,top);
 
-                DefineClass(pkg,cd,imports,top);
+            try {
+                template.render(top,out);
 
-                try {
-                    template.render(top,out);
-
-                    return true;
-                }
-                catch (TemplateException exc){
-                    throw new TemplateException("In template '"+xtm.source+"'.",exc);
-                }
+                return true;
             }
-            else
-                return false;
+            catch (TemplateException exc){
+                throw new TemplateException("In template '"+xtm.source+"'.",exc);
+            }
         }
         else
             throw new IllegalArgumentException();

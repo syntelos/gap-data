@@ -304,7 +304,13 @@ public final class Store
         Store.Enter(null);
     }
     /**
-     * Servlet enter
+     * Servlet init enter without namespace (default application namespace)
+     */
+    public static void EnterInit(){
+        Store.Enter(null);
+    }
+    /**
+     * Servlet service enter with namespace
      */
     public static void Enter(String ns){
         N.Enter(ns);
