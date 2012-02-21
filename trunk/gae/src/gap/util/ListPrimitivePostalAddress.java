@@ -27,9 +27,11 @@ import com.google.appengine.api.datastore.PostalAddress;
  * 
  * @author jdp
  */
-public class ListPrimitivePostalAddress
+public final class ListPrimitivePostalAddress
     extends AbstractListPrimitive<PostalAddress>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitivePostalAddress(){
         super();

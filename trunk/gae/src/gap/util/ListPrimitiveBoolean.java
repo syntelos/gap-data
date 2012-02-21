@@ -25,9 +25,11 @@ package gap.util;
  * 
  * @author jdp
  */
-public class ListPrimitiveBoolean
+public final class ListPrimitiveBoolean
     extends AbstractListPrimitive<Boolean>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveBoolean(){
         super();

@@ -26,9 +26,11 @@ import com.google.appengine.api.datastore.Category;
  * 
  * @author jdp
  */
-public class ListPrimitiveCategory
+public final class ListPrimitiveCategory
     extends AbstractListPrimitive<Category>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveCategory(){
         super();

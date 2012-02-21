@@ -139,6 +139,15 @@ public abstract class BigTable
 
         return gap.Strings.KeyToString(key);
     }
+    public final static String ToString(Key a, Key b){
+        try {
+            return gap.Strings.KeyToString(a);
+        }
+        catch (IllegalArgumentException incomplete){
+
+            return gap.Strings.KeyToString(b);
+        }
+    }
     public final static boolean Equals(Key a, Key b){
         if (null == a)
             return (null == b);

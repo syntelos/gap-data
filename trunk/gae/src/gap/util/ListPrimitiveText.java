@@ -27,9 +27,11 @@ import com.google.appengine.api.datastore.Text;
  * 
  * @author jdp
  */
-public class ListPrimitiveText
+public final class ListPrimitiveText
     extends AbstractListPrimitive<Text>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitiveText(){
         super();

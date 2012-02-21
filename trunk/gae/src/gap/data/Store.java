@@ -275,12 +275,14 @@ public final class Store
                 return null;
             }
         }
-        protected static void Put(Entity entity){
-            final Key key = entity.getKey();
+        protected static void Put(Key key, Entity entity){
+            try {
+                final String ck = BigTable.ToString(key,entity.getKey());
 
-            final String ck = BigTable.ToString(key);
-
-            Get().put(ck,entity);
+                Get().put(ck,entity);
+            }
+            catch (IllegalArgumentException incompleteKeys){
+            }
         }
         protected static void Delete(Key key){
 
@@ -348,7 +350,7 @@ public final class Store
                     /*
                      * Optimistic cache
                      */
-                    C.Put(entity);
+                    C.Put(key,entity);
 
                     BigTable table = BigTable.From(entity);
                     if (table instanceof AdminReadWrite){
@@ -402,7 +404,7 @@ public final class Store
                     /*
                      * Optimistic cache
                      */
-                    C.Put(entity);
+                    C.Put(key,entity);
 
                     BigTable table = BigTable.From(entity);
                     if (table instanceof AdminReadWrite){
@@ -501,7 +503,7 @@ public final class Store
                 /*
                  * Copy write to cache
                  */
-                C.Put(entity);
+                C.Put(key,entity);
 
                 table.setKey(key);
 

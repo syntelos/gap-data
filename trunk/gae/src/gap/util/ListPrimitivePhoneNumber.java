@@ -27,9 +27,11 @@ import com.google.appengine.api.datastore.PhoneNumber;
  * 
  * @author jdp
  */
-public class ListPrimitivePhoneNumber
+public final class ListPrimitivePhoneNumber
     extends AbstractListPrimitive<PhoneNumber>
 {
+    private final static long serialVersionUID = 1L;
+
 
     public ListPrimitivePhoneNumber(){
         super();

@@ -30,6 +30,8 @@ import gap.data.Kind;
 public final class Selection
     extends gap.util.ListPrimitiveKey
 {
+    private final static long serialVersionUID = -3843683902754486482L;
+
     private final static String ClassName = Selection.class.getName();
 
     public final static String SessionKey(Kind kind){
