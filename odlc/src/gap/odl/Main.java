@@ -98,7 +98,7 @@ public final class Main
              */
             {
                 File beanJava = new File(packagePath,parentClassName+".java");
-                if (!beanJava.exists()){
+                if (ConditionalUser(beanJava)){
                     PrintWriter out = new PrintWriter(new FileWriter(beanJava));
                     try {
                         OD.GenerateBeanSource(TemplateNames.BeanUser, pack, imports, clas, out);
@@ -114,7 +114,7 @@ public final class Main
              */
             {
                 File servletJava = new File(packagePath,parentClassName+"Servlet.java");
-                if (!servletJava.exists()){
+                if (ConditionalUser(servletJava)){
                     PrintWriter out = new PrintWriter(new FileWriter(servletJava));
                     try {
                         if (OD.GenerateServletSource(TemplateNames.BeanServlet, pack, imports, clas, out)){
@@ -168,7 +168,7 @@ public final class Main
                                 String userClassName = OD.ListImplClassName(parentClassName,childClassName);
                                 if (null != userClassName){
                                     File userFile = new File(packagePath,userClassName+".java");
-                                    if (!userFile.exists()){
+                                    if (ConditionalUser(userFile)){
                                         PrintWriter out = new PrintWriter(new FileWriter(userFile));
                                         try {
                                             OD.GenerateListSource(TemplateNames.ListUser, pack, imports, clas, field,
@@ -202,7 +202,7 @@ public final class Main
                                 String userClassName = OD.ListImplClassName(parentClassName,childClassName);
                                 if (null != userClassName){
                                     File userFile = new File(packagePath,userClassName+".java");
-                                    if (!userFile.exists()){
+                                    if (ConditionalUser(userFile)){
                                         PrintWriter out = new PrintWriter(new FileWriter(userFile));
                                         try {
                                             OD.GenerateListSource(TemplateNames.ListUser, pack, imports, clas, field,
@@ -502,5 +502,15 @@ public final class Main
         }
     }
     public final static FileFilter ODLFiles = new FileFilter();
-
+    /**
+     * Write non existant file, or overwrite empty file
+     */
+    public final static boolean ConditionalUser(File file){
+        if (!file.exists())
+            return true;
+        else if (1 > file.length())
+            return true;
+        else
+            return false;
+    }
 }
