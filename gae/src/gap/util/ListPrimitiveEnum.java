@@ -28,7 +28,7 @@ package gap.util;
 public final class ListPrimitiveEnum
     extends AbstractListPrimitive<Enum>
 {
-    private final static long serialVersionUID = 1L;
+    private final static long serialVersionUID = -8730744897200958281L;
 
 
     public ListPrimitiveEnum(){
