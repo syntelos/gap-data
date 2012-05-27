@@ -47,7 +47,7 @@ public final class Field
                FieldDescriptor.DefaultSortBy,
                FieldDescriptor.Enumerated
 {
-    public final static Pattern Statement = new jauk.Re("<_>[^;]*;<Newline>");
+    public final static Pattern Statement = new jauk.Re("<_>*[^;]*;<Newline>");
 
     public enum Qualifier {
         Child("*child"),

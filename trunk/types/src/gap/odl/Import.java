@@ -36,7 +36,7 @@ public final class Import
     extends Object
     implements ImportDescriptor
 {
-    public final static Pattern Statement = new jauk.Re("<_>import [^;]*;<Newline>");
+    public final static Pattern Statement = new jauk.Re("<_>*import [^;]*;<Newline>");
 
 
     public final static java.lang.Class Find(Package pkg, lxl.List<ImportDescriptor> imports, String type){

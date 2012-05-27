@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see B
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-05-26T21:16:28.151Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-05-27T14:31:27.892Z")
 public abstract class BData
     extends gap.data.BigTable
     implements DataInheritance<B>

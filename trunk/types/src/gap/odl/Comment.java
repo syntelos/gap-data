@@ -38,7 +38,7 @@ public final class Comment
     private final static String ReLine2 = "//<Line>";
     private final static String ReMultiline = "<CComment>";
 
-    public final static Pattern Re = new jauk.Re("<_>("+ReLine1+"|"+ReLine2+"|"+ReMultiline+")<_>");
+    public final static Pattern Re = new jauk.Re("<_>*("+ReLine1+"|"+ReLine2+"|"+ReMultiline+")<_>*");
 
 
 
