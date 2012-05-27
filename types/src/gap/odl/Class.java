@@ -111,7 +111,7 @@ public final class Class
                ClassDescriptor.WithPackage,
                ClassDescriptor.WithImports
 {
-    public final static Pattern Open = new jauk.Re("<_>(class|parent|child) [^{]*\\{<Newline>");
+    public final static Pattern Open = new jauk.Re("<_>*(class|parent|child) [^{]*\\{<Newline>");
 
 
     public enum Attribute {

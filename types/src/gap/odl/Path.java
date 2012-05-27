@@ -33,7 +33,7 @@ public final class Path
     extends Object
     implements gap.data.HasName
 {
-    public final static Pattern Statement = new jauk.Re("<_>path [^;]*;<Newline>");
+    public final static Pattern Statement = new jauk.Re("<_>*path [^;]*;<Newline>");
 
 
     private Comment comment;

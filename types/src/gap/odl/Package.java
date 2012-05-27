@@ -33,7 +33,7 @@ public final class Package
     extends Object
     implements gap.service.od.PackageDescriptor
 {
-    public final static Pattern Statement = new jauk.Re("<_>package [^;]*;<Newline>");
+    public final static Pattern Statement = new jauk.Re("<_>*package [^;]*;<Newline>");
 
 
     private Comment comment;
