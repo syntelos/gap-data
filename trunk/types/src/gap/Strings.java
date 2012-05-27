@@ -570,6 +570,20 @@ public abstract class Strings {
 	    return copier;
 	}
     }
+    public final static java.lang.String[] Cat(java.lang.String[] a, java.lang.String[] b){
+	if (null == a)
+	    return b;
+	else if (null == b)
+	    return a;
+	else {
+	    final int alen = a.length;
+	    final int blen = b.length;
+	    java.lang.String[] copier = new java.lang.String[alen+blen];
+	    java.lang.System.arraycopy(a,0,copier,0,alen);
+	    java.lang.System.arraycopy(b,0,copier,alen,blen);
+	    return copier;
+	}
+    }
     private final static int RandomIdentifierOctets = 12;
 
     public final static java.lang.String RandomIdentifier(){

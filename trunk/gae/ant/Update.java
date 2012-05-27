@@ -114,10 +114,12 @@ public class Update
 			}
 			else {
 			    final long srclen = src.length();
+                            File on = null;
 			    try {
 				FileChannel source = new FileInputStream(src).getChannel();
 				try {
 				    for (File tgt: targets){
+                                        on = tgt;
 					/*
 					 * Copy source to target
 					 */
@@ -156,6 +158,9 @@ public class Update
 				}
 			    }
 			    catch (Exception exc){
+                                if (null != on){
+                                    System.err.printf("Error on target '%s'%n",on.getPath());
+                                }
 				exc.printStackTrace();
 				System.exit(1);
 			    }
@@ -520,19 +525,21 @@ public class Update
             for (int ccc = 0, ccz = files.length; ccc < ccz; ccc++){
 
 		String tgts = files[ccc];
-                File tgt;
+                if (0 < tgts.length()){
+                    File tgt;
 
-		if (tgts.startsWith("${user.home}/"))
-		    tgt = new File(UserHomeDir,tgts.substring(13));
-		else
-		    tgt = new File(tgts);
+                    if (tgts.startsWith("${user.home}/"))
+                        tgt = new File(UserHomeDir,tgts.substring(13));
+                    else
+                        tgt = new File(tgts);
 
-                if (tgt.isDirectory()){
-                    tgt = new File(tgt,src.getName());
-                }
+                    if (tgt.isDirectory()){
+                        tgt = new File(tgt,src.getName());
+                    }
 		
-		if (!tgt.getAbsolutePath().equals(src.getAbsolutePath()))
-		    list = Add(list,tgt);
+                    if (!tgt.getAbsolutePath().equals(src.getAbsolutePath()))
+                        list = Add(list,tgt);
+                }
             }
         }
         return list;

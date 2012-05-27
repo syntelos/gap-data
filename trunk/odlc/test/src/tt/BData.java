@@ -26,6 +26,8 @@ import gap.hapax.TemplateDataDictionary;
 import gap.hapax.TemplateName;
 import gap.util.*;
 
+import json.Json;
+
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.blobstore.BlobKey;
 
@@ -38,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see B
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-24T11:33:40.373Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-05-26T21:16:28.151Z")
 public abstract class BData
     extends gap.data.BigTable
     implements DataInheritance<B>
@@ -240,7 +242,7 @@ public abstract class BData
     public final static void Delete(Key instanceKey){
         if (null != instanceKey){
 
-            gap.data.Store.DeleteKey(instanceKey);
+            gap.data.Store.Delete(instanceKey);
         }
     }
     /**
@@ -248,8 +250,8 @@ public abstract class BData
      */
     public final static void Clean(B instance){
         if (null != instance){
-            Key key = instance.getKey();
-            gap.data.Store.CleanKey(key);
+
+            gap.data.Store.Clean(instance.getKey());
         }
     }
     /**
@@ -257,6 +259,7 @@ public abstract class BData
      */
     public final static void Save(B instance){
         if (null != instance){
+
             gap.data.Store.PutClass(instance);
         }
     }
@@ -265,6 +268,7 @@ public abstract class BData
      */
     public final static void Store(B instance){
         if (null != instance){
+
             gap.data.Store.PutClass(instance);
         }
     }
@@ -553,7 +557,7 @@ public abstract class BData
         }
     }
 
-    private transient final B.Field.Statistics fieldStatistics = new B.Field.Statistics();
+    private transient B.Field.Statistics fieldStatistics = new B.Field.Statistics();
 
     private transient B inheritFrom;
 
@@ -579,6 +583,14 @@ public abstract class BData
     }
 
 
+    private B.Field.Statistics fieldStatistics(){
+        B.Field.Statistics fieldStatistics = this.fieldStatistics;
+        if (null == fieldStatistics){
+            fieldStatistics = new B.Field.Statistics();
+            this.fieldStatistics = fieldStatistics;
+        }
+        return fieldStatistics;
+    }
     public void destroy(){
         this.inheritFrom = null;
         this.person = null;
@@ -654,7 +666,7 @@ public abstract class BData
     }
     public final boolean dropPerson(){
         if (null != this.person){
-            this.fieldStatistics.markDirty(B.Field.Person);
+            this.fieldStatistics().markDirty(B.Field.Person);
             this.person = null;
             this.personId = null;
             this.personKey = null;
@@ -668,7 +680,7 @@ public abstract class BData
     }
     public final boolean setPersonId(String personId){
         if (IsNotEqual(this.personId,personId)){
-            this.fieldStatistics.markDirty(B.Field.Person);
+            this.fieldStatistics().markDirty(B.Field.Person);
             this.personId = personId;
             this.personKey = null;
             this.person = null;
@@ -708,7 +720,7 @@ public abstract class BData
     }
     public final boolean setPerson(Person person){
         if (IsNotEqual(this.person,person)){
-            this.fieldStatistics.markDirty(B.Field.Person);
+            this.fieldStatistics().markDirty(B.Field.Person);
             this.person = person;
             if (null != person){
                 this.personId = person.getId();
@@ -723,8 +735,15 @@ public abstract class BData
         else
             return false;
     }
-    public boolean setPerson(json.Json json){
-        return this.setPersonId(json.asString());
+    public Json toJsonPerson(){
+        Person person = this.getPerson();
+        return Json.Wrap( person);
+    }
+    public boolean fromJsonPerson(Json json){
+        if (null == json)
+            return false;
+        else
+            return this.setPerson((Person)json.getValue(Person.class));
     }
     /*
      * Data binding supports
@@ -745,13 +764,14 @@ public abstract class BData
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
-    public json.Json toJson(){
-        json.Json json = new json.ObjectJson();
-         person = this.getPerson();
-        json.set("person",person.getId());
+    public Json toJson(){
+        Json json = new json.ObjectJson();
+        Json person = this.toJsonPerson();
+        if (null != person)
+            json.set("person",person);
         return json;
     }
-    public boolean fromJson(json.Json json){
+    public boolean fromJson(Json json){
         boolean modified = false;
         return modified;
     }
@@ -777,17 +797,17 @@ public abstract class BData
     }
     public final B markClean(){
 
-        this.fieldStatistics.markClean();
+        this.fieldStatistics().markClean();
         return (B)this;
     }
     public final B markDirty(){
 
-        this.fieldStatistics.markDirty();
+        this.fieldStatistics().markDirty();
         return (B)this;
     }
     public final B markDirty(gap.data.Field field){
 
-        this.fieldStatistics.markDirty(field);
+        this.fieldStatistics().markDirty(field);
         return (B)this;
     }
     public final B markDirty(java.io.Serializable instance){
@@ -795,24 +815,26 @@ public abstract class BData
             gap.data.Field field = B.Field.Person;
             return this.markDirty(field);
         }
+        else if (null != instance)
+            throw new IllegalArgumentException(instance.getClass().getName());
         else
-            return (B)this;
+            throw new IllegalArgumentException();
     }
     public final Iterable<gap.data.Field> listClean(){
 
-        return this.fieldStatistics.listClean();
+        return this.fieldStatistics().listClean();
     }
     public final Iterable<gap.data.Field> listDirty(){
 
-        return this.fieldStatistics.listDirty();
+        return this.fieldStatistics().listDirty();
     }
     public final boolean isClean(){
 
-        return this.fieldStatistics.isClean();
+        return this.fieldStatistics().isClean();
     }
     public final boolean isDirty(){
 
-        return this.fieldStatistics.isDirty();
+        return this.fieldStatistics().isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return B.ClassDescriptorFor();
@@ -846,12 +868,10 @@ public abstract class BData
                     return this.hasPerson(true);
                 }
             default:
-                throw new IllegalStateException(field.name());
+                break;
             }
         }
-        else {
-            return super.hasVariable(name);
-        }
+        return super.hasVariable(name);
     }
     public String getVariable(TemplateName name){
         Field field = B.Field.For(name.getTerm());
@@ -873,12 +893,10 @@ public abstract class BData
                 else
                     return this.getPersonId();
             default:
-                throw new IllegalStateException(field.name());
+                break;
             }
         }
-        else {
-            return super.getVariable(name);
-        }
+        return super.getVariable(name);
     }
     public void setVariable(TemplateName name, String value){
         Field field = B.Field.For(name.getTerm());
@@ -911,8 +929,12 @@ public abstract class BData
             switch (field){
             case Person:
                 Person person = this.getPerson(true);
-                if (null != person)
-                    return person.getSection(new TemplateName(name));
+                if (null != person){
+                    if (name.has(1))
+                        return person.getSection(new TemplateName(name));
+                    else
+                        return new gap.util.ShortList( this, person);
+                }
                 else
                     return null;
             default:
