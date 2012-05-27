@@ -26,6 +26,8 @@ import gap.hapax.TemplateDataDictionary;
 import gap.hapax.TemplateName;
 import gap.util.*;
 
+import json.Json;
+
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.blobstore.BlobKey;
 
@@ -38,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see A
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-01-24T11:33:38.661Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-05-26T21:16:26.037Z")
 public abstract class AData
     extends gap.data.BigTable
     implements DataInheritance<A>
@@ -240,7 +242,7 @@ public abstract class AData
     public final static void Delete(Key instanceKey){
         if (null != instanceKey){
 
-            gap.data.Store.DeleteKey(instanceKey);
+            gap.data.Store.Delete(instanceKey);
         }
     }
     /**
@@ -248,8 +250,8 @@ public abstract class AData
      */
     public final static void Clean(A instance){
         if (null != instance){
-            Key key = instance.getKey();
-            gap.data.Store.CleanKey(key);
+
+            gap.data.Store.Clean(instance.getKey());
         }
     }
     /**
@@ -257,6 +259,7 @@ public abstract class AData
      */
     public final static void Save(A instance){
         if (null != instance){
+
             gap.data.Store.PutClass(instance);
         }
     }
@@ -265,6 +268,7 @@ public abstract class AData
      */
     public final static void Store(A instance){
         if (null != instance){
+
             gap.data.Store.PutClass(instance);
         }
     }
@@ -584,7 +588,7 @@ public abstract class AData
         }
     }
 
-    private transient final A.Field.Statistics fieldStatistics = new A.Field.Statistics();
+    private transient A.Field.Statistics fieldStatistics = new A.Field.Statistics();
 
     private transient A inheritFrom;
 
@@ -610,6 +614,14 @@ public abstract class AData
     }
 
 
+    private A.Field.Statistics fieldStatistics(){
+        A.Field.Statistics fieldStatistics = this.fieldStatistics;
+        if (null == fieldStatistics){
+            fieldStatistics = new A.Field.Statistics();
+            this.fieldStatistics = fieldStatistics;
+        }
+        return fieldStatistics;
+    }
     public void destroy(){
         this.inheritFrom = null;
         this.name = null;
@@ -695,7 +707,7 @@ public abstract class AData
     }
     public final boolean dropName(){
         if (null != this.name){
-            this.fieldStatistics.markDirty(A.Field.Name);
+            this.fieldStatistics().markDirty(A.Field.Name);
             this.name = null;
             return true;
         }
@@ -710,15 +722,12 @@ public abstract class AData
     }
     public final boolean setName(String name){
         if (IsNotEqual(this.name,name)){
-            this.fieldStatistics.markDirty(A.Field.Name);
+            this.fieldStatistics().markDirty(A.Field.Name);
             this.name = name;
             return true;
         }
         else
             return false;
-    }
-    public boolean setName(json.Json json){
-        return this.setName((String)json.getValue(String.class));
     }
     public final boolean hasChildren(boolean mayInherit){
         return (this.getChildren(mayInherit).isNotEmpty());
@@ -751,7 +760,7 @@ public abstract class AData
                 }
             }
             /*
-             * Collection type coersion
+             * compiler type coercion
              */
             {
                 Object tmp = new ListAB((A)this);
@@ -760,6 +769,7 @@ public abstract class AData
             this.children = children;
             children.init();
         }
+
         return children;
     }
     public final boolean setChildren(List.Short<B> children){
@@ -836,7 +846,7 @@ public abstract class AData
                 }
             }
             /*
-             * Collection type coersion
+             * compiler type coercion
              */
             {
                 Object tmp = new MapPrimitiveAStringBlob((A)this);
@@ -845,6 +855,7 @@ public abstract class AData
             this.content = content;
             content.init();
         }
+
         return content;
     }
     public final boolean setContent(Map.Primitive<String,Blob> content){
@@ -881,6 +892,36 @@ public abstract class AData
         else
             throw new IllegalArgumentException();
     }
+    public Json toJsonName(){
+        String name = this.getName();
+        return Json.Wrap( name);
+    }
+    public boolean fromJsonName(Json json){
+        if (null == json)
+            return false;
+        else
+            return this.setName((String)json.getValue(String.class));
+    }
+    public Json toJsonChildren(){
+        List.Short<B> children = this.getChildren();
+        return Json.Wrap( children);
+    }
+    public boolean fromJsonChildren(Json json){
+        /*
+         * [TODO] json.getValue(colClas,comClas) not expressed by (e.g.) "List.Short<Component>.class"
+         */
+        return false;
+    }
+    public Json toJsonContent(){
+        Map.Primitive<String,Blob> content = this.getContent();
+        return Json.Wrap( content);
+    }
+    public boolean fromJsonContent(Json json){
+        /*
+         * [TODO] json.getValue(colClas,comClas) not expressed by (e.g.) "List.Short<Component>.class"
+         */
+        return false;
+    }
     /*
      * Data binding supports
      */
@@ -900,14 +941,23 @@ public abstract class AData
     public final gap.data.Field getClassFieldByName(String name){
         return Field.getField(name);
     }
-    public json.Json toJson(){
-        json.Json json = new json.ObjectJson();
-         name = this.getName();
-        json.set("name",name);
+    public Json toJson(){
+        Json json = new json.ObjectJson();
+        Json name = this.toJsonName();
+        if (null != name)
+            json.set("name",name);
+        Json children = this.toJsonChildren();
+        if (null != children)
+            json.set("children",children);
+        Json content = this.toJsonContent();
+        if (null != content)
+            json.set("content",content);
         return json;
     }
-    public boolean fromJson(json.Json json){
+    public boolean fromJson(Json json){
         boolean modified = false;
+        modified = (this.fromJsonChildren(json.at("children")) || modified);
+        modified = (this.fromJsonContent(json.at("content")) || modified);
         return modified;
     }
     public boolean updateFrom(Request req) throws ValidationError {
@@ -932,17 +982,17 @@ public abstract class AData
     }
     public final A markClean(){
 
-        this.fieldStatistics.markClean();
+        this.fieldStatistics().markClean();
         return (A)this;
     }
     public final A markDirty(){
 
-        this.fieldStatistics.markDirty();
+        this.fieldStatistics().markDirty();
         return (A)this;
     }
     public final A markDirty(gap.data.Field field){
 
-        this.fieldStatistics.markDirty(field);
+        this.fieldStatistics().markDirty(field);
         return (A)this;
     }
     public final A markDirty(java.io.Serializable instance){
@@ -958,24 +1008,26 @@ public abstract class AData
             gap.data.Field field = A.Field.Content;
             return this.markDirty(field);
         }
+        else if (null != instance)
+            throw new IllegalArgumentException(instance.getClass().getName());
         else
-            return (A)this;
+            throw new IllegalArgumentException();
     }
     public final Iterable<gap.data.Field> listClean(){
 
-        return this.fieldStatistics.listClean();
+        return this.fieldStatistics().listClean();
     }
     public final Iterable<gap.data.Field> listDirty(){
 
-        return this.fieldStatistics.listDirty();
+        return this.fieldStatistics().listDirty();
     }
     public final boolean isClean(){
 
-        return this.fieldStatistics.isClean();
+        return this.fieldStatistics().isClean();
     }
     public final boolean isDirty(){
 
-        return this.fieldStatistics.isDirty();
+        return this.fieldStatistics().isDirty();
     }
     public final gap.service.od.ClassDescriptor getClassDescriptorFor(){
         return A.ClassDescriptorFor();
@@ -1003,13 +1055,23 @@ public abstract class AData
                      */
                     return this.hasName(true);
                 }
+            case Children:
+                /*
+                 * compiler type coercion
+                 */
+                List<TemplateDataDictionary> children;
+                {
+                    Object _children = this.getChildren(true);
+                    children = (List<TemplateDataDictionary>)_children;
+                }
+                return (null != name.dereference(children));
+                
+            case Content:
             default:
-                throw new IllegalStateException(field.name());
+                break;
             }
         }
-        else {
-            return super.hasVariable(name);
-        }
+        return super.hasVariable(name);
     }
     public String getVariable(TemplateName name){
         Field field = A.Field.For(name.getTerm());
@@ -1025,13 +1087,23 @@ public abstract class AData
                     throw new IllegalStateException(field.name());
                 else
                     return this.getName(true);
+            case Children:
+                /*
+                 * compiler type coercion
+                 */
+                List<TemplateDataDictionary> children;
+                {
+                    Object _children = this.getChildren(true);
+                    children = (List<TemplateDataDictionary>)_children;
+                }
+                return name.dereference(children);
+                
+            case Content:
             default:
-                throw new IllegalStateException(field.name());
+                break;
             }
         }
-        else {
-            return super.getVariable(name);
-        }
+        return super.getVariable(name);
     }
     public void setVariable(TemplateName name, String value){
         Field field = A.Field.For(name.getTerm());
@@ -1041,6 +1113,10 @@ public abstract class AData
                 case Id:
                     throw new UnsupportedOperationException(field.name());
                 case Name:
+                    throw new IllegalStateException(field.name());
+                case Children:
+                    throw new IllegalStateException(field.name());
+                case Content:
                     throw new IllegalStateException(field.name());
                 default:
                     throw new IllegalStateException(field.name());
@@ -1058,6 +1134,14 @@ public abstract class AData
         if (null != field){
             switch (field){
             case Name:
+                return null;
+            case Children:
+                /*
+                 * compiler type coercion
+                 */
+                Object children = this.getChildren(true);
+                return (List.Short<TemplateDataDictionary>)children;
+            case Content:
                 return null;
             default:
                 throw new IllegalStateException(field.name());

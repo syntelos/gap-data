@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated primitive map.
  */
-@Generated(value={"gap.service.OD","MapPrimitive.java"},date="2012-01-24T11:33:39.818Z")
+@Generated(value={"gap.service.OD","MapPrimitive.java"},date="2012-05-26T21:16:27.263Z")
 public final class MapPrimitiveAStringBlob
     extends gap.util.AbstractMapPrimitive<String,Blob>
     implements gap.data.Map.Primitive<String,Blob>

@@ -28,6 +28,11 @@
     <servlet-class>tt.CServlet</servlet-class>
     <load-on-startup>-1</load-on-startup>
   </servlet>
+  <servlet>
+    <servlet-name>D</servlet-name>
+    <servlet-class>tt.DServlet</servlet-class>
+    <load-on-startup>-1</load-on-startup>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>A</servlet-name>
@@ -48,6 +53,10 @@
   <servlet-mapping>
     <servlet-name>C</servlet-name>
     <url-pattern>/C/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>D</servlet-name>
+    <url-pattern>/D/*</url-pattern>
   </servlet-mapping>
 
   <error-page>

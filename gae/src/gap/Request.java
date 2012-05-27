@@ -361,6 +361,40 @@ public class Request
             return null;
     }
     /**
+     * Compose a list of parameters for two equivalent syntaces:
+     * multiple instances of the parameter name, and each instance of
+     * the parameter name with a value list defined by a separator
+     * character (string).
+     * 
+     * For example with separator character <code>'|'</code>, the
+     * following query string expressions produce equivalent lists of
+     * parameter values.
+     * 
+     * <pre>
+     * ?s=1&amp;s=2&amp;s=3
+     * ?s=1|2&amp;s=3
+     * ?s=1|2|3
+     * </pre>
+     * 
+     * @param name Parameter name
+     * @param sep Optional parameter value internal separator
+     */
+    public final String[] getParameters(String name, String sep){
+        String[] list = this.parameters.get(name);
+        if (null != list && 0 != list.length){
+            String[] nlist = null;
+            for (String p: list){
+
+                String[] plist = this.separateParameter(p,sep);
+
+                nlist = Strings.Cat(nlist,plist);
+            }
+            return nlist;
+        }
+        else
+            return null;
+    }
+    /**
      * Dereference value array, call {@link #isParameterClean} or
      * {@link #cleanParameter}.  Called from {@link #getParameter} on
      * non-empty value arrays.
@@ -425,6 +459,21 @@ public class Request
             }
         }
         return strbuf.toString();
+    }
+    public String[] separateParameter(String value, String sep){
+        final StringTokenizer strtok = new StringTokenizer(value,sep);
+        final int count = strtok.countTokens();
+        if (1 == count)
+            return new String[]{value};
+        else {
+            String[] list = new String[count];
+
+            for (int cc = 0; cc < count; cc++){
+
+                list[cc] = strtok.nextToken();
+            }
+            return list;
+        }
     }
     public final String getBodyString(){
         String body = this.bodyString;

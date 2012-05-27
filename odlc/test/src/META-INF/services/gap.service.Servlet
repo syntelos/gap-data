@@ -3,3 +3,4 @@ tt.PersonServlet
 tt.ChannelServlet
 tt.BServlet
 tt.CServlet
+tt.DServlet
