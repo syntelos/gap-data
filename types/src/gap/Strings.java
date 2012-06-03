@@ -453,8 +453,13 @@ public abstract class Strings {
         if (null != string){
             if (LinkRE.matches(string))
                 return new com.google.appengine.api.datastore.Link(string);
-            else
-                throw new IllegalArgumentException(string);
+            else {
+                String check = "http://"+string;
+                if (LinkRE.matches(check))
+                    return new com.google.appengine.api.datastore.Link(check);
+                else
+                    throw new IllegalArgumentException(string);
+            }
         }
         else
             return null;
