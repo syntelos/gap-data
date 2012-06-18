@@ -31,7 +31,7 @@ public final class ClassName
 {
 
 
-    public final String name, unqualified;
+    public final String name, unqualified, pkg;
     public final boolean qualified;
 
 
@@ -48,6 +48,7 @@ public final class ClassName
             else
                 this.name = name;
 
+            this.pkg = null;
             this.qualified = false;
             this.unqualified = name;
         }
@@ -60,10 +61,14 @@ public final class ClassName
             this.name = name;
             int idx = name.lastIndexOf('.');
             this.qualified = (0 < idx);
-            if (this.qualified)                
+            if (this.qualified){
+                this.pkg = name.substring(0,idx);
                 this.unqualified = name.substring(idx+1);
-            else
+            }
+            else {
+                this.pkg = null;
                 this.unqualified = name;
+            }
         }
         else
             throw new IllegalArgumentException(name);

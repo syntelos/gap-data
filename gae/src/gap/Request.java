@@ -499,7 +499,7 @@ public class Request
         Json body = this.bodyJson;
         if (null == body){
             try {
-                body = Json.Decode(this);
+                body = (new json.Reader().read(this.getBodyString()));
                 this.bodyJson = body;
             }
             catch (Exception drop){

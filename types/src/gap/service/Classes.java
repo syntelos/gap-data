@@ -48,6 +48,11 @@ public class Classes {
 
     private final static lxl.Map<ClassName,ClassDescriptor> C = new lxl.Map<ClassName,ClassDescriptor>();
 
+    /**
+     * Qualified and Unqualified names of table classes with short descriptors
+     */
+    private final static lxl.Map<ClassName,ClassDescriptor> T = new lxl.Map<ClassName,ClassDescriptor>();
+
     public final static Iterable<jauk.Resource> Resources(){
         return R.values();
     }
@@ -55,6 +60,67 @@ public class Classes {
         return C.values();
     }
 
+
+    /**
+     * Permit a field to notify the compilation process that a type
+     * name has been marked as a big table class.  This permits
+     * interface types to be handled as table classes when declared as
+     * <code>"*table"</code> fields within an ODL class.
+     * 
+     * @param pkg Package descriptor for class
+     * @param clas Incomplete class has not yet stored its package contructor internally
+     * @param field Field of class finalizing its contruction 
+     */
+    public final static void TouchTableClass(PackageDescriptor pkg, ClassDescriptor clas, FieldDescriptor field)
+        throws java.io.IOException, gap.odl.Syntax
+    {
+        String packageName = Classes.PackageName(pkg);
+        String typeName = Classes.ToString(field.getType());
+        lxl.List<ImportDescriptor> imports = Classes.ImportsFor(clas);
+        String cleanTypeName = CleanTypeName(typeName);
+
+        if (null == Primitive.For(cleanTypeName) &&
+            null == gap.data.List.Type.For(cleanTypeName) &&
+            null == gap.data.Map.Type.For(cleanTypeName))
+        {
+            /*
+             * Indirect resolution
+             */
+            for (ImportDescriptor imp : imports){
+                String classname = ClassNameIn(cleanTypeName,imp);
+                if (null != classname){
+                    ClassName className = new ClassName(classname);
+                    TouchTableClass(className);
+                    return;
+                }
+            }
+            /*
+             * Direct resolution
+             */
+            ClassName className = new ClassName(cleanTypeName);
+            if (className.qualified){
+
+                TouchTableClass(className);
+            }
+            else {
+                className = new ClassName(packageName+'.'+cleanTypeName);
+
+                TouchTableClass(className);
+            }
+        }
+    }
+    public final static void TouchTableClass(ClassName name)
+        throws java.io.IOException, gap.odl.Syntax
+    {
+        ClassDescriptor shortCd = new gap.util.ClassNameDescriptor(name);
+
+        T.put(name, shortCd);
+
+        if (name.qualified){
+
+            T.put(new ClassName(name.unqualified), shortCd);
+        }
+    }
     public final static ClassDescriptor For(ClassName name)
         throws java.io.IOException, gap.odl.Syntax
     {
@@ -75,6 +141,11 @@ public class Classes {
                 synchronized(C){
                     C.put(name,cd);
                 }
+            }
+        }
+        if (null == cd){
+            synchronized(T){
+                cd = T.get(name);
             }
         }
         return cd;
@@ -113,11 +184,13 @@ public class Classes {
     public final static ClassDescriptor For(String name)
         throws java.io.IOException, gap.odl.Syntax
     {
-        ClassName cn = new ClassName(name);
+        ClassName cn = new ClassName(name), ucn;
         if (cn.qualified)
-            cn = new ClassName(cn.unqualified);
+            ucn = new ClassName(cn.unqualified);
+        else
+            ucn = cn;
 
-        return Classes.For(cn);
+        return Classes.For(ucn);
     }
     public final static ClassDescriptor For(Class<? extends TableClass> jclass)
         throws java.io.IOException, gap.odl.Syntax
@@ -178,6 +251,16 @@ public class Classes {
             return new gap.odl.Package(pclass);
         else
             return new gap.odl.Package(gclass.type);
+    }
+    public final static lxl.List<ImportDescriptor> ImportsFor(ClassDescriptor gclass)
+    {
+        if (gclass instanceof ClassDescriptor.WithImports){
+            ClassDescriptor.WithImports iclass = (ClassDescriptor.WithImports)gclass;
+
+            return iclass.getImports();
+        }
+        else
+            throw new IllegalArgumentException();
     }
     public final static lxl.List<ImportDescriptor> ImportsFor(ClassDescriptor gclass, 
                                                               lxl.List<ImportDescriptor> scope)
@@ -654,6 +737,15 @@ public class Classes {
             }
         }
     }
+    /**
+     * A Table Class member interface has no definition
+     */
+    public final static boolean IsTypeClassBigTableInterface(ClassDescriptor cd){
+        /*
+         * Is a pseudo descriptor (definition not found)
+         */
+        return (cd instanceof gap.util.ClassNameDescriptor);
+    }
     public final static boolean IsTypeClassBigTable(ClassDescriptor cd, java.lang.Class jclass){
         if (null != cd)
             return true;
@@ -744,6 +836,23 @@ public class Classes {
                 catch (ClassNotFoundException exc){
                     return null;
                 }
+            }
+            else
+                return null;
+        }
+        else
+            return null;
+    }
+    /**
+     * @return String class name for type name explicit match to import
+     */
+    private final static String ClassNameIn(String cleanTypeName, ImportDescriptor imp){
+
+        if (imp.hasClassName()){
+            String packageClassName = imp.getClassName();
+            if (packageClassName.endsWith("."+cleanTypeName)){
+
+                return packageClassName;
             }
             else
                 return null;

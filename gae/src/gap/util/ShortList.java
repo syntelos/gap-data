@@ -30,7 +30,7 @@ import com.google.appengine.api.datastore.Query;
  * 
  * @author jdp
  */
-public class ShortList<V extends BigTable>
+public class ShortList<V extends TableClass>
     extends AbstractList<V>
     implements List.Short<V>
 {
@@ -129,7 +129,7 @@ public class ShortList<V extends BigTable>
      * @see gap.data.List$Short#nhead(int)
      */
     public Iterable<V> nhead(int count){
-        final BigTable[] buffer = this.buffer;
+        final TableClass[] buffer = this.buffer;
         if (null != buffer){
             final int size = this.gross;
             if (0 > count){
@@ -137,7 +137,7 @@ public class ShortList<V extends BigTable>
             }
             else if (size == buffer.length || count < buffer.length){
                 if (count < size){
-                    V[] re = (V[])(new BigTable[count]);
+                    V[] re = (V[])(new TableClass[count]);
                     System.arraycopy(buffer,0,re,0,count);
                     return (Iterable<V>)(new BufferIterator(re));
                 }
@@ -157,7 +157,7 @@ public class ShortList<V extends BigTable>
      * @see gap.data.List$Short#ntail(int)
      */
     public Iterable<V> ntail(int count){
-        final BigTable[] buffer = this.buffer;
+        final TableClass[] buffer = this.buffer;
         if (null != buffer){
             final int size = this.gross;
             if (0 > count){
@@ -167,7 +167,7 @@ public class ShortList<V extends BigTable>
                 if (count < size){
                     final int x = (size-count-1);
                     if (x < buffer.length){
-                        V[] re = (V[])(new BigTable[count]);
+                        V[] re = (V[])(new TableClass[count]);
                         System.arraycopy(buffer,x,re,0,count);
                         return (Iterable<V>)(new BufferIterator(re));
                     }

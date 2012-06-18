@@ -120,6 +120,9 @@ public final class OD
         public final static TemplateName FieldIsBigTable = new TemplateName("field_is_bigTable");
         public final static TemplateName FieldIsNotBigTable = new TemplateName("field_is_not_bigTable");
 
+        public final static TemplateName FieldIsBigTableInterface = new TemplateName("field_is_bigTableInterface");
+        public final static TemplateName FieldIsNotBigTableInterface = new TemplateName("field_is_not_bigTableInterface");
+
         public final static TemplateName FieldIsLong = new TemplateName("field_is_long");
         public final static TemplateName FieldIsShort = new TemplateName("field_is_short");
         /*
@@ -621,7 +624,7 @@ public final class OD
 
                 parent = Classes.For(classRelationParent);
                 if (null == parent)
-                    throw new ODStateException(cd,"Parent class not found.");
+                    throw new ODStateException(cd,String.format("Parent class '%s' of '%s' not found.",classRelationParent,className));
             }
         }
         else
@@ -667,6 +670,12 @@ public final class OD
                 final ClassDescriptor fieldTypeClassDescriptor = Classes.For(fieldType);
                 final Class fieldTypeClass = FieldClass(packageName,fieldType,imports);
                 final boolean isBigTable = IsTypeClassBigTable(fieldTypeClassDescriptor,fieldTypeClass);
+                final boolean isBigTableInterface;
+                if (isBigTable)
+                    isBigTableInterface = IsTypeClassBigTableInterface(fieldTypeClassDescriptor);
+                else
+                    isBigTableInterface = false;
+
                 final boolean isCollection = IsTypeClassCollection(field,fieldTypeClass);
 
                 final boolean isEnumerated = IsFieldEnumerated(field,fieldTypeClassDescriptor,fieldTypeClass);
@@ -854,6 +863,7 @@ public final class OD
 
                     dataField.addSection(TemplateNames.FieldIsPrimitive);
                     dataField.addSection(TemplateNames.FieldIsNotBigTable);
+                    dataField.addSection(TemplateNames.FieldIsNotBigTableInterface);
 
                     dataField.addSection(TemplateNames.FieldIsNotMap);
                     dataField.addSection(TemplateNames.FieldIsNotMapPrimitive);
@@ -1071,6 +1081,10 @@ public final class OD
                         /*
                          */
                         dataField.addSection(TemplateNames.FieldIsBigTable);
+                        if (isBigTableInterface)
+                            dataField.addSection(TemplateNames.FieldIsBigTableInterface);
+                        else
+                            dataField.addSection(TemplateNames.FieldIsNotBigTableInterface);
 
                         if (IsFieldShort(cd,field,fieldTypeClassDescriptor))
                             dataField.addSection(TemplateNames.FieldIsShort);
@@ -1100,7 +1114,7 @@ public final class OD
                     }
                     else {
                         dataField.addSection(TemplateNames.FieldIsNotBigTable);
-
+                        dataField.addSection(TemplateNames.FieldIsNotBigTableInterface);
                         /*
                          */
                         if (null != listType){

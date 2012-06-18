@@ -33,7 +33,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2012-02-12T02:50:36.811Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2012-06-18T22:42:57.447Z")
 public abstract class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>
@@ -139,7 +139,7 @@ public abstract class ListShortTemplateTemplateNode
      * @see gap.data.List$Short#nhead(int)
      */
     public Iterable<TemplateNode> nhead(int count){
-        final BigTable[] buffer = this.buffer;
+        final TableClass[] buffer = this.buffer;
         if (null != buffer){
             final int size = this.gross;
             if (0 > count){
@@ -147,7 +147,7 @@ public abstract class ListShortTemplateTemplateNode
             }
             else if (size == buffer.length || count < buffer.length){
                 if (count < size){
-                    TemplateNode[] re = (TemplateNode[])(new BigTable[count]);
+                    TemplateNode[] re = (TemplateNode[])(new TableClass[count]);
                     System.arraycopy(buffer,0,re,0,count);
                     return (Iterable<TemplateNode>)(new BufferIterator(re));
                 }
@@ -167,7 +167,7 @@ public abstract class ListShortTemplateTemplateNode
      * @see gap.data.List$Short#ntail(int)
      */
     public Iterable<TemplateNode> ntail(int count){
-        final BigTable[] buffer = this.buffer;
+        final TableClass[] buffer = this.buffer;
         if (null != buffer){
             final int size = this.gross;
             if (0 > count){
@@ -177,7 +177,7 @@ public abstract class ListShortTemplateTemplateNode
                 if (count < size){
                     final int x = (size-count-1);
                     if (x < buffer.length){
-                        TemplateNode[] re = (TemplateNode[])(new BigTable[count]);
+                        TemplateNode[] re = (TemplateNode[])(new TableClass[count]);
                         System.arraycopy(buffer,x,re,0,count);
                         return (Iterable<TemplateNode>)(new BufferIterator(re));
                     }

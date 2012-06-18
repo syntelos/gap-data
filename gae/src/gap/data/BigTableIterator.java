@@ -32,7 +32,7 @@ import java.util.Iterator;
  * @see Store#QueryN
  * @author jdp
  */
-public final class BigTableIterator<V extends BigTable>
+public final class BigTableIterator<V extends TableClass>
     extends Object
     implements Iterator<V>,
                Iterable<V>

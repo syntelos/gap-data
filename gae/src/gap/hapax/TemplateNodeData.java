@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-12T02:50:36.851Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-06-18T22:42:57.497Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -482,20 +482,20 @@ public abstract class TemplateNodeData
                 return instance.getId();
             case NodeType:
                 return instance.getNodeType(MayNotInherit);
-            case Offset:{
+            case Offset:
                 return instance.getOffset(MayNotInherit);
-            }
-            case LineNumber:{
+            
+            case LineNumber:
                 return instance.getLineNumber(MayNotInherit);
-            }
-            case Index:{
+            
+            case Index:
                 return instance.getIndex(MayNotInherit);
-            }
+            
             case NodeContent:
                 return instance.getNodeContent(MayNotInherit);
-            case IndexCloseRelative:{
+            case IndexCloseRelative:
                 return instance.getIndexCloseRelative(MayNotInherit);
-            }
+            
             default:
                 throw new IllegalArgumentException(field.toString()+" in TemplateNode");
             }

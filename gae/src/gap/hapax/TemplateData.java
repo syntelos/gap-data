@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see Template
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-02-12T02:50:35.879Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-06-18T22:42:56.354Z")
 public abstract class TemplateData
     extends gap.data.BigTable
     implements DataInheritance<Template>,
@@ -447,14 +447,14 @@ public abstract class TemplateData
                 return instance.getId();
             case Name:
                 return instance.getName(MayNotInherit);
-            case LastModified:{
+            case LastModified:
                 return instance.getLastModified(MayNotInherit);
-            }
+            
             case TemplateSourceHapax:
                 return instance.getTemplateSourceHapax(MayNotInherit);
-            case TemplateTargetHapax:{
+            case TemplateTargetHapax:
                 return null;
-            }
+            
             default:
                 throw new IllegalArgumentException(field.toString()+" in Template");
             }

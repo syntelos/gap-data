@@ -510,9 +510,11 @@ public abstract class {{=class_name}}Data
             case Id:
                 return instance.getId();{{#field}}{{#field_is_not_bigTable}}
             case {{=field_nameCamel}}:
-                return instance.get{{=field_nameCamel}}(mayInherit);{{/field_is_not_bigTable}}{{#field_is_bigTable}}
+                return instance.get{{=field_nameCamel}}(mayInherit);{{/field_is_not_bigTable}}{{#field_is_bigTable}}{{#field_is_bigTableInterface}}
             case {{=field_nameCamel}}:
-                return instance.get{{=field_nameCamel}}Id();{{/field_is_bigTable}}{{/field}}
+                return instance.get{{=field_nameCamel}}Key();{{/field_is_bigTableInterface}}{{#field_is_not_bigTableInterface}}
+            case {{=field_nameCamel}}:
+                return instance.get{{=field_nameCamel}}Id();{{/field_is_not_bigTableInterface}}{{/field_is_bigTable}}{{/field}}
             default:
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
@@ -533,9 +535,11 @@ public abstract class {{=class_name}}Data
             case Id:
                 return instance.setId(gap.Objects.StringFromObject(value));{{#field}}{{#field_is_not_bigTable}}
             case {{=field_nameCamel}}:
-                return instance.set{{=field_nameCamel}}({{=field_from_object_prefix}}value{{=field_from_object_suffix}});{{/field_is_not_bigTable}}{{#field_is_bigTable}}
+                return instance.set{{=field_nameCamel}}({{=field_from_object_prefix}}value{{=field_from_object_suffix}});{{/field_is_not_bigTable}}{{#field_is_bigTable}}{{#field_is_bigTableInterface}}
             case {{=field_nameCamel}}:
-                return instance.set{{=field_nameCamel}}Id(gap.Objects.StringFromObject(value));{{/field_is_bigTable}}{{/field}}
+                return instance.set{{=field_nameCamel}}Key(gap.Objects.KeyFromObject(value));{{/field_is_bigTableInterface}}{{#field_is_not_bigTableInterface}}
+            case {{=field_nameCamel}}:
+                return instance.set{{=field_nameCamel}}Id(gap.Objects.StringFromObject(value));{{/field_is_not_bigTableInterface}}{{/field_is_bigTable}}{{/field}}
             default:
                 throw new IllegalArgumentException(field.toString()+" in {{=class_name}}");
             }
@@ -562,9 +566,9 @@ public abstract class {{=class_name}}Data
                 else
                     return null;
             }{{/field_is_primitive_collection}}{{#field_is_collection_not_primitive}}
-            case {{=field_nameCamel}}:{
+            case {{=field_nameCamel}}:
                 return null;
-            }{{/field_is_collection_not_primitive}}{{#field_is_character}}
+            {{/field_is_collection_not_primitive}}{{#field_is_character}}
             case {{=field_nameCamel}}:{
                 {{=field_class}} _{{=field_name}} = instance.get{{=field_nameCamel}}(MayNotInherit);
                 if (null != _{{=field_name}})
@@ -572,9 +576,9 @@ public abstract class {{=class_name}}Data
                 else
                     return null;
             }{{/field_is_character}}{{#field_is_number}}
-            case {{=field_nameCamel}}:{
+            case {{=field_nameCamel}}:
                 return instance.get{{=field_nameCamel}}(MayNotInherit);
-            }{{/field_is_number}}{{#field_is_biginteger}}
+            {{/field_is_number}}{{#field_is_biginteger}}
             case {{=field_nameCamel}}:{
                 {{=field_class}} _{{=field_name}} = instance.get{{=field_nameCamel}}(MayNotInherit);
                 if (null != _{{=field_name}})
@@ -593,11 +597,13 @@ public abstract class {{=class_name}}Data
                 {{=field_class}} _{{=field_name}} = instance.get{{=field_nameCamel}}(MayNotInherit);
                 return Serialize.To(field,_{{=field_name}});
             }{{/field_is_serializable}}{{#field_is_enum}}
-            case {{=field_nameCamel}}:{
-                return Strings.EnumToString( instance.get{{=field_nameCamel}}(MayNotInherit));
-            }{{/field_is_enum}}{{#field_is_bigTable}}
             case {{=field_nameCamel}}:
-                return instance.get{{=field_nameCamel}}Id();{{/field_is_bigTable}}{{#field_is_not_collection}}{{#field_is_not_character}}{{#field_is_not_number}}{{#field_is_not_biginteger}}{{#field_is_not_bigdecimal}}{{#field_is_not_serializable}}{{#field_is_not_enum}}{{#field_is_not_bigTable}}
+                return Strings.EnumToString( instance.get{{=field_nameCamel}}(MayNotInherit));
+            {{/field_is_enum}}{{#field_is_bigTable}}{{#field_is_bigTableInterface}}
+            case {{=field_nameCamel}}:
+                return instance.get{{=field_nameCamel}}Key();{{/field_is_bigTableInterface}}{{#field_is_not_bigTableInterface}}
+            case {{=field_nameCamel}}:
+                return instance.get{{=field_nameCamel}}Id();{{/field_is_not_bigTableInterface}}{{/field_is_bigTable}}{{#field_is_not_collection}}{{#field_is_not_character}}{{#field_is_not_number}}{{#field_is_not_biginteger}}{{#field_is_not_bigdecimal}}{{#field_is_not_serializable}}{{#field_is_not_enum}}{{#field_is_not_bigTable}}
             case {{=field_nameCamel}}:
                 return instance.get{{=field_nameCamel}}(MayNotInherit);{{/field_is_not_bigTable}}{{/field_is_not_enum}}{{/field_is_not_serializable}}{{/field_is_not_bigdecimal}}{{/field_is_not_biginteger}}{{/field_is_not_number}}{{/field_is_not_character}}{{/field_is_not_collection}}{{/field}}
             default:
@@ -672,10 +678,13 @@ public abstract class {{=class_name}}Data
                 {{field_class}} _{{=field_name}} = ({{=field_class}})Strings.EnumFromString( (String)value);
                 instance.set{{=field_nameCamel}}( _{{=field_name}});
                 return;
-            }{{/field_is_enum}}{{#field_is_bigTable}}
+            }{{/field_is_enum}}{{#field_is_bigTable}}{{#field_is_bigTableInterface}}
+            case {{=field_nameCamel}}:
+                instance.set{{=field_nameCamel}}Key( (Key)value);
+                return;{{/field_is_bigTableInterface}}{{#field_is_not_bigTableInterface}}
             case {{=field_nameCamel}}:
                 instance.set{{=field_nameCamel}}Id( (String)value);
-                return;{{/field_is_bigTable}}{{#field_is_not_collection}}{{#field_is_not_character}}{{#field_is_not_number}}{{#field_is_not_biginteger}}{{#field_is_not_bigdecimal}}{{#field_is_not_serializable}}{{#field_is_not_enum}}{{#field_is_not_bigTable}}
+                return;{{/field_is_not_bigTableInterface}}{{/field_is_bigTable}}{{#field_is_not_collection}}{{#field_is_not_character}}{{#field_is_not_number}}{{#field_is_not_biginteger}}{{#field_is_not_bigdecimal}}{{#field_is_not_serializable}}{{#field_is_not_enum}}{{#field_is_not_bigTable}}
             case {{=field_nameCamel}}:
                 instance.set{{=field_nameCamel}}( ({{=field_class}})value);
                 return;{{/field_is_not_bigTable}}{{/field_is_not_enum}}{{/field_is_not_serializable}}{{/field_is_not_bigdecimal}}{{/field_is_not_biginteger}}{{/field_is_not_number}}{{/field_is_not_character}}{{/field_is_not_collection}}{{/field}}
@@ -788,9 +797,10 @@ public abstract class {{=class_name}}Data
     private transient {{=class_name}} inheritFrom;
 
 {{#pfield}}{{#field_is_primitive}}
-    private {{=field_class}} {{=field_name}};{{/field_is_primitive}}{{#field_is_bigTable}}
+    private {{=field_class}} {{=field_name}};{{/field_is_primitive}}{{#field_is_bigTable}}{{#field_is_not_bigTableInterface}}
     private String {{=field_name}}Id;
-    private transient Key {{=field_name}}Key;
+    private transient Key {{=field_name}}Key;{{/field_is_not_bigTableInterface}}{{#field_is_bigTableInterface}}
+    private Key {{=field_name}}Key;{{/field_is_bigTableInterface}}
     private transient {{=field_class}} {{=field_name}};{{/field_is_bigTable}}{{/pfield}}{{#cfield}}{{#field_is_primitive_collection}}
     private {{=field_class}} {{=field_name}};{{/field_is_primitive_collection}}{{#field_is_not_primitive_collection}}
     private transient {{=field_class}} {{=field_name}};{{/field_is_not_primitive_collection}}{{/cfield}}{{#tfield}}
@@ -965,14 +975,14 @@ public abstract class {{=class_name}}Data
     public final boolean drop{{=field_nameCamel}}(){
         if (null != this.{{=field_name}}){
             this.fieldStatistics().markDirty({{=class_name}}.Field.{{=field_nameCamel}});
-            this.{{=field_name}} = null;{{#field_is_bigTable}}
-            this.{{=field_name}}Id = null;
+            this.{{=field_name}} = null;{{#field_is_bigTable}}{{#field_is_not_bigTableInterface}}
+            this.{{=field_name}}Id = null;{{/field_is_not_bigTableInterface}}
             this.{{=field_name}}Key = null;{{/field_is_bigTable}}
             return true;
         }
         else
             return false;
-    }{{#field_is_bigTable}}
+    }{{#field_is_bigTable}}{{#field_is_not_bigTableInterface}}
     public final String get{{=field_nameCamel}}Id(){
         return this.{{=field_name}}Id;
     }
@@ -986,8 +996,23 @@ public abstract class {{=class_name}}Data
         }
         else
             return false;
-    }
-    public final Key get{{=field_nameCamel}}Key(){
+    }{{/field_is_not_bigTableInterface}}{{#field_is_bigTableInterface}}
+    /**
+     * N.B. Storing keys <i>may</i> reference a single object instance "version" (Key internal ID) -- depending on the state of the stored Key.
+     * A newly created key (in this framework) has no version (Key internal ID), and references the current version.
+     * A key derived from the Datastore has an internal ID component that references a particular instance version.
+     */
+    public final boolean set{{=field_nameCamel}}Key(Key {{=field_name}}Key){
+        if (IsNotEqual(this.{{=field_name}}Key,{{=field_name}}Key)){
+            this.fieldStatistics().markDirty({{=class_name}}.Field.{{=field_nameCamel}});
+            this.{{=field_name}}Key = {{=field_name}}Key;
+            this.{{=field_name}} = null;
+            return true;
+        }
+        else
+            return false;
+    }{{/field_is_bigTableInterface}}
+    public final Key get{{=field_nameCamel}}Key(){{{#field_is_not_bigTableInterface}}
         if (null == this.{{=field_name}}Key){
             /*
              * BigTable dereferencing
@@ -996,9 +1021,9 @@ public abstract class {{=class_name}}Data
                 this.{{=field_name}}Key = {{=field_class}}.KeyLongFor(this.{{=field_name}}Id);{{/field_is_long}}{{#field_is_short}}
                 this.{{=field_name}}Key = {{=field_class}}.KeyShortFor(this.getKey(),this.{{=field_name}}Id);{{/field_is_short}}
             }
-        }
+        }{{/field_is_not_bigTableInterface}}
         return this.{{=field_name}}Key;
-    }{{#field_is_inheritable}}
+    }{{#field_is_inheritable}}{{#field_is_not_bigTableInterface}}
     public final String get{{=field_nameCamel}}Id(boolean mayInherit){
         if (null != this.{{=field_name}}Id)
             return this.{{=field_name}}Id;
@@ -1008,7 +1033,7 @@ public abstract class {{=class_name}}Data
         }
         else
             return null;
-    }
+    }{{/field_is_not_bigTableInterface}}
     public final Key get{{=field_nameCamel}}Key(boolean mayInherit){
         Key {{=field_name}}Key = this.get{{=field_nameCamel}}Key();
         if (null != {{=field_name}}Key)
@@ -1029,8 +1054,9 @@ public abstract class {{=class_name}}Data
              */
             Key {{=field_name}}Key = this.get{{=field_nameCamel}}Key();
 
-            if (null != {{=field_name}}Key){
-                {{=field_name}} = {{=field_class}}.Get({{=field_name}}Key);
+            if (null != {{=field_name}}Key){{{#field_is_not_bigTableInterface}}
+                {{=field_name}} = {{=field_class}}.Get({{=field_name}}Key);{{/field_is_not_bigTableInterface}}{{#field_is_bigTableInterface}}
+                {{=field_name}} = ({{=field_class}})gap.data.Store.GetClass({{=field_name}}Key);{{/field_is_bigTableInterface}}
                 this.{{=field_name}} = {{=field_name}};
             }
         }
@@ -1060,8 +1086,9 @@ public abstract class {{=class_name}}Data
              */
             Key {{=field_name}}Key = this.get{{=field_nameCamel}}Key(mayInherit);
 
-            if (null != {{=field_name}}Key){
-                {{=field_name}} = {{=field_class}}.Get({{=field_name}}Key);
+            if (null != {{=field_name}}Key){{{#field_is_not_bigTableInterface}}
+                {{=field_name}} = {{=field_class}}.Get({{=field_name}}Key);{{/field_is_not_bigTableInterface}}{{#field_is_bigTableInterface}}
+                {{=field_name}} = ({{=field_class}})gap.data.Store.GetClass({{=field_name}}Key);{{/field_is_bigTableInterface}}
                 this.{{=field_name}} = {{=field_name}};
             }
         }
@@ -1077,12 +1104,12 @@ public abstract class {{=class_name}}Data
         if (IsNotEqual(this.{{=field_name}},this.get{{=field_nameCamel}}(withInheritance))){
             this.fieldStatistics().markDirty({{=class_name}}.Field.{{=field_nameCamel}});
             this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
-            if (null != {{=field_name}}){
-                this.{{=field_name}}Id = {{=field_name}}.getId();
+            if (null != {{=field_name}}){{{#field_is_not_bigTableInterface}}
+                this.{{=field_name}}Id = {{=field_name}}.getId();{{/field_is_not_bigTableInterface}}
                 this.{{=field_name}}Key = {{=field_name}}.getKey();
             }
-            else {
-                this.{{=field_name}}Id = null;
+            else {{{#field_is_not_bigTableInterface}}
+                this.{{=field_name}}Id = null;{{/field_is_not_bigTableInterface}}
                 this.{{=field_name}}Key = null;
             }{{/field_is_bigTable}}
             return true;
@@ -1094,12 +1121,12 @@ public abstract class {{=class_name}}Data
         if (IsNotEqual(this.{{=field_name}},{{=field_name}})){
             this.fieldStatistics().markDirty({{=class_name}}.Field.{{=field_nameCamel}});
             this.{{=field_name}} = {{=field_name}};{{#field_is_bigTable}}
-            if (null != {{=field_name}}){
-                this.{{=field_name}}Id = {{=field_name}}.getId();
+            if (null != {{=field_name}}){{{#field_is_not_bigTableInterface}}
+                this.{{=field_name}}Id = {{=field_name}}.getId();{{/field_is_not_bigTableInterface}}
                 this.{{=field_name}}Key = {{=field_name}}.getKey();
             }
-            else {
-                this.{{=field_name}}Id = null;
+            else {{{#field_is_not_bigTableInterface}}
+                this.{{=field_name}}Id = null;{{/field_is_not_bigTableInterface}}
                 this.{{=field_name}}Key = null;
             }{{/field_is_bigTable}}
             return true;
@@ -1460,9 +1487,10 @@ public abstract class {{=class_name}}Data
                     else
                         return null;
                 }
-                else{{#field_is_unique}}
+                else{{#field_is_bigTableInterface}}
+                    return null;{{/field_is_bigTableInterface}}{{#field_is_not_bigTableInterface}}{{#field_is_unique}}
                     return this.get{{=field_nameCamel}}Id();{{/field_is_unique}}{{#field_is_not_unique}}
-                    return this.get{{=field_nameCamel}}Id(Notation.MayInherit);{{/field_is_not_unique}}{{/field_is_bigTable}}{{#field_is_primitive}}
+                    return this.get{{=field_nameCamel}}Id(Notation.MayInherit);{{/field_is_not_unique}}{{/field_is_not_bigTableInterface}}{{/field_is_bigTable}}{{#field_is_primitive}}
                 if (name.has(1))
                     throw new IllegalStateException(field.name());
                 else

@@ -63,8 +63,7 @@ import java.math.BigDecimal;
 public abstract class BigTable
     extends gap.hapax.AbstractData
     implements gap.data.TableClass,
-               RequestCreateUpdate,
-               json.Builder
+               RequestCreateUpdate
 {
     /**
      * Initialize data bean classes, called in the class
@@ -250,10 +249,6 @@ public abstract class BigTable
     public final boolean hasNotId(){
         return (null == this.key);
     }
-    public abstract String getId();
-
-    public abstract boolean setId(String id);
-
     /**
      * Data store reference to this instance.
      */
@@ -289,26 +284,6 @@ public abstract class BigTable
             return false;
     }
     /**
-     * Called by the Store layer after retrieving an instance object
-     * from the datastore or memcache.  Subclasses should ensure that
-     * their state is consistent, as for example to upgrade features
-     * across package versions.
-     * 
-     * The fromDatastore field value is defined before this
-     * method is called.
-     */
-    public abstract void onread();
-    /**
-     * Called once by the Store layer before storing an instance
-     * object to the datastore or memcache.  Subclasses may perform
-     * operations updating their state.  Called after {@link
-     * LastModified} and before storage.
-     */
-    public abstract void onwrite();
-
-    public abstract void destroy();
-
-    /**
      * The transient field "from datastore" employed by the {@link
      * Store}.  The value "true" is represented as "from datastore",
      * and false as "from memcache".  The init state of this value is
@@ -341,20 +316,10 @@ public abstract class BigTable
     /*
      * Data binding supports
      */
-    /**
-     * @return A class static value naming the datastore class name,
-     * e.g., "Person".
-     */
-    public abstract Kind getClassKind();
-    /**
-     * @return The class static unqualified class name.
-     */
-    public abstract String getClassName();
 
     public final String getClassKindPath(){
         return this.getClassKind().pathName;
     }
-
     /**
      * A global- cloud- system lock associated with this instance may
      * be employed for any suitable purpose.
@@ -373,57 +338,6 @@ public abstract class BigTable
         }
         return lock;
     }
-    /**
-     * A static value enumerating the persistent (not transient)
-     * fields of this class.
-     */
-    public abstract List<Field> getClassFields();
-
-    public abstract Field getClassFieldByName(String name);
-
-    /**
-     * Dynamic binding operator for field data type
-     *
-     * Persistent BigTable fields are represented by the string ID.
-     */
-    public abstract java.io.Serializable valueOf(Field field, boolean mayInherit);
-
-    /**
-     * Dynamic binding operator for field storage type
-     *
-     * Persistent BigTable fields are represented by the string ID.
-     */
-    public abstract java.io.Serializable valueStorage(Field field);
-
-    /**
-     * Dynamic binding operator for field data type
-     *
-     * Persistent BigTable fields are represented by the string ID.
-     */
-    public abstract void define(Field field, java.io.Serializable value);
-
-    /**
-     * Dynamic binding operator for field storage type
-     *
-     * Persistent BigTable fields are represented by the string ID.
-     */
-    public abstract void defineStorage(Field field, java.io.Serializable value);
-
-    public abstract BigTable markClean();
-
-    public abstract BigTable markDirty();
-
-    public abstract BigTable markDirty(Field field);
-
-    public abstract BigTable markDirty(java.io.Serializable instance);
-
-    public abstract Iterable<Field> listClean();
-
-    public abstract Iterable<Field> listDirty();
-
-    public abstract boolean isClean();
-
-    public abstract boolean isDirty();
 
     public final void define(String fieldName, java.io.Serializable value){
         Field field = this.getClassFieldByName(fieldName);
@@ -432,22 +346,6 @@ public abstract class BigTable
         else
             throw new IllegalArgumentException("Unknown field name '"+fieldName+"'.");
     }
-    /**
-     * Delete from the world, completely.
-     */
-    public abstract void drop();
-    /**
-     * Drop from memcache, exclusively.
-     */
-    public abstract void clean();
-    /**
-     * Clean and store.
-     */
-    public abstract void save();
-    /**
-     * Write to store.
-     */
-    public abstract void store();
 
     public boolean hasInheritFromKey(){
         return (null != this.inheritFromKey);
@@ -474,7 +372,6 @@ public abstract class BigTable
         else
             return false;
     }
-    public abstract gap.service.od.ClassDescriptor getClassDescriptorFor();
 
     public final Entity fillTo(Entity entity){
 

@@ -30,7 +30,7 @@ import com.google.appengine.api.datastore.Query;
  * 
  * @author jdp
  */
-public abstract class AbstractList<V extends BigTable>
+public abstract class AbstractList<V extends TableClass>
     extends Object
     implements List<V>
 {
@@ -43,7 +43,7 @@ public abstract class AbstractList<V extends BigTable>
         implements java.lang.Iterable<V>,
                    java.util.Iterator<V>
     {
-        private final BigTable[] buffer;
+        private final TableClass[] buffer;
         private final int count;
         private int index;
 
@@ -53,7 +53,7 @@ public abstract class AbstractList<V extends BigTable>
             this.buffer = null;
             this.count = 0;
         }
-        public BufferIterator(BigTable[] buffer){
+        public BufferIterator(TableClass[] buffer){
             super();
             this.buffer = buffer;
             this.count = ((null == buffer)?(0):(buffer.length));
@@ -88,7 +88,7 @@ public abstract class AbstractList<V extends BigTable>
 
     protected Page page = null;
 
-    protected transient BigTable[] buffer;
+    protected transient TableClass[] buffer;
 
     protected transient boolean fillable = true;
 
@@ -124,11 +124,11 @@ public abstract class AbstractList<V extends BigTable>
         if (null != query){
             Page page = this.page;
             this.buffering(page);
-            BigTableIterator<BigTable> iterable = Store.QueryNClass(query,page);
+            BigTableIterator<V> iterable = Store.QueryNClass(query,page);
             this.gross = iterable.gross;
             this.hitEnd = iterable.hitEnd;
             this.clearBuffer();
-            for (BigTable table: iterable){
+            for (V table: iterable){
                 this.addToBuffer(table);
             }
             return this;
@@ -215,7 +215,7 @@ public abstract class AbstractList<V extends BigTable>
     public abstract void setValueClassAncestorKey();
 
     public final int size(){
-        BigTable[] buffer = this.buffer;
+        TableClass[] buffer = this.buffer;
         if (null == buffer)
             return 0;
         else
@@ -235,7 +235,7 @@ public abstract class AbstractList<V extends BigTable>
     }
     public V get(int index){
         if (-1 < index){
-            BigTable[] buffer = this.buffer;
+            TableClass[] buffer = this.buffer;
             if (null != buffer && index < buffer.length)
                 return (V)buffer[index];
         }
@@ -243,7 +243,7 @@ public abstract class AbstractList<V extends BigTable>
     }
     public V set(int index, V value){
         if (-1 < index){
-            BigTable[] buffer = this.buffer;
+            TableClass[] buffer = this.buffer;
             if (null != buffer && index < buffer.length){
                 buffer[index] = value;
                 return value;
@@ -255,7 +255,7 @@ public abstract class AbstractList<V extends BigTable>
         try {
             AbstractList<V> clone = (AbstractList<V>)super.clone();
             if (null != this.buffer)
-                clone.buffer = (BigTable[])this.buffer.clone();
+                clone.buffer = (TableClass[])this.buffer.clone();
             return clone;
         }
         catch (java.lang.CloneNotSupportedException exc){
@@ -306,18 +306,18 @@ public abstract class AbstractList<V extends BigTable>
      */
     protected void buffering(Page page){
     }
-    protected void buffered(BigTable instance, int index){
+    protected void buffered(V instance, int index){
     }
-    public final List<V> addToBuffer(BigTable instance){
+    public final List<V> addToBuffer(V instance){
         if (null != instance){
-            BigTable[] buffer = this.buffer;
+            TableClass[] buffer = this.buffer;
             if (null == buffer){
-                this.buffer = new BigTable[]{instance};
+                this.buffer = new TableClass[]{instance};
                 this.buffered(instance,0);
             }
             else {
                 int len = buffer.length;
-                BigTable[] copier = new BigTable[len+1];
+                TableClass[] copier = new TableClass[len+1];
                 System.arraycopy(buffer,0,copier,0,len);
                 copier[len] = instance;
                 this.buffer = copier;
@@ -328,11 +328,11 @@ public abstract class AbstractList<V extends BigTable>
         else
             throw new IllegalArgumentException();
     }
-    public final int indexInBuffer(BigTable instance){
-        BigTable[] buffer = this.buffer;
+    public final int indexInBuffer(V instance){
+        TableClass[] buffer = this.buffer;
         if (null != buffer){
             for (int cc = 0, count = buffer.length; cc < count; cc++){
-                BigTable item = buffer[cc];
+                TableClass item = buffer[cc];
                 if (instance == item || item.equals(instance))
                     return cc;
             }
@@ -346,10 +346,10 @@ public abstract class AbstractList<V extends BigTable>
             return null;
         }
         else {
-            BigTable[] buffer = this.buffer;
+            TableClass[] buffer = this.buffer;
             int len = buffer.length;
             int term = (len-1);
-            BigTable[] copy = new BigTable[term];
+            TableClass[] copy = new TableClass[term];
 
             if (0 == index){
                 System.arraycopy(buffer,1,copy,0,term);
@@ -367,10 +367,10 @@ public abstract class AbstractList<V extends BigTable>
         }
     }
     public void drop(){
-        BigTable[] buffer = this.buffer;
+        TableClass[] buffer = this.buffer;
         if (null != buffer){
             for (int cc = 0, count = buffer.length; cc < count; cc++){
-                BigTable instance = buffer[cc];
+                TableClass instance = buffer[cc];
                 instance.drop();
             }
             this.buffer = null;
@@ -379,13 +379,13 @@ public abstract class AbstractList<V extends BigTable>
     public boolean save(long timeout)
         throws java.lang.InterruptedException
     {
-        BigTable[] buffer = this.buffer;
+        TableClass[] buffer = this.buffer;
         if (null != buffer){
             Lock lock = this.getParent().getLock();
             if (lock.enter(timeout)){
                 try {
                     for (int cc = 0, count = buffer.length; cc < count; cc++){
-                        BigTable instance = buffer[cc];
+                        TableClass instance = buffer[cc];
                         instance.save();
                     }
                     return true;
@@ -403,13 +403,13 @@ public abstract class AbstractList<V extends BigTable>
     public boolean save()
         throws java.lang.InterruptedException
     {
-        BigTable[] buffer = this.buffer;
+        TableClass[] buffer = this.buffer;
         if (null != buffer){
             Lock lock = this.getParent().getLock();
             if (lock.enter()){
                 try {
                     for (int cc = 0, count = buffer.length; cc < count; cc++){
-                        BigTable instance = buffer[cc];
+                        TableClass instance = buffer[cc];
                         instance.save();
                     }
                     return true;

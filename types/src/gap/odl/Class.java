@@ -215,7 +215,7 @@ public final class Class
                     }
                 }
                 else {
-                    field = new gap.odl.Field(reader);
+                    field = new gap.odl.Field(reader,this,pack);
                     this.fields.add(field);
                 }
             }
