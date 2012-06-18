@@ -48,12 +48,62 @@ public final class Field
                FieldDescriptor.Enumerated
 {
     public final static Pattern Statement = new jauk.Re("<_>*[^;]*;<Newline>");
-
+    /**
+     * Field qualifiers
+     */
     public enum Qualifier {
+        /**
+         * <pre>
+         * *child
+         * </pre>
+         * Short relation for a Child Class
+         */
         Child("*child"),
+        /**
+         * <pre>
+         * *unique
+         * </pre>
+         * Component of required Object Instance Identity
+         */
         Unique("*unique"),
+        /**
+         * <pre>
+         * *transient
+         * </pre>
+         * A Field that is not persistent is not stored in the Data
+         * Store or Memcache.
+         */
         Transient("*transient"),
+        /**
+         * <pre>
+         * *enum
+         * </pre>
+         * The field Object Class is a Java Enum
+         */
         Enumerated("*enum"),
+        /**
+         * <pre>
+         * *table
+         * </pre>
+         * Employ table class interface type, storing Key not Abstract
+         * Identifier.  This is for a field that is defined with a
+         * Java Class that is an interface extending {@link
+         * gap.data.TableClass}.  Because the Data Store KIND is a
+         * variable in this expression, the Data Store Key is stored
+         * rather than the Gap Data conventional Abstract Identifier.
+         * 
+         * This is an advanced usage in that Data Store Keys in Gap
+         * Data may refer to a specific version of an Object Instance
+         * in the Data Store.
+         */
+        TableClass("*table"),
+        /**
+         * <pre>
+         * *sortBy
+         * </pre>
+         * This field is the default sortBy -- otherwise the first
+         * unique would be the default sortBy in Data Store Queries.
+         */
         DefaultSortBy("*sortby");
 
 
@@ -146,14 +196,14 @@ public final class Field
 
     public final Persistence.Type persistence;
 
-    public final boolean unique, enumerated;
+    public final boolean unique, enumerated, tableclass;
 
     public final Relation.Type relational;
 
     public final boolean isDefaultSortBy;
 
 
-    public Field(Reader reader)
+    public Field(Reader reader, Class clas, Package pack)
         throws IOException, Syntax
     {
         super();
@@ -163,7 +213,7 @@ public final class Field
             boolean isDefaultSortBy = false;
             String typeName = null, name = null;
             Persistence.Type persistence = null;
-            boolean unique = false, enumerated = false;
+            boolean unique = false, enumerated = false, tableclass = false;
             Relation.Type relational = null;
 
             StringTokenizer strtok = new StringTokenizer(line," \t\r\n;");
@@ -204,6 +254,9 @@ public final class Field
                         case Enumerated:
                             enumerated = true;
                             break;
+                        case TableClass:
+                            tableclass = true;
+                            break;
                         case DefaultSortBy:
                             isDefaultSortBy = true;
                             break;
@@ -224,13 +277,22 @@ public final class Field
             else if (null == name)
                 name = Class.Decamel(typeName);
 
-            this.typeName = typeName;
+            this.typeName = Field.GetType(typeName);
             this.name = name;
             this.unique = unique;
             this.enumerated = enumerated;
             this.persistence = persistence;
             this.relational = relational;
+            this.tableclass = tableclass;
             this.isDefaultSortBy = isDefaultSortBy;
+            /*
+             * Rather than scan later, fit this here with an
+             * appropriate semantics for "touch"
+             */
+            if (tableclass){
+
+                gap.service.Classes.TouchTableClass(pack, clas, this);
+            }
         }
         else
             throw new Jump(this.comment);
@@ -241,7 +303,7 @@ public final class Field
         return this.name;
     }
     public Object getType(){
-        return Field.GetType(this.typeName);
+        return this.typeName;
     }
     public boolean hasPersistence(){
         return (null != this.persistence);

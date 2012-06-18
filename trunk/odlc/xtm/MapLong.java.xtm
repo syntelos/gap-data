@@ -119,7 +119,7 @@ public final class MapLong{{=parent_class_name}}{{=map_key_type}}{{=child_class_
     public String getMapKeyFieldName(){
         return MapKeyFieldName;
     }
-    protected void buffered(BigTable instance, int index){
+    protected void buffered({{=child_class_name}} instance, int index){
         Comparable field = (Comparable)instance.valueOf(MapKeyField,MayNotInherit);
         this.index.add(field,index);
     }

@@ -182,14 +182,14 @@ public enum Primitive {
     public final static Primitive For(Class type, boolean isEnum, boolean isTable, boolean isCollection){
         if (isEnum)
             return Primitive.Enum;
+        else if (isTable || isCollection)
+            return null;
         else {
             final Primitive primitive = Primitive.For(type);
             if (null != primitive)
                 return primitive;
-            else if ((!isTable)&&(!isCollection))
-                return Primitive.Serializable;
             else
-                return null;
+                return Primitive.Serializable;
         }
     }
     public final static Primitive For(String name){

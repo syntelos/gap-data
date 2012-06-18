@@ -30,7 +30,7 @@ import com.google.appengine.api.datastore.Query;
  * 
  * @author jdp
  */
-public abstract class AbstractMap<K extends Comparable,V extends BigTable>
+public abstract class AbstractMap<K extends Comparable,V extends TableClass>
     extends AbstractList<V>
     implements Map<K,V>
 {
