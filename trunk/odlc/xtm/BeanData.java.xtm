@@ -235,6 +235,15 @@ public abstract class {{=class_name}}Data
         else
             throw new IllegalArgumentException();
     }
+    /**
+     * @param entity Use entity for its key (only)
+     */
+    public final static {{=class_name}} Get(Entity entity){
+        if (null != entity)
+            return Get(entity.getKey());
+        else
+            throw new IllegalArgumentException();
+    }
     public final static Key GetKey(Key key){
         if (null != key){
             Query q = {{=class_name}}.CreateQueryFor(key);
@@ -351,6 +360,13 @@ public abstract class {{=class_name}}Data
         }
     }
     /**
+     * @param entity Use entity for its key (only)
+     */
+    public final static void Delete(Entity entity){
+        if (null != entity)
+            Delete(entity.getKey());
+    }
+    /**
      * Drop the instance from memcache, exclusively.
      */
     public final static void Clean({{=class_name}} instance){
@@ -439,6 +455,15 @@ public abstract class {{=class_name}}Data
     public final static List.Primitive<Key> QueryNKey(Query query){
         if (null != query)
             return gap.data.Store.QueryNKey(query);
+        else
+            throw new IllegalArgumentException();
+    }
+    /**
+     * @return Entities having only keys, unbuffered
+     */
+    public final static Iterable<Entity> QueryNKeyUnbuffered(Query query){
+        if (null != query)
+            return gap.data.Store.QueryNKeyUnbuffered(query);
         else
             throw new IllegalArgumentException();
     }
