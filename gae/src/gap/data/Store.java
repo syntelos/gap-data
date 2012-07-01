@@ -225,6 +225,19 @@ public final class Store
             }
             return list;
         }
+        protected static Iterable<Entity> QueryNUnbuffered(Query query){
+            if (BigTable.IsAdmin(query.getKind())){
+
+                if (!Logon.IsAdmin())
+                    throw new AdminAccessException();
+            }
+            query.setKeysOnly();
+
+            DatastoreService ds = Get();
+            PreparedQuery stmt = ds.prepare(query);
+
+            return stmt.asIterable();
+        }
     }
     /**
      * Memcache
@@ -452,6 +465,15 @@ public final class Store
     public static List.Primitive<Key> QueryNKey(Query q){
 
         return Store.P.QueryN(q);
+    }
+    /**
+     * Unbuffered for large sets
+     * 
+     * @return Entities having only keys 
+     */
+    public static Iterable<Entity> QueryNKeyUnbuffered(Query q){
+
+        return Store.P.QueryNUnbuffered(q);
     }
     public static <T extends TableClass> T PutClass(T table){
         /*
