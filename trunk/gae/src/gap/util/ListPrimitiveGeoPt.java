@@ -19,6 +19,9 @@
  */
 package gap.util;
 
+import json.ArrayJson;
+import json.Json;
+
 import com.google.appengine.api.datastore.GeoPt;
 
 
@@ -45,5 +48,28 @@ public final class ListPrimitiveGeoPt
     }
     public ListPrimitiveGeoPt clone(){
         return (ListPrimitiveGeoPt)super.clone();
+    }
+    public boolean fromJson(Json json){
+        boolean mod = false;
+        if (json instanceof ArrayJson){
+
+            mod = this.isNotEmpty();
+
+            this.clear();
+
+            final ArrayJson array = (ArrayJson)json;
+            for (Json j: array){
+
+                GeoPt v = j.getValue(GeoPt.class);
+
+                if (null != v){
+
+                    this.add(v);
+
+                    mod = true;
+                }
+            }
+        }
+        return mod;
     }
 }

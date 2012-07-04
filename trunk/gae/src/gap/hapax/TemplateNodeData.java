@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see TemplateNode
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-06-18T22:42:57.497Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-07-03T17:30:25.139Z")
 public abstract class TemplateNodeData
     extends gap.data.BigTable
     implements DataInheritance<TemplateNode>
@@ -71,6 +71,15 @@ public abstract class TemplateNodeData
         return KIND.pathto(subpath);
     }
 
+    /**
+     * Short instance key from parent key
+     */
+    public static Key KeyShort(Key ancestor, Json json){
+        final String nodeType = json.getValue("nodeType",String.class);
+        final Integer offset = json.getValue("offset",Integer.class);
+
+        return KeyShortIdFor(ancestor, nodeType, offset);
+    }
     /**
      * Short instance key from parent key
      */
@@ -108,6 +117,15 @@ public abstract class TemplateNodeData
     }
 
     /**
+     * Instance lookup or create
+     */
+    public static TemplateNode ForShort(Key ancestor, Json json){
+        final String nodeType = json.getValue("nodeType",String.class);
+        final Integer offset = json.getValue("offset",Integer.class);
+
+        return ForShortNodeTypeOffset(ancestor, nodeType, offset);
+    }
+    /**
      * Instance lookup from parent key
      */
     public final static TemplateNode ForShortNodeTypeOffset(Key ancestor, String nodeType, Integer offset){
@@ -126,6 +144,15 @@ public abstract class TemplateNodeData
     }
 
     /**
+     * Instance lookup or create
+     */
+    public static TemplateNode GetCreateShort(Key ancestor, Json json){
+        final String nodeType = json.getValue("nodeType",String.class);
+        final Integer offset = json.getValue("offset",Integer.class);
+
+        return GetCreateShort(ancestor, nodeType, offset);
+    }
+    /**
      * Instance lookup or create from parent key
      */
     public final static TemplateNode GetCreateShort(Key ancestor, String nodeType, Integer offset){
@@ -136,7 +163,27 @@ public abstract class TemplateNodeData
         }
         return templateNode;
     }
-
+    /**
+     * Instance lookup or create from (presumed correct and coherent) instance key and data
+     *
+     * Used by long and short lists
+     *
+     * @param key Key derived from data
+     *
+     * @param data Data instance of this class
+     *
+     * @return Possibly dirty (in need of save)
+     */
+    public final static TemplateNode GetCreate(Key key, Json json){
+        TemplateNode instance = gap.data.Store.GetClass(key);
+        if (null == instance){
+            final String nodeType = json.getValue("nodeType",String.class);
+            final Integer offset = json.getValue("offset",Integer.class);
+            final Key ancestor = key.getParent();
+            instance = new TemplateNode(ancestor, nodeType, offset);
+        }
+        return instance;
+    }
 
     public final static Key KeyShortFor(Key ancestor, String id){
         return KeyFactory.createKey(ancestor,KIND.getName(),id);
@@ -171,6 +218,15 @@ public abstract class TemplateNodeData
                 return (TemplateNode)gap.data.Store.Query1Class(q);
             }
         }
+        else
+            throw new IllegalArgumentException();
+    }
+    /**
+     * @param entity Use entity for its key (only)
+     */
+    public final static TemplateNode Get(Entity entity){
+        if (null != entity)
+            return Get(entity.getKey());
         else
             throw new IllegalArgumentException();
     }
@@ -248,6 +304,15 @@ public abstract class TemplateNodeData
         }
     }
     /**
+     * Drop all children of the parent
+     */
+    public final static void DeleteChildrenOf(Entity parent){
+        if (null != parent){
+
+            DeleteChildrenOf(parent.getKey());
+        }
+    }
+    /**
      * Drop the instance from memcache and datastore.
      */
     public final static void Delete(TemplateNode instance){
@@ -264,6 +329,13 @@ public abstract class TemplateNodeData
 
             gap.data.Store.Delete(instanceKey);
         }
+    }
+    /**
+     * @param entity Use entity for its key (only)
+     */
+    public final static void Delete(Entity entity){
+        if (null != entity)
+            Delete(entity.getKey());
     }
     /**
      * Drop the instance from memcache, exclusively.
@@ -343,6 +415,15 @@ public abstract class TemplateNodeData
     public final static List.Primitive<Key> QueryNKey(Query query){
         if (null != query)
             return gap.data.Store.QueryNKey(query);
+        else
+            throw new IllegalArgumentException();
+    }
+    /**
+     * @return Entities having only keys, unbuffered
+     */
+    public final static Iterable<Entity> QueryNKeyUnbuffered(Query query){
+        if (null != query)
+            return gap.data.Store.QueryNKeyUnbuffered(query);
         else
             throw new IllegalArgumentException();
     }
@@ -1069,7 +1150,7 @@ public abstract class TemplateNodeData
     public boolean fromJsonNodeType(Json json){
         if (null == json)
             return false;
-        else
+        else 
             return this.setNodeType((String)json.getValue(String.class));
     }
     public Json toJsonOffset(){
@@ -1079,7 +1160,7 @@ public abstract class TemplateNodeData
     public boolean fromJsonOffset(Json json){
         if (null == json)
             return false;
-        else
+        else 
             return this.setOffset((Integer)json.getValue(Integer.class));
     }
     public final boolean setOffset(Number offset){
@@ -1101,7 +1182,7 @@ public abstract class TemplateNodeData
     public boolean fromJsonLineNumber(Json json){
         if (null == json)
             return false;
-        else
+        else 
             return this.setLineNumber((Integer)json.getValue(Integer.class));
     }
     public final boolean setLineNumber(Number lineNumber){
@@ -1123,7 +1204,7 @@ public abstract class TemplateNodeData
     public boolean fromJsonIndex(Json json){
         if (null == json)
             return false;
-        else
+        else 
             return this.setIndex((Integer)json.getValue(Integer.class));
     }
     public final boolean setIndex(Number index){
@@ -1145,7 +1226,7 @@ public abstract class TemplateNodeData
     public boolean fromJsonNodeContent(Json json){
         if (null == json)
             return false;
-        else
+        else 
             return this.setNodeContent((Text)json.getValue(Text.class));
     }
     public Json toJsonIndexCloseRelative(){
@@ -1155,7 +1236,7 @@ public abstract class TemplateNodeData
     public boolean fromJsonIndexCloseRelative(Json json){
         if (null == json)
             return false;
-        else
+        else 
             return this.setIndexCloseRelative((Integer)json.getValue(Integer.class));
     }
     public final boolean setIndexCloseRelative(Number indexCloseRelative){

@@ -21,6 +21,8 @@ package gap.util;
 
 import gap.data.*;
 
+import json.Json;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
@@ -336,5 +338,8 @@ public abstract class AbstractListPrimitive<V>
             }
         }
         return -1;
+    }
+    public boolean fromJson(Json json){
+        throw new UnsupportedOperationException();
     }
 }

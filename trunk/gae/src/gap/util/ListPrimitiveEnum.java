@@ -19,6 +19,8 @@
  */
 package gap.util;
 
+import json.ArrayJson;
+import json.Json;
 
 /**
 
@@ -44,5 +46,28 @@ public final class ListPrimitiveEnum
     }
     public ListPrimitiveEnum clone(){
         return (ListPrimitiveEnum)super.clone();
+    }
+    public boolean fromJson(Json json){
+        boolean mod = false;
+        if (json instanceof ArrayJson){
+
+            mod = this.isNotEmpty();
+
+            this.clear();
+
+            final ArrayJson array = (ArrayJson)json;
+            for (Json j: array){
+
+                Enum v = j.getValue(Enum.class);
+
+                if (null != v){
+
+                    this.add(v);
+
+                    mod = true;
+                }
+            }
+        }
+        return mod;
     }
 }

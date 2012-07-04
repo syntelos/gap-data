@@ -19,6 +19,9 @@
  */
 package gap.util;
 
+import json.ArrayJson;
+import json.Json;
+
 import com.google.appengine.api.datastore.Text;
 
 
@@ -45,5 +48,28 @@ public final class ListPrimitiveText
     }
     public ListPrimitiveText clone(){
         return (ListPrimitiveText)super.clone();
+    }
+    public boolean fromJson(Json json){
+        boolean mod = false;
+        if (json instanceof ArrayJson){
+
+            mod = this.isNotEmpty();
+
+            this.clear();
+
+            final ArrayJson array = (ArrayJson)json;
+            for (Json j: array){
+
+                Text v = j.getValue(Text.class);
+
+                if (null != v){
+
+                    this.add(v);
+
+                    mod = true;
+                }
+            }
+        }
+        return mod;
     }
 }

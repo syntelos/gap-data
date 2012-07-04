@@ -19,6 +19,9 @@
  */
 package gap.util;
 
+import json.ArrayJson;
+import json.Json;
+
 import com.google.appengine.api.datastore.PostalAddress;
 
 
@@ -45,5 +48,28 @@ public final class ListPrimitivePostalAddress
     }
     public ListPrimitivePostalAddress clone(){
         return (ListPrimitivePostalAddress)super.clone();
+    }
+    public boolean fromJson(Json json){
+        boolean mod = false;
+        if (json instanceof ArrayJson){
+
+            mod = this.isNotEmpty();
+
+            this.clear();
+
+            final ArrayJson array = (ArrayJson)json;
+            for (Json j: array){
+
+                PostalAddress v = j.getValue(PostalAddress.class);
+
+                if (null != v){
+
+                    this.add(v);
+
+                    mod = true;
+                }
+            }
+        }
+        return mod;
     }
 }

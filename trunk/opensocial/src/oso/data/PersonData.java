@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see Person
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-06-18T22:42:46.070Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2012-07-03T17:30:14.343Z")
 public abstract class PersonData
     extends gap.data.BigTable
     implements DataInheritance<Person>
@@ -68,6 +68,14 @@ public abstract class PersonData
         return KIND.pathto(subpath);
     }
 
+    /**
+     * Long instance key from parent key
+     */
+    public static Key KeyLong(Json json){
+        final String logonId = json.getValue("logonId",String.class);
+
+        return KeyLongIdFor( logonId);
+    }
     /**
      * Long instance key without parent key
      */
@@ -104,6 +112,14 @@ public abstract class PersonData
     }
 
     /**
+     * Instance lookup or create
+     */
+    public static Person ForLong(Json json){
+        final String logonId = json.getValue("logonId",String.class);
+
+        return ForLongLogonId( logonId);
+    }
+    /**
      * Instance lookup
      */
     public final static Person ForLongLogonId(String logonId){
@@ -130,6 +146,14 @@ public abstract class PersonData
     /**
      * Instance lookup or create
      */
+    public static Person GetCreateLong(Json json){
+        final String logonId = json.getValue("logonId",String.class);
+
+        return GetCreateLong( logonId);
+    }
+    /**
+     * Instance lookup or create
+     */
     public final static Person GetCreateLongLogonId(String logonId){
         Person person = Person.ForLongLogonId( logonId);
         if (null == person){
@@ -138,7 +162,25 @@ public abstract class PersonData
         }
         return person;
     }
-
+    /**
+     * Instance lookup or create from (presumed correct and coherent) instance key and data
+     *
+     * Used by long and short lists
+     *
+     * @param key Key derived from data
+     *
+     * @param data Data instance of this class
+     *
+     * @return Possibly dirty (in need of save)
+     */
+    public final static Person GetCreate(Key key, Json json){
+        Person instance = gap.data.Store.GetClass(key);
+        if (null == instance){
+            final String logonId = json.getValue("logonId",String.class);
+            instance = new Person( logonId);
+        }
+        return instance;
+    }
 
     public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND.getName(),id);
@@ -173,6 +215,15 @@ public abstract class PersonData
                 return (Person)gap.data.Store.Query1Class(q);
             }
         }
+        else
+            throw new IllegalArgumentException();
+    }
+    /**
+     * @param entity Use entity for its key (only)
+     */
+    public final static Person Get(Entity entity){
+        if (null != entity)
+            return Get(entity.getKey());
         else
             throw new IllegalArgumentException();
     }
@@ -244,6 +295,13 @@ public abstract class PersonData
 
             gap.data.Store.Delete(instanceKey);
         }
+    }
+    /**
+     * @param entity Use entity for its key (only)
+     */
+    public final static void Delete(Entity entity){
+        if (null != entity)
+            Delete(entity.getKey());
     }
     /**
      * Drop the instance from memcache, exclusively.
@@ -323,6 +381,15 @@ public abstract class PersonData
     public final static List.Primitive<Key> QueryNKey(Query query){
         if (null != query)
             return gap.data.Store.QueryNKey(query);
+        else
+            throw new IllegalArgumentException();
+    }
+    /**
+     * @return Entities having only keys, unbuffered
+     */
+    public final static Iterable<Entity> QueryNKeyUnbuffered(Query query){
+        if (null != query)
+            return gap.data.Store.QueryNKeyUnbuffered(query);
         else
             throw new IllegalArgumentException();
     }
@@ -693,7 +760,7 @@ public abstract class PersonData
     public boolean fromJsonLogonId(Json json){
         if (null == json)
             return false;
-        else
+        else 
             return this.setLogonId((String)json.getValue(String.class));
     }
     /*

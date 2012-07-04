@@ -74,12 +74,28 @@ public abstract class {{=class_name}}Data
     }
 {{#class_re_not_child}}
     /**
+     * Long instance key from parent key
+     */
+    public static Key KeyLong(Json json){{{#field_unique}}
+        final {{=field_class}} {{=field_name}} = json.getValue("{{=field_name}}",{{=field_class}}.class);{{/field_unique}}
+
+        return KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+    }
+    /**
      * Long instance key without parent key
      */
     public final static Key KeyLongIdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
         String id = {{=class_name}}.IdFor({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         return KeyLongFor(id);
     }{{/class_re_not_child}}{{#class_re_child}}
+    /**
+     * Short instance key from parent key
+     */
+    public static Key KeyShort(Key ancestor, Json json){{{#field_unique}}
+        final {{=field_class}} {{=field_name}} = json.getValue("{{=field_name}}",{{=field_class}}.class);{{/field_unique}}
+
+        return KeyShortIdFor(ancestor{{#field_unique}}, {{=field_name}}{{/field_unique}});
+    }
     /**
      * Short instance key from parent key
      */
@@ -118,6 +134,14 @@ public abstract class {{=class_name}}Data
     }
 {{#class_re_not_child}}
     /**
+     * Instance lookup or create
+     */
+    public static {{=class_name}} ForLong(Json json){{{#field_unique}}
+        final {{=field_class}} {{=field_name}} = json.getValue("{{=field_name}}",{{=field_class}}.class);{{/field_unique}}
+
+        return ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+    }
+    /**
      * Instance lookup
      */
     public final static {{=class_name}} ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
@@ -134,6 +158,14 @@ public abstract class {{=class_name}}Data
         else
             throw new IllegalArgumentException();
     }{{/class_re_not_child}}{{#class_re_child}}
+    /**
+     * Instance lookup or create
+     */
+    public static {{=class_name}} ForShort(Key ancestor, Json json){{{#field_unique}}
+        final {{=field_class}} {{=field_name}} = json.getValue("{{=field_name}}",{{=field_class}}.class);{{/field_unique}}
+
+        return ForShort{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}(ancestor{{#field_unique}}, {{=field_name}}{{/field_unique}});
+    }
     /**
      * Instance lookup from parent key
      */
@@ -161,6 +193,14 @@ public abstract class {{=class_name}}Data
     /**
      * Instance lookup or create
      */
+    public static {{=class_name}} GetCreateLong(Json json){{{#field_unique}}
+        final {{=field_class}} {{=field_name}} = json.getValue("{{=field_name}}",{{=field_class}}.class);{{/field_unique}}
+
+        return GetCreateLong({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
+    }
+    /**
+     * Instance lookup or create
+     */
     public final static {{=class_name}} GetCreateLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}}, {{/field_unique_it_NotFirst}}{{=field_class}} {{=field_name}}{{/field_unique}}){
         {{=class_name}} {{=class_nameDecamel}} = {{=class_name}}.ForLong{{#field_unique}}{{=field_nameCamel}}{{/field_unique}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});
         if (null == {{=class_nameDecamel}}){
@@ -169,6 +209,14 @@ public abstract class {{=class_name}}Data
         }
         return {{=class_nameDecamel}};
     }{{/class_re_not_child}}{{#class_re_child}}
+    /**
+     * Instance lookup or create
+     */
+    public static {{=class_name}} GetCreateShort(Key ancestor, Json json){{{#field_unique}}
+        final {{=field_class}} {{=field_name}} = json.getValue("{{=field_name}}",{{=field_class}}.class);{{/field_unique}}
+
+        return GetCreateShort(ancestor{{#field_unique}}, {{=field_name}}{{/field_unique}});
+    }
     /**
      * Instance lookup or create from parent key
      */
@@ -180,7 +228,27 @@ public abstract class {{=class_name}}Data
         }
         return {{=class_nameDecamel}};
     }{{/class_re_child}}
-
+    /**
+     * Instance lookup or create from (presumed correct and coherent) instance key and data
+     *
+     * Used by long and short lists
+     *
+     * @param key Key derived from data
+     *
+     * @param data Data instance of this class
+     *
+     * @return Possibly dirty (in need of save)
+     */
+    public final static {{=class_name}} GetCreate(Key key, Json json){
+        {{=class_name}} instance = gap.data.Store.GetClass(key);
+        if (null == instance){{{#field_unique}}
+            final {{=field_class}} {{=field_name}} = json.getValue("{{=field_name}}",{{=field_class}}.class);{{/field_unique}}{{#class_re_not_child}}
+            instance = new {{=class_name}}({{#field_unique}}{{#field_unique_it_NotFirst}},{{/field_unique_it_NotFirst}} {{=field_name}}{{/field_unique}});{{/class_re_not_child}}{{#class_re_child}}
+            final Key ancestor = key.getParent();
+            instance = new {{=class_name}}(ancestor{{#field_unique}}, {{=field_name}}{{/field_unique}});{{/class_re_child}}
+        }
+        return instance;
+    }
 {{#class_re_not_child}}
     public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND.getName(),id);
@@ -339,6 +407,15 @@ public abstract class {{=class_name}}Data
         if (null != parentKey){
 
              gap.data.Store.DeleteCollection(KIND,{{=class_name}}.CreateQueryFor(parentKey));
+        }
+    }
+    /**
+     * Drop all children of the parent
+     */
+    public final static void DeleteChildrenOf(Entity parent){
+        if (null != parent){
+
+            DeleteChildrenOf(parent.getKey());
         }
     }{{/class_re_child}}
     /**
@@ -1302,14 +1379,13 @@ public abstract class {{=class_name}}Data
         {{=field_class}} {{=field_name}} = this.get{{=field_nameCamel}}();
         return Json.Wrap( {{=field_name}});
     }
-    public boolean fromJson{{=field_nameCamel}}(Json json){{{#field_is_collection}}
-        /*
-         * [TODO] json.getValue(colClas,comClas) not expressed by (e.g.) "List.Short<Component>.class"
-         */
-        return false;{{/field_is_collection}}{{#field_is_not_collection}}
+    public boolean fromJson{{=field_nameCamel}}(Json json){
         if (null == json)
             return false;
-        else
+        else {{#field_is_collection}}{
+            {{=field_class}} collection = this.get{{=field_nameCamel}}(Notation.MayInherit);
+            return collection.fromJson(json);
+        }{{/field_is_collection}}{{#field_is_not_collection}}
             return this.set{{=field_nameCamel}}(({{=field_class}})json.getValue({{=field_class}}.class));{{/field_is_not_collection}}
     }{{#field_is_number}}
     public final boolean set{{=field_nameCamel}}(Number {{=field_name}}){

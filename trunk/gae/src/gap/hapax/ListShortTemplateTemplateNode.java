@@ -20,8 +20,12 @@
 package gap.hapax;
 
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
+
+import json.ArrayJson;
+import json.Json;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.blobstore.*;
@@ -33,7 +37,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2012-06-18T22:42:57.447Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2012-07-03T17:30:25.098Z")
 public abstract class ListShortTemplateTemplateNode
     extends gap.util.AbstractList<TemplateNode>
     implements gap.data.List.Short<TemplateNode>
@@ -196,5 +200,63 @@ public abstract class ListShortTemplateTemplateNode
         else
             return (Iterable<TemplateNode>)(new BufferIterator());
     }
+    /**
+     * Add without drop: half an editor that is efficient wrt data store operations.  Is recursive.
+     */
+    public boolean fromJson(Json json){
 
+        if (json instanceof ArrayJson){
+            /*
+             * Keys for data
+             */
+            Key[] keys = null;
+
+            Json[] array = ((ArrayJson)json).toArray();
+
+            for (Json j: array){
+                try {
+                    keys = Objects.Add(keys, TemplateNode.KeyShort(this.ancestorKey,j));
+                }
+                catch (Exception cancel){
+                    /*
+                     * Breach of contract: an incomplete child will cause this process to bail
+                     */
+                    return false;
+                }
+            }
+            /*
+             * Add without drop
+             */
+            if (null != keys && null != array){
+                final int count = keys.length;
+                if (count == array.length){
+
+                    boolean mod = false;
+
+                    for (int cc = 0; cc < count; cc++){
+                        Key k = keys[cc];
+                        Json j = array[cc];
+                        int idx = this.indexInBuffer(k);
+                        TemplateNode child;
+                        if (0 > idx){
+                            child = TemplateNode.GetCreate(k,j);
+                            child.fromJson(j);
+                            child.save();
+                            mod = true;
+                            this.addToBuffer(child);
+                        }
+                        else {
+                            child = this.get(idx);
+                            if (child.fromJson(j)){
+                                child.save();
+                                mod = true;
+                            }
+                        }
+                    }
+                    return mod;
+                }
+            }
+        }
+        return false;
+    }
 }

@@ -23,6 +23,8 @@ import gap.data.Collection;
 import gap.data.Filter;
 import gap.data.List;
 
+import json.Json;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
@@ -366,5 +368,8 @@ public class ArrayList<V>
      */
     public Iterable<V> xtail(int count){
         return this.ntail(this.size()-count);
+    }
+    public boolean fromJson(Json json){
+        throw new UnsupportedOperationException();
     }
 }
