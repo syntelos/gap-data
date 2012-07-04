@@ -19,6 +19,9 @@
  */
 package gap.util;
 
+import json.ArrayJson;
+import json.Json;
+
 import gap.data.Kind;
 import gap.data.List;
 import gap.data.TableClass;
@@ -132,5 +135,28 @@ public class ListPrimitiveKey
             return java.util.Arrays.binarySearch(this.list,instance);
         else
             return -1;
+    }
+    public boolean fromJson(Json json){
+        boolean mod = false;
+        if (json instanceof ArrayJson){
+
+            mod = this.isNotEmpty();
+
+            this.clear();
+
+            final ArrayJson array = (ArrayJson)json;
+            for (Json j: array){
+
+                Key v = j.getValue(Key.class);
+
+                if (null != v){
+
+                    this.add(v);
+
+                    mod = true;
+                }
+            }
+        }
+        return mod;
     }
 }

@@ -19,6 +19,8 @@
  */
 package gap.util;
 
+import json.ArrayJson;
+import json.Json;
 
 /**
 
@@ -43,5 +45,28 @@ public final class ListPrimitiveLong
     }
     public ListPrimitiveLong clone(){
         return (ListPrimitiveLong)super.clone();
+    }
+    public boolean fromJson(Json json){
+        boolean mod = false;
+        if (json instanceof ArrayJson){
+
+            mod = this.isNotEmpty();
+
+            this.clear();
+
+            final ArrayJson array = (ArrayJson)json;
+            for (Json j: array){
+
+                java.lang.Long v = j.getValue(java.lang.Long.class);
+
+                if (null != v){
+
+                    this.add(v);
+
+                    mod = true;
+                }
+            }
+        }
+        return mod;
     }
 }

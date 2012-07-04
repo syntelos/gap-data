@@ -21,6 +21,8 @@ package gap.util;
 
 import gap.data.*;
 
+import json.Json;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
@@ -287,7 +289,7 @@ public abstract class AbstractList<V extends TableClass>
             }
             if (hit){
                 if (miss)
-                    return Compares.NoIntersection;
+                    return Compares.Intersects;
                 else
                     return Compares.Equivalent;
             }
@@ -339,6 +341,20 @@ public abstract class AbstractList<V extends TableClass>
         }
         return -1;
     }
+    public final int indexInBuffer(Key key){
+        if (null != key){
+            TableClass[] buffer = this.buffer;
+            if (null != buffer){
+                for (int cc = 0, count = buffer.length; cc < count; cc++){
+                    TableClass item = buffer[cc];
+
+                    if (BigTable.Equals(key,item.getKey()))
+                        return cc;
+                }
+            }
+        }
+        return -1;
+    }
     public final V removeFromBuffer (V item) {
 
         int index = this.indexInBuffer(item);
@@ -385,8 +401,13 @@ public abstract class AbstractList<V extends TableClass>
             if (lock.enter(timeout)){
                 try {
                     for (int cc = 0, count = buffer.length; cc < count; cc++){
+
                         TableClass instance = buffer[cc];
-                        instance.save();
+
+                        if (instance.isDirty()){
+
+                            instance.save();
+                        }
                     }
                     return true;
                 }
@@ -409,8 +430,13 @@ public abstract class AbstractList<V extends TableClass>
             if (lock.enter()){
                 try {
                     for (int cc = 0, count = buffer.length; cc < count; cc++){
+
                         TableClass instance = buffer[cc];
-                        instance.save();
+
+                        if (instance.isDirty()){
+
+                            instance.save();
+                        }
                     }
                     return true;
                 }
@@ -455,5 +481,8 @@ public abstract class AbstractList<V extends TableClass>
      */
     public Iterable<V> xtail(int count){
         return this.ntail(this.gross-count);
+    }
+    public boolean fromJson(Json json){
+        throw new UnsupportedOperationException();
     }
 }

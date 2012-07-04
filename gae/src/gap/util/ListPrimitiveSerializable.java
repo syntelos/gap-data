@@ -19,6 +19,9 @@
  */
 package gap.util;
 
+import json.ArrayJson;
+import json.Json;
+
 import java.io.Serializable;
 
 
@@ -45,5 +48,28 @@ public final class ListPrimitiveSerializable
     }
     public ListPrimitiveSerializable clone(){
         return (ListPrimitiveSerializable)super.clone();
+    }
+    public boolean fromJson(Json json){
+        boolean mod = false;
+        if (json instanceof ArrayJson){
+
+            mod = this.isNotEmpty();
+
+            this.clear();
+
+            final ArrayJson array = (ArrayJson)json;
+            for (Json j: array){
+
+                Serializable v = j.getValue(Serializable.class);
+
+                if (null != v){
+
+                    this.add(v);
+
+                    mod = true;
+                }
+            }
+        }
+        return mod;
     }
 }

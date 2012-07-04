@@ -19,6 +19,9 @@
  */
 package gap.util;
 
+import json.ArrayJson;
+import json.Json;
+
 import com.google.appengine.api.datastore.PhoneNumber;
 
 
@@ -45,5 +48,28 @@ public final class ListPrimitivePhoneNumber
     }
     public ListPrimitivePhoneNumber clone(){
         return (ListPrimitivePhoneNumber)super.clone();
+    }
+    public boolean fromJson(Json json){
+        boolean mod = false;
+        if (json instanceof ArrayJson){
+
+            mod = this.isNotEmpty();
+
+            this.clear();
+
+            final ArrayJson array = (ArrayJson)json;
+            for (Json j: array){
+
+                PhoneNumber v = j.getValue(PhoneNumber.class);
+
+                if (null != v){
+
+                    this.add(v);
+
+                    mod = true;
+                }
+            }
+        }
+        return mod;
     }
 }

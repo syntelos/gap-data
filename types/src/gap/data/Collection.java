@@ -21,6 +21,8 @@ package gap.data;
 
 import gap.util.Page;
 
+import json.Json;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 
@@ -124,6 +126,21 @@ public interface Collection<V>
     public void init();
 
     public void destroy();
+
+    /**
+     * The argument type will be analogous to this type (list or map).
+     * 
+     * Generally, deletion is not translated into JSON update, where
+     * it would be more than intended in some cases.  The partial
+     * update of complex objects should be implemented.  A null or
+     * empty collection may be a placeholder, not a deletion.
+     * Deletion should be reserved for more explicit operations.
+     * 
+     * A non empty collection must be interpreted for its deletions
+     * and additions, but a null or empty collection may be ignored as
+     * having no effect on the state of storage.
+     */
+    public boolean fromJson(Json json);
 
     public Collection<V> clone();
 }

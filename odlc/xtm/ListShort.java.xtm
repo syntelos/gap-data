@@ -21,8 +21,12 @@ package {{=parent_package_name}};
 {{#import}}
 import {{=import_spec}};{{/import}}
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
+
+import json.ArrayJson;
+import json.Json;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.blobstore.*;
@@ -197,5 +201,63 @@ public abstract class ListShort{{=parent_class_name}}{{=child_class_name}}
         else
             return (Iterable<{{=child_class_name}}>)(new BufferIterator());
     }
+    /**
+     * Add without drop: half an editor that is efficient wrt data store operations.  Is recursive.
+     */
+    public boolean fromJson(Json json){
 
+        if (json instanceof ArrayJson){
+            /*
+             * Keys for data
+             */
+            Key[] keys = null;
+
+            Json[] array = ((ArrayJson)json).toArray();
+
+            for (Json j: array){
+                try {
+                    keys = Objects.Add(keys, {{=child_class_name}}.KeyShort(this.ancestorKey,j));
+                }
+                catch (Exception cancel){
+                    /*
+                     * Breach of contract: an incomplete child will cause this process to bail
+                     */
+                    return false;
+                }
+            }
+            /*
+             * Add without drop
+             */
+            if (null != keys && null != array){
+                final int count = keys.length;
+                if (count == array.length){
+
+                    boolean mod = false;
+
+                    for (int cc = 0; cc < count; cc++){
+                        Key k = keys[cc];
+                        Json j = array[cc];
+                        int idx = this.indexInBuffer(k);
+                        {{=child_class_name}} child;
+                        if (0 > idx){
+                            child = {{=child_class_name}}.GetCreate(k,j);
+                            child.fromJson(j);
+                            child.save();
+                            mod = true;
+                            this.addToBuffer(child);
+                        }
+                        else {
+                            child = this.get(idx);
+                            if (child.fromJson(j)){
+                                child.save();
+                                mod = true;
+                            }
+                        }
+                    }
+                    return mod;
+                }
+            }
+        }
+        return false;
+    }
 }

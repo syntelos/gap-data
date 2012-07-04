@@ -386,4 +386,331 @@ public abstract class Objects {
         else
             throw new ClassCastException(object.getClass().getName());
     }
+
+    public final static java.lang.Object[] Add(java.lang.Object[] list, java.lang.Object item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.Object[]{item};
+        else {
+            final int len = list.length;
+            java.lang.Object[] copier = new java.lang.Object[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.lang.String[] Add(java.lang.String[] list, java.lang.String item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.String[]{item};
+        else {
+            final int len = list.length;
+            java.lang.String[] copier = new java.lang.String[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.lang.Boolean[] Add(java.lang.Boolean[] list, java.lang.Boolean item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.Boolean[]{item};
+        else {
+            final int len = list.length;
+            java.lang.Boolean[] copier = new java.lang.Boolean[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.lang.Byte[] Add(java.lang.Byte[] list, java.lang.Byte item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.Byte[]{item};
+        else {
+            final int len = list.length;
+            java.lang.Byte[] copier = new java.lang.Byte[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.lang.Character[] Add(java.lang.Character[] list, java.lang.Character item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.Character[]{item};
+        else {
+            final int len = list.length;
+            java.lang.Character[] copier = new java.lang.Character[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.lang.Short[] Add(java.lang.Short[] list, java.lang.Short item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.Short[]{item};
+        else {
+            final int len = list.length;
+            java.lang.Short[] copier = new java.lang.Short[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.lang.Integer[] Add(java.lang.Integer[] list, java.lang.Integer item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.Integer[]{item};
+        else {
+            final int len = list.length;
+            java.lang.Integer[] copier = new java.lang.Integer[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.lang.Long[] Add(java.lang.Long[] list, java.lang.Long item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.Long[]{item};
+        else {
+            final int len = list.length;
+            java.lang.Long[] copier = new java.lang.Long[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.lang.Float[] Add(java.lang.Float[] list, java.lang.Float item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.Float[]{item};
+        else {
+            final int len = list.length;
+            java.lang.Float[] copier = new java.lang.Float[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.lang.Double[] Add(java.lang.Double[] list, java.lang.Double item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.Double[]{item};
+        else {
+            final int len = list.length;
+            java.lang.Double[] copier = new java.lang.Double[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.util.Date[] Add(java.util.Date[] list, java.util.Date item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.util.Date[]{item};
+        else {
+            final int len = list.length;
+            java.util.Date[] copier = new java.util.Date[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.lang.Enum[] Add(java.lang.Enum[] list, java.lang.Enum item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.lang.Enum[]{item};
+        else {
+            final int len = list.length;
+            java.lang.Enum[] copier = new java.lang.Enum[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.math.BigInteger[] Add(java.math.BigInteger[] list, java.math.BigInteger item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.math.BigInteger[]{item};
+        else {
+            final int len = list.length;
+            java.math.BigInteger[] copier = new java.math.BigInteger[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.math.BigDecimal[] Add(java.math.BigDecimal[] list, java.math.BigDecimal item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.math.BigDecimal[]{item};
+        else {
+            final int len = list.length;
+            java.math.BigDecimal[] copier = new java.math.BigDecimal[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static com.google.appengine.api.datastore.Blob[] Add(com.google.appengine.api.datastore.Blob[] list, com.google.appengine.api.datastore.Blob item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new com.google.appengine.api.datastore.Blob[]{item};
+        else {
+            final int len = list.length;
+            com.google.appengine.api.datastore.Blob[] copier = new com.google.appengine.api.datastore.Blob[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static com.google.appengine.api.datastore.Category[] Add(com.google.appengine.api.datastore.Category[] list, com.google.appengine.api.datastore.Category item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new com.google.appengine.api.datastore.Category[]{item};
+        else {
+            final int len = list.length;
+            com.google.appengine.api.datastore.Category[] copier = new com.google.appengine.api.datastore.Category[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static com.google.appengine.api.datastore.Email[] Add(com.google.appengine.api.datastore.Email[] list, com.google.appengine.api.datastore.Email item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new com.google.appengine.api.datastore.Email[]{item};
+        else {
+            final int len = list.length;
+            com.google.appengine.api.datastore.Email[] copier = new com.google.appengine.api.datastore.Email[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static com.google.appengine.api.datastore.GeoPt[] Add(com.google.appengine.api.datastore.GeoPt[] list, com.google.appengine.api.datastore.GeoPt item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new com.google.appengine.api.datastore.GeoPt[]{item};
+        else {
+            final int len = list.length;
+            com.google.appengine.api.datastore.GeoPt[] copier = new com.google.appengine.api.datastore.GeoPt[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static com.google.appengine.api.datastore.Key[] Add(com.google.appengine.api.datastore.Key[] list, com.google.appengine.api.datastore.Key item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new com.google.appengine.api.datastore.Key[]{item};
+        else {
+            final int len = list.length;
+            com.google.appengine.api.datastore.Key[] copier = new com.google.appengine.api.datastore.Key[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static com.google.appengine.api.datastore.Link[] Add(com.google.appengine.api.datastore.Link[] list, com.google.appengine.api.datastore.Link item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new com.google.appengine.api.datastore.Link[]{item};
+        else {
+            final int len = list.length;
+            com.google.appengine.api.datastore.Link[] copier = new com.google.appengine.api.datastore.Link[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static com.google.appengine.api.datastore.PhoneNumber[] Add(com.google.appengine.api.datastore.PhoneNumber[] list, com.google.appengine.api.datastore.PhoneNumber item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new com.google.appengine.api.datastore.PhoneNumber[]{item};
+        else {
+            final int len = list.length;
+            com.google.appengine.api.datastore.PhoneNumber[] copier = new com.google.appengine.api.datastore.PhoneNumber[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static com.google.appengine.api.datastore.PostalAddress[] Add(com.google.appengine.api.datastore.PostalAddress[] list, com.google.appengine.api.datastore.PostalAddress item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new com.google.appengine.api.datastore.PostalAddress[]{item};
+        else {
+            final int len = list.length;
+            com.google.appengine.api.datastore.PostalAddress[] copier = new com.google.appengine.api.datastore.PostalAddress[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static com.google.appengine.api.datastore.Rating[] Add(com.google.appengine.api.datastore.Rating[] list, com.google.appengine.api.datastore.Rating item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new com.google.appengine.api.datastore.Rating[]{item};
+        else {
+            final int len = list.length;
+            com.google.appengine.api.datastore.Rating[] copier = new com.google.appengine.api.datastore.Rating[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static com.google.appengine.api.datastore.Text[] Add(com.google.appengine.api.datastore.Text[] list, com.google.appengine.api.datastore.Text item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new com.google.appengine.api.datastore.Text[]{item};
+        else {
+            final int len = list.length;
+            com.google.appengine.api.datastore.Text[] copier = new com.google.appengine.api.datastore.Text[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+    public final static java.io.Serializable[] Add(java.io.Serializable[] list, java.io.Serializable item){
+        if (null == item)
+            return list;
+        else if (null == list)
+            return new java.io.Serializable[]{item};
+        else {
+            final int len = list.length;
+            java.io.Serializable[] copier = new java.io.Serializable[len+1];
+            System.arraycopy(list,0,copier,0,len);
+            copier[len] = item;
+            return copier;
+        }
+    }
+
 }
