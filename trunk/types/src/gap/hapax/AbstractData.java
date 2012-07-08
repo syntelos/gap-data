@@ -208,12 +208,16 @@ public class AbstractData
                  */
                 if (this.hasVariable(name)){
 
-                    if (!name.complement)
+                    if (!name.complement){
                         section = this.showSection(name);
+                        return section;
+                    }
                 }
                 else {
-                    if (name.complement)
+                    if (name.complement){
                         section = this.showSection(name);
+                        return section;
+                    }
                 }
             }
         }
