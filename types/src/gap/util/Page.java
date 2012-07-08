@@ -67,6 +67,9 @@ public class Page
     public Page(){
         this(0,DefaultCount);
     }
+    public Page(Page p, int count){
+        this(p.startIndex,count);
+    }
 
 
     public final void dictionaryInto(TemplateDataDictionary dict){
