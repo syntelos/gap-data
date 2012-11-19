@@ -38,11 +38,20 @@ public class XMPPServlet
     extends gap.service.Servlet
 {
 
+    private XMPPService xs;
+
 
     public XMPPServlet() {
         super();
     }
 
+
+    protected final XMPPService getXMPPService(){
+        if (null == this.xs)
+            this.xs = XMPPServiceFactory.getXMPPService();
+
+        return xs;
+    }
 
     protected void doChat(Request req, Response rep, XMPPService xs, Message msg)
         throws ServletException, IOException
@@ -92,22 +101,23 @@ public class XMPPServlet
     protected final void doPost(Request req, Response rep)
         throws ServletException, IOException
     {
-	/*
-	 * GAE protects the URL this should be configured to, and will
-	 * employ admin status on access.  Re-enforcing this here is a
-	 * problem as under test there is no user.
-	 */
+        req.setViewerDisabled();
+        /*
+         * GAE protects the URL this should be configured to, and will
+         * employ admin status on access.  Re-enforcing this here is a
+         * problem as under test there is no user.
+         */
+        final XMPPService xs = this.getXMPPService();
+
         switch(Directive.For(req.path.getComponent(0))){
         case message:
             switch(Directive.Message.For(req.path.getComponent(1))){
             case chat:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Message m = xs.parseMessage(req);
                 this.doChat(req,rep,xs,m);
             }
                 break;
             case error:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Message m = xs.parseMessage(req);
                 this.doChatError(req,rep,xs,m);
             }
@@ -120,31 +130,26 @@ public class XMPPServlet
         case subscription:
             switch(Directive.Subscription.For(req.path.getComponent(1))){
             case subscribe:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Subscription s = xs.parseSubscription(req);
                 this.doSubscribe(req,rep,xs,s);
             }
                 break;
             case subscribed:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Subscription s = xs.parseSubscription(req);
                 this.doSubscribed(req,rep,xs,s);
             }
                 break;
             case unsubscribe:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Subscription s = xs.parseSubscription(req);
                 this.doUnsubscribe(req,rep,xs,s);
             }
                 break;
             case unsubscribed:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Subscription s = xs.parseSubscription(req);
                 this.doUnsubscribed(req,rep,xs,s);
             }
                 break;
             case error:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Subscription s = xs.parseSubscription(req);
                 this.doSubscriptionError(req,rep,xs,s);
             }
@@ -157,25 +162,21 @@ public class XMPPServlet
         case presence:
             switch(Directive.Presence.For(req.path.getComponent(1))){
             case available:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Presence p = xs.parsePresence(req);
                 this.doAvailable(req,rep,xs,p);
             }
                 break;
             case unavailable:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Presence p = xs.parsePresence(req);
                 this.doUnavailable(req,rep,xs,p);
             }
                 break;
             case probe:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Presence p = xs.parsePresence(req);
                 this.doProbe(req,rep,xs,p);
             }
                 break;
             case error:{
-                final XMPPService xs = XMPPServiceFactory.getXMPPService();
                 final Presence p = xs.parsePresence(req);
                 this.doPresenceError(req,rep,xs,p);
             }
@@ -196,69 +197,69 @@ public class XMPPServlet
      * Lookup maps for fixed path elements
      */
     public enum Directive {
-	message, presence, subscription, error, none, unrecognized;
+        message, presence, subscription, error, none, unrecognized;
 
-	public final static Directive For(String name){
-	    if (null == name)
-		return none;
-	    else {
-		try {
-		    return Directive.valueOf(name);
-		}
-		catch (RuntimeException exc){
-		    return unrecognized;
-		}
-	    }
-	}
+        public final static Directive For(String name){
+            if (null == name)
+                return none;
+            else {
+                try {
+                    return Directive.valueOf(name);
+                }
+                catch (RuntimeException exc){
+                    return unrecognized;
+                }
+            }
+        }
 
-	public enum Message {
-	    chat, error, none, unrecognized;
+        public enum Message {
+            chat, error, none, unrecognized;
 
-	    public final static Message For(String name){
-		if (null == name)
-		    return none;
-		else {
-		    try {
-			return Message.valueOf(name);
-		    }
-		    catch (RuntimeException exc){
-			return unrecognized;
-		    }
-		}
-	    }
-	}
-	public enum Presence {
-	    available, unavailable, probe, error, none, unrecognized;
+            public final static Message For(String name){
+                if (null == name)
+                    return none;
+                else {
+                    try {
+                        return Message.valueOf(name);
+                    }
+                    catch (RuntimeException exc){
+                        return unrecognized;
+                    }
+                }
+            }
+        }
+        public enum Presence {
+            available, unavailable, probe, error, none, unrecognized;
 
-	    public final static Presence For(String name){
-		if (null == name)
-		    return none;
-		else {
-		    try {
-			return Presence.valueOf(name);
-		    }
-		    catch (RuntimeException exc){
-			return unrecognized;
-		    }
-		}
-	    }
-	}
-	public enum Subscription {
-	    subscribe, subscribed, unsubscribe, unsubscribed, error, none, unrecognized;
+            public final static Presence For(String name){
+                if (null == name)
+                    return none;
+                else {
+                    try {
+                        return Presence.valueOf(name);
+                    }
+                    catch (RuntimeException exc){
+                        return unrecognized;
+                    }
+                }
+            }
+        }
+        public enum Subscription {
+            subscribe, subscribed, unsubscribe, unsubscribed, error, none, unrecognized;
 
-	    public final static Subscription For(String name){
-		if (null == name)
-		    return none;
-		else {
-		    try {
-			return Subscription.valueOf(name);
-		    }
-		    catch (RuntimeException exc){
-			return unrecognized;
-		    }
-		}
-	    }
-	}
+            public final static Subscription For(String name){
+                if (null == name)
+                    return none;
+                else {
+                    try {
+                        return Subscription.valueOf(name);
+                    }
+                    catch (RuntimeException exc){
+                        return unrecognized;
+                    }
+                }
+            }
+        }
     }
 
     public final static String From(Message m){
