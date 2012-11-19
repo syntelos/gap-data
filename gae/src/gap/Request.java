@@ -138,6 +138,7 @@ public class Request
     private String bodyString;
     private Json bodyJson;
     private Person person;
+    private boolean personEnabled = true;
 
 
     public Request(String ns, HttpServletRequest req, Method method, Protocol protocol, Path path, 
@@ -244,21 +245,62 @@ public class Request
     public final String getHostname(){
         return this.hostname;
     }
+    public boolean isViewerEnabled(){
+
+        return this.personEnabled;
+    }
+    public Request setViewerEnabled(){
+
+        this.personEnabled = true;
+
+        return this;
+    }
+    public Request setViewerDisabled(){
+
+        this.personEnabled = false;
+
+        return this;
+    }
     public boolean hasViewer(){
 
-        return this.logon.serviceMember;
+        if (null != this.person)
+            return true;
+        else if (this.personEnabled)
+            return this.hasViewerLogon();
+        else
+            return false;
     }
     public Person getViewer(){
 
-        if (this.logon.serviceMember){
-
-            if (null == this.person){
-                this.person = Person.GetCreateLongLogonId(this.logon.serviceLogon);
-            }
+        if (null != this.person)
             return this.person;
-        }
+        else if (this.personEnabled)
+            return this.getViewerLogon();
         else
             return null;
+    }
+    protected boolean hasViewerLogon(){
+
+        return (this.logon.serviceMember && this.isAvailableStorageRead());
+    }
+    protected Person getViewerLogon(){
+
+        if (null == this.person && this.logon.serviceMember){
+
+            if (this.isAvailableStorageRead()){
+
+                this.person = Person.GetCreateLongLogonId(this.logon.serviceLogon);
+            }
+        }
+        return this.person;
+    }
+    public Request setViewer(Person person){
+        if (null != this.person)
+            throw new IllegalStateException();
+        else {
+            this.person = person;
+            return this;
+        }
     }
     public final boolean acceptHtml(){
         return this.accept.accept("text/html");
@@ -545,7 +587,7 @@ public class Request
                 return name.is(0);
             case logon:
                 if (this.isMember){
-                    if (name.has(1) && (null != this.person || this.isAvailableStorageRead()))
+                    if (name.has(1) && (this.hasViewer()))
                         this.getViewer().hasVariable(new TemplateName(name));
                     else
                         return true;
@@ -578,7 +620,7 @@ public class Request
                     return true;
             case viewer:
                 if (this.isMember){
-                    if (name.has(1) && (null != this.person || this.isAvailableStorageRead()))
+                    if (name.has(1) && (this.hasViewer()))
                         this.getViewer().hasVariable(new TemplateName(name));
                     else
                         return true;
@@ -644,7 +686,7 @@ public class Request
                 return this.userReference;
             case logon:
                 if (this.isMember){
-                    if (name.has(1) && (null != this.person || this.isAvailableStorageRead()))
+                    if (name.has(1) && (this.hasViewer()))
                         this.getViewer().getVariable(new TemplateName(name));
                     else
                         return this.logon.serviceLogon;
@@ -700,7 +742,7 @@ public class Request
                     return gap.Version.Short;
             case viewer:
                 if (this.isMember){
-                    if (name.has(1) && (null != this.person || this.isAvailableStorageRead()))
+                    if (name.has(1) && (this.hasViewer()))
                         this.getViewer().getVariable(new TemplateName(name));
                     else
                         return this.logon.serviceLogon;
@@ -738,7 +780,7 @@ public class Request
                 return EmptySection;
             case logon:
                 if (this.isMember){
-                    if (null != this.person || this.isAvailableStorageRead()){
+                    if (this.hasViewer()){
                         if (name.has(1))
                             return this.getViewer().getSection(new TemplateName(name));
                         else {
@@ -786,7 +828,7 @@ public class Request
 
             case viewer:
                 if (this.isMember){
-                    if (null != this.person || this.isAvailableStorageRead()){
+                    if (this.hasViewer()){
                         if (name.has(1))
                             return this.getViewer().getSection(new TemplateName(name));
                         else {
