@@ -147,10 +147,14 @@ public final class Templates
 	else
 	    return null;
     }
+    /** 
+     * @return Template for request servlet sub path excluding servlet
+     * path.
+     */
     private TemplateRenderer getTemplate(Request request)
         throws TemplateException
     {
-        return this.getTemplate(request.path.getSub());
+        return this.getTemplate(request.path.sub);
     }
     private TemplateRenderer getTemplate(String path)
         throws TemplateException
