@@ -141,6 +141,8 @@ public interface ClassDescriptor
         public boolean hasPackage();
 
         public PackageDescriptor getPackage();
+
+        public String getPackageClassName();
     }
 
     /**
