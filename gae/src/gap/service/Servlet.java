@@ -358,6 +358,10 @@ public class Servlet
             return;
         }
     }
+    /** 
+     * @return Template for request servlet sub path excluding servlet
+     * path.
+     */
     protected TemplateRenderer getTemplate(Request req)
         throws TemplateException
     {
@@ -509,6 +513,13 @@ public class Servlet
     {
         this.error(req,rep,HttpServletResponse.SC_NOT_IMPLEMENTED, "Method '"+req.getMethod()+"' not implemented");
     }
+    /** 
+     * Render template for request servlet sub path (excluding servlet
+     * path).
+     * 
+     * @param req Servlet request
+     * @param rep Servlet response
+     */
     protected final void render(Request req, Response rep)
         throws IOException, ServletException, TemplateException
     {
@@ -529,6 +540,16 @@ public class Servlet
             this.error(req,rep,500,"Template error",exc);
         }
     }
+    /** 
+     * Render named template
+     * 
+     * @param req Servlet request
+     * @param rep Servlet response
+     * 
+     * @param templateName Path relative to
+     * <code>"WEB-INF/templates"</code> (optionally includes a
+     * trailing <code>".xtm"</code> file name suffix).
+     */
     protected final void render(Request req, Response rep, String templateName)
         throws IOException, ServletException, TemplateException
     {

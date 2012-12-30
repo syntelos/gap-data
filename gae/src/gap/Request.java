@@ -316,6 +316,10 @@ public class Request
     public final boolean accept(String name){
         return this.accept.accept(name);
     }
+    /** 
+     * @return Template for request servlet sub path excluding servlet
+     * path.
+     */
     public final TemplateRenderer getTemplate()
         throws TemplateException
     {
