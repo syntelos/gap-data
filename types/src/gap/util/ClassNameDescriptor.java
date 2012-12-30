@@ -87,6 +87,10 @@ public final class ClassNameDescriptor
 
         return new ClassNamePackageDescriptor(this.name.pkg);
     }
+    public String getPackageClassName(){
+
+        return this.name.name;
+    }
     public String getName(){
 
         return this.name.unqualified;

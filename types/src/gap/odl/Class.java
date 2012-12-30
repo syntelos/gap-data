@@ -238,14 +238,13 @@ public final class Class
             this.name = name;
             this.nameDecamel = Decamel(name);
 
-            if ("parent".equals(spec) || (0 < this.children.size()))
-
-                this.relation = Relation.Type.Parent;
-
-            else if ("child".equals(spec) || (null != parent)){
+            if ("child".equals(spec) || (null != parent)){
 
                 this.relation = Relation.Type.Child;
             }
+            else if ("parent".equals(spec) || (0 < this.children.size()))
+
+                this.relation = Relation.Type.Parent;
             else
                 this.relation = Relation.Type.None;
         }
@@ -366,6 +365,17 @@ public final class Class
     }
     public PackageDescriptor getPackage(){
         return this.pack;
+    }
+    public String getPackageClassName(){
+        final PackageDescriptor pack = this.pack;
+        if (null != pack){
+            final String pkg = pack.getName();
+            if (null != pkg){
+
+                return pkg+'.'+this.name;
+            }
+        }
+        return this.name;
     }
     public boolean hasImports(){
         return (!this.imports.isEmpty());

@@ -252,6 +252,14 @@ public class Classes {
         else
             return new gap.odl.Package(gclass.type);
     }
+    public final static String GetPackageClassName(ClassDescriptor gclass){
+        if (gclass instanceof ClassDescriptor.WithPackage){
+
+            return ((ClassDescriptor.WithPackage)gclass).getPackageClassName();
+        }
+        else
+            return gclass.getName();
+    }
     public final static lxl.List<ImportDescriptor> ImportsFor(ClassDescriptor gclass)
     {
         if (gclass instanceof ClassDescriptor.WithImports){
@@ -474,11 +482,11 @@ public class Classes {
             if (isShort)
                 return true;
             else
-                throw new ODStateException(field,"Field class '"+gap.Objects.StringFromObject(field.getType())+"' is used in a short relation from class '"+container.getName()+"', but is not declared 'child'.  This redundancy is required for type integrity.");
+                throw new ODStateException(field,"Field class '"+gap.Objects.StringFromObject(field.getType())+"' is used in a short relation from class '"+GetPackageClassName(container)+"', but is not declared 'child'.  This redundancy is required for type integrity.");
         }
         else if (isShort){
 
-            throw new ODStateException(field,"Field class '"+gap.Objects.StringFromObject(field.getType())+"' is declared 'child' but not declared 'child' in class '"+container.getClass()+"'.  This redundancy is required for type integrity.");
+            throw new ODStateException(field,"Field class '"+gap.Objects.StringFromObject(field.getType())+"' is declared 'child' but not declared 'child' in class '"+GetPackageClassName(container)+"'.  This redundancy is required for type integrity.");
         }
         else
             return false;
