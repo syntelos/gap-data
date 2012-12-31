@@ -1,0 +1,187 @@
+/*
+ * common
+ */
+body {
+ z-index: 0;
+ margin: 0px;
+ padding: 20px;
+ font-family: Arial, sans-serif;
+ color: #032753;
+ background-color: #ffffff;
+}
+div {
+ font-family: Arial, sans-serif;
+ width: 80%;
+}
+div.block {
+ margin-left: 40px;
+ background-color: #f6f6f6;
+
+ padding-left: 0px;
+ padding-top: 6px;
+ padding-bottom: 6px;
+ padding-right: 8px;
+}
+div.block.inside {
+ background-color: #ffffff;
+ border-top: 0.5px solid #032753;
+}
+div.block.inside.heavy {
+ border-top: 2.5px solid #032753;
+}
+
+h1 {
+ background-color: #cfe2f3;
+ border-left: 0.5px solid #032753;
+ border-right: 0.5px solid #032753;
+ padding: 6px;
+ padding-left: 18px;
+ margin-left: 0px;
+}
+
+h2 {
+ background-color: #cfe2f3;
+ border-left: 0.5px solid #032753;
+ border-right: 0.5px solid #032753;
+ padding: 4px;
+ padding-left: 24px;
+ margin-left: 0px;
+}
+a {
+ color: #032753;
+ text-decoration: none;
+ font-weight: 600;
+}
+a.gap.data {
+ font: 20px Courier, monospace;
+ font-weight: 700;
+ font-style: italic;
+ margin-left: 2px;
+ margin-right: 2px;
+}
+p {
+ padding-left: 24px;
+}
+div.logon {
+ position: absolute;
+ right: 0px;
+ top: 0px;
+ margin: 0px;
+ width: 50%;
+ height: 32px;
+ float: right;
+ text-align: right;
+ padding: 4px;
+ padding-right: 16px;
+}
+span.tool {
+ margin: 0px;
+ margin-right: 6px;
+ z-index: 2;
+ padding: 0px;
+ padding-right: 6px;
+ border-right: 0.5px solid #032753;
+ border-bottom: 0.5px solid #032753;
+}
+h1.errors {
+ padding-left: 18px;
+}
+pre.errors {
+ padding-left: 6px;
+}
+p.errors {
+ color: #af0000;
+}
+/*
+ * layers
+ */
+div.tools {
+ position: absolute;
+ right: 0px;
+ top: 40px;
+ width: 200px;
+ height: 50px;
+ padding: 0px;
+ margin: 0px;
+ float: right;
+ z-index: 2;
+ opacity: 1.0;
+}
+div.tool {
+ right: 0px;
+ margin: 0px;
+ margin-top: 12px;
+ width: 200px;
+ height: 50px;
+ cursor: pointer;
+ cursor: hand;
+ z-index: 2;
+ opacity: 1.0;
+}
+div.tool.off {
+ opacity: 0.5;
+}
+input.tool {
+ padding-top: 2px;
+ padding-left: 4px;
+ padding-right: 4px;
+ padding-bottom: 2px;
+ border: 1.5px solid #032753;
+ background-color: #fefefe;
+ color: #032753;
+ z-index: 2;
+ opacity: 1.0;
+}
+input.tool.button {
+ font-family: Arial, sans-serif;
+ font-weight: 600;
+}
+div.overlay {
+ position: absolute;
+ visibility: hidden;
+ margin: 0;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background-color: #fefefe;
+ z-index: 1;
+ opacity: 0.8;
+}
+div.over {
+ margin: 0px;
+ margin-top: 8px;
+ margin-left: 10%;
+ padding: 3px;
+ width: 80%;
+ text-align: center;
+ background-repeat: no-repeat;
+ z-index: 2;
+ opacity: 1.0;
+}
+div.logo {
+ position: absolute;
+ right: 0px;
+ bottom: 240px;
+ width: 200px;
+ height: 50px;
+ float: right;
+ background-image: url('icons/powered-by-gap-data-rhs-200x50.png');
+ background-repeat: no-repeat;
+ cursor: pointer;
+ cursor: hand;
+ z-index: 0;
+ opacity: 1.0;
+}
+div.copyrights {
+ float: left;
+ margin-top: 24px;
+ margin-left: 12px;
+ margin-bottom: 0px;
+ width: 50%;
+ height: 120px;
+ font: 12px Lucida Typewriter, Verdana, sans-serif;
+ color: #000;
+ z-index: 0;
+ opacity: 0.8;
+}

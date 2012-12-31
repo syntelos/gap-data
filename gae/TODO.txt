@@ -1,0 +1,29 @@
+                            -*-outline-*-
+
+* UI
+** /spacenet/cat/update.html
+*** review AJAX values
+** Upgrade 
+*** Nav bar left vertical
+*** Forms via JSON
+*** API via Text
+*** Install budget feature showing resources employed and operating cost
+
+* Backend
+** Review exception catching and logging in servlets
+** Review 'GET data' for data formats
+** Add data formats to reproduce inputs for comparative debugging
+*** Add hooks to reproduce inputs for correct list of ids
+
+** Install blessed users
+*** Modify data
+*** Create derivatives
+*** Modify catalogs
+*** Create and modify Craft
+**** Create and modify TLEs
+
+** Delete PVC records older than catalog expiration delta
+
+* ISSLive
+** try adding "control" functions to test
+

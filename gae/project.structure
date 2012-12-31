@@ -1,0 +1,15 @@
+src=src
+ver.src=ver/src
+ver.web=ver/web
+web=web
+out=war
+out.webinf=${out}/WEB-INF
+out.bin=${out.webinf}/classes
+out.lib=${out.webinf}/lib
+out.src=${out.webinf}/src
+out.odl=${out}/odl
+out.data=${out.webinf}/data
+lib=lib
+doc=doc
+odl=odl
+ore.data=orekit-data

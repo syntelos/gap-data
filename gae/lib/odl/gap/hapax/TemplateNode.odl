@@ -1,0 +1,13 @@
+package gap.hapax;
+path /template-nodes;
+
+child TemplateNode version 5
+    parent Template
+{
+    *unique String nodeType;
+    *unique *sortby Integer offset;
+    Integer lineNumber;
+    Integer index;
+    Text nodeContent;
+    Integer indexCloseRelative;
+}
