@@ -121,6 +121,11 @@ div.tool {
 div.tool.off {
  opacity: 0.5;
 }
+div.tool.foreign {
+ text-align: right;
+ align: right;
+ margin-top: 40px;
+}
 input.tool {
  padding-top: 2px;
  padding-left: 4px;
@@ -162,7 +167,7 @@ div.over {
 div.logo {
  position: absolute;
  right: 0px;
- bottom: 240px;
+ bottom: 0px;
  width: 200px;
  height: 50px;
  float: right;
