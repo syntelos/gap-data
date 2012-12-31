@@ -1,5 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title>Gap Data: The Experiment</title>
     <link rel="stylesheet" type="text/css" href="/top.css" />
     <link rel="icon" href="/icons/favicon.ico" />
@@ -21,25 +22,27 @@
     <div class="block">
       <div class="block inside">
 
-        <p><a href="http://code.google.com/p/gap-data">Gap Data</a> is a web interface for <a href="http://appengine.google.com/">appengine development</a>.</p>
-
         <div class="block">
-          <img src="images/gap-data-1-400x252.png" width="400" height="252" />
+          <a href="/images/gap-data-1.svg"><img src="images/gap-data-1-400x252.png" width="400" height="252" /></a>
         </div>
 
         <div class="block inside">
-          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-          exposes its configuration to its site administrators,
-          including all site content and programming. </p>
 
-          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-          site administrators may adapt its web based programming to
-          create groups or roles or capabilities' delegations to
-          other web logons as desired. </p>
+          <blockquote><i><a href="http://code.google.com/p/gap-data">Gap Data</a>
+          is like a "java application wiki" when multiple users
+          access template and function editing. </i> </blockquote>
 
-          <p><a href="http://code.google.com/p/gap-data">Gap Data</a>
-          is like a <i>"java application wiki"</i>.
-          </p>
+          <p>This conception is being defined across a variety of
+          media for <a href="http://jela.googlecode.com/">Jela</a> and
+          <a href="http://hapax2.googlecode.com/">Hapax3</a> (@ <a
+          href="http://gap-data.googlecode.com/">Gap Data</a>). </p>
+
+          <p> For more info, see <a
+          href="http://blog.gap-data.net/">blog.gap-data.net</a> or <a
+          href="http://blog.syntelos.com/">blog.syntelos.com</a>. </p>
+
+          <p> Or, read the source at <a
+          href="http://gap-data.googlecode.com/">gap-data.googlecode.com</a>. </p>
 
         </div>
       </div>

@@ -1,0 +1,5 @@
+                              -*-outline-*-
+
+* copy structure of oso
+** export plus from ulsf-spacenet
+
