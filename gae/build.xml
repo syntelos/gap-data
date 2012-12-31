@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ULSF-SpaceNet" default="write">
+<project name="gap-data" default="write">
   <tstamp/>
   <property name="compiler.source" value="1.6"/>
   <property name="compiler.target" value="1.6"/>
@@ -158,12 +158,6 @@
         <include name="**/*.odl" />
       </fileset>
     </copy>
-    <copy todir="${out.data}">
-
-      <fileset dir="${ore.data}">
-        <include name="**/*.*" />
-      </fileset>
-    </copy>
 
   </target>
 
@@ -215,80 +209,6 @@
         <arg value="logs.txt"/>
       </args>
     </appcfg>
-  </target>
-
-  <!--  Ant 1.8 + Junit 3.8 -->
-  <target name="test.compile" depends="version" description="Compile unit tests">
-    <path id="test.lib.path">
-      <pathelement location="${out.bin}" />
-      <pathelement path="test/bin" />
-      <fileset dir="${out.lib}">
-        <include name="**/*.jar" />
-      </fileset>
-      <path location="${appengine.sdk.home}/lib/appengine-tools-api.jar" />
-      <path location="${appengine.sdk.home}/lib/impl/appengine-api.jar" />
-      <path location="${appengine.sdk.home}/lib/impl/appengine-api-labs.jar" />
-      <path location="${appengine.sdk.home}/lib/impl/appengine-api-stubs.jar" />
-      <path location="${appengine.sdk.home}/lib/impl/appengine-local-runtime.jar" />
-      <path location="${appengine.sdk.home}/lib/shared/servlet-api.jar" />
-      <path location="${appengine.sdk.home}/lib/testing/appengine-testing.jar" />
-      <path location="${ant.home}/lib/junit.jar" />
-    </path>
-
-    <mkdir dir="test/bin" />
-    <javac srcdir="test/src" destdir="test/bin" includeAntRuntime="false" debug="true">
-      <classpath refid="test.lib.path"/>
-    </javac>
-
-    <mkdir dir="test/WEB-INF/data" />
-
-    <copy todir="test/WEB-INF/data">
-
-      <fileset dir="${ore.data}">
-        <include name="**/*.*" />
-      </fileset>
-    </copy>
-
-  </target>
-
-  <target name="test" depends="clean,write,test.compile" description="Run all unit tests">
-    <echo>
- ---
- ---
- --- Catalog Parsing Tests
- ---
- ---
-    </echo>
-    <junit haltonerror="true" includeAntRuntime="true" fork="true" dir="test">
-      <classpath refid="test.lib.path"/>
-      <formatter type="plain" usefile="false"/>
-
-      <test name="Aliased" />
-
-      <test name="UCS" />
-
-      <test name="JSR" />
-
-    </junit>
-    <echo>
- ---
- ---
- --- Catalog Copy Tests
- ---
- ---
-    </echo>
-    <junit haltonerror="true" includeAntRuntime="true" fork="true" dir="test">
-      <classpath refid="test.lib.path"/>
-      <formatter type="plain" usefile="false"/>
-
-      <test name="LocalAliased" />
-
-      <test name="LocalJSR" />
-
-      <test name="LocalUCS" />
-
-    </junit>
-
   </target>
 
 </project>

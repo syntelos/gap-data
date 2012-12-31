@@ -12,12 +12,12 @@
     <servlet-name>Template</servlet-name>
     <servlet-class>gap.hapax.TemplateServlet</servlet-class>
     <load-on-startup>-1</load-on-startup>
-  </servlet>{{#servlet}}
+  </servlet>
   <servlet>
-    <servlet-name>{{=name}}</servlet-name>
-    <servlet-class>{{=class_name}}</servlet-class>
-    <load-on-startup>{{=load_on}}</load-on-startup>
-  </servlet>{{/servlet}}
+    <servlet-name>Person</servlet-name>
+    <servlet-class>oso.data.PersonServlet</servlet-class>
+    <load-on-startup>-1</load-on-startup>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>Site</servlet-name>
@@ -26,11 +26,11 @@
   <servlet-mapping>
     <servlet-name>Template</servlet-name>
     <url-pattern>/templates/*</url-pattern>
-  </servlet-mapping>{{#servlet}}
+  </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>{{=name}}</servlet-name>
-    <url-pattern>{{=url_pattern}}</url-pattern>
-  </servlet-mapping>{{/servlet}}
+    <servlet-name>Person</servlet-name>
+    <url-pattern>/people/*</url-pattern>
+  </servlet-mapping>
 
 
   <error-page>
