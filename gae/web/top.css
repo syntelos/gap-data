@@ -50,11 +50,9 @@ h2 {
 a {
  color: #032753;
  text-decoration: none;
- font-weight: 600;
 }
 a.gap.data {
  font: 20px Courier, monospace;
- font-weight: 700;
  font-style: italic;
  margin-left: 2px;
  margin-right: 2px;
@@ -139,7 +137,6 @@ input.tool {
 }
 input.tool.button {
  font-family: Arial, sans-serif;
- font-weight: 600;
 }
 div.overlay {
  position: absolute;
