@@ -565,17 +565,20 @@ public class Servlet
         try {
             template.render(req,rep.getWriter());
 
-            if (req.accept("text/html"))
-                rep.setContentType("text/html;charset=utf-8");
+            if (null == rep.getContentType()){
 
-            else if (req.accept("application/json"))
-                rep.setContentType("application/json");
+                if (req.accept("text/html"))
+                    rep.setContentType("text/html;charset=utf-8");
 
-            else if (req.accept("text/xml"))
-                rep.setContentType("text/xml");
+                else if (req.accept("application/json"))
+                    rep.setContentType("application/json");
 
-            else if (req.accept("application/xml"))
-                rep.setContentType("application/xml");
+                else if (req.accept("text/xml"))
+                    rep.setContentType("text/xml");
+
+                else if (req.accept("application/xml"))
+                    rep.setContentType("application/xml");
+            }
         }
         catch (gap.hapax.TemplateParser.Retry exc){
 
@@ -585,18 +588,20 @@ public class Servlet
              */
             template.render(req,rep.getWriter());
 
-            if (req.accept("text/html"))
-                rep.setContentType("text/html;charset=utf-8");
+            if (null == rep.getContentType()){
 
-            else if (req.accept("application/json"))
-                rep.setContentType("application/json");
+                if (req.accept("text/html"))
+                    rep.setContentType("text/html;charset=utf-8");
 
-            else if (req.accept("text/xml"))
-                rep.setContentType("text/xml");
+                else if (req.accept("application/json"))
+                    rep.setContentType("application/json");
 
-            else if (req.accept("application/xml"))
-                rep.setContentType("application/xml");
+                else if (req.accept("text/xml"))
+                    rep.setContentType("text/xml");
 
+                else if (req.accept("application/xml"))
+                    rep.setContentType("application/xml");
+            }
         }
         finally {
             req.renderComplete();
