@@ -99,7 +99,7 @@ public interface Map<K,V>
 
         public Map.Primitive<K,V> put(K key, V value);
 
-        public V remove(K key);
+        public V removeMap(K key);
     }
 
     public interface Short<K,V>

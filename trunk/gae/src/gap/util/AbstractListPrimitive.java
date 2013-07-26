@@ -212,7 +212,7 @@ public abstract class AbstractListPrimitive<V>
         }
         return idx;
     }
-    public final List.Primitive<V> remove(V instance){
+    public final List.Primitive<V> removeList(V instance){
         return this.remove(this.indexOf(instance));
     }
     public final List.Primitive<V> remove(int index){

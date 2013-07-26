@@ -105,7 +105,7 @@ public interface List<V>
         /**
          * Remove from list
          */
-        public List.Primitive<V> remove(V instance);
+        public List.Primitive<V> removeList(V instance);
 
         public List.Primitive<V> clear();
     }

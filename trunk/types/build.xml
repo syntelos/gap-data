@@ -51,11 +51,7 @@
   <target name="jar" depends="compile" description="Produce 'name-V*.jar' and 'name-V*.jar.md5'.  See 'version'.">
     <archive.cleanly/>
 
-    <archive target="${target.jar}" bin="${bin}" manifest="${src}/Manifest.mf">
-      <pack>
-	<zipfileset src="${toString:lib.jauk}"/>
-      </pack>
-    </archive>
+    <archive target="${target.jar}" bin="${bin}" manifest="${src}/Manifest.mf" />
 
     <flush dir="${bin}" type="class"/>
   </target>
