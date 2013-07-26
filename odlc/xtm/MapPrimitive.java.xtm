@@ -137,7 +137,7 @@ public final class MapPrimitive{{=parent_class_name}}{{=map_key_type}}{{=child_c
         }
         return this;
     }
-    public {{=child_class_name}} remove({{=map_key_type}} key){
+    public {{=child_class_name}} removeMap({{=map_key_type}} key){
         int index = this.index.get(key);
         if (-1 != index){
             this.index.drop(key,index);

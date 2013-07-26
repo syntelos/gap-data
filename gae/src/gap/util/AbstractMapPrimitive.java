@@ -36,7 +36,7 @@ public abstract class AbstractMapPrimitive<K extends Comparable,V extends Serial
     implements Map.Primitive<K,V>
 {
 
-    protected transient Index index = new Index(23);
+    protected transient Index<K> index = new Index(23);
 
 
     protected AbstractMapPrimitive(){
