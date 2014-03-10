@@ -421,6 +421,26 @@ public class Servlet
     {
 	rep.setStatus(status,message);
     }
+    protected final void log(HttpServletRequest req, Level level, String message)
+        throws IOException, ServletException
+    {
+        Log.log(Level.INFO,alto.io.u.Chbuf.fcat(req.getServletPath(),req.getPathInfo()),message);
+    }
+    protected final void log(HttpServletRequest req, Level level, Throwable t)
+        throws IOException, ServletException
+    {
+        Log.log(Level.INFO,alto.io.u.Chbuf.fcat(req.getServletPath(),req.getPathInfo()),t);
+    }
+    protected final void info(HttpServletRequest req, String message)
+        throws IOException, ServletException
+    {
+        this.log(req,Level.INFO,message);
+    }
+    protected final void info(HttpServletRequest req, Throwable t)
+        throws IOException, ServletException
+    {
+        this.log(req,Level.INFO,t);
+    }
     protected final void error(HttpServletRequest req, HttpServletResponse rep)
         throws IOException, ServletException
     {
