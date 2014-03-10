@@ -1,5 +1,17 @@
                                         -*-outline-*-
 
+* GAE services
+** Multithread safe
+*** need thread-locals for namespaces, only
+** Namespace sensitive
+*** programmatic namespace usage
+** Thread local
+*** system
+*** viewer
+** Store
+*** kind
+*** instance
+
 * Move permissions and BigTable interfaces into types
 ** Admin*.java
 
