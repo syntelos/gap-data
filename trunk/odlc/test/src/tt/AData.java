@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see A
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-05-27T14:31:24.472Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2015-02-16T20:12:43.235Z")
 public abstract class AData
     extends gap.data.BigTable
     implements DataInheritance<A>
@@ -68,6 +68,14 @@ public abstract class AData
         return KIND.pathto(subpath);
     }
 
+    /**
+     * Long instance key from parent key
+     */
+    public static Key KeyLong(Json json){
+        final String name = json.getValue("name",String.class);
+
+        return KeyLongIdFor( name);
+    }
     /**
      * Long instance key without parent key
      */
@@ -104,6 +112,14 @@ public abstract class AData
     }
 
     /**
+     * Instance lookup or create
+     */
+    public static A ForLong(Json json){
+        final String name = json.getValue("name",String.class);
+
+        return ForLongName( name);
+    }
+    /**
      * Instance lookup
      */
     public final static A ForLongName(String name){
@@ -130,6 +146,14 @@ public abstract class AData
     /**
      * Instance lookup or create
      */
+    public static A GetCreateLong(Json json){
+        final String name = json.getValue("name",String.class);
+
+        return GetCreateLong( name);
+    }
+    /**
+     * Instance lookup or create
+     */
     public final static A GetCreateLongName(String name){
         A a = A.ForLongName( name);
         if (null == a){
@@ -138,7 +162,25 @@ public abstract class AData
         }
         return a;
     }
-
+    /**
+     * Instance lookup or create from (presumed correct and coherent) instance key and data
+     *
+     * Used by long and short lists
+     *
+     * @param key Key derived from data
+     *
+     * @param data Data instance of this class
+     *
+     * @return Possibly dirty (in need of save)
+     */
+    public final static A GetCreate(Key key, Json json){
+        A instance = gap.data.Store.GetClass(key);
+        if (null == instance){
+            final String name = json.getValue("name",String.class);
+            instance = new A( name);
+        }
+        return instance;
+    }
 
     public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND.getName(),id);
@@ -173,6 +215,15 @@ public abstract class AData
                 return (A)gap.data.Store.Query1Class(q);
             }
         }
+        else
+            throw new IllegalArgumentException();
+    }
+    /**
+     * @param entity Use entity for its key (only)
+     */
+    public final static A Get(Entity entity){
+        if (null != entity)
+            return Get(entity.getKey());
         else
             throw new IllegalArgumentException();
     }
@@ -244,6 +295,13 @@ public abstract class AData
 
             gap.data.Store.Delete(instanceKey);
         }
+    }
+    /**
+     * @param entity Use entity for its key (only)
+     */
+    public final static void Delete(Entity entity){
+        if (null != entity)
+            Delete(entity.getKey());
     }
     /**
      * Drop the instance from memcache, exclusively.
@@ -323,6 +381,15 @@ public abstract class AData
     public final static List.Primitive<Key> QueryNKey(Query query){
         if (null != query)
             return gap.data.Store.QueryNKey(query);
+        else
+            throw new IllegalArgumentException();
+    }
+    /**
+     * @return Entities having only keys, unbuffered
+     */
+    public final static Iterable<Entity> QueryNKeyUnbuffered(Query query){
+        if (null != query)
+            return gap.data.Store.QueryNKeyUnbuffered(query);
         else
             throw new IllegalArgumentException();
     }
@@ -440,9 +507,9 @@ public abstract class AData
                 return instance.getId();
             case Name:
                 return instance.getName(MayNotInherit);
-            case Children:{
+            case Children:
                 return null;
-            }
+            
             case Content:{
                 Map.Primitive<String,Blob> content = instance.getContent(MayNotInherit);
                 if (null != content)
@@ -899,7 +966,7 @@ public abstract class AData
     public boolean fromJsonName(Json json){
         if (null == json)
             return false;
-        else
+        else 
             return this.setName((String)json.getValue(String.class));
     }
     public Json toJsonChildren(){
@@ -907,20 +974,24 @@ public abstract class AData
         return Json.Wrap( children);
     }
     public boolean fromJsonChildren(Json json){
-        /*
-         * [TODO] json.getValue(colClas,comClas) not expressed by (e.g.) "List.Short<Component>.class"
-         */
-        return false;
+        if (null == json)
+            return false;
+        else {
+            List.Short<B> collection = this.getChildren(Notation.MayInherit);
+            return collection.fromJson(json);
+        }
     }
     public Json toJsonContent(){
         Map.Primitive<String,Blob> content = this.getContent();
         return Json.Wrap( content);
     }
     public boolean fromJsonContent(Json json){
-        /*
-         * [TODO] json.getValue(colClas,comClas) not expressed by (e.g.) "List.Short<Component>.class"
-         */
-        return false;
+        if (null == json)
+            return false;
+        else {
+            Map.Primitive<String,Blob> collection = this.getContent(Notation.MayInherit);
+            return collection.fromJson(json);
+        }
     }
     /*
      * Data binding supports
