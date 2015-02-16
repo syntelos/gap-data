@@ -35,7 +35,7 @@ import javax.annotation.Generated;
 /**
  * Generated primitive map.
  */
-@Generated(value={"gap.service.OD","MapPrimitive.java"},date="2012-05-27T14:31:25.922Z")
+@Generated(value={"gap.service.OD","MapPrimitive.java"},date="2015-02-16T20:12:44.707Z")
 public final class MapPrimitiveAStringBlob
     extends gap.util.AbstractMapPrimitive<String,Blob>
     implements gap.data.Map.Primitive<String,Blob>
@@ -136,7 +136,7 @@ public final class MapPrimitiveAStringBlob
         }
         return this;
     }
-    public Blob remove(String key){
+    public Blob removeMap(String key){
         int index = this.index.get(key);
         if (-1 != index){
             this.index.drop(key,index);

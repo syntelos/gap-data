@@ -20,8 +20,12 @@
 package tt;
 
 
+import gap.*;
 import gap.data.*;
 import gap.util.*;
+
+import json.ArrayJson;
+import json.Json;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.blobstore.*;
@@ -33,7 +37,7 @@ import javax.annotation.Generated;
 /**
  * Generated short list.
  */
-@Generated(value={"gap.service.OD","ListShort.java"},date="2012-05-27T14:31:25.809Z")
+@Generated(value={"gap.service.OD","ListShort.java"},date="2015-02-16T20:12:44.424Z")
 public abstract class ListShortAB
     extends gap.util.AbstractList<B>
     implements gap.data.List.Short<B>
@@ -139,7 +143,7 @@ public abstract class ListShortAB
      * @see gap.data.List$Short#nhead(int)
      */
     public Iterable<B> nhead(int count){
-        final BigTable[] buffer = this.buffer;
+        final TableClass[] buffer = this.buffer;
         if (null != buffer){
             final int size = this.gross;
             if (0 > count){
@@ -147,7 +151,7 @@ public abstract class ListShortAB
             }
             else if (size == buffer.length || count < buffer.length){
                 if (count < size){
-                    B[] re = (B[])(new BigTable[count]);
+                    B[] re = (B[])(new TableClass[count]);
                     System.arraycopy(buffer,0,re,0,count);
                     return (Iterable<B>)(new BufferIterator(re));
                 }
@@ -167,7 +171,7 @@ public abstract class ListShortAB
      * @see gap.data.List$Short#ntail(int)
      */
     public Iterable<B> ntail(int count){
-        final BigTable[] buffer = this.buffer;
+        final TableClass[] buffer = this.buffer;
         if (null != buffer){
             final int size = this.gross;
             if (0 > count){
@@ -177,7 +181,7 @@ public abstract class ListShortAB
                 if (count < size){
                     final int x = (size-count-1);
                     if (x < buffer.length){
-                        B[] re = (B[])(new BigTable[count]);
+                        B[] re = (B[])(new TableClass[count]);
                         System.arraycopy(buffer,x,re,0,count);
                         return (Iterable<B>)(new BufferIterator(re));
                     }
@@ -196,5 +200,63 @@ public abstract class ListShortAB
         else
             return (Iterable<B>)(new BufferIterator());
     }
+    /**
+     * Add without drop: half an editor that is efficient wrt data store operations.  Is recursive.
+     */
+    public boolean fromJson(Json json){
 
+        if (json instanceof ArrayJson){
+            /*
+             * Keys for data
+             */
+            Key[] keys = null;
+
+            Json[] array = ((ArrayJson)json).toArray();
+
+            for (Json j: array){
+                try {
+                    keys = Objects.Add(keys, B.KeyShort(this.ancestorKey,j));
+                }
+                catch (Exception cancel){
+                    /*
+                     * Breach of contract: an incomplete child will cause this process to bail
+                     */
+                    return false;
+                }
+            }
+            /*
+             * Add without drop
+             */
+            if (null != keys && null != array){
+                final int count = keys.length;
+                if (count == array.length){
+
+                    boolean mod = false;
+
+                    for (int cc = 0; cc < count; cc++){
+                        Key k = keys[cc];
+                        Json j = array[cc];
+                        int idx = this.indexInBuffer(k);
+                        B child;
+                        if (0 > idx){
+                            child = B.GetCreate(k,j);
+                            child.fromJson(j);
+                            child.save();
+                            mod = true;
+                            this.addToBuffer(child);
+                        }
+                        else {
+                            child = this.get(idx);
+                            if (child.fromJson(j)){
+                                child.save();
+                                mod = true;
+                            }
+                        }
+                    }
+                    return mod;
+                }
+            }
+        }
+        return false;
+    }
 }

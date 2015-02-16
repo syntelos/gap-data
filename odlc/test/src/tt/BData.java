@@ -40,7 +40,7 @@ import javax.annotation.Generated;
  *
  * @see B
  */
-@Generated(value={"gap.service.OD","BeanData.java"},date="2012-05-27T14:31:27.892Z")
+@Generated(value={"gap.service.OD","BeanData.java"},date="2015-02-16T20:12:45.677Z")
 public abstract class BData
     extends gap.data.BigTable
     implements DataInheritance<B>
@@ -68,6 +68,14 @@ public abstract class BData
         return KIND.pathto(subpath);
     }
 
+    /**
+     * Long instance key from parent key
+     */
+    public static Key KeyLong(Json json){
+        final Person person = json.getValue("person",Person.class);
+
+        return KeyLongIdFor( person);
+    }
     /**
      * Long instance key without parent key
      */
@@ -104,6 +112,14 @@ public abstract class BData
     }
 
     /**
+     * Instance lookup or create
+     */
+    public static B ForLong(Json json){
+        final Person person = json.getValue("person",Person.class);
+
+        return ForLongPerson( person);
+    }
+    /**
      * Instance lookup
      */
     public final static B ForLongPerson(Person person){
@@ -130,6 +146,14 @@ public abstract class BData
     /**
      * Instance lookup or create
      */
+    public static B GetCreateLong(Json json){
+        final Person person = json.getValue("person",Person.class);
+
+        return GetCreateLong( person);
+    }
+    /**
+     * Instance lookup or create
+     */
     public final static B GetCreateLongPerson(Person person){
         B b = B.ForLongPerson( person);
         if (null == b){
@@ -138,7 +162,25 @@ public abstract class BData
         }
         return b;
     }
-
+    /**
+     * Instance lookup or create from (presumed correct and coherent) instance key and data
+     *
+     * Used by long and short lists
+     *
+     * @param key Key derived from data
+     *
+     * @param data Data instance of this class
+     *
+     * @return Possibly dirty (in need of save)
+     */
+    public final static B GetCreate(Key key, Json json){
+        B instance = gap.data.Store.GetClass(key);
+        if (null == instance){
+            final Person person = json.getValue("person",Person.class);
+            instance = new B( person);
+        }
+        return instance;
+    }
 
     public final static Key KeyLongFor(String id){
         return KeyFactory.createKey(KIND.getName(),id);
@@ -173,6 +215,15 @@ public abstract class BData
                 return (B)gap.data.Store.Query1Class(q);
             }
         }
+        else
+            throw new IllegalArgumentException();
+    }
+    /**
+     * @param entity Use entity for its key (only)
+     */
+    public final static B Get(Entity entity){
+        if (null != entity)
+            return Get(entity.getKey());
         else
             throw new IllegalArgumentException();
     }
@@ -244,6 +295,13 @@ public abstract class BData
 
             gap.data.Store.Delete(instanceKey);
         }
+    }
+    /**
+     * @param entity Use entity for its key (only)
+     */
+    public final static void Delete(Entity entity){
+        if (null != entity)
+            Delete(entity.getKey());
     }
     /**
      * Drop the instance from memcache, exclusively.
@@ -323,6 +381,15 @@ public abstract class BData
     public final static List.Primitive<Key> QueryNKey(Query query){
         if (null != query)
             return gap.data.Store.QueryNKey(query);
+        else
+            throw new IllegalArgumentException();
+    }
+    /**
+     * @return Entities having only keys, unbuffered
+     */
+    public final static Iterable<Entity> QueryNKeyUnbuffered(Query query){
+        if (null != query)
+            return gap.data.Store.QueryNKeyUnbuffered(query);
         else
             throw new IllegalArgumentException();
     }
@@ -742,7 +809,7 @@ public abstract class BData
     public boolean fromJsonPerson(Json json){
         if (null == json)
             return false;
-        else
+        else 
             return this.setPerson((Person)json.getValue(Person.class));
     }
     /*
