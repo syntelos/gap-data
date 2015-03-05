@@ -100,14 +100,19 @@ public final class Templates
     private static File TemplateFile(String name)
         throws TemplateException
     {
-        if (!name.endsWith(TemplatesFilenameSuffix))
-            name += TemplatesFilenameSuffix;
+        try {
+            if (!name.endsWith(TemplatesFilenameSuffix))
+                name += TemplatesFilenameSuffix;
 
-        File file = new File(TemplatesLocation,name);
-        if (file.isFile())
-            return file;
-        else
-            return null;
+            File file = new File(TemplatesLocation,name);
+            if (file.isFile()){
+
+                return file;
+            }
+        }
+        catch (Exception ignore){
+        }
+        return null;
     }
     public static String ReadToString(File file)
         throws IOException
